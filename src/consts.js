@@ -1,5 +1,5 @@
 let API;
-const adesVersion = '0.1.0';
+const adesVersion = '0.1.1';
 
 //const hostname = window && window.location && window.location.hostname;
 //console.log(`API::${process.env.ADES_API}`)
