@@ -1,0 +1,62 @@
+{
+  "name": "ades",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@blueprintjs/core": "^3.22.3",
+    "@blueprintjs/datetime": "^3.15.2",
+    "@blueprintjs/icons": "^3.13.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/user-event": "^7.1.2",
+    "async-mutex": "^0.1.4",
+    "axios": "^0.19.1",
+    "i18next": "^19.4.2",
+    "leaflet": "^1.6.0",
+    "leaflet-hotline": "^0.4.0",
+    "leaflet-rotatedmarker": "^0.2.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.12.0",
+    "react-cookie": "^4.0.3",
+    "react-dom": "^16.12.0",
+    "react-i18next": "^11.3.4",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.4.1",
+    "react-scroll": "^1.7.16",
+    "sanctuary": "^2.0.1",
+    "socket.io-client": "^2.3.0",
+    "use-deep-compare-effect": "^1.3.1"
+  },
+  "scripts": {
+    "start": "set PORT=2000 && react-scripts -r @cypress/instrument-cra start",
+    "start-dev": "SET \"REACT_APP_ADES_API=https://localhost:3000\" && SET PORT=2000 && react-scripts -r @cypress/instrument-cra start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --transformIgnorePatterns \\\"node_modules/(?!use-global-hook)/\\\"",
+    "eject": "react-scripts eject",
+    "cypress:open": "cypress open"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@cypress/code-coverage": "^3.1.0",
+    "@cypress/instrument-cra": "^1.1.0",
+    "@testing-library/dom": "^6.15.0",
+    "@testing-library/react": "^9.5.0",
+    "cypress": "^4.1.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.18.3",
+    "istanbul-lib-coverage": "^3.0.0",
+    "nyc": "^15.0.1",
+    "react-test-renderer": "^16.13.1"
+  }
+}
