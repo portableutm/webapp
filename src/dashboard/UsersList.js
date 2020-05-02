@@ -1,16 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import A from 'axios';
-import { API } from '../consts';
-import { fM } from '../libs/SaferSanctuary';
+import {API, USERS_DATA_TOO_OLD} from '../consts';
+import _, {fM, fSM} from '../libs/SaferSanctuary';
+import S from 'sanctuary';
 import '../Ades.css';
 import {Button, Tab, Tabs} from '@blueprintjs/core';
+import {useHistory} from 'react-router-dom';
+import useAdesState from '../state/AdesState';
 
 const USERS_ONE_PAGE_NUMBER = 5;
 
-const UsersList = ({authToken}) => {
-    
-	// state
-	const [users, setUsers] = useState([]);
+const UsersList = () => {
+	const history = useHistory();
+
+	const [state, actions] = useAdesState();
 	const [firstUser, setFirstUser] = useState(0);
 	const [lastUser, setLastUser] = useState(USERS_ONE_PAGE_NUMBER);
 
@@ -22,16 +25,14 @@ const UsersList = ({authToken}) => {
 	// because at first render, authToken is empty, so we have to reexecute the
 	// useEffect when the token is received.
 	useEffect(() => {
-		if(authToken.value){
-			A.get(API + 'user', {headers: { auth: fM(authToken) }})
-				.then(result => setUsers(result.data))
-				.catch(error => console.error('There was an error fetching users', error));
+		if (Date.now() - USERS_DATA_TOO_OLD - state.users.updated > USERS_DATA_TOO_OLD) {
+			actions.users.fetch();
 		}
-	}, [authToken]);
-
-	const usersThisPage = users.slice(firstUser, lastUser + 1);
+	}, []);
+	const users = S.values(fSM(state.users.list));
+	const usersThisPage = users.slice(firstUser, lastUser);
 	let tabsTotal = [];
-	for (let i = 0; i < users.length / USERS_ONE_PAGE_NUMBER; i++) {
+	for (let i = 0; i <  users.length / USERS_ONE_PAGE_NUMBER; i++) {
 		tabsTotal.push(i);
 	}
 
@@ -70,7 +71,7 @@ const UsersList = ({authToken}) => {
 								<td>{user.username}</td>
 								<td>{user.email}</td>
 								<td>{user.role}</td>
-								<td><Button small={true}>Edit</Button></td>
+								<td><Button small={true} onClick={() => history.push('/dashboard/users/' + user.username)}>Edit</Button></td>
 							</tr>
 						))}
 					</tbody>
