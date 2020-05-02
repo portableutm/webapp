@@ -328,7 +328,7 @@ th, td {
 }
 
 .dashboard {
-  top: 100vh;
+  /* top: 100vh */
   background-color: transparent;
   width: 100%;
   height: 100%;
@@ -340,6 +340,20 @@ th, td {
   grid-row-gap: 0px;
 }
 
+@media only screen and (max-width: 600px) {
+  .dashboard {
+    background-color: transparent;
+    width: 100%;
+    pointer-events: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr repeat(8, 2fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    overflow: auto;
+  }
+}
+
 .dshHeader {
   grid-area: 1 / 1 / 2 / 4;
   padding-bottom: 5px;
@@ -347,6 +361,14 @@ th, td {
 .dshSide {
   padding: 0 5px;
   grid-area: 2 / 1 / 11 / 2;
+}
+@media only screen and (max-width: 600px) {
+  .dshSide {
+    padding: 0 5px;
+    position: absolute;
+    top: 95vh;
+    width: 100%;
+  }
 }
 .dshLeft {
   grid-area: 2 / 2 / 11 / 3;
@@ -358,6 +380,16 @@ th, td {
   height: 100%;
   width: 100%;
   pointer-events: auto;
+}
+@media only screen and (max-width: 600px) {
+  .dshContent {
+    grid-area: 2 / 1 / 11 / 4;
+    padding: 0 5px 5px;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    pointer-events: auto;
+  }
 }
 
 .dshShorterContent {
@@ -374,6 +406,71 @@ th, td {
 .dshTopRight { grid-area: 2 / 3 / 6 / 4; }
 .dshBottomLeft { grid-area: 6 / 2 / 10 / 3; }
 .dshBottomRight { grid-area: 6 / 3 / 10 / 4; }
+
+/*
+  Dashboard users
+ */
+
+.dshPilot {
+  position: relative;
+  display: grid;
+  height: 100%;
+  width: 100%;
+  grid-template-columns: 150px minmax(0,2fr);
+  grid-template-rows: 1fr 3fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
+
+.dshPilotLeft {
+  max-width: 100%;
+  height: 150px;
+  grid-area: 1 / 1 / 2 / 2;
+}
+.dshPilotImg {
+  width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.dshPilotRight {
+  padding-left: 3%;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  grid-area: 1 / 2 / 2 / 3;
+}
+
+.dshPilotBottom {
+  width: 100%;
+  padding-top: 20px;
+  grid-area: 2 / 1 / 3 / 3;
+}
+
+@media only screen and (max-width: 600px) {
+  .dshPilot {
+    position: relative;
+    min-width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 2fr 2fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+  }
+  .dshPilotLeft {
+    height: 0;
+  }
+  .dshPilotRight {
+    padding: 5%;
+    grid-area: 1 / 1 / 2 / 2;
+  }
+  .dshPilotBottom {
+    grid-area: 2 / 1 / 3 / 2;
+  }
+}
+
 
 /*
   Dashboard lists

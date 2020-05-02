@@ -5,7 +5,18 @@ import React, { useState, useEffect } from 'react';
  */
 //import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Alert, Popover, Position, Icon } from '@blueprintjs/core';
+import {
+	Alert,
+	Popover,
+	Position,
+	Icon,
+	Card,
+	Elevation,
+	FormGroup,
+	InputGroup,
+	Button,
+	Intent, Spinner
+} from '@blueprintjs/core';
 import S from 'sanctuary';
 import { useTranslation } from 'react-i18next';
 
@@ -21,7 +32,7 @@ import Map from './map/Map.js';
 //import NotificationCenter from './NotificationCenter.js';
 import Simulator from './Simulator.js';
 import LoginScreen from './LoginScreen';
-import RegistrationPage from './RegistrationPage';
+import RegistrationScreen from './RegistrationScreen';
 
 /**
  * Layout components
@@ -46,6 +57,7 @@ import UsersList from './dashboard/UsersList';
 import useAdesState from './state/AdesState.js';
 import { useCookies } from 'react-cookie';
 import { fM } from './libs/SaferSanctuary';
+import Pilot from './dashboard/user/Pilot';
 
 function alertIsImportant(alertUtmMessage) {
 	return (
@@ -54,22 +66,6 @@ function alertIsImportant(alertUtmMessage) {
 		alertUtmMessage.severity === 'ALERT'
 	);
 }
-
-const PrivateRoute = ({children, isLoggedIn, ...rest}) => {
-	if(!isLoggedIn){
-		return(
-			<Route {...rest}>
-				<LoginScreen />
-			</Route>
-		);
-	}else{
-		return(
-			<Route {...rest}>
-				{children}
-			</Route>
-		);
-	}
-};
 
 const MasterPage = ({children}) => {
 	return(
@@ -115,6 +111,7 @@ function Ades() {
 	//console.log('AdesState', state);
 	const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
 	const [isLoggedIn, setLoggedIn] = useState(true);
+	const [role, setRole] = useState('none');
 
 	useEffect(() => {
 		//console.log('useEffect state:auth');
@@ -128,7 +125,10 @@ function Ades() {
 		} else {
 			setLoggedIn(true);
 			if (S.isNothing(state.auth.user)) {
-				actions.auth.info(cookies['jwt'], cookies['user'], () => actions.operations.fetch(), () => {
+				actions.auth.info(cookies['jwt'], cookies['user'], (user) => {
+					setRole(user.role);
+					actions.operations.fetch();
+				}, () => {
 					removeCookie('user');
 					removeCookie('jwt');
 				});
@@ -143,87 +143,152 @@ function Ades() {
 		}
 	}, [JSON.stringify(state.auth), cookies]); // eslint-disable-line react-hooks/exhaustive-deps
 
+	if (isLoggedIn && role === 'admin') {
+		/* Operator pages */
+		return (
+			<div className='App'>
+				{/* Alert System (UseCase01A: UTMMessage E,A,C received) */}
+				<Alert
+					confirmButtonText={'OK'}
+					canEscapeKeyCancel={false}
+					canOutsideClickCancel={false}
+					onConfirm={() => setAlertOpen(false)}
+					isOpen={alertOpen}
+				>
+					{alertUtmMessage != null && (
+						<p>
+							(Message id: {alertUtmMessage.message_id})<br/>
+							<b>{alertUtmMessage.severity}</b>
+							<br/>
+							{alertUtmMessage.free_text}
+						</p>
+					)}
+				</Alert>
+				<Router>
+					<Switch>
+						<Route exact path='/registration'>
+							<RegistrationScreen/>
+						</Route>
+						<Route exact path='/debug'>
+							<MasterPage>
+								<Simulator/>
+							</MasterPage>
+						</Route>
+						<Route exact path='/operation/new'>
+							<MasterPage>
+								<Map mode={S.Maybe.Just('new')}/>
+							</MasterPage>
+						</Route>
+						<Route exact path='/operation/:id'>
+							<MasterPage>
+								<Map mode={S.Maybe.Just('view')}/>
+							</MasterPage>
+						</Route>
+						<Route exact path='/dashboard/operations'>
+							<MasterPage>
+								<>
+									<Dashboard>
+										<OperationList/>
+									</Dashboard>
+								</>
+							</MasterPage>
+						</Route>
+						<Route exact path='/dashboard/users/:username'>
+							<MasterPage>
+								<>
+									<Dashboard>
+										<Pilot/>
+									</Dashboard>
+								</>
+							</MasterPage>
+						</Route>
+						<Route exact path='/dashboard/users'>
+							<MasterPage>
+								<>
+									<Dashboard>
+										<UsersList />
+									</Dashboard>
+								</>
+							</MasterPage>
+						</Route>
+						<Route exact path='/dashboard'>
+							<MasterPage>
+								<>
+									<Dashboard />
+								</>
+							</MasterPage>
+						</Route>
+						<Route path='/'>
+							<MasterPage>
+								<>
+									<Map mode={S.Maybe.Nothing}/>
+								</>
+							</MasterPage>
+						</Route>
+						<Route path='/notfound'>{t('not_found')}</Route>
+					</Switch>
+				</Router>
+			</div>
+		);
+	} else if (isLoggedIn && role === 'pilot') {
+		return (
+			<div className="App">
+				<Router>
+					<Switch>
+						<Route path='/operation/new'>
+							<MasterPage>
+								<Map mode={S.Maybe.Just('new')}/>
+							</MasterPage>
+						</Route>
+						<Route path={'/dashboard/users/' + fM(state.auth.user).username}>
+							<MasterPage>
+								<>
+									<Dashboard>
+										<Pilot user={fM(state.auth.user)}/>
+									</Dashboard>
+								</>
+							</MasterPage>
+						</Route>
+						<Route path='/'>
+							<MasterPage>
+								<>
+									<Dashboard/>
+								</>
+							</MasterPage>
+						</Route>
+						<Route path='/notfound'>{t('not_found')}</Route>
+					</Switch>
+				</Router>
+			</div>
+		);
+	} else if (isLoggedIn) {
+		/* Unknown role or yet not fetched - show loading */
+		return (
+			<div className='App bp3-dark'>
+				<Card className="loginWindow" elevation={Elevation.TWO}>
+					<Spinner size={100} intent={Intent.PRIMARY}/>
+				</Card>
+			</div>
+		);
+	} else {
+		/* Not logged in */
+		return (
+			<div className='App bp3-dark'>
+				<Router>
+					<Switch>
+						<Route exact path='/registration'>
+							<RegistrationScreen/>
+						</Route>
+						<Route path='/'>
+							<LoginScreen/>
+						</Route>
+					</Switch>
+				</Router>
+			</div>
+		);
+	}
 
-	/* ************* */
-	return (
-		<div className='App bp3-dark'>
-			{/* Alert System (UseCase01A: UTMMessage E,A,C received) */}
-			<Alert
-				confirmButtonText={'OK'}
-				canEscapeKeyCancel={false}
-				canOutsideClickCancel={false}
-				onConfirm={() => setAlertOpen(false)}
-				isOpen={alertOpen}
-			>
-				{alertUtmMessage != null && (
-					<p>
-								(Message id: {alertUtmMessage.message_id})<br/>
-						<b>{alertUtmMessage.severity}</b>
-						<br/>
-						{alertUtmMessage.free_text}
-					</p>
-				)}
-			</Alert>
-			<Router>
-				<Switch>
-					{/*****************************************************************
-					************************** PUBLIC ROUTES **************************
-					*******************************************************************/}
-					<Route path='/notfound'>{t('not_found')}</Route>
-					<Route path='/registration'>
-						<RegistrationPage/>
-					</Route>
 
-					{/*****************************************************************
-					************************* PRIVATE ROUTES  *************************
-					*******************************************************************/}
-					<PrivateRoute path='/debug' isLoggedIn={isLoggedIn}>
-						<MasterPage>
-							<Simulator/>
-						</MasterPage>
-					</PrivateRoute>
-					<PrivateRoute path='/operation/new' isLoggedIn={isLoggedIn}>
-						<MasterPage>
-							<Map mode={S.Maybe.Just('new')}/>
-						</MasterPage>
-					</PrivateRoute>
-					<PrivateRoute path='/operation/:id' isLoggedIn={isLoggedIn}>
-						<MasterPage>
-							<Map mode={S.Maybe.Just('view')}/>
-						</MasterPage>
-					</PrivateRoute>
-					<PrivateRoute path='/dashboard/operations' isLoggedIn={isLoggedIn}>
-						<MasterPage>
-							<>
-								<Map mode={S.Maybe.Nothing}/>
-								<Dashboard>
-									<OperationList/>
-								</Dashboard>
-							</>
-						</MasterPage>
-					</PrivateRoute>
-					<PrivateRoute path='/dashboard/users' isLoggedIn={isLoggedIn}>
-						<MasterPage>
-							<>
-								<Map mode={S.Maybe.Nothing}/>
-								<Dashboard>
-									<UsersList authToken={state.auth.token}/>
-								</Dashboard>
-							</>
-						</MasterPage>
-					</PrivateRoute>
-					<PrivateRoute path='/' isLoggedIn={isLoggedIn}>
-						<MasterPage>
-							<>
-								<Map mode={S.Maybe.Nothing}/>
-								<Dashboard/>
-							</>
-						</MasterPage>
-					</PrivateRoute>	
-				</Switch>
-			</Router>
-		</div>
-	);
 }
 
 export default Ades;

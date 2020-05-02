@@ -7,7 +7,7 @@ describe('SPx: (Registration)', function () {
 		}).as('postUser');
 	});
 
-	it('Visits RegistrationPage', function () {
+	it('Visits RegistrationScreen', function () {
 		cy.visit('http://localhost:2000/registration');
 	});
 	it('Fills info of user', function () {

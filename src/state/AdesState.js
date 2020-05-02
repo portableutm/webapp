@@ -31,6 +31,10 @@ const initialState = {
 		list: S.Nothing,
 		updated: Date.now()
 	},
+	users: {
+		list: S.Nothing,
+		updated: 0 // We won't fetch it until we need it.
+	},
 	drones: {
 		list: S.Nothing,
 		updated: Date.now()
@@ -107,6 +111,15 @@ function addOperations(store, data) {
 		});
 }
 
+function addUsers(store, data) {
+	const dataObtained = Array.from(data);
+	const pairs = S.justs(dataObtained.map((user) => {
+		return S.Just(S.Pair(user.username)(user));
+	}));
+	const users = S.fromPairs(pairs);
+	store.setState({ users: { updated: Date.now(), list: S.Just(users)}});
+}
+
 /* Actions */
 const actions = {
 	auth: {
@@ -131,7 +144,7 @@ const actions = {
 			Axios.get('user/' + username, {headers: {'auth': token}})
 				.then(result => {
 					store.setState({ auth: { ...store.state.auth, token: S.Just(token), user: S.Just(result.data) }});
-					okCallback && okCallback(token);
+					okCallback && okCallback(result.data);
 				})
 				.catch(error => {
 					console.error('AdesState: (ERROR)', error);
@@ -141,6 +154,13 @@ const actions = {
 		},
 		logout: (store) => {
 			store.setState(initialState);
+		}
+	},
+	users: {
+		fetch: (store) => {
+			Axios.get(API + 'user', {headers: { auth: fM(store.state.auth.token) }})
+				.then(result => addUsers(store, result.data))
+				.catch(error => console.error('AdesState: (Users)', error));
 		}
 	},
 	operations: {

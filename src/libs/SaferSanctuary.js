@@ -57,4 +57,11 @@ function fM(maybe) {
     return S.maybeToNullable(maybe);
 }
 
-export {_ as default, mapValues, maybeShow, maybeValues, u, fM};
+/**
+ * from StrMap, if Nothing then empty StrMap, if not actual StrMap
+ */
+function fSM(maybe) {
+    return maybe != null && S.isJust(maybe) ? S.maybeToNullable(maybe) : {};
+}
+
+export {_ as default, mapValues, maybeShow, maybeValues, u, fM, fSM};
