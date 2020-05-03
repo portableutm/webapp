@@ -21,7 +21,7 @@ function Operation({children}) {
 			onClick={() => setShowProperties(show => !show)}
 		>
 			{showProperties &&
-			<div className="animated fadeInDown faster">
+			<div className="animated fadeIn faster">
 				<GenericListLine>
 					gufi
 					<div data-test-id='dash#selected#gufi'>
@@ -64,7 +64,7 @@ function Operation({children}) {
 	);
 }
 
-function List() {
+function OperationsList() {
 	const [state, ] = useAdesState();
 	const { t,  } = useTranslation();
 
@@ -84,4 +84,4 @@ function List() {
 	);
 }
 
-export default List;
+export default OperationsList;

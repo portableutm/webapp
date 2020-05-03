@@ -19,6 +19,19 @@ th, td {
   width: 100%;
 }
 
+.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  text-align: center;
+  top: -20px;
+  background-color: rgb(17, 33, 47);
+  z-index: 9999;
+}
+
+.error {
+  background-color: crimson !important;
+}
+
 .nooverflow {
   overflow: hidden !important;
 }
@@ -373,6 +386,12 @@ th, td {
 .dshLeft {
   grid-area: 2 / 2 / 11 / 3;
 }
+
+.dshInsideContent {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .dshContent {
   grid-area: 2 / 2 / 11 / 4;
   padding: 0 5px 5px;
@@ -608,6 +627,7 @@ Dashboard components
 *::-webkit-scrollbar-thumb
 {
   border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.4);
   background-color: #30404d;
 }
+

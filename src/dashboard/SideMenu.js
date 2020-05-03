@@ -103,8 +103,12 @@ function SideMenu() {
 							text={t('dsh_operations_list')}
 							onClick={() => history.push('/dashboard/operations')}/>
 						<MenuDivider title="Vehicles"/>
-						<MenuItem icon="airplane" text="Add new vehicle"/>
-						<MenuItem icon="numbered-list" text="All vehicles"/>
+						<MenuItem icon="airplane" 
+							text={t('dsh_vehicles_new')}
+							onClick={() => history.push('/dashboard/vehicles/new')}/>
+						<MenuItem icon="numbered-list"
+							text={t('dsh_vehicles_list')}
+							onClick={() => history.push('/dashboard/vehicles')}/>
 					</Menu>
 				</div>
 			</>
@@ -142,8 +146,13 @@ function SideMenu() {
 							text={t('dsh_operations_list_pilot')}
 							onClick={() => history.push('/dashboard/operations')}/>
 						<MenuDivider title="Vehicles"/>
-						<MenuItem icon="airplane" text={t('dsh_vehicles_new_pilot')}/>
-						<MenuItem icon="numbered-list" text={t('dsh_vehicles_list_pilot')}/>
+						<MenuItem icon="airplane"
+							text={t('dsh_vehicles_new')}
+							onClick={() => history.push('/dashboard/vehicles/new')}/>
+						<MenuItem icon="numbered-list"
+							text={t('dsh_vehicles_list_pilot')}
+							onClick={() => history.push('/dashboard/vehicles')}
+						/>
 					</Menu>
 				</div>
 			</>

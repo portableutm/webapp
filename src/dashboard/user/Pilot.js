@@ -14,10 +14,11 @@ function Pilot({user: passedUser}) {
 	const [ user, setUser ] = useState(passedUser);
 
 	useEffect(() => {
+		// Only run in mount
 		if (Date.now() - USERS_DATA_TOO_OLD - state.users.updated > USERS_DATA_TOO_OLD) {
 			actions.users.fetch();
 		}
-	}, []);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		if (user == null) {
@@ -27,7 +28,7 @@ function Pilot({user: passedUser}) {
 				setUser(S.fromMaybe({firstName: 'Does not', lastName: 'exist', username: 'error', email:'error', role:'admin'})(S.value(username)(users)));
 			}
 		}
-	}, [state.users.updated]);
+	}, [state.users.updated]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		console.log('user', user);
@@ -37,7 +38,7 @@ function Pilot({user: passedUser}) {
 	return (
 		<div className='dshPilot'>
 			<div className='dshPilotLeft'>
-				<img className='dshPilotImg' src={profile} alt="Profile picture"/>
+				<img className='dshPilotImg' src={profile} alt="Profile"/>
 			</div>
 			<div className='dshPilotRight'>
 				{   user == null &&

@@ -35,6 +35,10 @@ const initialState = {
 		list: S.Nothing,
 		updated: 0 // We won't fetch it until we need it.
 	},
+	vehicles: {
+		list: S.Nothing,
+		updated: 0 // Won't fetch until we need it.
+	},
 	drones: {
 		list: S.Nothing,
 		updated: Date.now()
@@ -111,6 +115,8 @@ function addOperations(store, data) {
 		});
 }
 
+/* Users */
+
 function addUsers(store, data) {
 	const dataObtained = Array.from(data);
 	const pairs = S.justs(dataObtained.map((user) => {
@@ -118,6 +124,32 @@ function addUsers(store, data) {
 	}));
 	const users = S.fromPairs(pairs);
 	store.setState({ users: { updated: Date.now(), list: S.Just(users)}});
+}
+
+/* Vehicles */
+
+const VEHICLES_DATA_TOO_OLD = 2 * 60000;
+
+function addVehicles(store, data) {
+	const dataObtained = Array.from(data);
+	const pairs = S.justs(dataObtained.map((vehicle) => {
+		return S.Just(S.Pair(vehicle.uvin)(vehicle));
+	}));
+	const vehicles = S.fromPairs(pairs);
+	store.setState({ vehicles: { updated: Date.now(), list: S.Just(vehicles)}});
+}
+
+function addVehicle(store, data) {
+	store.setState({ 
+		vehicles: { 
+			updated: Date.now(), 
+			list: S.Just(
+				S.insert
+				(data.uvin)
+				(data)
+				(fM(store.state.vehicles.list))
+			)
+		}});
 }
 
 /* Actions */
@@ -161,6 +193,29 @@ const actions = {
 			Axios.get(API + 'user', {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => addUsers(store, result.data))
 				.catch(error => console.error('AdesState: (Users)', error));
+		}
+	},
+	vehicles: {
+		fetch: (store) => {
+			Axios.get(API + 'vehicle', {headers: { auth: fM(store.state.auth.token) }})
+				.then(result => addVehicles(store, result.data))
+				.catch(error => console.error('AdesState: (Vehicles)', error));
+		},
+		fetchIfOld: (store) => {
+			if (Date.now() - store.state.vehicles.updated > VEHICLES_DATA_TOO_OLD) {
+				store.actions.vehicles.fetch(store);
+			}
+		},
+		post: (store, vehicle, callback, errorCallback) => {
+			A.post(API + 'vehicle', vehicle, {headers: { auth: fM(store.state.auth.token) }})
+				.then(result => {
+					addVehicle(store, result.data);
+					callback && callback();
+				})
+				.catch(error => {
+					console.error('[AS] Vehicles: (ERROR)', error);
+					errorCallback && error.response && errorCallback(error.response.data);
+				});
 		}
 	},
 	operations: {

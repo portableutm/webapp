@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import A from 'axios';
-import {API, USERS_DATA_TOO_OLD} from '../consts';
-import _, {fM, fSM} from '../libs/SaferSanctuary';
+import {USERS_DATA_TOO_OLD} from '../../consts';
+import {fSM} from '../../libs/SaferSanctuary';
 import S from 'sanctuary';
-import '../Ades.css';
+import '../../Ades.css';
 import {Button, Tab, Tabs} from '@blueprintjs/core';
 import {useHistory} from 'react-router-dom';
-import useAdesState from '../state/AdesState';
+import useAdesState from '../../state/AdesState';
 
 const USERS_ONE_PAGE_NUMBER = 5;
 
@@ -17,18 +16,13 @@ const UsersList = () => {
 	const [firstUser, setFirstUser] = useState(0);
 	const [lastUser, setLastUser] = useState(USERS_ONE_PAGE_NUMBER);
 
-	//-------------------------------------------------------------------------------------
-	//------------------------------------- useEffect -------------------------------------
-	//-------------------------------------------------------------------------------------
-	
-	// The useEffect is used to fetch the users data. It depends on authToken,
-	// because at first render, authToken is empty, so we have to reexecute the
-	// useEffect when the token is received.
 	useEffect(() => {
+		// Only run in mount
 		if (Date.now() - USERS_DATA_TOO_OLD - state.users.updated > USERS_DATA_TOO_OLD) {
 			actions.users.fetch();
 		}
-	}, []);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+
 	const users = S.values(fSM(state.users.list));
 	const usersThisPage = users.slice(firstUser, lastUser);
 	let tabsTotal = [];

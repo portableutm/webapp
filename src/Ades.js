@@ -10,15 +10,10 @@ import {
 	Popover,
 	Position,
 	Icon,
-	Card,
-	Elevation,
-	FormGroup,
-	InputGroup,
-	Button,
-	Intent, Spinner
 } from '@blueprintjs/core';
 import S from 'sanctuary';
 import { useTranslation } from 'react-i18next';
+import './css/animate.css';
 
 /*
  * CSS Styling
@@ -48,8 +43,8 @@ import ContextualMenu from './layout/ContextualMenu';
  * Dashboard
  */
 import Dashboard from './dashboard/Dashboard';
-import OperationList from './dashboard/operation/List.js';
-import UsersList from './dashboard/UsersList';
+import OperationList from './dashboard/operation/OperationsList.js';
+import UsersList from './dashboard/user/UsersList';
 
 /**
  * State Providers
@@ -58,6 +53,8 @@ import useAdesState from './state/AdesState.js';
 import { useCookies } from 'react-cookie';
 import { fM } from './libs/SaferSanctuary';
 import Pilot from './dashboard/user/Pilot';
+import VehiclesList from './dashboard/vehicle/VehiclesList';
+import NewVehicle from './dashboard/vehicle/NewVehicle';
 
 function alertIsImportant(alertUtmMessage) {
 	return (
@@ -146,7 +143,7 @@ function Ades() {
 	if (isLoggedIn && role === 'admin') {
 		/* Operator pages */
 		return (
-			<div className='App'>
+			<div className='App animated fadeIn faster'>
 				{/* Alert System (UseCase01A: UTMMessage E,A,C received) */}
 				<Alert
 					confirmButtonText={'OK'}
@@ -211,6 +208,24 @@ function Ades() {
 								</>
 							</MasterPage>
 						</Route>
+						<Route exact path='/dashboard/vehicles/new'>
+							<MasterPage>
+								<>
+									<Dashboard>
+										<NewVehicle />
+									</Dashboard>
+								</>
+							</MasterPage>
+						</Route>
+						<Route exact path='/dashboard/vehicles'>
+							<MasterPage>
+								<>
+									<Dashboard>
+										<VehiclesList />
+									</Dashboard>
+								</>
+							</MasterPage>
+						</Route>
 						<Route exact path='/dashboard'>
 							<MasterPage>
 								<>
@@ -232,7 +247,7 @@ function Ades() {
 		);
 	} else if (isLoggedIn && role === 'pilot') {
 		return (
-			<div className="App">
+			<div className="App animated fadeIn faster">
 				<Router>
 					<Switch>
 						<Route path='/operation/new'>
@@ -245,6 +260,24 @@ function Ades() {
 								<>
 									<Dashboard>
 										<Pilot user={fM(state.auth.user)}/>
+									</Dashboard>
+								</>
+							</MasterPage>
+						</Route>
+						<Route exact path='/dashboard/vehicles/new'>
+							<MasterPage>
+								<>
+									<Dashboard>
+										<NewVehicle />
+									</Dashboard>
+								</>
+							</MasterPage>
+						</Route>
+						<Route exact path='/dashboard/vehicles'>
+							<MasterPage>
+								<>
+									<Dashboard>
+										<VehiclesList />
 									</Dashboard>
 								</>
 							</MasterPage>
@@ -265,9 +298,7 @@ function Ades() {
 		/* Unknown role or yet not fetched - show loading */
 		return (
 			<div className='App bp3-dark'>
-				<Card className="loginWindow" elevation={Elevation.TWO}>
-					<Spinner size={100} intent={Intent.PRIMARY}/>
-				</Card>
+
 			</div>
 		);
 	} else {
