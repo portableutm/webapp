@@ -39,7 +39,7 @@ function LoginScreen() {
 			setCookie('lang', 'en');
 			i18n.changeLanguage('en');
 		}
-	}
+	};
 
 	return (
 		<form onSubmit={login} className="centeredScreen texturedBackground">

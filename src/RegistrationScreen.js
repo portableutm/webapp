@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import {Alert, Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
 import A from 'axios';
 import { API } from './consts';
+import {useTranslation} from 'react-i18next';
+import {useCookies} from 'react-cookie';
 
 const Axios = A.create({
 	baseURL: API,
@@ -26,6 +28,8 @@ const RegistrationScreen = () => {
 	const [registrationButtonEnabled, setRegistrationButtonEnabled] = useState(true);
 	const [successfullyRegistered, setSuccessFullyRegistered] = useState(false);
 	const [alertMessage, setAlertMessage] = useState(null);
+	const { t, i18n } = useTranslation();
+	const [, setCookie, ] = useCookies(['jwt']);
 
 	//----------------------------------------------------------------------------------
 	//--------------------------------- AUX FUNCTIONS  ---------------------------------
@@ -39,6 +43,16 @@ const RegistrationScreen = () => {
 	//----------------------------------------------------------------------------------
 	//--------------------------------- EVENT HANDLERS ---------------------------------
 	//----------------------------------------------------------------------------------
+
+	const changeLanguage = () => {
+		if (i18n.language === 'en') {
+			setCookie('lang', 'es');
+			i18n.changeLanguage('es');
+		} else {
+			setCookie('lang', 'en');
+			i18n.changeLanguage('en');
+		}
+	};
     
 	const handleOnSubmit = e => {
 		// avoid submit
@@ -103,8 +117,8 @@ const RegistrationScreen = () => {
 			<div className="bp3-dark centeredScreen texturedBackground">
 				<Card className="registrationCard" elevation={Elevation.TWO}>
 					<form onSubmit={handleOnSubmit}>
-						<h1>PortableUTM - User Registration</h1>
-						<h3>Please fill the form to register.</h3>
+						<h1>{t('app_name')}</h1>
+						<h3>{t('app_pleaseregister')}</h3>
 						<Alert
 							confirmButtonText={'OK'}
 							canEscapeKeyCancel={false}
@@ -122,7 +136,7 @@ const RegistrationScreen = () => {
 					 *************************** First Name ***************************
 						******************************************************************/}
 						<FormGroup
-							label="First Name"
+							label={t('app_firstname')}
 							labelFor="input-first-name">
 							<InputGroup id="input-first-name" value={firstName} onChange={e => setFirstName(e.target.value)}/>
 						</FormGroup>
@@ -131,7 +145,7 @@ const RegistrationScreen = () => {
 					 *************************** Last Name  ***************************
 						******************************************************************/}
 						<FormGroup
-							label="Last Name"
+							label={t('app_lastname')}
 							labelFor="input-last-name">
 							<InputGroup id="input-last-name" value={lastName} onChange={e => setLastName(e.target.value)}/>
 						</FormGroup>
@@ -140,7 +154,7 @@ const RegistrationScreen = () => {
 					 ***************************** Email  *****************************
 						******************************************************************/}
 						<FormGroup
-							label="Email"
+							label={t('app_email')}
 							labelFor="input-email">
 							<InputGroup id="input-email" value={email} onChange={e => setEmail(e.target.value)}/>
 						</FormGroup>
@@ -149,7 +163,7 @@ const RegistrationScreen = () => {
 					 **************************** Username ****************************
 						******************************************************************/}
 						<FormGroup
-							label="Username"
+							label={t('app_user')}
 							labelFor="input-username">
 							<InputGroup id="input-username" value={username} onChange={e => setUsername(e.target.value)}/>
 						</FormGroup>
@@ -158,7 +172,7 @@ const RegistrationScreen = () => {
 					 **************************** Password ****************************
 						******************************************************************/}
 						<FormGroup
-							label="Password"
+							label={t('app_password')}
 							labelFor="input-password">
 							<InputGroup
 								id="input-password"
@@ -172,7 +186,7 @@ const RegistrationScreen = () => {
 					 ************************ Repeat Password  ************************
 						******************************************************************/}
 						<FormGroup
-							label="Repeat Password"
+							label={t('app_repeatpassword')}
 							labelFor="input-repeat-password">
 							<InputGroup
 								id="input-repeat-password"
@@ -186,16 +200,18 @@ const RegistrationScreen = () => {
 					 ************************* Submit Button  *************************
 						******************************************************************/}
 						<div className="loginButtons">
-							<Button
-								fill
+							<Button fill style={{margin: '5px'}} intent={Intent.PRIMARY} onClick={() => changeLanguage()}>
+								{t('app_changelanguage')}
+							</Button>
+							<Button fill
 								style={{margin: '5px'}}
-								intent={Intent.PRIMARY}
+								intent={Intent.SUCCESS}
 								type="submit"
-								disabled={!registrationButtonEnabled}
-							>
-							Register
+								disabled={!registrationButtonEnabled} >
+								{t('app_register')}
 							</Button>
 						</div>
+
 					</form>
 				</Card>
 			</div>
@@ -204,7 +220,11 @@ const RegistrationScreen = () => {
 	}else{
 		// after the user is registered, we display this page
 		return(
-			<h1>Usuario Registrado</h1>
+			<div className="bp3-dark centeredScreen texturedBackground">
+				<Card className="registrationCard" elevation={Elevation.TWO}>
+					{t('app_registered')}
+				</Card>
+			</div>
 		);
 	}
 };
