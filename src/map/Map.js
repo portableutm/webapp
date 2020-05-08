@@ -34,6 +34,7 @@ import {initializeLeaflet} from './MapAuxs';
 import useEditorStepText from './hooks/useEditorStepText';
 import OperationEditMarker from './elements/OperationEditMarker';
 import useEditorLogic from './hooks/useEditorLogic';
+import RightArea from '../layout/RightArea';
 
 
 /* Main function */
@@ -134,17 +135,6 @@ function Map({ mode }) {
 
 	return (
 		<>
-			<QuickFly
-				onClick={quickFlyOnClick}
-			/>
-			<Layers
-				filtersSelected={filtersSelected}
-				setFiltersSelected={setFiltersSelected}
-				operations={ops}
-				idsSelected={ids}
-				setIdsSelected={setIds}
-				disabled={id != null}
-			/>
 			{/* Panels of MapEditor */}
 			{S.isJust(mode) && fM(mode) === 'new' &&
 			<>
@@ -234,6 +224,19 @@ function Map({ mode }) {
 					});
 				})}
 			</MapMain>
+			<RightArea>
+				<QuickFly
+					onClick={quickFlyOnClick}
+				/>
+				<Layers
+					filtersSelected={filtersSelected}
+					setFiltersSelected={setFiltersSelected}
+					operations={ops}
+					idsSelected={ids}
+					setIdsSelected={setIds}
+					disabled={id != null}
+				/>
+			</RightArea>
 		</>
 	);
 }

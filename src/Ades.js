@@ -55,6 +55,7 @@ import { fM } from './libs/SaferSanctuary';
 import Pilot from './dashboard/user/Pilot';
 import VehiclesList from './dashboard/vehicle/VehiclesList';
 import NewVehicle from './dashboard/vehicle/NewVehicle';
+import RightArea from './layout/RightArea';
 
 function alertIsImportant(alertUtmMessage) {
 	return (
@@ -73,8 +74,6 @@ const MasterPage = ({children}) => {
 			<MainArea>
 				{children}
 			</MainArea>
-			{/* <RightArea>
-				</RightArea> */}
 			<ActionArea>
 				<Popover content={<ContextualMenu/>} position={Position.BOTTOM_LEFT}>
 					<div data-test-id="mapButtonMenu" className='contextualMenu'>
