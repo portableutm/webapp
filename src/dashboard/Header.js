@@ -8,7 +8,7 @@ function Header() {
             <Navbar>
                 <Navbar.Group align={Alignment.LEFT}>
                     <NavbarHeading>
-                        DronfiesUTM
+                        PortableUTM
                     </NavbarHeading>
                     <NavbarDivider />
                 </Navbar.Group>

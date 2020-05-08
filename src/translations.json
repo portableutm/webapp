@@ -1,7 +1,7 @@
 {
   "en": {
     "translation": {
-      "app_name": "DronfiesUTM",
+      "app_name": "PortableUTM",
       "app_pleaselogin": "Please log in to use the system.",
       "app_changelanguage": "Cambiar a Español (UY)",
       "app_user": "Username",
@@ -113,7 +113,7 @@
   },
   "es": {
     "translation": {
-      "app_name": "AdesWeb",
+      "app_name": "PortableUTM",
       "app_pleaselogin": "Por favor, iniciá sesión para usar el sistema",
       "app_changelanguage": "Change to English (US)",
       "app_user": "Nombre de usuario",

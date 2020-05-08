@@ -99,10 +99,10 @@ const RegistrationScreen = () => {
 
         
 		return (
-			<div className="centeredScreen texturedBackground">
+			<div className="bp3-dark centeredScreen texturedBackground">
 				<Card className="registrationCard" elevation={Elevation.TWO}>
 					<form onSubmit={handleOnSubmit}>
-						<h1>DronfiesUTM - User Registration</h1>
+						<h1>PortableUTM - User Registration</h1>
 						<h3>Please fill the form to register.</h3>
 
 						{/*****************************************************************
