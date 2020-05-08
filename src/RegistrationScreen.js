@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
+import {Alert, Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
 import A from 'axios';
 import { API } from './consts';
 
@@ -25,6 +25,7 @@ const RegistrationScreen = () => {
 	const [repeatPassword, setRepeatPassword] = useState('');
 	const [registrationButtonEnabled, setRegistrationButtonEnabled] = useState(true);
 	const [successfullyRegistered, setSuccessFullyRegistered] = useState(false);
+	const [alertMessage, setAlertMessage] = useState(null);
 
 	//----------------------------------------------------------------------------------
 	//--------------------------------- AUX FUNCTIONS  ---------------------------------
@@ -45,27 +46,27 @@ const RegistrationScreen = () => {
         
 		// validate data
 		if(firstName.length < 1 || firstName.length > 40){
-			alert('firstName debe tener entre 1 y 40 caracteres');
+			setAlertMessage('firstName debe tener entre 1 y 40 caracteres');
 			return;
 		}
 		if(lastName.length < 1 || lastName.length > 40){
-			alert('lastName debe tener entre 1 y 40 caracteres');
+			setAlertMessage('lastName debe tener entre 1 y 40 caracteres');
 			return;
 		}
 		if(!validEmail(email)){
-			alert('El email ingresado no es valido');
+			setAlertMessage('El email ingresado no es valido');
 			return;
 		}
 		if(username.length < 1 || username.length > 40){
-			alert('username debe tener entre 1 y 40 caracteres');
+			setAlertMessage('username debe tener entre 1 y 40 caracteres');
 			return;
 		}
 		if(password.length < 4 || password.length > 40){
-			alert('password debe tener entre 4 y 40 caracteres');
+			setAlertMessage('password debe tener entre 4 y 40 caracteres');
 			return;
 		}
 		if(password !== repeatPassword){
-			alert('No coinciden los passwords ingresados');
+			setAlertMessage('No coinciden los passwords ingresados');
 			return;
 		}
         
@@ -81,7 +82,7 @@ const RegistrationScreen = () => {
 			password
 		};
 		Axios.post('user/register', userToRegister)
-			.then(result => {
+			.then(() => {
 				setSuccessFullyRegistered(true);
 			})
 			.catch(error => {
@@ -104,7 +105,19 @@ const RegistrationScreen = () => {
 					<form onSubmit={handleOnSubmit}>
 						<h1>PortableUTM - User Registration</h1>
 						<h3>Please fill the form to register.</h3>
-
+						<Alert
+							confirmButtonText={'OK'}
+							canEscapeKeyCancel={false}
+							canOutsideClickCancel={false}
+							onConfirm={() => setAlertMessage(null)}
+							isOpen={alertMessage != null}
+						>
+							{alertMessage != null && (
+								<p>
+									{alertMessage}
+								</p>
+							)}
+						</Alert>
 						{/*****************************************************************
 					 *************************** First Name ***************************
 						******************************************************************/}
