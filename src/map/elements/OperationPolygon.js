@@ -31,7 +31,7 @@ function getColorForOperationState(state) {
 /**
  * @return {null}
  */
-function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ onClick, onClickPopup}) {
+function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ onClick, onClickPopup, isSelected = false}) {
 	const { t,  } = useTranslation();
 	const [polygon, setPolygon] = useState(S.Nothing);
 	useEffect(() => { // Mount and unmount
@@ -72,6 +72,20 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+	useEffect(() => {
+		if (S.isJust(polygon)) {
+			console.log("POLYGON", fM(polygon));
+			if (isSelected) {
+				fM(polygon)._path.classList.add('animated');
+				fM(polygon)._path.classList.add('flash');
+				fM(polygon)._path.classList.add('infinite');
+			} else {
+				fM(polygon)._path.classList.remove('animated');
+				fM(polygon)._path.classList.remove('flash');
+				fM(polygon)._path.classList.remove('infinite');
+			}
+		}
+	}, [isSelected]);
 	
 	useEffect(() => {
 		// Redraw if the polygon moved or the state changed

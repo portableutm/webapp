@@ -8,27 +8,32 @@ import useOperationFilter from '../hooks/useOperationFilter';
 import S from 'sanctuary';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
+import RightAreaButton from '../RightAreaButton';
+import {fM} from '../../libs/SaferSanctuary';
 
 const StateFilters = ({selectedFilters, setSelectedFilters}) => {
 	const [, , , , , , , states] = useOperationFilter();
 	const { t,  } = useTranslation();
 	return (
 		<>
-			<MenuDivider title={t('map_filter_bystate')}/>
+			<div className='rightAreaButtonTextsSeparator'>
+				{t('map_filter_bystate')}
+			</div>
 			{states.map((filter, index) => {
 				return (
 					<div
 						key={index + filter.text}
+						className='rightAreaButtonText'
 					>
 						<Checkbox
 							className='donotselect'
 							data-test-id={'layers' + filter.filter}
 							checked={S.maybeToNullable(S.value('' + index)(selectedFilters))}
-							onChange={(evt) =>
+							onChange={(evt) => {
 								setSelectedFilters((current) =>
-									S.insert('' + index)(evt.target.checked)(current)
-								)
-							}
+									S.insert('' + index)(!fM(S.value('' + index)(current)))(current)
+								);
+							}}
 						>
 							{filter.text}
 						</Checkbox>
@@ -44,10 +49,13 @@ const OperationFilters = ({operations, ids, setIds}) => {
 	const { t,  } = useTranslation();
 	return (
 		<>
-			<MenuDivider title={t('map_filter_byid')} />
+			<div className='rightAreaButtonTextsSeparator'>
+				{t('map_filter_byid')}
+			</div>
 			{operations.map((op, index) => {
 				return (
 					<div
+						className='rightAreaButtonText'
 						key={op.gufi + index}
 					>
 						<Checkbox
@@ -64,7 +72,7 @@ const OperationFilters = ({operations, ids, setIds}) => {
 								})
 							}
 						>
-							{t('operation') + " " + op.flight_comments}
+							{op.flight_comments}
 						</Checkbox>
 					</div>
 				);
@@ -77,6 +85,8 @@ const OperationFilters = ({operations, ids, setIds}) => {
 /* Button that opens a Menu that permits users selects what layers to show */
 const Layers = ({filtersSelected, setFiltersSelected, operations, idsSelected, setIdsSelected, disabled}) => {
 	return (
+		<>
+			{/*
 		<div data-test-id='mapButtonLayers' className='layersButton'>
 			<Popover content={
 				<div>
@@ -91,6 +101,17 @@ const Layers = ({filtersSelected, setFiltersSelected, operations, idsSelected, s
 				</div>
 			</Popover>
 		</div>
+		*/}
+			<RightAreaButton
+				useCase='Layers'
+				icon='layers'
+				label='LAYERS'
+				simpleChildren={false}
+			>
+				<StateFilters selectedFilters={filtersSelected} setSelectedFilters={setFiltersSelected}/>
+				<OperationFilters operations={operations} ids={idsSelected} setIds={setIdsSelected}/>
+			</RightAreaButton>
+		</>
 	);
 };
 

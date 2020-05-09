@@ -59,8 +59,8 @@
       "map_filter_closed": "Closed operations",
       "map_filter_nonconforming": "Non-conforming operations",
       "map_filter_rogue": "Rogue operations",
-      "map_filter_bystate": "Filter by state",
-      "map_filter_byid": "Show specific operation",
+      "map_filter_bystate": "FILTER BY STATE",
+      "map_filter_byid": "FILTER BY OPERATION",
       "map_flyto": "Fly in map to",
 
       "undefined": "unknown",

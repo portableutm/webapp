@@ -1,9 +1,14 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import '../Ades.css';
-import {Button, Icon, Intent} from '@blueprintjs/core';
+import {Icon} from '@blueprintjs/core';
 
-function RightArea({children}) {
+function RightArea({forceOpen, onClose, children}) {
 	const [isOpened, setOpened] = useState(true);
+
+	useEffect(() => {
+		setOpened(forceOpen);
+	}, [forceOpen]);
+
 	return (
 		<>
 			{	!isOpened &&
@@ -17,7 +22,11 @@ function RightArea({children}) {
 			{	isOpened &&
 			<div className='rightArea animated fadeInRight bp3-dark'>
 				<>
-					<Icon className="rightAreaCloser" icon="cross" onClick={() => setOpened(false)} iconSize={30}/>
+					<Icon className="rightAreaCloser" icon="cross" 
+						onClick={() => {
+							setOpened(false);
+							onClose();
+						}} iconSize={30}/>
 					{children}
 				</>
 			</div>

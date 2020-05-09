@@ -74,13 +74,17 @@ const MasterPage = ({children}) => {
 			<MainArea>
 				{children}
 			</MainArea>
+			{/*
 			<ActionArea>
+
 				<Popover content={<ContextualMenu/>} position={Position.BOTTOM_LEFT}>
 					<div data-test-id="mapButtonMenu" className='contextualMenu'>
 						<Icon icon='menu' iconSize={44} color='rgb(50,50,50)'/>
 					</div>
 				</Popover>
+
 			</ActionArea>
+			*/}
 		</>
 	);
 };
