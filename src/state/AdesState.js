@@ -46,7 +46,8 @@ const initialState = {
 	map: {
 		cornerNW: { lat: -34.781788, lng: -56.225623},
 		cornerSE: { lat: -34.927028, lng: -55.835540}
-	}
+	},
+	debug: false
 };
 
 /* Operations */
@@ -266,6 +267,9 @@ const actions = {
 			//console.log('MapState: (BOUND) ', JSON.stringify(cornerNW), JSON.stringify(cornerSE));
 			store.setState({ map: { cornerNW, cornerSE }});
 		}
+	},
+	debug: (store, toggle) => {
+		store.setState({ debug: toggle});
 	}
 };
 

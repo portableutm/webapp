@@ -14,6 +14,7 @@ function Property({property, value}) {
 				{property}
 			</div>
 			<div
+				data-test-id={'property' + property}
 				className='rightAreaButtonText'
 			>
 				{value}
@@ -27,8 +28,8 @@ function SelectedOperation ({gufi}) {
 	const [state, ] = useAdesState();
 	const operation = fM(S.value(gufi)(fM(state.operations.list)));
 	const info = [
+		[t('name'), operation.flight_comments],
 		['ID',operation.gufi],
-		[t('operation'), operation.flight_comments],
 		[t('state'), operation.state],
 		[t('effective_time_begin'), new Date(operation.operation_volumes[0].effective_time_begin).toLocaleString()],
 		[t('effective_time_end'), new Date(operation.operation_volumes[0].effective_time_end).toLocaleString()],
@@ -39,9 +40,9 @@ function SelectedOperation ({gufi}) {
 
 	return(
 		<RightAreaButton
-			useCase='quickFly'
+			useCase='SelectedOperation'
 			icon='trending-up'
-			label={operation.flight_comments}
+			label={t('selected_operation')}
 			simpleChildren={false}
 			forceOpen={true}
 		>

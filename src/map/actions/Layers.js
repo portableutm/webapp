@@ -1,7 +1,7 @@
 import React from 'react';
 
 /* Visuals */
-import {Checkbox, Icon, Menu, MenuDivider, Popover, Position} from '@blueprintjs/core';
+import {Checkbox} from '@blueprintjs/core';
 
 /* Logic */
 import useOperationFilter from '../hooks/useOperationFilter';
@@ -10,15 +10,17 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import RightAreaButton from '../RightAreaButton';
 import {fM} from '../../libs/SaferSanctuary';
+import useAdesState from '../../state/AdesState';
 
 const StateFilters = ({selectedFilters, setSelectedFilters}) => {
 	const [, , , , , , , states] = useOperationFilter();
-	const { t,  } = useTranslation();
 	return (
 		<>
+			{/*
 			<div className='rightAreaButtonTextsSeparator'>
 				{t('map_filter_bystate')}
 			</div>
+			*/}
 			{states.map((filter, index) => {
 				return (
 					<div
@@ -84,6 +86,7 @@ const OperationFilters = ({operations, ids, setIds}) => {
 
 /* Button that opens a Menu that permits users selects what layers to show */
 const Layers = ({filtersSelected, setFiltersSelected, operations, idsSelected, setIdsSelected, disabled}) => {
+	const [state, ] = useAdesState();
 	return (
 		<>
 			{/*
@@ -103,13 +106,16 @@ const Layers = ({filtersSelected, setFiltersSelected, operations, idsSelected, s
 		</div>
 		*/}
 			<RightAreaButton
+				forceOpen={true}
 				useCase='Layers'
 				icon='layers'
 				label='LAYERS'
 				simpleChildren={false}
 			>
 				<StateFilters selectedFilters={filtersSelected} setSelectedFilters={setFiltersSelected}/>
+				{ state.debug &&
 				<OperationFilters operations={operations} ids={idsSelected} setIds={setIdsSelected}/>
+				}
 			</RightAreaButton>
 		</>
 	);

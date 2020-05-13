@@ -1,7 +1,5 @@
-import {Icon} from '@blueprintjs/core';
-import React, {useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import {useTranslation} from 'react-i18next';
 import RightAreaButton from '../RightAreaButton';
 
 /* Constants */
