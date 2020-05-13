@@ -1,7 +1,6 @@
-import {Icon, Menu, MenuDivider, MenuItem, Popover, Position} from '@blueprintjs/core';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {useTranslation} from 'react-i18next';
+import RightAreaButton from '../RightAreaButton';
 
 /* Constants */
 const quickFlyLocations = [
@@ -32,35 +31,19 @@ const quickFlyLocations = [
 	}
 ];
 
-const QuickFlyControl = ({onClick}) => {
-	const { t,  } = useTranslation();
-	return (
-		<div>
-			<Menu>
-				<MenuDivider title={t('map_flyto')}/>
-				{	quickFlyLocations.map((location, index) =>
-					<MenuItem
-						data-test-id={'mapQuickFly' + index}
-						key={location.name}
-						text={location.name}
-						onClick={() => onClick(location)}
-					/>
-				)
-				}
-			</Menu>
-		</div>
-	);
-};
-
 const QuickFly = ({onClick}) => {
 	//console.log('QuickFly', onClick);
-	return (<div data-test-id='mapButtonQuickFly' className='quickFlyButton'>
-		<Popover content={<QuickFlyControl onClick={onClick}/>} position={Position.BOTTOM_LEFT}>
-			<div className='contextualMenu'>
-				<Icon icon='send-to-map' iconSize={44} color='rgb(50,50,50)'/>
-			</div>
-		</Popover>
-	</div>);
+	return(
+		<RightAreaButton
+			useCase='quickFly'
+			icon='send-to-map'
+			label='QUICK FLY'
+			onClick={onClick}
+			simpleChildren={true}
+		>
+			{quickFlyLocations}
+		</RightAreaButton>
+	);
 };
 
 QuickFly.propTypes = {

@@ -34,6 +34,8 @@ import {initializeLeaflet} from './MapAuxs';
 import useEditorStepText from './hooks/useEditorStepText';
 import OperationEditMarker from './elements/OperationEditMarker';
 import useEditorLogic from './hooks/useEditorLogic';
+import RightArea from '../layout/RightArea';
+import SelectedOperation from './viewer/SelectedOperation';
 
 
 /* Main function */
@@ -68,6 +70,7 @@ function Map({ mode }) {
 
 	/* Viewer state */
 	const [ops, opsFiltered, id, ids, filtersSelected, setFiltersSelected, setIds] = useOperationFilter();
+	const [currentSelectedOperation, setCurrentSelectedOperation] = useState(S.Nothing);
 
 
 	/* 	Drone related logic	 */
@@ -134,17 +137,6 @@ function Map({ mode }) {
 
 	return (
 		<>
-			<QuickFly
-				onClick={quickFlyOnClick}
-			/>
-			<Layers
-				filtersSelected={filtersSelected}
-				setFiltersSelected={setFiltersSelected}
-				operations={ops}
-				idsSelected={ids}
-				setIdsSelected={setIds}
-				disabled={id != null}
-			/>
 			{/* Panels of MapEditor */}
 			{S.isJust(mode) && fM(mode) === 'new' &&
 			<>
@@ -193,9 +185,11 @@ function Map({ mode }) {
 							map={map.current}
 							key={op.gufi + '#' + volume.id}
 							id={op.gufi + '#' + volume.id}
+							isSelected={op.gufi === fM(currentSelectedOperation)}
 							latlngs={volume.operation_geography.coordinates}
 							state={op.state}
 							info={op}
+							onClick={() => setCurrentSelectedOperation(S.Maybe.Just(op.gufi))}
 						/>;
 					});
 				})}
@@ -234,6 +228,25 @@ function Map({ mode }) {
 					});
 				})}
 			</MapMain>
+			<RightArea
+				forceOpen={S.isJust(currentSelectedOperation)}
+				onClose={() => setCurrentSelectedOperation(S.Nothing)}
+			>
+				{S.isJust(currentSelectedOperation) &&
+					<SelectedOperation gufi={fM(currentSelectedOperation)} />
+				}
+				<QuickFly
+					onClick={quickFlyOnClick}
+				/>
+				<Layers
+					filtersSelected={filtersSelected}
+					setFiltersSelected={setFiltersSelected}
+					operations={ops}
+					idsSelected={ids}
+					setIdsSelected={setIds}
+					disabled={id != null}
+				/>
+			</RightArea>
 		</>
 	);
 }

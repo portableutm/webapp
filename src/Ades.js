@@ -73,12 +73,10 @@ const MasterPage = ({children}) => {
 			<MainArea>
 				{children}
 			</MainArea>
-			{/* <RightArea>
-				</RightArea> */}
 			<ActionArea>
 				<Popover content={<ContextualMenu/>} position={Position.BOTTOM_LEFT}>
 					<div data-test-id="mapButtonMenu" className='contextualMenu'>
-						<Icon icon='menu' iconSize={44} color='rgb(50,50,50)'/>
+						<Icon icon='menu' iconSize={44}/>
 					</div>
 				</Popover>
 			</ActionArea>

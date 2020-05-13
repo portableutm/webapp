@@ -13,11 +13,12 @@ import {useTranslation} from 'react-i18next';
 
 
 const initial = S.fromPairs([
-	S.Pair('0')(false),
-	S.Pair('1')(false),
+	S.Pair('0')(true),
+	S.Pair('1')(true),
 	S.Pair('2')(true),
+	/*
 	S.Pair('3')(false),
-	S.Pair('4')(true),
+	S.Pair('4')(true),*/
 	/*S.Pair('5')(true)*/]);
 
 const useOperationFilter = () => {
@@ -31,6 +32,19 @@ const useOperationFilter = () => {
 
 	const states = [
 		{
+			text: t('map_filter_pending'),
+			filter: 'PENDING'
+		},
+		{
+			text: t('map_filter_activated'),
+			filter: 'ACTIVATED'
+		},
+		{
+			text: t('map_filter_rogue'),
+			filter: 'ROGUE'
+		},
+		/*
+		{
 			text: t('map_filter_proposed'),
 			filter: 'PROPOSED'
 		},
@@ -38,24 +52,19 @@ const useOperationFilter = () => {
 			text: t('map_filter_accepted'),
 			filter: 'ACCEPTED'
 		},
-		{
-			text: t('map_filter_activated'),
-			filter: 'ACTIVATED'
-		},
+		*/
+		/*
 		{
 			text: t('map_filter_closed'),
 			filter: 'CLOSED'
 		},
+		*/
 		/*
 		{
 			text: t('map_filter_nonconforming'),
 			filter: 'NONCONFORMING'
 		},
 		 */
-		{
-			text: t('map_filter_rogue'),
-			filter: 'ROGUE'
-		}
 	];
 
 	useEffect(() => {

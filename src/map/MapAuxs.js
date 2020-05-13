@@ -24,11 +24,11 @@ const initializeLeaflet = (map, mapClick, mapDragEnd, setMapInitialized) => {
 		worldCopyJump: true,
 		layers: [leafletLayer]
 	});
-	L.control
+	/*L.control
 		.zoom({
 			position: 'topright'
 		})
-		.addTo(map.current);
+		.addTo(map.current);*/
 	map.current.on('click', mapClick); // Map clicked outside any element
 	map.current.on('moveend', mapDragEnd);
 	setMapInitialized(true);

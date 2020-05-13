@@ -18,15 +18,16 @@ describe('SP1: (Map) Quick Fly', function () {
 
 	it('Finds button and clicks on first location', function () {
 		cy.visit('http://localhost:2000/');
-		cy.get('[data-test-id="mapButtonQuickFly"]').click();
-		cy.get('[data-test-id="mapQuickFly0"]').click();
+		cy.get('[data-test-id="rightAreaOpener"]').click();
+		cy.get('[data-test-id="mapButtonquickFly"]').click();
+		cy.get('[data-test-id="mapquickFly0"]').click();
 	});
 	it('Finds button and clicks on second location', function () {
-		cy.get('[data-test-id="mapButtonQuickFly"]').click();
-		cy.get('[data-test-id="mapQuickFly1"]').click();
+		//cy.get('[data-test-id="mapButtonQuickFly"]').click();
+		cy.get('[data-test-id="mapquickFly1"]').click();
 	});
 	it('Finds button and clicks on third location', function () {
-		cy.get('[data-test-id="mapButtonQuickFly"]').click();
-		cy.get('[data-test-id="mapQuickFly2"]').click();
+		//cy.get('[data-test-id="mapButtonQuickFly"]').click();
+		cy.get('[data-test-id="mapquickFly2"]').click();
 	});
 });
