@@ -36,6 +36,9 @@ import OperationEditMarker from './elements/OperationEditMarker';
 import useEditorLogic from './hooks/useEditorLogic';
 import RightArea from '../layout/RightArea';
 import SelectedOperation from './viewer/SelectedOperation';
+import SimulatorPanel from './actions/SimulatorPanel';
+import useSimulatorLogic from './hooks/useSimulatorLogic';
+import Polyline from './elements/Polyline';
 
 
 /* Main function */
@@ -71,6 +74,11 @@ function Map({ mode }) {
 	/* Viewer state */
 	const [ops, opsFiltered, id, ids, filtersSelected, setFiltersSelected, setIds] = useOperationFilter();
 	const [currentSelectedOperation, setCurrentSelectedOperation] = useState(S.Nothing);
+
+	/* Simulator state */
+	const [simPaths, setSimPath, simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic(refMapOnClick, map, fM(state.auth.token));
+	const isSimulator = (S.isJust(mode) && fM(mode) === 'simulator');
+
 
 
 	/* 	Drone related logic	 */
@@ -129,11 +137,12 @@ function Map({ mode }) {
 
 	useEffect(() => {
 		console.count('mapUpdated');
-	}, [JSON.stringify(ops), JSON.stringify(opsFiltered), JSON.stringify(drones), JSON.stringify(polygons)]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [JSON.stringify(ops), JSON.stringify(opsFiltered), JSON.stringify(drones), JSON.stringify(polygons), JSON.stringify(simPaths)]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/*	Helpers */
 
 	const quickFlyOnClick = (location) => actions.map.setCorners(location.cornerNW, location.cornerSE);
+
 
 	return (
 		<>
@@ -227,9 +236,33 @@ function Map({ mode }) {
 						);
 					});
 				})}
+				{/* Simulator */}
+				{S.isJust(mode) && fM(mode) === 'simulator' && simPaths.map((path, index) => {
+					return path.map((latlng, index2) => {
+						return (
+							<OperationEditMarker
+								index={'D' + index + '->' + index2}
+								map={map.current}
+								id={'marker' + index2 + 'p' + index}
+								key={'marker' + index2 + 'p' + index}
+								onDrag={latlng => setSimPath(latlng, index2)}
+								latlng={latlng}
+							/>
+						);
+					});
+				})}
+				{S.isJust(mode) && fM(mode) === 'simulator' && simPaths.map((path, index) => {
+					return (
+						<Polyline
+							map={map.current}
+							key={'polyline' + index}
+							latlngs={path}
+						/>
+					);
+				})}
 			</MapMain>
 			<RightArea
-				forceOpen={S.isJust(currentSelectedOperation)}
+				forceOpen={S.isJust(currentSelectedOperation) || isSimulator}
 				onClose={() => setCurrentSelectedOperation(S.Nothing)}
 			>
 				{S.isJust(currentSelectedOperation) &&
@@ -246,6 +279,16 @@ function Map({ mode }) {
 					setIdsSelected={setIds}
 					disabled={id != null}
 				/>
+				{ isSimulator &&
+					<SimulatorPanel
+						paths={simPaths}
+						onClick={onSelectSimDrone}
+						selected={simDroneIndex}
+						newDrone={addNewDrone}
+						startFlying={startFlying}
+						stopFlying={stopFlying}
+					/>
+				}
 			</RightArea>
 		</>
 	);

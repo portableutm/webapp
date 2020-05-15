@@ -167,6 +167,11 @@ function Ades() {
 								<Simulator/>
 							</MasterPage>
 						</Route>
+						<Route exact path='/simulator'>
+							<MasterPage>
+								<Map mode={S.Maybe.Just('simulator')}/>
+							</MasterPage>
+						</Route>
 						<Route exact path='/operation/new'>
 							<MasterPage>
 								<Map mode={S.Maybe.Just('new')}/>

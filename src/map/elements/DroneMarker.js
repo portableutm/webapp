@@ -112,7 +112,7 @@ function DroneMarker({map, id, position, heading, altitude, risk}) {
 					const pathWithZs = path.map((latlng, index) => [latlng.lat, latlng.lng, index]);
 					// Construct Array with third value Zindex that represents "freshness" of the data.
 					// The higher the Zindex, the darker it will look (older data).
-					polyline.setLatLngs(pathWithZs);
+					if (S.isJust(polyline)) fM(polyline).setLatLngs(pathWithZs);
 				}
 			}
 			setTimer(setTimeout(() => markerGraphic.setIcon(INACTIVE_DRONE_ICON), INACTIVE_TIMEOUT)); // Inactivity after INACTIVE_TIMEOUT seconds

@@ -12,6 +12,7 @@
     "axios": "^0.19.1",
     "i18next": "^19.4.2",
     "leaflet": "^1.6.0",
+    "leaflet-geometryutil": "^0.9.3",
     "leaflet-hotline": "^0.4.0",
     "leaflet-rotatedmarker": "^0.2.0",
     "prop-types": "^15.7.2",
