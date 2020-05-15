@@ -46,10 +46,10 @@ const RegistrationScreen = () => {
 
 	const changeLanguage = () => {
 		if (i18n.language === 'en') {
-			setCookie('lang', 'es');
+			setCookie('lang', 'es', {path: '/'});
 			i18n.changeLanguage('es');
 		} else {
-			setCookie('lang', 'en');
+			setCookie('lang', 'en', {path: '/'});
 			i18n.changeLanguage('en');
 		}
 	};

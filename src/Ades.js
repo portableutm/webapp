@@ -122,8 +122,8 @@ function Ades() {
 					setRole(user.role);
 					actions.operations.fetch();
 				}, () => {
-					removeCookie('user');
-					removeCookie('jwt');
+					removeCookie('user', {path: '/'});
+					removeCookie('jwt', {path: '/'});
 				});
 			}
 		}
@@ -251,6 +251,7 @@ function Ades() {
 								<Map mode={S.Maybe.Just('new')}/>
 							</MasterPage>
 						</Route>
+						{S.isJust(state.auth.user) && // It can happen... race condition
 						<Route path={'/dashboard/users/' + fM(state.auth.user).username}>
 							<MasterPage>
 								<>
@@ -260,6 +261,7 @@ function Ades() {
 								</>
 							</MasterPage>
 						</Route>
+						}
 						<Route exact path='/dashboard/vehicles/new'>
 							<MasterPage>
 								<>
