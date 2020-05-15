@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import useAdesState from '../../state/AdesState';
 import {mapValues} from '../../libs/SaferSanctuary';
-import {Callout, Intent, Spinner, Tag} from '@blueprintjs/core';
+import {Button, Callout, Intent, Spinner, Tag} from '@blueprintjs/core';
 import {useTranslation} from 'react-i18next';
 import {GenericListLine} from '../generic/GenericList';
 
@@ -86,7 +86,20 @@ function VehiclesList() {
 	return (
 		<>
 			<h1>{t('vehicles')}</h1>
-			{	mapValues
+			{ 	state.vehicles.error &&
+				<>
+					<p>
+						{t('app_errorocurredfetching')}
+					</p>
+					<Button
+						intent={Intent.PRIMARY}
+						onClick={() => actions.vehicles.fetch()}
+					>
+						{t('app_tryagain')}
+					</Button>
+				</>
+			}
+			{	!state.vehicles.error && mapValues
 			(state.vehicles.list)
 			(() => <Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>)
 			(vehicle => <Vehicle key={vehicle.faaNumber}>{vehicle}</Vehicle>)

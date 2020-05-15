@@ -33,11 +33,13 @@ const initialState = {
 	},
 	users: {
 		list: S.Nothing,
-		updated: 0 // We won't fetch it until we need it.
+		updated: 0, // We won't fetch it until we need it.
+		error: false
 	},
 	vehicles: {
 		list: S.Nothing,
-		updated: 0 // Won't fetch until we need it.
+		updated: 0, // Won't fetch until we need it.
+		error: false
 	},
 	drones: {
 		list: S.Nothing,
@@ -193,14 +195,20 @@ const actions = {
 		fetch: (store) => {
 			Axios.get(API + 'user', {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => addUsers(store, result.data))
-				.catch(error => print(store.state, true, 'UserState', error));
+				.catch(error => {
+					print(store.state, true, 'UserState', error);
+					store.setState({users: {updated: 0, error: true, list: S.Nothing}});
+				});
 		}
 	},
 	vehicles: {
 		fetch: (store) => {
 			Axios.get(API + 'vehicle', {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => addVehicles(store, result.data))
-				.catch(error => print(store.state, true, 'VehicleState', error));
+				.catch(error => {
+					print(store.state, true, 'VehicleState', error);
+					store.setState({vehicles: {updated: 0, error: true, list: S.Nothing}});
+				});
 		},
 		fetchIfOld: (store) => {
 			if (Date.now() - store.state.vehicles.updated > VEHICLES_DATA_TOO_OLD) {
@@ -217,6 +225,10 @@ const actions = {
 					print(store.state, true, 'VehicleState', error);
 					errorCallback && error.response && errorCallback(error.response.data);
 				});
+		},
+		debugSetError: (store) => {
+			print(store.state, true, 'VehicleState', 'manual');
+			store.setState({vehicles: {updated: Date.now(), error: true, list: S.Nothing}});
 		}
 	},
 	operations: {

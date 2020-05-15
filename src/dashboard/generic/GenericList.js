@@ -1,5 +1,4 @@
 import React from 'react';
-import {print} from '../../state/AdesState';
 
 function GenericListLine({children}) {
 	return(

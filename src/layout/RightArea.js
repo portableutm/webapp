@@ -15,6 +15,11 @@ function RightArea({forceOpen, onClose, children}) {
 				actions.debug(false);
 				setShowCommandBox(false);
 			}
+		} else if (commands[0] === 'seterror') {
+			if (commands[1] === 'vehicle') {
+				actions.vehicles.debugSetError();
+				setShowCommandBox(false);
+			}
 		}
 	};
 

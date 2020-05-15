@@ -20,6 +20,8 @@
       "app_login_error": "An error has occurred. Please check your credentials and try again.",
       "app_login_pleasewait": "Logging in... Please wait.",
       "app_login_successful": "Logged in succesfully",
+      "app_errorocurredfetching": "An error has ocurred while fetching this data, please try again",
+      "app_tryagain": "Try again",
 
       "dsh_logout_confirmation": "Are you sure you want to log out?",
       "dsh_logout_details": "You won't be able to use the system if you're not logged in.",
@@ -137,6 +139,9 @@
       "app_login_error": "Ocurrió un error. Revisá tus credenciales e intentalo otra vez.",
       "app_login_pleasewait": "Iniciando sesión... Por favor, esperá",
       "app_login_successful": "¡Sesión iniciada correctamente!",
+      "app_errorocurredfetching": "Un error ocurrió consiguiendo esta información. Intentá otra vez",
+      "app_tryagain": "Reintentar",
+
 
       "map_filter_proposed": "Operaciones PROPUESTAS",
       "map_filter_accepted": "Operaciones ACEPTADAS",
