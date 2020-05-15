@@ -168,7 +168,7 @@ const actions = {
 					callback && callback();
 				})
 				.catch(error => {
-					console.error('AdesState: (ERROR)', error);
+					print(store.state, true, 'AuthState', error);
 					errorCallback && error.response && errorCallback(error.response.data);
 				});
 		},
@@ -180,7 +180,7 @@ const actions = {
 					okCallback && okCallback(result.data);
 				})
 				.catch(error => {
-					console.error('AdesState: (ERROR)', error);
+					print(store.state, true, 'AuthState', error);
 					store.setState(initialState);
 					errorCallback && errorCallback();
 				});
@@ -193,14 +193,14 @@ const actions = {
 		fetch: (store) => {
 			Axios.get(API + 'user', {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => addUsers(store, result.data))
-				.catch(error => console.error('AdesState: (Users)', error));
+				.catch(error => print(store.state, true, 'UserState', error));
 		}
 	},
 	vehicles: {
 		fetch: (store) => {
 			Axios.get(API + 'vehicle', {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => addVehicles(store, result.data))
-				.catch(error => console.error('AdesState: (Vehicles)', error));
+				.catch(error => print(store.state, true, 'VehicleState', error));
 		},
 		fetchIfOld: (store) => {
 			if (Date.now() - store.state.vehicles.updated > VEHICLES_DATA_TOO_OLD) {
@@ -214,7 +214,7 @@ const actions = {
 					callback && callback();
 				})
 				.catch(error => {
-					console.error('[AS] Vehicles: (ERROR)', error);
+					print(store.state, true, 'VehicleState', error);
 					errorCallback && error.response && errorCallback(error.response.data);
 				});
 		}
@@ -223,7 +223,7 @@ const actions = {
 		fetch: (store) => {
 			A.get(API + 'operation', {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => addOperations(store, result.data.ops)) // TODO: Contract
-				.catch(error => console.error('OperationState: (ERROR) ', error));
+				.catch(error => print(store.state, true, 'OperationState', error));
 		},
 		post: (store, operation, callback, errorCallback) => {
 			A.post(API + 'operation', operation, {headers: { auth: fM(store.state.auth.token) }})
@@ -232,7 +232,7 @@ const actions = {
 					callback && callback();
 				})
 				.catch(error => {
-					console.error('OperationState: (ERROR', error);
+					print(store.state, true, 'OperationState', error);
 					errorCallback && error.response && errorCallback(error.response.data);
 				});
 		}

@@ -98,9 +98,6 @@ const RegistrationScreen = () => {
 		Axios.post('user/register', userToRegister)
 			.then(() => {
 				setSuccessFullyRegistered(true);
-			})
-			.catch(error => {
-				console.error('AdesState: (ERROR)', error);
 			});
 	};
 
