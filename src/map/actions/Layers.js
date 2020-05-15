@@ -52,7 +52,7 @@ const OperationFilters = ({operations, ids, setIds}) => {
 	return (
 		<>
 			<div className='rightAreaButtonTextsSeparator'>
-				{t('map_filter_byid')}
+				{'DEBUG: ' + t('map_filter_byid')}
 			</div>
 			{operations.map((op, index) => {
 				return (

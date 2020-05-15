@@ -110,8 +110,8 @@ function Ades() {
 	useEffect(() => {
 		if (cookies.jwt === null || cookies.jwt === void 0) {
 			if (!S.isNothing(state.auth.token)) {
-				setCookie('user', state.auth.username);
-				setCookie('jwt', fM(state.auth.token));
+				setCookie('user', state.auth.username, {path: '/'});
+				setCookie('jwt', fM(state.auth.token), {path: '/'});
 			} else {
 				setLoggedIn(false);
 			}
@@ -130,7 +130,7 @@ function Ades() {
 
 		// Language cookie
 		if (cookies.lang === null || cookies.lang === void 0) {
-			setCookie('lang', i18n.language);
+			setCookie('lang', i18n.language, {path: '/'});
 		} else {
 			i18n.changeLanguage(cookies.lang);
 		}

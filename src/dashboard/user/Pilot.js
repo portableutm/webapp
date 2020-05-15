@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import profile from '../../images/profile.jpg';
+import profile from '../../images/profile.png';
 import {Card, Elevation, FormGroup, InputGroup} from '@blueprintjs/core';
 import {useTranslation} from 'react-i18next';
 import useAdesState from '../../state/AdesState';
@@ -33,7 +33,7 @@ function Pilot({user: passedUser}) {
 	return (
 		<div className='dshPilot'>
 			<div className='dshPilotLeft'>
-				<img className='dshPilotImg' src={profile} alt="Profile"/>
+				<img className='dshPilotImg' src={profile} title="User icon by Icons8" alt="Default profile"/>
 			</div>
 			<div className='dshPilotRight'>
 				{   user == null &&
