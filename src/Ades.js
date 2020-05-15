@@ -103,13 +103,11 @@ function Ades() {
 	bc.onmessage = (event) => setAlertUtmMessage(event.data);
 
 	/* Auth */
-	//console.log('AdesState', state);
 	const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
 	const [isLoggedIn, setLoggedIn] = useState(true);
 	const [role, setRole] = useState('none');
 
 	useEffect(() => {
-		//console.log('useEffect state:auth');
 		if (cookies.jwt === null || cookies.jwt === void 0) {
 			if (!S.isNothing(state.auth.token)) {
 				setCookie('user', state.auth.username);

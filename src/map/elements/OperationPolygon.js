@@ -74,7 +74,6 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 
 	useEffect(() => {
 		if (S.isJust(polygon)) {
-			console.log('POLYGON', fM(polygon));
 			if (isSelected) {
 				fM(polygon)._path.classList.add('animated');
 				fM(polygon)._path.classList.add('flash');
@@ -90,7 +89,6 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 	useEffect(() => {
 		// Redraw if the polygon moved or the state changed
 		if (S.isJust(polygon)) {
-			console.log('Polygon updated!');
 			fM(polygon).setLatLngs(latlngs);
 		}
 	}, [latlngs, state]); // eslint-disable-line react-hooks/exhaustive-deps

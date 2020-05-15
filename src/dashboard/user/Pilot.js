@@ -30,11 +30,6 @@ function Pilot({user: passedUser}) {
 		}
 	}, [state.users.updated]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
-		console.log('user', user);
-	}, [user]);
-
-
 	return (
 		<div className='dshPilot'>
 			<div className='dshPilotLeft'>

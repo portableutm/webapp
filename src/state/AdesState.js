@@ -102,7 +102,7 @@ function addOperations(store, data) {
 	operationsMutex
 		.acquire()
 		.then(function (release) {
-			//console.log('OperationState: (NEW) ', data);
+			print(store.state, false, 'OperationState', data);
 			const dataObtained = Array.from(data);
 			const pairs = S.justs(dataObtained.map((op) => {
 				return validateOperation(op) ? S.Just(S.Pair(op.gufi)(convertCoordinates(op))) : S.Nothing;
@@ -221,7 +221,6 @@ const actions = {
 	},
 	operations: {
 		fetch: (store) => {
-			console.log('Fetch');
 			A.get(API + 'operation', {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => addOperations(store, result.data.ops)) // TODO: Contract
 				.catch(error => console.error('OperationState: (ERROR) ', error));
@@ -293,14 +292,27 @@ const filterOperationsByIds = ids => operations => {
 	return S.filter((op) => ids.includes(op.gufi)) (operations);
 };
 
+/* Debug console */
+const print = (adesState, isError, origin, ...args) => {
+	if (adesState.debug) {
+		if (isError) {
+			console.error('('+origin +')', args);
+		} else {
+			console.log('('+origin +')', args);
+		}
+	}
+};
+
 const useAdesState = globalHook(React, initialState, actions, initializer);
 
 export {
 	useAdesState as default,
 	extractOperationsFromState,
 	filterOperationsByState,
-	filterOperationsByIds
+	filterOperationsByIds,
+	print
 };
+
 
 /* Notification state to be added
 
