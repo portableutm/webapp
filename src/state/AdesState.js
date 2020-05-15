@@ -75,18 +75,8 @@ const operationsMutex = new Mutex();
 
 /* Drones */
 
-const socket = io(API, {
-	transports: ['websocket']
-});
-
 const droneMutex = new Mutex();
 const initializer = (store) => {
-	socket.on('new-position', function (info) {
-		const info2 = {...info};
-		//console.log('DroneState: new-position: ', info2);
-		store.actions.drones.post(info2);
-	});
-
 	// Set default position for the map. If geolocation is allowed, it'll be the Operator current location.
 	if (navigator.geolocation) {
 		/// TODO: Force default even if geolocation is acquired (parameter)
@@ -179,6 +169,17 @@ const actions = {
 			Axios.get('user/' + username, {headers: {'auth': token}})
 				.then(result => {
 					store.setState({ auth: { ...store.state.auth, token: S.Just(token), user: S.Just(result.data) }});
+					const socket = io(API, {
+						query : {
+							token: token
+						},
+						transports: ['websocket']
+					});
+					socket.on('new-position', function (info) {
+						const info2 = {...info};
+						//console.log('DroneState: new-position: ', info2);
+						store.actions.drones.post(info2);
+					});
 					okCallback && okCallback(result.data);
 				})
 				.catch(error => {
