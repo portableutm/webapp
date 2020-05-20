@@ -46,8 +46,21 @@ const initialState = {
 		updated: Date.now()
 	},
 	map: {
+		/* Uruguay
 		cornerNW: { lat: -34.781788, lng: -56.225623},
-		cornerSE: { lat: -34.927028, lng: -55.835540}
+		cornerSE: { lat: -34.927028, lng: -55.835540},
+		*/
+		cornerNW: { lat: 90, lng: -180},
+		cornerSE: { lat: -90, lng: 180},
+		ids: []
+	},
+	quickFly: {
+		list: S.Nothing,
+		updated: Date.now()
+	},
+	rfv: {
+		list: S.Nothing,
+		updated: Date.now()
 	},
 	debug: false
 };
@@ -71,6 +84,22 @@ const convertCoordinates = (op) => {
 		)
 	};
 };
+
+const convertCoordinatesRFV = (rfv) => {
+	// Switch LngLat to LatLng
+	const coordinates = rfv.geography.coordinates.map((coords) =>
+		coords.map((pos) => [pos[1], pos[0]])
+	);
+	return {...rfv, geography: {...rfv.geography, coordinates}};
+};
+
+const convertCoordinatesQF = (qf) => {
+	const cornerNWswap = [[qf.cornerNW[1]], [qf.cornerNW[0]]];
+	const cornerSEswap = [[qf.cornerSE[1]], [qf.cornerSE[0]]];
+	return {...qf, cornerNW: cornerNWswap, cornerSE: cornerSEswap};
+};
+
+
 const operationsMutex = new Mutex();
 
 /* Drones */
@@ -143,6 +172,27 @@ function addVehicle(store, data) {
 				(fM(store.state.vehicles.list))
 			)
 		}});
+}
+
+/* RFV */
+
+function addRFV(store, data) {
+	const dataObtained = Array.from(data);
+	const pairs = S.justs(dataObtained.map((rfv) => {
+		return S.Just(S.Pair(rfv.id)(convertCoordinatesRFV(rfv)));
+	}));
+	const rfvs = S.fromPairs(pairs);
+	store.setState({ rfv: { updated: Date.now(), list: S.Just(rfvs)}});
+}
+
+/* QuickFly */
+function addQuickFly(store, data) {
+	const dataObtained = Array.from(data);
+	const pairs = S.justs(dataObtained.map((qf) => {
+		return S.Just(S.Pair(qf.name)(convertCoordinatesQF(qf)));
+	}));
+	const qfs = S.fromPairs(pairs);
+	store.setState({ quickFly: { updated: Date.now(), list: S.Just(qfs) } });
 }
 
 /* Actions */
@@ -277,7 +327,40 @@ const actions = {
 	map: {
 		setCorners: (store, cornerNW, cornerSE) => {
 			//console.log('MapState: (BOUND) ', JSON.stringify(cornerNW), JSON.stringify(cornerSE));
-			store.setState({ map: { cornerNW, cornerSE }});
+			store.setState({ map: { ...store.state.map, cornerNW, cornerSE }});
+		},
+		addId: (store, id) => {
+			const newIds = store.state.map.ids.slice();
+			newIds.push(id);
+			store.setState({ map: { ...store.state.map, ids: newIds}});
+		},
+		removeId: (store, id) => {
+			store.setState({ map: { ...store.state.map, ids: store.state.map.ids.filter(idsaved => idsaved !== id)}});
+		}
+	},
+	rfv: {
+		fetch: (store) => {
+			A.get(API + 'restrictedflightvolume', {headers: { auth: fM(store.state.auth.token) }})
+				.then(result => addRFV(store, result.data))
+				.catch(error => print(store.state, true, 'RFVState', error));
+		}
+	},
+	quickFly: {
+		fetch: (store) => {
+			A.get(API + 'quickfly', {headers: { auth: fM(store.state.auth.token) }})
+				.then(result => addQuickFly(store, result.data))
+				.catch(error => print(store.state, true, 'QuickFlyState', error));
+		},
+		post: (store, data, callback, errorCallback) => {
+			A.post(API + 'quickfly', data, {headers: { auth: fM(store.state.auth.token) }})
+				.then(result => {
+					addQuickFly(result.data);
+					callback && callback();
+				})
+				.catch(error => {
+					print(store.state, true, 'QuickFlyState', error);
+					errorCallback && error.response && errorCallback(error.response.data);
+				});
 		}
 	},
 	debug: (store, toggle) => {

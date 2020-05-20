@@ -10,13 +10,22 @@ function Operation({children}) {
 	// Renders one Operation text properties for a list
 	const history = useHistory();
 	const { t,  } = useTranslation();
+	const [ state, actions ] = useAdesState();
+	const operationIsSelected = state.map.ids.indexOf(children.gufi) !== -1;
+	const onClick = operationIsSelected ?
+		() => actions.map.removeId(children.gufi)
+		:
+		() =>  {
+			actions.map.addId(children.gufi);
+			history.push('/');
+		};
 	const [showProperties, setShowProperties] = useState(false);
 	return (
 		<Callout
 			key={children.flight_comments}
 			className="dshListItem"
 			title={children.flight_comments}
-			data-test-id={"op" + children.flight_comments}
+			data-test-id={'op' + children.flight_comments}
 			icon="double-chevron-right"
 			onClick={() => setShowProperties(show => !show)}
 		>
@@ -56,8 +65,14 @@ function Operation({children}) {
 					{t('free_text')}
 					{children.free_text}
 				</GenericListLine>
-				<Button intent={Intent.PRIMARY} onClick={() => history.push('/operation/' + children.gufi)}>Show on
-					map</Button>
+				<Button intent={Intent.PRIMARY} onClick={onClick}>
+					{ operationIsSelected &&
+						<>Remove from map</>
+					}
+					{ !operationIsSelected &&
+						<>Show on map</>
+					}
+				</Button>
 			</div>
 			}
 		</Callout>

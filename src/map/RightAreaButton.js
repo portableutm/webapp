@@ -6,15 +6,31 @@ function ExpandedRightAreaButton({useCase, isExpanded, onClick , simpleChildren,
 		<div
 			className={isExpanded ? 'rightAreaButtonTexts rightAreaButtonText100' : 'rightAreaButtonTexts rightAreaButtonText0'}
 		>
-			{	simpleChildren && children.map((sub, index) =>
-				<div
-					className={index % 2 ? 'rightAreaButtonText' : 'rightAreaButtonText'}
-					data-test-id={'map' + useCase + index}
-					key={sub.name}
-					onClick={() => onClick(sub)}
-				>
-					{sub.name}
-				</div>
+			{	simpleChildren && children.map((sub, index) => {
+				if (sub.special != null) {
+					return (
+						<div
+							className='rightAreaButtonText'
+							data-test-id={'map' + useCase + index}
+							key={sub.name}
+							onClick={sub.onClick}
+						>
+							{sub.name}
+						</div>
+					);
+				} else {
+					return (
+						<div
+							className={index % 2 ? 'rightAreaButtonText' : 'rightAreaButtonText'}
+							data-test-id={'map' + useCase + index}
+							key={sub.name}
+							onClick={() => onClick(sub)}
+						>
+							{sub.name}
+						</div>
+					);
+				}
+			}
 			)
 			}
 			{	!simpleChildren &&
@@ -24,13 +40,13 @@ function ExpandedRightAreaButton({useCase, isExpanded, onClick , simpleChildren,
 	);
 }
 
-function RightAreaButton({forceOpen = false, useCase, icon, label, onClick, simpleChildren, children}) {
+function RightAreaButton({forceOpen = false, useCase, icon, label, onClick, simpleChildren, children, className = ''}) {
 	const [isExpanded, setExpanded] = useState(forceOpen);
 	return (
 		<>
 			<div
 				data-test-id={'mapButton' + useCase}
-				className='rightAreaButton'
+				className={'rightAreaButton ' + className}
 				onClick={() => setExpanded(current => !current)}
 			>
 				<Icon icon={icon} iconSize={20} color='rgb(255,255,255)'/>

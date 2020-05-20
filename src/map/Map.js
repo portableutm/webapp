@@ -22,23 +22,27 @@ import DroneMarker from './elements/DroneMarker';
 import OperationPolygon from './elements/OperationPolygon';
 import OperationInfoEditor from './editor/OperationInfoEditor';
 import OperationVolumeInfoEditor from './editor/OperationVolumeInfoEditor';
+import RestrictedFlightVolume from './elements/RestrictedFlightVolume';
+import SelectedOperation from './viewer/SelectedOperation';
+import SimulatorPanel from './actions/SimulatorPanel';
+import EditorPanel from './actions/EditorPanel';
+import OperationEditMarker from './elements/OperationEditMarker';
 
 /* Hooks */
 import useOperationFilter from './hooks/useOperationFilter';
 import useAdesState from '../state/AdesState';
-import {fM, maybeValues} from '../libs/SaferSanctuary';
+import useEditorStepText from './hooks/useEditorStepText';
+import useEditorLogic from './hooks/useEditorLogic';
+import useSimulatorLogic from './hooks/useSimulatorLogic';
 
 /* Auxiliaries */
 import {initializeLeaflet} from './MapAuxs';
-import useEditorStepText from './hooks/useEditorStepText';
-import OperationEditMarker from './elements/OperationEditMarker';
-import useEditorLogic from './hooks/useEditorLogic';
+
 import RightArea from '../layout/RightArea';
-import SelectedOperation from './viewer/SelectedOperation';
-import SimulatorPanel from './actions/SimulatorPanel';
-import EditorPanel from './actions/EditorPanel';
-import useSimulatorLogic from './hooks/useSimulatorLogic';
+
 import Polyline from './elements/Polyline';
+import _, {fM, mapValues, maybeValues} from '../libs/SaferSanctuary';
+
 
 
 /* Main function */
@@ -74,7 +78,7 @@ function Map({ mode }) {
 	const isEditor = S.isJust(mode) && fM(mode) === 'new';
 
 	/* Viewer state */
-	const [ops, opsFiltered, id, ids, filtersSelected, setFiltersSelected, setIds] = useOperationFilter();
+	const [ops, opsFiltered, id, filtersSelected, setFiltersSelected, , idsShowing, setIdsShowing, rfvs, setRfvsShowing] = useOperationFilter();
 	const [currentSelectedOperation, setCurrentSelectedOperation] = useState(S.Nothing);
 
 	/* Simulator state */
@@ -120,7 +124,6 @@ function Map({ mode }) {
 			setMapInitialized);
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-
 	useEffect(() => {
 		// Each time we visualize another Operation, we clear the feature group not to mix their volumes
 		if (id != null && opsFiltered.length > 0) {
@@ -128,6 +131,12 @@ function Map({ mode }) {
 			actions.map.setCorners(polygon.getBounds().getNorthWest(), polygon.getBounds().getSouthEast());
 		}
 	}, [id, opsFiltered]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
+		if (S.isJust(state.quickFly.list)) {
+			actions.map.setCorners(maybeValues(actions.map.quickFly.list)[0]);
+		}
+	}, [state.quickFly.updated]);
 
 	useEffect(() => {
 		// Change map position if it has changed in the state
@@ -142,6 +151,7 @@ function Map({ mode }) {
 	}, [JSON.stringify(ops), JSON.stringify(opsFiltered), JSON.stringify(drones), JSON.stringify(polygons), JSON.stringify(simPaths)]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/*	Helpers */
+
 
 	const quickFlyOnClick = (location) => actions.map.setCorners(location.cornerNW, location.cornerSE);
 
@@ -194,6 +204,20 @@ function Map({ mode }) {
 						/>;
 					});
 				})}
+				{mapValues(state.rfv.list)(() => {})((rfv) => {
+					if (rfvs.indexOf(rfv.id) !== -1) {
+						return (
+							<RestrictedFlightVolume
+								map={map.current}
+								key={rfv.comments}
+								latlngs={rfv.geography.coordinates}
+								name={rfv.comments}
+							/>
+						);
+					}
+				})}
+
+
 				{/* Operation creation */}
 				{isEditor && polygons.map((polygon, index) => {
 					return (
@@ -257,21 +281,23 @@ function Map({ mode }) {
 				forceOpen={S.isJust(currentSelectedOperation) || isSimulator || isEditor}
 				onClose={() => setCurrentSelectedOperation(S.Nothing)}
 			>
-				{S.isJust(currentSelectedOperation) &&
+				{ S.isJust(currentSelectedOperation) &&
 					<SelectedOperation gufi={fM(currentSelectedOperation)} />
 				}
-				{ !isEditor &&
+				{ S.isNothing(currentSelectedOperation) && !isEditor &&
 				<QuickFly
 					onClick={quickFlyOnClick}
 				/>
 				}
-				{ !isEditor &&
+				{ S.isNothing(currentSelectedOperation) && !isEditor &&
 				<Layers
 					filtersSelected={filtersSelected}
 					setFiltersSelected={setFiltersSelected}
+					idsSelected={idsShowing}
+					setIdsSelected={setIdsShowing}
+					rfvs={rfvs}
+					setRfvsShowing={setRfvsShowing}
 					operations={ops}
-					idsSelected={ids}
-					setIdsSelected={setIds}
 					disabled={id != null}
 				/>
 				}

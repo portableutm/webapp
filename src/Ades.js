@@ -121,6 +121,8 @@ function Ades() {
 				actions.auth.info(cookies['jwt'], cookies['user'], (user) => {
 					setRole(user.role);
 					actions.operations.fetch();
+					actions.rfv.fetch();
+					actions.quickFly.fetch();
 				}, () => {
 					removeCookie('user', {path: '/'});
 					removeCookie('jwt', {path: '/'});

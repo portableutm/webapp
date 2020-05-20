@@ -7,7 +7,7 @@ import S from 'sanctuary';
  * @private
  */
 function _(maybe) {
-    return S.isJust(maybe) ? S.maybeToNullable(maybe) : [];
+	return S.isJust(maybe) ? S.maybeToNullable(maybe) : [];
 }
 
 /**
@@ -18,34 +18,40 @@ function _(maybe) {
  * @returns {*}
  */
 function mapValues(maybeMap) {
-    return S.isJust(maybeMap) ?
-            (/*fnEmpty*/) =>
-                (fnNonEmpty) =>
-                    S.values(S.maybeToNullable(maybeMap)).map(fnNonEmpty)
-            : (fnEmpty) =>
-                (/*fnNonEmpty*/) =>
-                    fnEmpty()
+	return S.isJust(maybeMap) ?
+		(/*fnEmpty*/) =>
+			(fnNonEmpty) =>
+				S.values(S.maybeToNullable(maybeMap)).map(fnNonEmpty)
+		: (fnEmpty) =>
+			(/*fnNonEmpty*/) =>
+				fnEmpty();
 }
 
 function maybeShow(maybe) {
-    return S.isJust(maybe) ?
-        (/*fnNothing*/) =>
-            (fnJust) =>
-                fnJust()
-        :
-        (fnNothing) =>
-            (/*fnJust*/) =>
-                fnNothing()
+	return S.isJust(maybe) ?
+		(/*fnNothing*/) =>
+			(fnJust) =>
+				fnJust()
+		:
+		(fnNothing) =>
+			(/*fnJust*/) =>
+				fnNothing();
 }
 
 function maybeValues(strMapOrNothing) {
-    return S.isJust(strMapOrNothing) ?
-        S.values(S.maybeToNullable(strMapOrNothing))
-        : [];
+	return S.isJust(strMapOrNothing) ?
+		S.values(S.maybeToNullable(strMapOrNothing))
+		: [];
+}
+
+function maybeKeys(strMapOrNothing) {
+	return S.isJust(strMapOrNothing) ?
+		S.keys(S.maybeToNullable(strMapOrNothing))
+		: [];
 }
 
 function u(maybe) {
-    return maybe != null && S.isJust(maybe) ? S.maybeToNullable(maybe) : S.Nothing;
+	return maybe != null && S.isJust(maybe) ? S.maybeToNullable(maybe) : S.Nothing;
 }
 
 /**
@@ -54,14 +60,14 @@ function u(maybe) {
  * @returns {*}
  */
 function fM(maybe) {
-    return S.maybeToNullable(maybe);
+	return S.maybeToNullable(maybe);
 }
 
 /**
  * from StrMap, if Nothing then empty StrMap, if not actual StrMap
  */
 function fSM(maybe) {
-    return maybe != null && S.isJust(maybe) ? S.maybeToNullable(maybe) : {};
+	return maybe != null && S.isJust(maybe) ? S.maybeToNullable(maybe) : {};
 }
 
-export {_ as default, mapValues, maybeShow, maybeValues, u, fM, fSM};
+export {_ as default, mapValues, maybeShow, maybeValues, maybeKeys, u, fM, fSM};

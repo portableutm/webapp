@@ -1,8 +1,12 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import RightAreaButton from '../RightAreaButton';
+import useAdesState from '../../state/AdesState';
+import {maybeValues} from '../../libs/SaferSanctuary';
+import {FormGroup, InputGroup} from '@blueprintjs/core';
 
 /* Constants */
+/*
 const quickFlyLocations = [
 	{
 		name: 'MVD/SUMU: AIC (Ground)',
@@ -30,19 +34,76 @@ const quickFlyLocations = [
 		cornerSE: {lat: -34.917137, lng: -56.146111}
 	}
 ];
+ */
 
 const QuickFly = ({onClick}) => {
 	//console.log('QuickFly', onClick);
-	return(
-		<RightAreaButton
-			useCase='quickFly'
-			icon='send-to-map'
-			label='QUICK FLY'
-			onClick={onClick}
-			simpleChildren={true}
-		>
-			{quickFlyLocations}
-		</RightAreaButton>
+	const [state, actions] = useAdesState();
+	const [isCreating, showCreate] = useState(false);
+
+	const addNewQuickFlyButton = {
+		name: '> Add new location',
+		special: true,
+		onClick: () => showCreate(true)
+	};
+
+	const content = [].concat(maybeValues(state.quickFly.list),addNewQuickFlyButton);
+	return (
+		<>
+			{	!isCreating &&
+				<RightAreaButton
+					useCase='quickFly'
+					icon='send-to-map'
+					label='QUICK FLY'
+					onClick={onClick}
+					simpleChildren={true}
+				>
+					{content}
+				</RightAreaButton>
+			}
+			{	isCreating &&
+				<RightAreaButton
+					className={'animated flash'}
+					useCase='quickFlyNew'
+					icon='cog'
+					label='New QuickFly'
+					forceOpen={true}
+					simpleChildren={false}
+				>
+					<div
+						className='rightAreaButtonText'
+					>
+						<FormGroup
+							label="Name"
+							inline={true}
+							labelFor="qf-name"
+							labelInfo="(required)"
+						>
+							<InputGroup id="qf-name" placeholder="New location" />
+						</FormGroup>
+					</div>
+					<div
+						className='rightAreaButtonTextDisabled'
+					>
+						The position of the new saved location is captured automatically from the current region shown on the map.
+					</div>
+					<div
+						className='rightAreaButtonText'
+						onClick={() => actions.quickFly.post(
+							{
+								name: document.getElementById('qf-name').value,
+								cornerSE: state.map.cornerSE,
+								cornerNW: state.map.cornerNW
+							},
+							(info) => console.log('CreateQuickFly', info),
+							(error) => alert(JSON.stringify(error))
+						)}
+					>
+						Save new QuickFly location
+					</div>
+				</RightAreaButton>
+			}
+		</>
 	);
 };
 

@@ -269,14 +269,21 @@ th, td {
 }
 
 .rightAreaButtonText {
+  display: flex;
+  justify-content: space-between;
   color: white;
   padding: 5px 5px 5px 10px;
   margin-top: 1px;
   background-color: rgba(132, 130, 143, 0.25) !important;
 }
 
+.rightAreaButtonAlternateButton {
+  height: 16px !important;
+  width: 16px !important;
+}
+
 .rightAreaButtonTextDisabled {
-  color: gray;
+  color: #b3b3b3;
   padding: 5px 5px 5px 10px;
   margin-top: 1px;
   background-color: rgba(132, 130, 143, 0.25) !important;

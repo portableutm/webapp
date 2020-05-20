@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 
 /* Libraries */
 import S from 'sanctuary';
-import {fM} from '../../libs/SaferSanctuary';
+import {fM, maybeKeys, maybeValues} from '../../libs/SaferSanctuary';
 import {useParams} from 'react-router-dom';
 
 /* Internal state */
@@ -13,9 +13,10 @@ import {useTranslation} from 'react-i18next';
 
 
 const initial = S.fromPairs([
-	S.Pair('0')(true),
+	S.Pair('0')(false),
 	S.Pair('1')(true),
 	S.Pair('2')(true),
+	S.Pair('3')(true),
 	/*
 	S.Pair('3')(false),
 	S.Pair('4')(true),*/
@@ -23,14 +24,19 @@ const initial = S.fromPairs([
 
 const useOperationFilter = () => {
 	const [selectedFilters, setSelectedFilters] = useState(initial);
-	const [adesState, ] = useAdesState();
+	const [adesState, actions] = useAdesState();
 	const {id} = useParams();
-	const [ids, setIds] = useState( id == null ? [] : [id]);
+	const [ids, setIds] = useState(adesState.map.ids);
+	const [rfvs, setRfvsShowing] = useState(maybeKeys(adesState.rfv.list));
 	const [allOperations, setOperations] = useState(extractOperationsFromState(adesState));
 	const [filteredOperations, setFilteredOperations] = useState([]);
 	const { t,  } = useTranslation();
 
 	const states = [
+		{
+			text: t('map_filter_accepted'),
+			filter: 'ACCEPTED'
+		},
 		{
 			text: t('map_filter_pending'),
 			filter: 'PENDING'
@@ -48,10 +54,6 @@ const useOperationFilter = () => {
 			text: t('map_filter_proposed'),
 			filter: 'PROPOSED'
 		},
-		{
-			text: t('map_filter_accepted'),
-			filter: 'ACCEPTED'
-		},
 		*/
 		/*
 		{
@@ -68,8 +70,12 @@ const useOperationFilter = () => {
 	];
 
 	useEffect(() => {
-		setIds([id]);
+		actions.map.addId(id);
 	}, [id]);
+
+	useEffect(() => {
+		setIds(adesState.map.ids);
+	}, [adesState.map.ids]);
 
 	useEffect(() => {
 		const filterNames = id == null ? S.pipe(
@@ -92,6 +98,10 @@ const useOperationFilter = () => {
 		setOperations(extractOperationsFromState(adesState));
 	}, [adesState.operations.updated]); // eslint-disable-line react-hooks/exhaustive-deps
 
+	useEffect(() => {
+		setRfvsShowing(maybeKeys(adesState.rfv.list));
+	}, [adesState.rfv.updated]);
+
 	useEffect( () => {
 		//console.log("filteredOperations", filteredOperations);
 	}, [filteredOperations]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -105,7 +115,7 @@ const useOperationFilter = () => {
 		setIds: To show
 	 */
 
-	return [allOperations, filteredOperations, id, ids, selectedFilters, setSelectedFilters, setIds, states];
+	return [allOperations, filteredOperations, id, selectedFilters, setSelectedFilters, states, ids, setIds, rfvs, setRfvsShowing];
 };
 
 export {useOperationFilter as default};

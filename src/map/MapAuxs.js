@@ -42,4 +42,4 @@ const initializeLeaflet = (map, mapClick, mapDragEnd, setMapInitialized) => {
 
 export {
 	initializeLeaflet,
-}
+};
