@@ -275,6 +275,13 @@ th, td {
   background-color: rgba(132, 130, 143, 0.25) !important;
 }
 
+.rightAreaButtonTextDisabled {
+  color: gray;
+  padding: 5px 5px 5px 10px;
+  margin-top: 1px;
+  background-color: rgba(132, 130, 143, 0.25) !important;
+}
+
 .rightAreaText {
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */

@@ -22,7 +22,6 @@ import DroneMarker from './elements/DroneMarker';
 import OperationPolygon from './elements/OperationPolygon';
 import OperationInfoEditor from './editor/OperationInfoEditor';
 import OperationVolumeInfoEditor from './editor/OperationVolumeInfoEditor';
-import LeftOverlay from './generic/LeftOverlay';
 
 /* Hooks */
 import useOperationFilter from './hooks/useOperationFilter';
@@ -37,6 +36,7 @@ import useEditorLogic from './hooks/useEditorLogic';
 import RightArea from '../layout/RightArea';
 import SelectedOperation from './viewer/SelectedOperation';
 import SimulatorPanel from './actions/SimulatorPanel';
+import EditorPanel from './actions/EditorPanel';
 import useSimulatorLogic from './hooks/useSimulatorLogic';
 import Polyline from './elements/Polyline';
 
@@ -70,6 +70,8 @@ function Map({ mode }) {
 	//		? ' statusOverMapNotifs'
 	//		: ' statusOverMapNoNotifs';
 	const statusOverMapNotifs = ' statusOverMapNoNotifs';
+
+	const isEditor = S.isJust(mode) && fM(mode) === 'new';
 
 	/* Viewer state */
 	const [ops, opsFiltered, id, ids, filtersSelected, setFiltersSelected, setIds] = useOperationFilter();
@@ -150,12 +152,12 @@ function Map({ mode }) {
 			{S.isJust(mode) && fM(mode) === 'new' &&
 			<>
 				{isOperationInfoPopupOpen &&
-					<OperationInfoEditor
-						isOpen={isOperationInfoPopupOpen}
-						setOpen={setOperationInfoPopupOpen}
-						info={operationInfo}
-						setInfo={setOperationInfo}
-					/>
+				<OperationInfoEditor
+					isOpen={isOperationInfoPopupOpen}
+					setOpen={setOperationInfoPopupOpen}
+					info={operationInfo}
+					setInfo={setOperationInfo}
+				/>
 				}
 				<OperationVolumeInfoEditor
 					info={volume}
@@ -163,16 +165,6 @@ function Map({ mode }) {
 					opVolumeIndex={maybeEditingOpVolume}
 					setOpVolumeIndex={setEditingOperationVolume}
 				/>
-				<Card
-					elevation={4}
-					data-test-id='mapElementEditorStatus'
-					className={'statusOverMap animated fadeInUpBig' + statusOverMapNotifs}
-				>
-					{stepText}
-				</Card>
-				<LeftOverlay disabled={stepsDisabled}>
-					{stepsToDefineOperation}
-				</LeftOverlay>
 			</>
 			}
 			<MapMain map={map.current} mapInitialized={mapInitialized}>
@@ -203,7 +195,7 @@ function Map({ mode }) {
 					});
 				})}
 				{/* Operation creation */}
-				{S.isJust(mode) && fM(mode) === 'new' && polygons.map((polygon, index) => {
+				{isEditor && polygons.map((polygon, index) => {
 					return (
 						<OperationPolygon
 							map={map.current}
@@ -216,7 +208,7 @@ function Map({ mode }) {
 						/>
 					);
 				})}
-				{S.isJust(mode) && fM(mode) === 'new' && polygons.map((polygon, index) => {
+				{isEditor && polygons.map((polygon, index) => {
 					return polygon.map((latlng, index2) => {
 						return (
 							<OperationEditMarker
@@ -262,15 +254,18 @@ function Map({ mode }) {
 				})}
 			</MapMain>
 			<RightArea
-				forceOpen={S.isJust(currentSelectedOperation) || isSimulator}
+				forceOpen={S.isJust(currentSelectedOperation) || isSimulator || isEditor}
 				onClose={() => setCurrentSelectedOperation(S.Nothing)}
 			>
 				{S.isJust(currentSelectedOperation) &&
 					<SelectedOperation gufi={fM(currentSelectedOperation)} />
 				}
+				{ !isEditor &&
 				<QuickFly
 					onClick={quickFlyOnClick}
 				/>
+				}
+				{ !isEditor &&
 				<Layers
 					filtersSelected={filtersSelected}
 					setFiltersSelected={setFiltersSelected}
@@ -279,6 +274,15 @@ function Map({ mode }) {
 					setIdsSelected={setIds}
 					disabled={id != null}
 				/>
+				}
+				{/* Editor Panels */}
+				{isEditor &&
+					<EditorPanel
+						steps={stepsToDefineOperation}
+						stepsDisabled={stepsDisabled}
+					/>
+				}
+				{/* Simulator panels*/}
 				{ isSimulator &&
 					<SimulatorPanel
 						paths={simPaths}
