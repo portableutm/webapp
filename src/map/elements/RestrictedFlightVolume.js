@@ -58,7 +58,6 @@ function RestrictedFlightVolume({map, latlngs, name}) {
 		line.setAttribute('stroke-width', '15');
 		pattern.appendChild(line);
 
-		console.log('OVP', map.getPanes().overlayPane);
 		const ovp = map.getPanes().overlayPane.firstChild;
 		if (ovp) {
 			const defs = ovp.querySelector('defs') || document.createElementNS('http://www.w3.org/2000/svg','defs');

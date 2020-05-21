@@ -50,8 +50,8 @@ const initialState = {
 		cornerNW: { lat: -34.781788, lng: -56.225623},
 		cornerSE: { lat: -34.927028, lng: -55.835540},
 		*/
-		cornerNW: { lat: 90, lng: -180},
-		cornerSE: { lat: -90, lng: 180},
+		cornerNW: { lat: -90, lng: 180},
+		cornerSE: { lat: 90, lng: -180},
 		ids: []
 	},
 	quickFly: {
@@ -94,9 +94,12 @@ const convertCoordinatesRFV = (rfv) => {
 };
 
 const convertCoordinatesQF = (qf) => {
-	const cornerNWswap = [[qf.cornerNW[1]], [qf.cornerNW[0]]];
-	const cornerSEswap = [[qf.cornerSE[1]], [qf.cornerSE[0]]];
-	return {...qf, cornerNW: cornerNWswap, cornerSE: cornerSEswap};
+	const cornerNWswap = [qf.cornerNW[1], qf.cornerNW[0]];
+	const cornerSEswap = [qf.cornerSE[1], qf.cornerSE[0]];
+	const newQf = {...qf};
+	newQf.cornerNW = cornerNWswap;
+	newQf.cornerSE = cornerSEswap;
+	return newQf;
 };
 
 
@@ -192,6 +195,7 @@ function addQuickFly(store, data) {
 		return S.Just(S.Pair(qf.name)(convertCoordinatesQF(qf)));
 	}));
 	const qfs = S.fromPairs(pairs);
+	console.log('qfs', qfs);
 	store.setState({ quickFly: { updated: Date.now(), list: S.Just(qfs) } });
 }
 
@@ -225,10 +229,14 @@ const actions = {
 						},
 						transports: ['websocket']
 					});
+					/* Initialize sockets */
 					socket.on('new-position', function (info) {
 						const info2 = {...info};
 						//console.log('DroneState: new-position: ', info2);
 						store.actions.drones.post(info2);
+					});
+					socket.on('*', function (info) {
+						console.log('SOCKET.IO', info);
 					});
 					okCallback && okCallback(result.data);
 				})
@@ -347,12 +355,17 @@ const actions = {
 	},
 	quickFly: {
 		fetch: (store) => {
-			A.get(API + 'quickfly', {headers: { auth: fM(store.state.auth.token) }})
+			/*A.get(API + 'quickfly', {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => addQuickFly(store, result.data))
-				.catch(error => print(store.state, true, 'QuickFlyState', error));
+				.catch(error => print(store.state, true, 'QuickFlyState', error));*/
 		},
 		post: (store, data, callback, errorCallback) => {
-			A.post(API + 'quickfly', data, {headers: { auth: fM(store.state.auth.token) }})
+			const olds = maybeValues(store.state.quickFly.list);
+			data.cornerNW = [data.cornerNW.lng, data.cornerNW.lat];
+			data.cornerSE = [data.cornerSE.lng, data.cornerSE.lat];
+			olds.push(data);
+			addQuickFly(store, olds);
+			/*A.post(API + 'quickfly', data, {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => {
 					addQuickFly(result.data);
 					callback && callback();
@@ -360,7 +373,7 @@ const actions = {
 				.catch(error => {
 					print(store.state, true, 'QuickFlyState', error);
 					errorCallback && error.response && errorCallback(error.response.data);
-				});
+				});*/
 		}
 	},
 	debug: (store, toggle) => {

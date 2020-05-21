@@ -134,7 +134,8 @@ function Map({ mode }) {
 
 	useEffect(() => {
 		if (S.isJust(state.quickFly.list)) {
-			actions.map.setCorners(maybeValues(actions.map.quickFly.list)[0]);
+			const first = maybeValues(state.quickFly.list)[0];
+			actions.map.setCorners(first.cornerNW, first.cornerSE);
 		}
 	}, [state.quickFly.updated]);
 

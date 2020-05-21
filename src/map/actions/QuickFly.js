@@ -89,15 +89,18 @@ const QuickFly = ({onClick}) => {
 					</div>
 					<div
 						className='rightAreaButtonText'
-						onClick={() => actions.quickFly.post(
-							{
-								name: document.getElementById('qf-name').value,
-								cornerSE: state.map.cornerSE,
-								cornerNW: state.map.cornerNW
-							},
-							(info) => console.log('CreateQuickFly', info),
-							(error) => alert(JSON.stringify(error))
-						)}
+						onClick={() => {
+							actions.quickFly.post(
+								{
+									name: document.getElementById('qf-name').value,
+									cornerNW: state.map.cornerNW,
+									cornerSE: state.map.cornerSE,
+								},
+								(info) => console.log('CreateQuickFly', info),
+								(error) => alert(JSON.stringify(error))
+							);
+							showCreate(false);
+						}}
 					>
 						Save new QuickFly location
 					</div>
