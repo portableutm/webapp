@@ -263,21 +263,23 @@ th, td {
   display: flex;
   margin-top: 1px;
   user-select: none;
-  justify-content: center;
+  justify-content: space-evenly;
   align-content: center;
   background-color: rgb(47, 55, 73);
 }
 
 .rightAreaButtonText {
-  display: flex;
-  justify-content: space-between;
   color: white;
+  display: flex;
+  justify-content: flex-start;
   padding: 5px 5px 5px 10px;
   margin-top: 1px;
   background-color: rgba(132, 130, 143, 0.25) !important;
+  user-select: none;
 }
 
 .rightAreaButtonAlternateButton {
+  margin-left: auto;
   height: 16px !important;
   width: 16px !important;
 }
@@ -296,6 +298,17 @@ th, td {
   user-select: none; /* Standard */
 }
 
+.dialogify {
+  height: 100%;
+  width: 100%;
+  padding: 15px;
+}
+
+.fullW {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
 
 .contextualMenu {
   display: flex;

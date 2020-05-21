@@ -17,7 +17,7 @@ function Operation({children}) {
 		:
 		() =>  {
 			actions.map.addId(children.gufi);
-			history.push('/');
+			history.push('/operation/' + children.gufi);
 		};
 	const [showProperties, setShowProperties] = useState(false);
 	return (

@@ -316,6 +316,18 @@ const actions = {
 					print(store.state, true, 'OperationState', error);
 					errorCallback && error.response && errorCallback(error.response.data);
 				});
+		},
+		pendingacceptation: (store, gufi, comments, isApproved) => {
+			const data = {comments: comments, approved: isApproved};
+			A.post(API + 'operation/' + gufi + '/pendingtoaccept', data, {headers: { auth: fM(store.state.auth.token) }})
+				.then(() => {
+					// TODO:
+					//  updateOperationState(store, gufi, isApproved ? 'ACCEPTED' : 'NOT_ACCEPTED');
+				})
+				.catch(error => {
+					print(store.state, true, 'OperationState', error);
+					//errorCallback && error.response && errorCallback(error.response.data);
+				});
 		}
 	},
 	drones: {

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Icon} from '@blueprintjs/core';
+import {Button, Icon, Intent} from '@blueprintjs/core';
 
 function ExpandedRightAreaButton({useCase, isExpanded, onClick , simpleChildren, children}) {
 	return (
@@ -7,17 +7,8 @@ function ExpandedRightAreaButton({useCase, isExpanded, onClick , simpleChildren,
 			className={isExpanded ? 'rightAreaButtonTexts rightAreaButtonText100' : 'rightAreaButtonTexts rightAreaButtonText0'}
 		>
 			{	simpleChildren && children.map((sub, index) => {
-				if (sub.special != null) {
-					return (
-						<div
-							className='rightAreaButtonText'
-							data-test-id={'map' + useCase + index}
-							key={sub.name}
-							onClick={sub.onClick}
-						>
-							{sub.name}
-						</div>
-					);
+				if (sub.isSpecial != null && sub.isSpecial) {
+					return sub.div;
 				} else {
 					return (
 						<div

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import RightAreaButton from '../RightAreaButton';
 import useAdesState from '../../state/AdesState';
 import {maybeValues} from '../../libs/SaferSanctuary';
-import {FormGroup, InputGroup} from '@blueprintjs/core';
+import {Button, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
 
 /* Constants */
 /*
@@ -42,9 +42,19 @@ const QuickFly = ({onClick}) => {
 	const [isCreating, showCreate] = useState(false);
 
 	const addNewQuickFlyButton = {
-		name: '> Add new location',
-		special: true,
-		onClick: () => showCreate(true)
+		name: 'Add new location',
+		isSpecial: true,
+		div: (<div
+			className='rightAreaButtonTextsSeparator'
+		>
+			<Button
+				small={true}
+				intent={Intent.PRIMARY}
+				onClick={() => showCreate(true)}
+			>
+				Add new location
+			</Button>
+		</div>),
 	};
 
 	const content = [].concat(maybeValues(state.quickFly.list),addNewQuickFlyButton);
@@ -88,21 +98,26 @@ const QuickFly = ({onClick}) => {
 						The position of the new saved location is captured automatically from the current region shown on the map.
 					</div>
 					<div
-						className='rightAreaButtonText'
-						onClick={() => {
-							actions.quickFly.post(
-								{
-									name: document.getElementById('qf-name').value,
-									cornerNW: state.map.cornerNW,
-									cornerSE: state.map.cornerSE,
-								},
-								(info) => console.log('CreateQuickFly', info),
-								(error) => alert(JSON.stringify(error))
-							);
-							showCreate(false);
-						}}
+						className='rightAreaButtonTextsSeparator'
 					>
-						Save new QuickFly location
+						<Button
+							small={true}
+							intent={Intent.PRIMARY}
+							onClick={() => {
+								actions.quickFly.post(
+									{
+										name: document.getElementById('qf-name').value,
+										cornerNW: state.map.cornerNW,
+										cornerSE: state.map.cornerSE,
+									},
+									(info) => console.log('CreateQuickFly', info),
+									(error) => alert(JSON.stringify(error))
+								);
+								showCreate(false);
+							}}
+						>
+							Save
+						</Button>
 					</div>
 				</RightAreaButton>
 			}
