@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {mapValues} from '../../libs/SaferSanctuary';
 import GenericList, {GenericListLine} from '../generic/GenericList';
 import {Callout, Spinner, Intent, Button} from '@blueprintjs/core';

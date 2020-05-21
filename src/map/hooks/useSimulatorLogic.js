@@ -1,6 +1,4 @@
 import {useEffect, useState} from 'react';
-import _, {fM} from '../../libs/SaferSanctuary';
-import useAdesState, {print} from '../../state/AdesState';
 import L from 'leaflet';
 import 'leaflet-geometryutil';
 import A from 'axios';
@@ -10,7 +8,6 @@ function UseSimulatorLogic(refMapOnClick, map, token) {
 
 	const [droneCurrentlyAdding, setDroneCurrentlyAdding] = useState(-1);
 	const [paths, setPaths] = useState([[]]);
-	const [, actions] = useAdesState();
 	const [timer, setTimer] = useState(null);
 
 	const setPath = (latlng, index = -1) => {
@@ -34,7 +31,7 @@ function UseSimulatorLogic(refMapOnClick, map, token) {
 	const gufis = ['f7891e78-9bb4-431d-94d3-1a506910c254', 'ff4b6505-c282-42b1-b013-66f02137f5d5', 'a20ef8d5-506d-4f54-a981-874f6c8bd4de', 'b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63'];
 
 	const fly = (ratio) => {
-		paths.map((path, index) => {
+		paths.forEach((path, index) => {
 			const point = L.GeometryUtil.interpolateOnLine(map.current, path, ratio);
 			const nextPointIndex = point.predecessor < path.length - 1 ? point.predecessor + 1: 0;
 			const nextPoint = {lat: path[nextPointIndex][0], lng: path[nextPointIndex][1]};

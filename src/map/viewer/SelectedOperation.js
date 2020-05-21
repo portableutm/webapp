@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import RightAreaButton from '../RightAreaButton';
 import useAdesState from '../../state/AdesState';
 import S from 'sanctuary';
-import _, {fM, maybeShow} from '../../libs/SaferSanctuary';
+import {fM} from '../../libs/SaferSanctuary';
 import {useTranslation} from 'react-i18next';
-import {Button, Checkbox, Dialog, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
+import {Button, Dialog, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
 
 function Property({property, value}) {
 	return (

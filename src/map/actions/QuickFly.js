@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import RightAreaButton from '../RightAreaButton';
 import useAdesState from '../../state/AdesState';
 import {maybeValues} from '../../libs/SaferSanctuary';
-import {Button, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
+import {Button, Dialog, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
 
 /* Constants */
 /*
@@ -45,6 +45,7 @@ const QuickFly = ({onClick}) => {
 		name: 'Add new location',
 		isSpecial: true,
 		div: (<div
+			key='thisisauniqueone'
 			className='rightAreaButtonTextsSeparator'
 		>
 			<Button
@@ -110,8 +111,12 @@ const QuickFly = ({onClick}) => {
 										cornerNW: state.map.cornerNW,
 										cornerSE: state.map.cornerSE,
 									},
-									(info) => console.log('CreateQuickFly', info),
-									(error) => alert(JSON.stringify(error))
+									() => {
+										actions.map_dialog.open('Quick fly', 'New location created!');
+									},
+									(error) => {
+										actions.map_dialog.open('Quick fly', 'Error: ' + JSON.stringify(error));
+									}
 								);
 								showCreate(false);
 							}}

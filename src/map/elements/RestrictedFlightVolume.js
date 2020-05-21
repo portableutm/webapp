@@ -6,7 +6,6 @@ import L from 'leaflet';
 
 /* Global state */
 import {fM} from '../../libs/SaferSanctuary';
-import {useTranslation} from 'react-i18next';
 
 /* Helpers */
 

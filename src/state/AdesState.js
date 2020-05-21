@@ -54,6 +54,13 @@ const initialState = {
 		cornerSE: { lat: 90, lng: -180},
 		ids: []
 	},
+	map_dialog: {
+		open: false,
+		title: '',
+		text: '',
+		rightButtonText: S.Nothing,
+		rightButtonOnClick: S.Nothing
+	},
 	quickFly: {
 		list: S.Nothing,
 		updated: Date.now()
@@ -101,9 +108,6 @@ const convertCoordinatesQF = (qf) => {
 	newQf.cornerSE = cornerSEswap;
 	return newQf;
 };
-
-
-const operationsMutex = new Mutex();
 
 /* Drones */
 
@@ -378,6 +382,26 @@ const actions = {
 			store.setState({ map: { ...store.state.map, ids: store.state.map.ids.filter(idsaved => idsaved !== id)}});
 		}
 	},
+	map_dialog: {
+		open: (store, title = 'Information', text = 'No information', rightButtonText, rightButtonOnClick) => {
+			store.setState({ map_dialog: {
+				open: true,
+				title: title,
+				text: text,
+				rightButtonText: rightButtonText ? S.Just(rightButtonText) : S.Nothing,
+				rightButtonOnClick: rightButtonOnClick ? S.Just(rightButtonOnClick) : S.Nothing
+			}});
+		},
+		close: (store) => {
+			store.setState({ map_dialog: {
+				open: false,
+				title: '',
+				text: '',
+				rightButtonText: S.Nothing,
+				rightButtonOnClick: S.Nothing
+			}});
+		}
+	},
 	rfv: {
 		fetch: (store) => {
 			A.get(API + 'restrictedflightvolume', {headers: { auth: fM(store.state.auth.token) }})
@@ -397,6 +421,7 @@ const actions = {
 			data.cornerSE = [data.cornerSE.lng, data.cornerSE.lat];
 			olds.push(data);
 			addQuickFly(store, olds);
+			callback && callback();
 			/*A.post(API + 'quickfly', data, {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => {
 					addQuickFly(result.data);

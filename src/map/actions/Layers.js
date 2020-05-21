@@ -85,6 +85,13 @@ const OperationFilters = ({operations, ids, setIds}) => {
 							/>
 						</div>
 					);
+				} else {
+					return (
+						<div
+							key={op.gufi + index}
+						>
+						</div>
+					);
 				}
 			}
 			)}

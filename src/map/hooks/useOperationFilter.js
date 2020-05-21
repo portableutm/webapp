@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 
 /* Libraries */
 import S from 'sanctuary';
-import {fM, maybeKeys, maybeValues} from '../../libs/SaferSanctuary';
+import {fM, maybeKeys} from '../../libs/SaferSanctuary';
 import {useParams} from 'react-router-dom';
 
 /* Internal state */
@@ -71,7 +71,7 @@ const useOperationFilter = () => {
 
 	useEffect(() => {
 		actions.map.addId(id);
-	}, [id]);
+	}, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		setIds(adesState.map.ids);
@@ -100,7 +100,7 @@ const useOperationFilter = () => {
 
 	useEffect(() => {
 		setRfvsShowing(maybeKeys(adesState.rfv.list));
-	}, [adesState.rfv.updated]);
+	}, [adesState.rfv.updated]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect( () => {
 		//console.log("filteredOperations", filteredOperations);

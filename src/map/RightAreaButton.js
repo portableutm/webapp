@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Icon, Intent} from '@blueprintjs/core';
+import {Icon} from '@blueprintjs/core';
 
 function ExpandedRightAreaButton({useCase, isExpanded, onClick , simpleChildren, children}) {
 	return (
