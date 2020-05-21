@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import RightAreaButton from '../RightAreaButton';
 import useAdesState from '../../state/AdesState';
 import {maybeValues} from '../../libs/SaferSanctuary';
-import {Button, Dialog, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
+import {Button, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
 
 /* Constants */
 /*
