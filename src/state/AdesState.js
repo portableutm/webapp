@@ -123,21 +123,16 @@ const initializer = (store) => {
 
 /* Actions helpers */
 function addOperations(store, data) {
-	operationsMutex
-		.acquire()
-		.then(function (release) {
-			print(store.state, false, 'OperationState', data);
-			const dataObtained = Array.from(data);
-			const pairs = S.justs(dataObtained.map((op) => {
-				return validateOperation(op) ? S.Just(S.Pair(op.gufi)(convertCoordinates(op))) : S.Nothing;
-				// L, and therefore the web, uses LatLng coordinates
-				// The DB stores LngLat
-				// Therefore, we got to convert the coordinates of all volumes
-			}));
-			const operations = S.fromPairs(pairs);
-			store.setState({ operations: { updated: Date.now(), list: S.Just(operations)}});
-			release();
-		});
+	print(store.state, false, 'OperationState', data);
+	const dataObtained = Array.from(data);
+	const pairs = S.justs(dataObtained.map((op) => {
+		return validateOperation(op) ? S.Just(S.Pair(op.gufi)(convertCoordinates(op))) : S.Nothing;
+		// L, and therefore the web, uses LatLng coordinates
+		// The DB stores LngLat
+		// Therefore, we got to convert the coordinates of all volumes
+	}));
+	const operations = S.fromPairs(pairs);
+	store.setState({ operations: { updated: Date.now(), list: S.Just(operations)}});
 }
 
 /* Users */
@@ -299,7 +294,9 @@ const actions = {
 		post: (store, operation, callback, errorCallback) => {
 			A.post(API + 'operation', operation, {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => {
-					addOperations(store, result.data);
+					//addOperations(store, result.data);
+					// TODO: Don't ask the server for the operations...
+					store.actions.operations.fetch(store);
 					callback && callback();
 				})
 				.catch(error => {
