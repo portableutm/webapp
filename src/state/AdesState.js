@@ -62,7 +62,7 @@ const initialState = {
 		list: S.Nothing,
 		updated: Date.now()
 	},
-	debug: false
+	debug: true
 };
 
 /* Operations */
@@ -121,7 +121,7 @@ const initializer = (store) => {
 	}
 };
 
-/* Actions helpers */
+/* Operations */
 function addOperations(store, data) {
 	print(store.state, false, 'OperationState', data);
 	const dataObtained = Array.from(data);
@@ -133,6 +133,19 @@ function addOperations(store, data) {
 	}));
 	const operations = S.fromPairs(pairs);
 	store.setState({ operations: { updated: Date.now(), list: S.Just(operations)}});
+}
+
+function updateOperationState(store, gufi, info) {
+	print(store.state, false, 'OperationState-change', gufi, info);
+	const currentOperations = fM(store.state.operations.list);
+	const currentOperation = S.value(gufi)(currentOperations);
+	if (S.isJust(currentOperation)) {
+		fM(currentOperation).state = info;
+	} else {
+		print(store.state, true, 'OperationState', 'No operation locally with gufi', gufi);
+	}
+	const newOperations = S.insert(gufi)(fM(currentOperation))(currentOperations);
+	store.setState({ operations: { updated: Date.now(), list: S.Just(newOperations)}});
 }
 
 /* Users */
@@ -230,8 +243,8 @@ const actions = {
 						//console.log('DroneState: new-position: ', info2);
 						store.actions.drones.post(info2);
 					});
-					socket.on('*', function (info) {
-						console.log('SOCKET.IO', info);
+					socket.on('operation-state-change', function (info) {
+						updateOperationState(store, info.gufi, info.state);
 					});
 					okCallback && okCallback(result.data);
 				})
@@ -402,9 +415,9 @@ const filterOperationsByIds = ids => operations => {
 const print = (adesState, isError, origin, ...args) => {
 	if (adesState.debug) {
 		if (isError) {
-			console.error('('+origin +')', args);
+			console.error('('+origin +')', ...args);
 		} else {
-			console.log('('+origin +')', args);
+			console.log('('+origin +')', ...args);
 		}
 	}
 };
