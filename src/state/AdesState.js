@@ -148,6 +148,15 @@ function updateOperationState(store, gufi, info) {
 	}
 }
 
+function prepareOperation(operation) {
+	operation.operation_volumes.map(volume => {
+		const newVolume = {...volume};
+		newVolume.operation_geography.coordinates[0].push(newVolume.operation_geography.coordinates[0][0]);
+		return newVolume;
+	});
+	return operation;
+}
+
 /* Users */
 
 function addUsers(store, data) {
@@ -305,7 +314,8 @@ const actions = {
 				.catch(error => print(store.state, true, 'OperationState', error));
 		},
 		post: (store, operation, callback, errorCallback) => {
-			A.post(API + 'operation', operation, {headers: { auth: fM(store.state.auth.token) }})
+			const operationCleaned = prepareOperation(operation);
+			A.post(API + 'operation', operationCleaned, {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => {
 					//addOperations(store, result.data);
 					// TODO: Don't ask the server for the operations...
