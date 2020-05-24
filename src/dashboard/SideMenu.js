@@ -103,9 +103,10 @@ function SideMenu() {
 							text={t('dsh_operations_list')}
 							onClick={() => history.push('/dashboard/operations')}/>
 						<MenuDivider title="Vehicles"/>
-						<MenuItem icon="airplane" 
+						{/* As of 0.2 removed as vehicles have owners now...
+						 	<MenuItem icon="airplane"
 							text={t('dsh_vehicles_new')}
-							onClick={() => history.push('/dashboard/vehicles/new')}/>
+							onClick={() => history.push('/dashboard/vehicles/new')}/> */}
 						<MenuItem icon="numbered-list"
 							text={t('dsh_vehicles_list')}
 							onClick={() => history.push('/dashboard/vehicles')}/>

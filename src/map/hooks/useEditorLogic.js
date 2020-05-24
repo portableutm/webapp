@@ -88,6 +88,7 @@ function UseEditorLogic(refMapOnClick) {
 		if (currentStep === 0) {
 			// When Map click should do nothing
 			refMapOnClick.current = () => {};
+			actions.map.onClicksDisabled(false);
 		} else if (currentStep === 1) {
 			refMapOnClick.current = event => {
 				const {latlng} = event;
@@ -97,6 +98,7 @@ function UseEditorLogic(refMapOnClick) {
 					return [newPolygon];
 				});
 			};
+			actions.map.onClicksDisabled(true);
 		} else if (currentStep === 3) {
 			const info = _(operationInfo);
 			info.submit_time = new Date().toISOString();
@@ -110,6 +112,7 @@ function UseEditorLogic(refMapOnClick) {
 			info.operation_volumes = [volumeWithPolygons];
 			const callback = () => history.push('/dashboard/operations');
 			actions.operations.post(info, callback, errorOnSaveCallback);
+			actions.map.onClicksDisabled(false);
 		}
 	}, [currentStep]); // eslint-disable-line react-hooks/exhaustive-deps
 	

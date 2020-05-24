@@ -82,8 +82,22 @@ const UsersList = () => {
 										<td>{user.username}</td>
 										<td>{user.email}</td>
 										<td>{user.role}</td>
-										<td><Button small={true}
-											onClick={() => history.push('/dashboard/users/' + user.username)}>Edit</Button></td>
+										<td>
+											<div style={{display: 'flex', justifyContent: 'space-evenly'}}>
+												<Button
+													small={true}
+													onClick={() => history.push('/dashboard/users/' + user.username)}
+												>
+													Edit
+												</Button>
+												<Button
+													small={true}
+													onClick={() => history.push('/dashboard/vehicles/' + user.username + '/new/')}
+												>
+													Add veh.
+												</Button>
+											</div>
+										</td>
 									</tr>
 								))}
 							</tbody>

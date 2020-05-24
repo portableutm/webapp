@@ -211,7 +211,7 @@ function Ades() {
 								</>
 							</MasterPage>
 						</Route>
-						<Route exact path='/dashboard/vehicles/new'>
+						<Route exact path={'/dashboard/vehicles/:username/new'}>
 							<MasterPage>
 								<>
 									<Dashboard>
@@ -269,15 +269,17 @@ function Ades() {
 							</MasterPage>
 						</Route>
 						}
-						<Route exact path='/dashboard/vehicles/new'>
+						{S.isJust(state.auth.user) && // It can happen... race condition
+						<Route exact path={'/dashboard/vehicles/new'}>
 							<MasterPage>
 								<>
 									<Dashboard>
-										<NewVehicle />
+										<NewVehicle userId={fM(state.auth.user).username}/>
 									</Dashboard>
 								</>
 							</MasterPage>
 						</Route>
+						}
 						<Route exact path='/dashboard/vehicles'>
 							<MasterPage>
 								<>

@@ -3,15 +3,17 @@ import {useTranslation} from 'react-i18next';
 import {Button, FormGroup, InputGroup, Radio, RadioGroup} from '@blueprintjs/core';
 import {fM} from '../../libs/SaferSanctuary';
 import useAdesState from '../../state/AdesState';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
-function NewVehicle() {
+function NewVehicle({userId}) {
+	const { username } = useParams();
 	const { t, } = useTranslation();
 	const history = useHistory();
 	const [state, actions] = useAdesState();
 	const [isSubmitting, setSubmitting] = useState(false);
 	const [error, setError] = useState(null);
 	const [vehicle, setVehicle] = useState({
+		owner_id: userId || username,
 		nNumber: '',
 		faaNumber: '',
 		vehicleName: '',
@@ -39,7 +41,7 @@ function NewVehicle() {
 					vehicle[name] = evt.currentTarget.value;
 					return vehicle;
 				})}
-				value={vehicle.name}
+				value={vehicle[name]}
 			/>
 		</FormGroup>
 	);
@@ -119,6 +121,12 @@ function NewVehicle() {
 				disabled={true}
 			/>
 			<Text
+				name="owner_id"
+				label={'Owner username'}
+				placeholder=""
+				disabled={true}
+			/>
+			<Text
 				name="registeredBy"
 				label={t('vehicle_registeredBy')}
 				placeholder={fM(state.auth.user).username}
@@ -144,6 +152,7 @@ function NewVehicle() {
 
 /*
 {
+	"owner_id": "JudithaStrut",
     "uvin": "32b858dd-8c63-4e99-9a18-6df064cf64cb",
     "nNumber": "",
     "faaNumber": "AW7B64A",

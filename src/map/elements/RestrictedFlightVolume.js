@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 /* Logic */
 import S from 'sanctuary';
@@ -6,6 +6,7 @@ import L from 'leaflet';
 
 /* Global state */
 import {fM} from '../../libs/SaferSanctuary';
+import useAdesState from '../../state/AdesState';
 
 /* Helpers */
 
@@ -13,8 +14,9 @@ import {fM} from '../../libs/SaferSanctuary';
  * @return {null}
  */
 function RestrictedFlightVolume({map, latlngs, name}) {
-
+	const [state, ] = useAdesState();
 	const [polygon, setPolygon] = useState(S.Nothing);
+	const onClicksDisabled = useRef(state.map.onClicksDisabled);
 
 	useEffect(() => { // Mount and unmount
 		// Initialize Polygon, draw on Map
@@ -28,11 +30,6 @@ function RestrictedFlightVolume({map, latlngs, name}) {
 				lineJoin: 'miter'
 			}
 		);
-
-		/*onClick && polygon.on('click', (evt) => {
-			onClick(evt.latlng);
-			L.DomEvent.stopPropagation(evt);
-		});*/
 
 		polygon.bindPopup(
 			'Restricted Flight Volume </br>' +
@@ -80,6 +77,20 @@ function RestrictedFlightVolume({map, latlngs, name}) {
 			fM(polygon).setLatLngs(latlngs);
 		}
 	}, [latlngs]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
+		onClicksDisabled.current = state.map.onClicksDisabled;
+		if (S.isJust(polygon)) {
+			if (onClicksDisabled.current) {
+				fM(polygon).unbindPopup();
+			} else {
+				fM(polygon).bindPopup(
+					'Restricted Flight Volume </br>' +
+					'<b>' + name + '</b>'
+				);
+			}
+		}
+	}, [state.map.onClicksDisabled]);
 
 	return null;
 }

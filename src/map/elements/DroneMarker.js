@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 /* Logic */
 import S from 'sanctuary';
@@ -7,6 +7,8 @@ import L from 'leaflet';
 import 'leaflet-rotatedmarker';
 import 'leaflet-hotline';
 import {fM} from '../../libs/SaferSanctuary';
+import useAdesState from '../../state/AdesState';
+
 
 /* Constants */
 
@@ -57,9 +59,11 @@ const hasToRemoveOldest = (path) => path.length > MAX_POINTS_HISTORY;
  */
 function DroneMarker({map, id, position, heading, altitude, risk, onClick}) {
 	const [marker, setMarker] = useState(S.Nothing);
+	const [state, ] = useAdesState();
 	const [polyline, setPolyline] = useState(S.Nothing);
 	const [path, setPath] = useState([]);
 	const [timer, setTimer] = useState(null);
+	const onClicksDisabled = useRef(state.map.onClicksDisabled);
 
 	useEffect(() => {
 		// Create marker, add it to map. Remove from map on unmount
@@ -77,10 +81,16 @@ function DroneMarker({map, id, position, heading, altitude, risk, onClick}) {
 			max: MAX_POINTS_HISTORY - 1
 		});
 
+
+
 		onClick && marker.on('click', (evt) => {
-			onClick(evt.latlng);
-			L.DomEvent.stopPropagation(evt);
+			if (!onClicksDisabled.current) {
+				onClick(evt.latlng);
+				L.DomEvent.stopPropagation(evt);
+			}
 		});
+
+
 
 		marker.addTo(map);
 		hasToDrawTrail && polyline.addTo(map);
@@ -116,6 +126,10 @@ function DroneMarker({map, id, position, heading, altitude, risk, onClick}) {
 			setTimer(setTimeout(() => markerGraphic.setIcon(INACTIVE_DRONE_ICON), INACTIVE_TIMEOUT)); // Inactivity after INACTIVE_TIMEOUT seconds
 		}
 	}, [position.lat, position.lng, heading, altitude]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
+		onClicksDisabled.current = state.map.onClicksDisabled;
+	}, [state.map.onClicksDisabled]);
 
 	return null;
 }

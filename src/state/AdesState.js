@@ -52,7 +52,8 @@ const initialState = {
 		*/
 		cornerNW: { lat: -90, lng: 180},
 		cornerSE: { lat: 90, lng: -180},
-		ids: []
+		ids: [],
+		onClicksDisabled: false
 	},
 	map_dialog: {
 		open: false,
@@ -380,6 +381,10 @@ const actions = {
 		},
 		removeId: (store, id) => {
 			store.setState({ map: { ...store.state.map, ids: store.state.map.ids.filter(idsaved => idsaved !== id)}});
+		},
+		onClicksDisabled: (store, flag) => {
+			print(store.state, false, 'MapState', flag);
+			store.setState({ map: { ...store.state.map, onClicksDisabled: flag}});
 		}
 	},
 	map_dialog: {
