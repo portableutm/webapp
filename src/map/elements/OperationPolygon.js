@@ -33,8 +33,8 @@ function getColorForOperationState(state) {
  * @return {null}
  */
 function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ onClick, onClickPopup, isSelected = false}) {
-	const { t,  } = useTranslation();
-	const [adesState, ] = useAdesState();
+	const {t,} = useTranslation();
+	const [adesState,] = useAdesState();
 	const [polygon, setPolygon] = useState(S.Nothing);
 	const onClicksDisabled = useRef(adesState.map.onClicksDisabled);
 
@@ -95,7 +95,7 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 			}
 		}
 	}, [isSelected]); // eslint-disable-line react-hooks/exhaustive-deps
-	
+
 	useEffect(() => {
 		// Redraw if the polygon moved or the state changed
 		if (S.isJust(polygon)) {

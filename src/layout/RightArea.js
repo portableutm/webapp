@@ -45,7 +45,7 @@ function RightArea({forceOpen, onClose, children}) {
 			{	isOpened &&
 			<div className='rightArea animated fadeInLeft bp3-dark'>
 				<>
-					<Icon className="rightAreaCloser" icon="cross" 
+					<Icon className="rightAreaCloser" icon="cross"
 						onClick={() => {
 							setOpened(false);
 							onClose();

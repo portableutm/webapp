@@ -12,27 +12,22 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 				// response.body is automatically serialized into JSON
 				cy.setCookie('user', 'admin');
 				cy.setCookie('jwt', response.body);
-			})
+			});
 	});
 	it('Finds button and starts use case', function () {
 		cy.visit('http://localhost:2000/');
 		cy.get('[data-test-id="mapButtonMenu"]').click();
 		cy.contains('Create new operation').click();
 	});
-	it('Check editor loaded correctly', function () {
-		cy.get('[data-test-id="mapElementEditorStatus"]', { timeout: 5000 })
-			.should('be.visible')
-			.should('have.text', 'Complete the steps to define a new operation.');
-	});
 	it('Define Polygon', function () {
 		cy.contains('Define volumes').click();
+		cy.get('.rightAreaCloser').click();
 		cy.get('[data-test-id="map"]').click('topLeft');
 		cy.get('[data-test-id="map"]').click('topRight');
 		cy.get('[data-test-id="map"]').click('bottomLeft');
 	});
 	it('Define Volume Info', function () {
-
-		cy.get('[data-test-id="map"]').click(50,50);
+		cy.get('[data-test-id="map"]').click(150,150);
 		cy.contains('Editing').get('[data-test-id="mapEditorVolumeInfoMinAltitude"]').clear().type('-1');
 		cy.get('.bp3-dialog-close-button').click(); // TODO: Change this line if we don't use blueprint3js dialog anymore.
 		//cy.get('[data-test-id="map#editor#volume#info#near_structure"]').check();
@@ -41,6 +36,7 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 		// TODO: Add info here to validate UI interaction
 	});
 	it('Complete Volume information', function () {
+		cy.get('.rightAreaOpener').click();
 		cy.contains('Fill out general information').click();
 		cy.get('[data-test-id="mapInputEditorName"]')
 			.clear()

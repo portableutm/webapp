@@ -138,7 +138,7 @@ function Map({ mode }) {
 			const first = maybeValues(state.quickFly.list)[0];
 			actions.map.setCorners(first.cornerNW, first.cornerSE);
 		}
-	}, [state.quickFly.updated]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [S.isJust(state.quickFly.list)]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		// Change map position if it has changed in the state

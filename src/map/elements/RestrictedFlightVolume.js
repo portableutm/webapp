@@ -90,7 +90,7 @@ function RestrictedFlightVolume({map, latlngs, name}) {
 				);
 			}
 		}
-	}, [state.map.onClicksDisabled]);
+	}, [state.map.onClicksDisabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return null;
 }

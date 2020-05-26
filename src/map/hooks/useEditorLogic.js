@@ -98,7 +98,7 @@ function UseEditorLogic(refMapOnClick) {
 					return [newPolygon];
 				});
 			};
-			actions.map.onClicksDisabled(true);
+			actions.map.onClicksDisabled(false);
 		} else if (currentStep === 3) {
 			const info = _(operationInfo);
 			info.submit_time = new Date().toISOString();

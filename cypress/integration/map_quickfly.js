@@ -5,6 +5,34 @@
 
 import {API} from '../../src/consts';
 
+const quickFlyLocations = [
+	{
+		name: 'MVD/SUMU: AIC (Ground)',
+		cornerNW: [-34.816575, -56.052659],
+		cornerSE: [-34.847928, -56.007429]
+	},
+	{
+		name: 'MVD/SUMU: AIC (Approach)',
+		cornerNW: [-34.730198, -56.203753],
+		cornerSE: [-34.910978, -55.827960]
+	},
+	{
+		name: 'PDP/SULS: Laguna del Sauce (Ground)',
+		cornerNW: [-34.839509, -55.135924],
+		cornerSE: [-34.873023, -55.053979]
+	},
+	{
+		name: 'Uruguay',
+		cornerNW: [-29.754889, -58.773215],
+		cornerSE: [-35.149370, -52.615924]
+	},
+	{
+		name: 'DronfiesLabs',
+		cornerNW: [-34.903478, -56.163236],
+		cornerSE: [-34.917137, -56.146111]
+	}
+];
+
 describe('SP1: (Map) Quick Fly', function () {
 	beforeEach('Auth', function () {
 		cy
@@ -13,7 +41,13 @@ describe('SP1: (Map) Quick Fly', function () {
 				// response.body is automatically serialized into JSON
 				cy.setCookie('user', 'admin');
 				cy.setCookie('jwt', response.body);
-			})
+			});
+		cy.server();           // enable response stubbing
+		cy.route({
+			method: 'GET',      // Route all GET requests
+			url: '/quickfly',    //
+			response: quickFlyLocations
+		});
 	});
 
 	it('Finds button and clicks on first location', function () {

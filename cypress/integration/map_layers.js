@@ -683,6 +683,11 @@ describe('SP1: (Map) Layers', function () {
 			url: '/operation',    //
 			response: operations
 		});
+		cy.route({
+			method: 'GET',
+			url: '/restrictedflightvolume',
+			response: {}
+		});
 	});
 
 	it('Clicks use case button', function () {
@@ -723,6 +728,8 @@ describe('SP1: (Map) Layers', function () {
 		cy.get('[data-test-id="propertyState"]').then(($el) =>
 			expect($el).to.contain('ACTIVATED')
 		);
+		cy.get('.rightAreaCloser').click();
+		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersACTIVATED"]').uncheck({force: true});
 	});
 	it('Check PENDING operation', function () {
@@ -733,6 +740,8 @@ describe('SP1: (Map) Layers', function () {
 		cy.get('[data-test-id="propertyState"]').then(($el) =>
 			expect($el).to.contain('PENDING')
 		);
+		cy.get('.rightAreaCloser').click();
+		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersPENDING"]').uncheck({force: true});
 	});
 	it('Check ROGUE operation', function () {
@@ -743,6 +752,8 @@ describe('SP1: (Map) Layers', function () {
 		cy.get('[data-test-id="propertyState"]').then(($el) =>
 			expect($el).to.contain('ROGUE')
 		);
+		cy.get('.rightAreaCloser').click();
+		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersROGUE"]').uncheck({force: true});
 	});
 });

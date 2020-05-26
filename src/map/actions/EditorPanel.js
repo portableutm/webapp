@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import RightAreaButton from '../RightAreaButton';
 import {useTranslation} from 'react-i18next';
 import useAdesState from '../../state/AdesState';
@@ -6,7 +6,7 @@ import useAdesState from '../../state/AdesState';
 const EditorPanel = ({steps, stepsDisabled}) => {
 	const {t} = useTranslation();
 	const [state, actions] = useAdesState();
-	return(
+	return (
 		<>
 			<RightAreaButton
 				useCase='editorOptions'
@@ -19,11 +19,13 @@ const EditorPanel = ({steps, stepsDisabled}) => {
 					className='rightAreaButtonText'
 					onClick={() => actions.map.onClicksDisabled(!state.map.onClicksDisabled)}
 				>
-					{	state.map.onClicksDisabled &&
-						<p>Clicking on operations and restricted flight volumes will <b>NOT</b> show their properties. <i>Click here to change this behaviour</i> </p>
+					{state.map.onClicksDisabled &&
+					<p>Clicking on operations and restricted flight volumes will <b>NOT</b> show their properties. <i>Click
+						here to change this behaviour</i></p>
 					}
-					{	!state.map.onClicksDisabled &&
-						<p>Clicking on operations and restricted flight volumes will show their properties. <i>Click here to change this behaviour</i></p>
+					{!state.map.onClicksDisabled &&
+					<p>Clicking on operations and restricted flight volumes will show their properties. <i>Click here to
+						change this behaviour</i></p>
 					}
 				</div>
 			</RightAreaButton>
@@ -43,11 +45,13 @@ const EditorPanel = ({steps, stepsDisabled}) => {
 						<div
 							key={step.text}
 							className={className}
-							onClick={isDisabled ? () => {} : () => step.action()}
+							onClick={isDisabled ? () => {
+							} : () => step.action()}
 						>
 							{step.text}
 						</div>
-					);})}
+					);
+				})}
 			</RightAreaButton>
 		</>
 	);

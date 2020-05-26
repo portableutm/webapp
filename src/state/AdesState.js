@@ -3,7 +3,7 @@ import globalHook from '../libs/useGlobalHook';
 import A from 'axios';
 import S from 'sanctuary';
 
-import { API } from '../consts';
+import {API} from '../consts';
 import {Mutex} from 'async-mutex';
 import {fM, maybeValues} from '../libs/SaferSanctuary';
 import io from 'socket.io-client';
@@ -50,8 +50,8 @@ const initialState = {
 		cornerNW: { lat: -34.781788, lng: -56.225623},
 		cornerSE: { lat: -34.927028, lng: -55.835540},
 		*/
-		cornerNW: { lat: -90, lng: 180},
-		cornerSE: { lat: 90, lng: -180},
+		cornerNW: {lat: -90, lng: 180},
+		cornerSE: {lat: 90, lng: -180},
 		ids: [],
 		onClicksDisabled: false
 	},
@@ -102,11 +102,13 @@ const convertCoordinatesRFV = (rfv) => {
 };
 
 const convertCoordinatesQF = (qf) => {
+	console.log('oldQF', qf);
 	const cornerNWswap = [qf.cornerNW[1], qf.cornerNW[0]];
 	const cornerSEswap = [qf.cornerSE[1], qf.cornerSE[0]];
 	const newQf = {...qf};
 	newQf.cornerNW = cornerNWswap;
 	newQf.cornerSE = cornerSEswap;
+	console.log('newQF', newQf);
 	return newQf;
 };
 
@@ -119,8 +121,8 @@ const initializer = (store) => {
 		/// TODO: Force default even if geolocation is acquired (parameter)
 		navigator.geolocation.getCurrentPosition((position) => {
 			//store.actions.setPosition(position.coords.latitude, position.coords.longitude);
-			const cornerNW = { lat: position.coords.latitude - 0.05, lng: position.coords.longitude + 0.05};
-			const cornerSE = { lat: position.coords.latitude + 0.05, lng: position.coords.longitude - 0.05};
+			const cornerNW = {lat: position.coords.latitude - 0.05, lng: position.coords.longitude + 0.05};
+			const cornerSE = {lat: position.coords.latitude + 0.05, lng: position.coords.longitude - 0.05};
 			store.actions.map.setCorners(cornerNW, cornerSE);
 		});
 	}
@@ -137,7 +139,7 @@ function addOperations(store, data) {
 		// Therefore, we got to convert the coordinates of all volumes
 	}));
 	const operations = S.fromPairs(pairs);
-	store.setState({ operations: { updated: Date.now(), list: S.Just(operations)}});
+	store.setState({operations: {updated: Date.now(), list: S.Just(operations)}});
 }
 
 function updateOperationState(store, gufi, info) {
@@ -147,7 +149,7 @@ function updateOperationState(store, gufi, info) {
 	if (S.isJust(currentOperation)) {
 		fM(currentOperation).state = info;
 		const newOperations = S.insert(gufi)(fM(currentOperation))(currentOperations);
-		store.setState({ operations: { updated: Date.now(), list: S.Just(newOperations)}});
+		store.setState({operations: {updated: Date.now(), list: S.Just(newOperations)}});
 	} else {
 		print(store.state, true, 'OperationState', 'No operation locally with gufi', gufi);
 	}
@@ -170,7 +172,7 @@ function addUsers(store, data) {
 		return S.Just(S.Pair(user.username)(user));
 	}));
 	const users = S.fromPairs(pairs);
-	store.setState({ users: { updated: Date.now(), list: S.Just(users)}});
+	store.setState({users: {updated: Date.now(), list: S.Just(users)}});
 }
 
 /* Vehicles */
@@ -183,20 +185,21 @@ function addVehicles(store, data) {
 		return S.Just(S.Pair(vehicle.uvin)(vehicle));
 	}));
 	const vehicles = S.fromPairs(pairs);
-	store.setState({ vehicles: { updated: Date.now(), list: S.Just(vehicles)}});
+	store.setState({vehicles: {updated: Date.now(), list: S.Just(vehicles)}});
 }
 
 function addVehicle(store, data) {
-	store.setState({ 
-		vehicles: { 
-			updated: Date.now(), 
+	store.setState({
+		vehicles: {
+			updated: Date.now(),
 			list: S.Just(
 				S.insert
 				(data.uvin)
 				(data)
 				(fM(store.state.vehicles.list))
 			)
-		}});
+		}
+	});
 }
 
 /* RFV */
@@ -207,7 +210,7 @@ function addRFV(store, data) {
 		return S.Just(S.Pair(rfv.id)(convertCoordinatesRFV(rfv)));
 	}));
 	const rfvs = S.fromPairs(pairs);
-	store.setState({ rfv: { updated: Date.now(), list: S.Just(rfvs)}});
+	store.setState({rfv: {updated: Date.now(), list: S.Just(rfvs)}});
 }
 
 /* QuickFly */
@@ -217,8 +220,7 @@ function addQuickFly(store, data) {
 		return S.Just(S.Pair(qf.name)(convertCoordinatesQF(qf)));
 	}));
 	const qfs = S.fromPairs(pairs);
-	console.log('qfs', qfs);
-	store.setState({ quickFly: { updated: Date.now(), list: S.Just(qfs) } });
+	store.setState({quickFly: {updated: Date.now(), list: S.Just(qfs)}});
 }
 
 /* Actions */
@@ -232,7 +234,7 @@ const actions = {
 			Axios.post('auth/login', authInfo)
 				.then(result => {
 					const token = result.data;
-					store.setState({ auth: { ...store.state.auth, token: S.Just(token), username: username }});
+					store.setState({auth: {...store.state.auth, token: S.Just(token), username: username}});
 					callback && callback();
 				})
 				.catch(error => {
@@ -244,9 +246,9 @@ const actions = {
 		info: (store, token, username, okCallback, errorCallback) => {
 			Axios.get('user/' + username, {headers: {'auth': token}})
 				.then(result => {
-					store.setState({ auth: { ...store.state.auth, token: S.Just(token), user: S.Just(result.data) }});
+					store.setState({auth: {...store.state.auth, token: S.Just(token), user: S.Just(result.data)}});
 					const socket = io(API, {
-						query : {
+						query: {
 							token: token
 						},
 						transports: ['websocket']
@@ -274,7 +276,7 @@ const actions = {
 	},
 	users: {
 		fetch: (store) => {
-			Axios.get(API + 'user', {headers: { auth: fM(store.state.auth.token) }})
+			Axios.get(API + 'user', {headers: {auth: fM(store.state.auth.token)}})
 				.then(result => addUsers(store, result.data))
 				.catch(error => {
 					print(store.state, true, 'UserState', error);
@@ -284,7 +286,7 @@ const actions = {
 	},
 	vehicles: {
 		fetch: (store) => {
-			Axios.get(API + 'vehicle', {headers: { auth: fM(store.state.auth.token) }})
+			Axios.get(API + 'vehicle', {headers: {auth: fM(store.state.auth.token)}})
 				.then(result => addVehicles(store, result.data))
 				.catch(error => {
 					print(store.state, true, 'VehicleState', error);
@@ -297,7 +299,7 @@ const actions = {
 			}
 		},
 		post: (store, vehicle, callback, errorCallback) => {
-			A.post(API + 'vehicle', vehicle, {headers: { auth: fM(store.state.auth.token) }})
+			A.post(API + 'vehicle', vehicle, {headers: {auth: fM(store.state.auth.token)}})
 				.then(result => {
 					addVehicle(store, result.data);
 					callback && callback();
@@ -314,13 +316,13 @@ const actions = {
 	},
 	operations: {
 		fetch: (store) => {
-			A.get(API + 'operation', {headers: { auth: fM(store.state.auth.token) }})
+			A.get(API + 'operation', {headers: {auth: fM(store.state.auth.token)}})
 				.then(result => addOperations(store, result.data.ops)) // TODO: Contract
 				.catch(error => print(store.state, true, 'OperationState', error));
 		},
 		post: (store, operation, callback, errorCallback) => {
 			const operationCleaned = prepareOperation(operation);
-			A.post(API + 'operation', operationCleaned, {headers: { auth: fM(store.state.auth.token) }})
+			A.post(API + 'operation', operationCleaned, {headers: {auth: fM(store.state.auth.token)}})
 				.then(result => {
 					//addOperations(store, result.data);
 					// TODO: Don't ask the server for the operations...
@@ -334,7 +336,7 @@ const actions = {
 		},
 		pendingacceptation: (store, gufi, comments, isApproved) => {
 			const data = {comments: comments, approved: isApproved};
-			A.post(API + 'operation/' + gufi + '/pendingtoaccept', data, {headers: { auth: fM(store.state.auth.token) }})
+			A.post(API + 'operation/' + gufi + '/pendingtoaccept', data, {headers: {auth: fM(store.state.auth.token)}})
 				.then(() => {
 					// TODO:
 					//  updateOperationState(store, gufi, isApproved ? 'ACCEPTED' : 'NOT_ACCEPTED');
@@ -349,10 +351,12 @@ const actions = {
 		post: (store, data) => {
 			droneMutex
 				.acquire()
-				.then(function(release) {
+				.then(function (release) {
 					const drones = store.state.drones.list;
-					const locationLatLng = {...data.location,
-						coordinates: {lat: data.location.coordinates[1], lng: data.location.coordinates[0]}};
+					const locationLatLng = {
+						...data.location,
+						coordinates: {lat: data.location.coordinates[1], lng: data.location.coordinates[0]}
+					};
 					const dataLatLng = {...data, location: locationLatLng};
 					const defaultValue = S.singleton(data.gufi)(dataLatLng);
 					store.setState({
@@ -364,7 +368,8 @@ const actions = {
 								(S.insert(dataLatLng.gufi)(dataLatLng))
 								(drones)
 							)
-						}}); // Creates a new StrMap if it doesn't exist, if not it inserts new position data into it.
+						}
+					}); // Creates a new StrMap if it doesn't exist, if not it inserts new position data into it.
 					release();
 				});
 		}
@@ -372,53 +377,57 @@ const actions = {
 	map: {
 		setCorners: (store, cornerNW, cornerSE) => {
 			//console.log('MapState: (BOUND) ', JSON.stringify(cornerNW), JSON.stringify(cornerSE));
-			store.setState({ map: { ...store.state.map, cornerNW, cornerSE }});
+			store.setState({map: {...store.state.map, cornerNW, cornerSE}});
 		},
 		addId: (store, id) => {
 			const newIds = store.state.map.ids.slice();
 			newIds.push(id);
-			store.setState({ map: { ...store.state.map, ids: newIds}});
+			store.setState({map: {...store.state.map, ids: newIds}});
 		},
 		removeId: (store, id) => {
-			store.setState({ map: { ...store.state.map, ids: store.state.map.ids.filter(idsaved => idsaved !== id)}});
+			store.setState({map: {...store.state.map, ids: store.state.map.ids.filter(idsaved => idsaved !== id)}});
 		},
 		onClicksDisabled: (store, flag) => {
 			print(store.state, false, 'MapState', flag);
-			store.setState({ map: { ...store.state.map, onClicksDisabled: flag}});
+			store.setState({map: {...store.state.map, onClicksDisabled: flag}});
 		}
 	},
 	map_dialog: {
 		open: (store, title = 'Information', text = 'No information', rightButtonText, rightButtonOnClick) => {
-			store.setState({ map_dialog: {
-				open: true,
-				title: title,
-				text: text,
-				rightButtonText: rightButtonText ? S.Just(rightButtonText) : S.Nothing,
-				rightButtonOnClick: rightButtonOnClick ? S.Just(rightButtonOnClick) : S.Nothing
-			}});
+			store.setState({
+				map_dialog: {
+					open: true,
+					title: title,
+					text: text,
+					rightButtonText: rightButtonText ? S.Just(rightButtonText) : S.Nothing,
+					rightButtonOnClick: rightButtonOnClick ? S.Just(rightButtonOnClick) : S.Nothing
+				}
+			});
 		},
 		close: (store) => {
-			store.setState({ map_dialog: {
-				open: false,
-				title: '',
-				text: '',
-				rightButtonText: S.Nothing,
-				rightButtonOnClick: S.Nothing
-			}});
+			store.setState({
+				map_dialog: {
+					open: false,
+					title: '',
+					text: '',
+					rightButtonText: S.Nothing,
+					rightButtonOnClick: S.Nothing
+				}
+			});
 		}
 	},
 	rfv: {
 		fetch: (store) => {
-			A.get(API + 'restrictedflightvolume', {headers: { auth: fM(store.state.auth.token) }})
+			A.get(API + 'restrictedflightvolume', {headers: {auth: fM(store.state.auth.token)}})
 				.then(result => addRFV(store, result.data))
 				.catch(error => print(store.state, true, 'RFVState', error));
 		}
 	},
 	quickFly: {
 		fetch: (store) => {
-			/*A.get(API + 'quickfly', {headers: { auth: fM(store.state.auth.token) }})
+			A.get(API + 'quickfly', {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => addQuickFly(store, result.data))
-				.catch(error => print(store.state, true, 'QuickFlyState', error));*/
+				.catch(error => print(store.state, true, 'QuickFlyState', error));
 		},
 		post: (store, data, callback, errorCallback) => {
 			const olds = maybeValues(store.state.quickFly.list);
@@ -439,7 +448,7 @@ const actions = {
 		}
 	},
 	debug: (store, toggle) => {
-		store.setState({ debug: toggle});
+		store.setState({debug: toggle});
 	}
 };
 
@@ -455,21 +464,21 @@ const extractOperationsFromState = (adesState) => {
 const filterOperationsByState = states => operations => {
 	// Unwrap Operations, then filter operations that are not opState
 	// //console.log('filterOperationsByState', operations);
-	return S.filter ((op) => states.includes(op.state)) (operations);
+	return S.filter((op) => states.includes(op.state))(operations);
 };
 
 const filterOperationsByIds = ids => operations => {
 	//console.log('filterOperationsByIds', ids, operations);
-	return S.filter((op) => ids.includes(op.gufi)) (operations);
+	return S.filter((op) => ids.includes(op.gufi))(operations);
 };
 
 /* Debug console */
 const print = (adesState, isError, origin, ...args) => {
 	if (adesState.debug) {
 		if (isError) {
-			console.error('('+origin +')', ...args);
+			console.error('(' + origin + ')', ...args);
 		} else {
-			console.log('('+origin +')', ...args);
+			console.log('(' + origin + ')', ...args);
 		}
 	}
 };
