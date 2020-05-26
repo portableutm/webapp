@@ -1,8 +1,9 @@
+/* istanbul ignore file */
+
 import React, {useEffect, useState} from 'react';
 import '../Ades.css';
 import {Icon} from '@blueprintjs/core';
 import useAdesState from '../state/AdesState';
-
 
 function RightArea({forceOpen, onClose, children}) {
 	const parseCommand = (value) => {

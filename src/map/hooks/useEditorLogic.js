@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import S from 'sanctuary';
 import _ from '../../libs/SaferSanctuary';
-import {swap} from '../../Utils/coordsConverter';
 import {useHistory} from 'react-router-dom';
 import useAdesState from '../../state/AdesState';
 
@@ -10,6 +9,7 @@ const DEFAULT_OPERATION_VALIDITY = 1; // Value to set by default in a new Operat
 const timeNow = new Date();
 const timeNow2 = new Date();
 timeNow2.setUTCHours(timeNow.getUTCHours() + DEFAULT_OPERATION_VALIDITY);
+const swap = (array) => [array[1], array[0]];
 
 function UseEditorLogic(refMapOnClick) {
 	const [operationInfo, setOperationInfo] = useState(S.Just({

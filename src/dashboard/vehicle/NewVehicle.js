@@ -5,6 +5,22 @@ import {fM} from '../../libs/SaferSanctuary';
 import useAdesState from '../../state/AdesState';
 import { useHistory, useParams } from 'react-router-dom';
 
+const Text = ({name, label, description, placeholder = '', ...props}) => (
+	<FormGroup
+		helperText={description}
+		label={label}
+		labelFor={'text-' + name}
+	>
+		<InputGroup
+			id={'text-' + name}
+			key={'text-' + name}
+			placeholder={placeholder}
+			disabled={props.disabled}
+			intent={props.intent}
+		/>
+	</FormGroup>
+);
+
 function NewVehicle({userId}) {
 	const { username } = useParams();
 	const { t, } = useTranslation();
@@ -12,39 +28,7 @@ function NewVehicle({userId}) {
 	const [state, actions] = useAdesState();
 	const [isSubmitting, setSubmitting] = useState(false);
 	const [error, setError] = useState(null);
-	const [vehicle, setVehicle] = useState({
-		owner_id: userId || username,
-		nNumber: '',
-		faaNumber: '',
-		vehicleName: '',
-		manufacturer: '',
-		model: ' 3',
-		'class': 'MULTIROTOR',
-		accessType: '',
-		vehicleTypeId: '',
-		'org-uuid': '',
-		registeredBy: 'admin'
-	});
-
-	const Text = ({name, label, description, placeholder = '', ...props}) => (
-		<FormGroup
-			helperText={description}
-			label={label}
-			labelFor={'text-' + name}
-		>
-			<InputGroup
-				id={'text-' + name}
-				placeholder={placeholder}
-				disabled={props.disabled}
-				intent={props.intent}
-				onChange={(evt) => setVehicle(vehicle => {
-					vehicle[name] = evt.currentTarget.value;
-					return vehicle;
-				})}
-				value={vehicle[name]}
-			/>
-		</FormGroup>
-	);
+	const [tclass, setTClass] = useState('MULTIROTOR');
 
 	useEffect(() => {
 		// Only run in mount
@@ -95,8 +79,8 @@ function NewVehicle({userId}) {
 			/>
 			<RadioGroup
 				label={t('vehicle_class')}
-				onChange={(evt) => setVehicle(vehicle => ({...vehicle, 'class': evt.currentTarget.value}))}
-				selectedValue={vehicle.class}
+				onChange={(evt) => setTClass(evt.currentTarget.value)}
+				selectedValue={tclass}
 			>
 				<Radio label="Multirotor" value="MULTIROTOR" />
 				<Radio label="Fixed-wing" value="FIXEDWING" />
@@ -123,7 +107,7 @@ function NewVehicle({userId}) {
 			<Text
 				name="owner_id"
 				label={'Owner username'}
-				placeholder=""
+				placeholder={userId || username}
 				disabled={true}
 			/>
 			<Text
@@ -136,6 +120,19 @@ function NewVehicle({userId}) {
 				fill
 				disabled={isSubmitting}
 				onClick={() => {
+					const vehicle = {
+						owner_id: userId || username,
+						nNumber: document.getElementById('text-nNumber').value,
+						faaNumber: document.getElementById('text-faaNumber').value,
+						vehicleName: document.getElementById('text-vehicleName').value,
+						manufacturer: document.getElementById('text-manufacturer').value,
+						model: document.getElementById('text-model').value,
+						'class': tclass,
+						accessType: '',
+						vehicleTypeId: '',
+						'org-uuid': '',
+						registeredBy: document.getElementById('text-registeredBy').value,
+					};
 					setSubmitting(true);
 					actions.vehicles.post(
 						vehicle, 

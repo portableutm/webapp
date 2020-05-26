@@ -35,6 +35,9 @@
     "eject": "react-scripts eject",
     "cypress:open": "cypress open"
   },
+  "nyc": {
+    "exclude": "src/serviceWorker.js"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -59,8 +62,5 @@
     "istanbul-lib-coverage": "^3.0.0",
     "nyc": "^15.0.1",
     "react-test-renderer": "^16.13.1"
-  },
-  "nyc": {
-    "exclude": "src/serviceWorker.js"
   }
 }

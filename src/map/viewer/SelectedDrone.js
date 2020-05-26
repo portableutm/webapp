@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import React from 'react';
 import RightAreaButton from '../RightAreaButton';
 import useAdesState from '../../state/AdesState';
