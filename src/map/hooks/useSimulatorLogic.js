@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import {useEffect, useState} from 'react';
 import L from 'leaflet';
 import 'leaflet-geometryutil';

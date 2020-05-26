@@ -25,7 +25,7 @@ import './Ades.css';
  */
 import Map from './map/Map.js';
 //import NotificationCenter from './NotificationCenter.js';
-import Simulator from './Simulator.js';
+import Simulator from './debug/Simulator.js';
 import LoginScreen from './LoginScreen';
 import RegistrationScreen from './RegistrationScreen';
 

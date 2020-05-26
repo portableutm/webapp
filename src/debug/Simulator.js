@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import React, {useState} from 'react';
 import { InputGroup, H4, Button, RadioGroup, Radio } from '@blueprintjs/core';
 
