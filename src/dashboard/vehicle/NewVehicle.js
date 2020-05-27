@@ -7,7 +7,7 @@ import { useHistory, useParams } from 'react-router-dom';
 
 const Text = ({name, label, description, placeholder = '', ...props}) => (
 	<FormGroup
-		helperText={description}
+		helperText={description}dsh
 		label={label}
 		labelFor={'text-' + name}
 	>
