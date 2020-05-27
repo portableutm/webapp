@@ -56,13 +56,13 @@ import Pilot from './dashboard/user/Pilot';
 import VehiclesList from './dashboard/vehicle/VehiclesList';
 import NewVehicle from './dashboard/vehicle/NewVehicle';
 
-function alertIsImportant(alertUtmMessage) {
+/*function alertIsImportant(alertUtmMessage) {
 	return (
 		alertUtmMessage.severity === 'EMERGENCY' ||
 		alertUtmMessage.severity === 'CRITICAL' ||
 		alertUtmMessage.severity === 'ALERT'
 	);
-}
+}*/
 
 const MasterPage = ({children}) => {
 	return(
@@ -89,7 +89,7 @@ function Ades() {
 	const { t, i18n } = useTranslation();
 
 	/* Alert System */
-	const [alertUtmMessage, setAlertUtmMessage] = useState(null);
+	/*const [alertUtmMessage, setAlertUtmMessage] = useState(null);
 	const [alertOpen, setAlertOpen] = useState(false);
 	useEffect(() => {
 		if (alertUtmMessage != null) {
@@ -100,7 +100,7 @@ function Ades() {
 	}, [alertUtmMessage]);
 
 	const bc = new BroadcastChannel('simulator');
-	bc.onmessage = (event) => setAlertUtmMessage(event.data);
+	bc.onmessage = (event) => setAlertUtmMessage(event.data);*/
 
 	/* Auth */
 	const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
@@ -142,7 +142,7 @@ function Ades() {
 		/* Operator pages */
 		return (
 			<div className='App animated fadeIn faster'>
-				{/* Alert System (UseCase01A: UTMMessage E,A,C received) */}
+				{/* Alert System (UseCase01A: UTMMessage E,A,C received)
 				<Alert
 					confirmButtonText={'OK'}
 					canEscapeKeyCancel={false}
@@ -159,6 +159,7 @@ function Ades() {
 						</p>
 					)}
 				</Alert>
+				*/}
 				<Router>
 					<Switch>
 						<Route exact path='/registration'>

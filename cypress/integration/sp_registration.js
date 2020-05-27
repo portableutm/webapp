@@ -21,6 +21,10 @@ describe('SPx: (Registration)', function () {
 
 	it('fills info wronlgy', function() {
 		cy.visit('http://localhost:2000/registration/');
+		cy.contains('Español').click();
+		cy.contains('English').click();
+		cy.contains('Register').click();
+		cy.contains('OK').click();
 		cy.get( '#input-first-name').type('w');
 		cy.contains('Register').click();
 		cy.contains('OK').click();
