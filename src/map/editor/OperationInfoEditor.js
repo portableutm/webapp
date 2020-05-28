@@ -37,17 +37,6 @@ function OperationInfoEditor({setOpen, info, setInfo}) {
 					onChange={(evt) => editInfo('flight_comments', evt.target.value)}
 				/>
 			</FormGroup>
-			{/* "volumes_description": "v0.1 - Restricted to one volume." */}
-			<FormGroup
-				label={t('editor_oinfo_volumesdescription')}
-				labelFor="volumes_description"
-			>
-				<InputGroup
-					id="volumes_description"
-					value={info.volumes_description}
-					disabled
-				/>
-			</FormGroup>
 			{/* "flight_number": "12345678" */}
 			<FormGroup
 				label={t('editor_oinfo_flightnumber')}
@@ -58,6 +47,30 @@ function OperationInfoEditor({setOpen, info, setInfo}) {
 					data-test-id="mapInputEditorFlightNumber"
 					value={info.flight_number}
 					onChange={(evt) => editInfo('flight_number', evt.target.value)}
+				/>
+			</FormGroup>
+			{/* "Contact Name"*/}
+			<FormGroup
+				label={t('editor_oinfo_contact_name')}
+				labelFor="contact"
+			>
+				<InputGroup
+					id="contact"
+					data-test-id="mapInputEditorContact"
+					value={info.contact}
+					onChange={(evt) => editInfo('contact', evt.target.value)}
+				/>
+			</FormGroup>
+			{/* "Contact Phone"*/}
+			<FormGroup
+				label={t('editor_oinfo_contact_phone')}
+				labelFor="contact_phone"
+			>
+				<InputGroup
+					id="contact_phone"
+					data-test-id="mapInputEditorContactPhone"
+					value={info.contact_phone}
+					onChange={(evt) => editInfo('contact_phone', evt.target.value)}
 				/>
 			</FormGroup>
 		</div>;

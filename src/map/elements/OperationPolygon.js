@@ -12,16 +12,12 @@ import useAdesState from '../../state/AdesState';
 /* Helpers */
 function getColorForOperationState(state) {
 	switch (state) {
-	case 'PROPOSED':
-		return '#001aff';
 	case 'ACCEPTED':
+		return '#001aff';
+	case 'PENDING':
 		return '#fff300';
 	case 'ACTIVATED':
 		return '#2dff00';
-	case 'CLOSED':
-		return '#5e5e5e';
-	case 'NONCONFORMING':
-		return '#ff00c8';
 	case 'ROGUE':
 		return '#ff0000';
 	default:
@@ -100,7 +96,11 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 		// Redraw if the polygon moved or the state changed
 		if (S.isJust(polygon)) {
 			fM(polygon).setLatLngs(latlngs);
+<<<<<<< Updated upstream
 
+=======
+			fM(polygon).setStyle({fillColor: getColorForOperationState(state)});
+>>>>>>> Stashed changes
 		}
 	}, [latlngs, state]); // eslint-disable-line react-hooks/exhaustive-deps
 

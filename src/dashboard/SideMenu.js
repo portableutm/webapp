@@ -74,7 +74,6 @@ function SideMenu() {
 						{S.isJust(adesState.auth.user) &&
 						<>
 							<MenuDivider title={fM(adesState.auth.user).firstName}/>
-							<MenuItem icon="tick-circle" disabled text="Operator"/>
 							<MenuItem icon="person" disabled text={fM(adesState.auth.user).email}/>
 							<MenuItem icon="log-out" text={t('dsh_logout')} onClick={() => setLogoutP(true)}/>
 						</>
@@ -87,15 +86,12 @@ function SideMenu() {
 						</>
 						}
 
-						<MenuDivider title="Operational Areas"/>
-						<MenuItem icon="changes" text="Change active area"/>
-						<MenuItem icon="circle" text="All operational areas"/>
 						<MenuDivider title="Users"/>
 						{/* <MenuItem icon="drive-time" text="Add new Operator"/> */}
 						{/* <MenuItem icon="desktop" text="Add new Monitor"/> */}
 						<MenuItem
 							icon="user"
-							text="All users"
+							text={t('dsh_all_users')}
 							onClick={() => history.push('/dashboard/users')}/>
 						<MenuDivider title="Operations"/>
 						{/* <MenuItem icon="zoom-in" text="Pending assesment"/> */}

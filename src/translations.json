@@ -31,6 +31,7 @@
       "dsh_dshhome": "Dashboard main screen",
       "dsh_logout": "Log out",
 
+      "dsh_all_users": "All Users",
       "dsh_operations_list": "All operations",
       "dsh_operations_list_pilot": "Your operations",
       "dsh_edit_your_info": "Edit your info",
@@ -110,14 +111,16 @@
       "editor_vinfo_effectivetimeend": "Latest time the operation will done with the operation volume.",
       "editor_vinfo_selecttime": "Select time...",
       "editor_vinfo_closecalendar": "Close calendar",
-      "editor_vinfo_minaltitude": "Minimum altitude (in feet)",
-      "editor_vinfo_maxaltitude": "Maximum altitude (in feet)",
+      "editor_vinfo_minaltitude": "Minimum altitude (in meters)",
+      "editor_vinfo_maxaltitude": "Maximum altitude (in meters)",
 
       "editor_oinfo_complete": "Editing information of operation",
       "editor_oinfo_name": "Operation name",
       "editor_oinfo_untitled":"Untitled",
       "editor_oinfo_volumesdescription": "Volumes description",
       "editor_oinfo_defaultvolume": "v0.1 - Restricted to one volume",
+      "editor_oinfo_contact_name": "Contact name",
+      "editor_oinfo_contact_phone": "Contact phone",
       "editor_oinfo_flightnumber": "Flight number"
     }
   },
@@ -164,6 +167,7 @@
       "dsh_returnmap": "VOLVER A MAPA EN TIEMPO REAL",
       "dsh_dshhome": "Panel principal",
       "dsh_logout": "Cerrar sesión",
+      "dsh_all_users": "Todos los Usuarios",
       "dsh_operations_list": "Todas las operaciones",
       "dsh_operations_list_pilot": "Tus operaciones",
       "dsh_edit_your_info": "Editar tus datos",
@@ -229,6 +233,8 @@
       "editor_oinfo_untitled":"Completar",
       "editor_oinfo_volumesdescription": "Descripción de volúmenes",
       "editor_oinfo_defaultvolume": "UNUSED",
+      "editor_oinfo_contact_name": "Nombre del contacto",
+      "editor_oinfo_contact_phone": "Teléfono del contacto",
       "editor_oinfo_flightnumber": "Número de vuelo"
     }
   }

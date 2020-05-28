@@ -1,0 +1,47 @@
+.div-container{
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1em;
+}
+.div-active-ops{
+    background-color: #76CA9E;
+    height: 120px;
+    padding: 1em;
+    grid-column: 1 / 5;
+}
+.div-accepted-ops{
+    background-color: #7684CA;
+    height: 120px;
+    padding: 1em;
+    grid-column: 5 / 9;
+}
+.div-pending-ops{
+    background-color: #C6CA76;
+    height: 120px;
+    padding: 1em;
+    grid-column: 9 / 13;
+}
+.div-ops-by-month{
+    background-color: #425260;
+    height: 300px;
+    padding: 1em;
+    grid-column: 1 / 13;
+}
+.div-users{
+    background-color: #425260;
+    height: 300px;
+    padding: 1em;
+    grid-column: 1 / 4;
+}
+.div-drones{
+    background-color: #425260;
+    height: 300px;
+    padding: 1em;
+    grid-column: 4 / 7;
+}
+.div-ops-last-week{
+    background-color: #425260;
+    height: 300px;
+    padding: 1em;
+    grid-column: 7 / 13;
+}

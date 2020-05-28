@@ -13,9 +13,11 @@ const swap = (array) => [array[1], array[0]];
 
 function UseEditorLogic(refMapOnClick) {
 	const [operationInfo, setOperationInfo] = useState(S.Just({
+		contact: '',
+		contact_phone: '',
 		flight_comments: '',
 		volumes_description: 'v0.1',
-		flight_number: '12345678',
+		flight_number: '',
 		submit_time: new Date().toISOString(), // TODO: Proper format for time 2019-12-11T19:59:10Z
 		update_time: new Date().toISOString(),
 		faa_rule: 0,
@@ -51,24 +53,7 @@ function UseEditorLogic(refMapOnClick) {
 			}
 		],
 		operation_volumes: null,
-		negotiation_agreements: [
-			{
-				free_text: 'Esto es solo una prueba PRUEBAAAA',
-				discovery_reference: 'discovery reference',
-				type: 'INTERSECTION',
-				uss_name: 'dronfies',
-				uss_name_of_originator: 'dronfies',
-				uss_name_of_receiver: 'dronfies'
-			},
-			{
-				free_text: '(2) Esto es solo una prueba',
-				discovery_reference: '(2)discovery reference',
-				type: 'INTERSECTION',
-				uss_name: 'dronfies',
-				uss_name_of_originator: 'dronfies',
-				uss_name_of_receiver: 'dronfies'
-			}
-		]
+		negotiation_agreements: []
 	}));
 	const [currentStep, setCurrentStep] = useState(0);
 	const [volume, setVolumeInfo] = useState({
@@ -76,7 +61,7 @@ function UseEditorLogic(refMapOnClick) {
 		effective_time_begin: timeNow,
 		effective_time_end: timeNow2,
 		min_altitude: 0,
-		max_altitude: 393,
+		max_altitude: 120,
 		beyond_visual_line_of_sight: false
 	}); // TODO: Support more than one volume
 	const [polygons, setPolygons] = useState([[]]);

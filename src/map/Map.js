@@ -149,13 +149,15 @@ function Map({ mode }) {
 	}, [JSON.stringify(state.map.cornerNW), JSON.stringify(state.map.cornerSE)]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		console.count('mapUpdated');
+		//console.count('mapUpdated');
 	}, [JSON.stringify(ops), JSON.stringify(opsFiltered), JSON.stringify(drones), JSON.stringify(polygons), JSON.stringify(simPaths)]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/*	Helpers */
 
 
-	const quickFlyOnClick = (location) => actions.map.setCorners(location.cornerNW, location.cornerSE);
+	const quickFlyOnClick = (location) => {
+		actions.map.setCorners(location.cornerNW, location.cornerSE);
+	}
 	const showStandardRightAreaPanels =
 		S.isNothing(currentSelectedOperation) &&
 		S.isNothing(currentSelectedDrone) &&

@@ -50,8 +50,15 @@ const initialState = {
 		cornerNW: { lat: -34.781788, lng: -56.225623},
 		cornerSE: { lat: -34.927028, lng: -55.835540},
 		*/
+<<<<<<< Updated upstream
 		cornerNW: {lat: -90, lng: 180},
 		cornerSE: {lat: 90, lng: -180},
+=======
+		/*cornerNW: { lat: -90, lng: 180},
+		cornerSE: { lat: 90, lng: -180},*/
+		cornerNW: { lat: -34.75005024623737, lng: -56.475563049316406},
+		cornerSE: { lat: -34.9624719168252, lng: -55.94821929931641},
+>>>>>>> Stashed changes
 		ids: [],
 		onClicksDisabled: false
 	},
@@ -63,13 +70,27 @@ const initialState = {
 		rightButtonOnClick: S.Nothing
 	},
 	quickFly: {
-		list: S.Nothing,
+		//list: S.Nothing,
+		list: S.Just({
+			Montevideo: {
+				name: 'Montevideo',
+				cornerNW: [
+					-34.75005024623737,
+					-56.475563049316406
+				],
+				cornerSE: [
+					-34.9624719168252,
+					-55.94821929931641
+				]
+			}
+		}),
 		updated: Date.now()
 	},
 	rfv: {
 		list: S.Nothing,
 		updated: Date.now()
 	},
+	alarm: false,
 	debug: true
 };
 
@@ -217,7 +238,8 @@ function addRFV(store, data) {
 function addQuickFly(store, data) {
 	const dataObtained = Array.from(data);
 	const pairs = S.justs(dataObtained.map((qf) => {
-		return S.Just(S.Pair(qf.name)(convertCoordinatesQF(qf)));
+		//return S.Just(S.Pair(qf.name)(convertCoordinatesQF(qf)));
+		return S.Just(S.Pair(qf.name)(qf));
 	}));
 	const qfs = S.fromPairs(pairs);
 	store.setState({quickFly: {updated: Date.now(), list: S.Just(qfs)}});
@@ -261,6 +283,12 @@ const actions = {
 					});
 					socket.on('operation-state-change', function (info) {
 						updateOperationState(store, info.gufi, info.state);
+						if(info.state === 'ROGUE'){
+							store.actions.alarm.setState(true);
+						}
+					});
+					socket.on('new-operation', function (info) {
+						console.log('new-operation', info.gufi);
 					});
 					okCallback && okCallback(result.data);
 				})
@@ -431,8 +459,10 @@ const actions = {
 		},
 		post: (store, data, callback, errorCallback) => {
 			const olds = maybeValues(store.state.quickFly.list);
-			data.cornerNW = [data.cornerNW.lng, data.cornerNW.lat];
-			data.cornerSE = [data.cornerSE.lng, data.cornerSE.lat];
+			//data.cornerNW = [data.cornerNW.lng, data.cornerNW.lat];
+			//data.cornerSE = [data.cornerSE.lng, data.cornerSE.lat];
+			data.cornerNW = [data.cornerNW.lat, data.cornerNW.lng];
+			data.cornerSE = [data.cornerSE.lat, data.cornerSE.lng];
 			olds.push(data);
 			addQuickFly(store, olds);
 			callback && callback();
@@ -445,6 +475,12 @@ const actions = {
 					print(store.state, true, 'QuickFlyState', error);
 					errorCallback && error.response && errorCallback(error.response.data);
 				});*/
+		}
+	},
+	alarm: {
+		getState: (store) => store.state.alarm,
+		setState: (store, newValue) => {
+			store.setState({ alarm: newValue});
 		}
 	},
 	debug: (store, toggle) => {

@@ -38,7 +38,7 @@ function SelectedOperation ({gufi}) {
 		[t('effective_time_end'), new Date(operation.operation_volumes[0].effective_time_end).toLocaleString()],
 		[t('max_altitude'), operation.operation_volumes[0].max_altitude+'m'],
 		[t('contact'), operation.contact],
-		[t('phone'), '097431725'],
+		[t('phone'), operation.contact_phone],
 	];
 
 	const toShow = info.map((propvalue) =>
@@ -55,7 +55,7 @@ function SelectedOperation ({gufi}) {
 			>
 				<div className='dialogify'>
 					<p className='fullW'>
-						This operation will be <b>{isApproved ? 'APPROVED' : 'NOT APPROVED'}</b>
+						This operation will be <b>{isApproved ? 'APPROVED' : 'CLOSED'}</b>
 					</p>
 					<FormGroup
 						className='fullW'

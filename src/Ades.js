@@ -6,9 +6,17 @@ import React, { useState, useEffect } from 'react';
 //import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import {
+<<<<<<< Updated upstream
 	Popover,
 	Position,
+=======
+	Alert,
+	Classes,
+	Dialog,
+>>>>>>> Stashed changes
 	Icon,
+	Popover,
+	Position
 } from '@blueprintjs/core';
 import S from 'sanctuary';
 import { useTranslation } from 'react-i18next';
@@ -54,6 +62,7 @@ import { fM } from './libs/SaferSanctuary';
 import Pilot from './dashboard/user/Pilot';
 import VehiclesList from './dashboard/vehicle/VehiclesList';
 import NewVehicle from './dashboard/vehicle/NewVehicle';
+import MainScreen from './dashboard/main_screen/MainScreen'
 
 /*function alertIsImportant(alertUtmMessage) {
 	return (
@@ -140,6 +149,7 @@ function Ades() {
 	if (isLoggedIn && role === 'admin') {
 		/* Operator pages */
 		return (
+<<<<<<< Updated upstream
 			<div className='App animated fadeIn faster'>
 				{/* Alert System (UseCase01A: UTMMessage E,A,C received)
 				<Alert
@@ -150,12 +160,129 @@ function Ades() {
 					isOpen={alertOpen}
 				>
 					{alertUtmMessage != null && (
+=======
+			<div>
+				<div className='App animated fadeIn faster'>
+					{/* Alert System (UseCase01A: UTMMessage E,A,C received) */}
+					<Alert
+						confirmButtonText={'OK'}
+						canEscapeKeyCancel={false}
+						canOutsideClickCancel={false}
+						onConfirm={() => setAlertOpen(false)}
+						isOpen={alertOpen}
+					>
+						{alertUtmMessage != null && (
+							<p>
+								(Message id: {alertUtmMessage.message_id})<br/>
+								<b>{alertUtmMessage.severity}</b>
+								<br/>
+								{alertUtmMessage.free_text}
+							</p>
+						)}
+					</Alert>
+					<Router>
+						<Switch>
+							<Route exact path='/registration'>
+								<RegistrationScreen/>
+							</Route>
+							<Route exact path='/debug'>
+								<MasterPage>
+									<Simulator/>
+								</MasterPage>
+							</Route>
+							<Route exact path='/simulator'>
+								<MasterPage>
+									<Map mode={S.Maybe.Just('simulator')}/>
+								</MasterPage>
+							</Route>
+							<Route exact path='/operation/new'>
+								<MasterPage>
+									<Map mode={S.Maybe.Just('new')}/>
+								</MasterPage>
+							</Route>
+							<Route exact path='/operation/:id'>
+								<MasterPage>
+									<Map mode={S.Maybe.Just('view')}/>
+								</MasterPage>
+							</Route>
+							<Route exact path='/dashboard/operations'>
+								<MasterPage>
+									<>
+										<Dashboard>
+											<OperationList/>
+										</Dashboard>
+									</>
+								</MasterPage>
+							</Route>
+							<Route exact path='/dashboard/users/:username'>
+								<MasterPage>
+									<>
+										<Dashboard>
+											<Pilot/>
+										</Dashboard>
+									</>
+								</MasterPage>
+							</Route>
+							<Route exact path='/dashboard/users'>
+								<MasterPage>
+									<>
+										<Dashboard>
+											<UsersList />
+										</Dashboard>
+									</>
+								</MasterPage>
+							</Route>
+							<Route exact path={'/dashboard/vehicles/:username/new'}>
+								<MasterPage>
+									<>
+										<Dashboard>
+											<NewVehicle />
+										</Dashboard>
+									</>
+								</MasterPage>
+							</Route>
+							<Route exact path='/dashboard/vehicles'>
+								<MasterPage>
+									<>
+										<Dashboard>
+											<VehiclesList />
+										</Dashboard>
+									</>
+								</MasterPage>
+							</Route>
+							<Route exact path='/dashboard'>
+								<MasterPage>
+									<>
+										<Dashboard>
+											<MainScreen/>
+										</Dashboard>
+									</>
+								</MasterPage>
+							</Route>
+							<Route path='/'>
+								<MasterPage>
+									<>
+										<Map mode={S.Maybe.Nothing}/>
+									</>
+								</MasterPage>
+							</Route>
+							<Route path='/notfound'>{t('not_found')}</Route>
+						</Switch>
+					</Router>
+				</div>
+				<Dialog
+					autoFocus="true"
+					isOpen={state.alarm}
+					onClose={() => actions.alarm.setState(false)}
+					title="Rogue Operation">
+					<div className={Classes.DIALOG_BODY}>
+>>>>>>> Stashed changes
 						<p>
-							(Message id: {alertUtmMessage.message_id})<br/>
-							<b>{alertUtmMessage.severity}</b>
-							<br/>
-							{alertUtmMessage.free_text}
+							<strong>
+                                Some of the active operations change his state to ROGUE.
+							</strong>
 						</p>
+<<<<<<< Updated upstream
 					)}
 				</Alert>
 				*/}
@@ -246,6 +373,37 @@ function Ades() {
 						<Route path='/notfound'>{t('not_found')}</Route>
 					</Switch>
 				</Router>
+=======
+						<p>
+                            There are many reasons that can make an Active operation became to Rogue:
+						</p>
+						<ul>
+							<li>The pilot if flying above the max altitude he reserved</li>
+							<li>The pilot if flying outside the area he reserved</li>
+							<li>The pilot if flying outside the period of time he reserved</li>
+						</ul>
+						<p>
+							Go to the map to see which of the operations is in Rogue state. Rogue operations are marked with red color on the map.
+						</p>
+					</div>
+				</Dialog>
+
+				{/*state.alarm
+					?
+					<>
+						<div className="div-rogue-alarm animate-flicker"></div>
+						<Button 
+							className="button-close-alarm"
+							icon="small-cross" 
+							intent="danger" 
+							text="Hide Alarm"
+							onClick={() => actions.alarm.setState(false)}/>
+					</>
+					:
+					null
+				*/}
+				
+>>>>>>> Stashed changes
 			</div>
 		);
 	} else if (isLoggedIn && role === 'pilot') {

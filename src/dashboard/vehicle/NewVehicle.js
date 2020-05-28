@@ -1,22 +1,48 @@
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Button, FormGroup, InputGroup, Radio, RadioGroup} from '@blueprintjs/core';
+import {Button, FormGroup, InputGroup, Radio, RadioGroup, Intent} from '@blueprintjs/core';
 import {fM} from '../../libs/SaferSanctuary';
 import useAdesState from '../../state/AdesState';
 import { useHistory, useParams } from 'react-router-dom';
 
+<<<<<<< Updated upstream
 const Text = ({name, label, description, placeholder = '', ...props}) => (
 	<FormGroup
 		helperText={description}dsh
+=======
+const Text = ({vehicle, setVehicle, name, label, description, placeholder = '', ...props}) => (
+	<FormGroup
+		helperText={description}
+>>>>>>> Stashed changes
 		label={label}
 		labelFor={'text-' + name}
 	>
 		<InputGroup
 			id={'text-' + name}
+<<<<<<< Updated upstream
 			key={'text-' + name}
 			placeholder={placeholder}
 			disabled={props.disabled}
 			intent={props.intent}
+=======
+			placeholder={placeholder}
+			disabled={props.disabled}
+			intent={props.intent}
+			onChange={
+				/*(evt) => setVehicle(
+					v => {
+						v[name] = evt.currentTarget.value;
+						return v;
+					}
+				)*/
+				evt =>{
+					let newVehicle = {...vehicle};
+					newVehicle[name] = evt.currentTarget.value;
+					setVehicle(newVehicle);
+				}
+			}
+			value={vehicle[name]}
+>>>>>>> Stashed changes
 		/>
 	</FormGroup>
 );
@@ -28,7 +54,23 @@ function NewVehicle({userId}) {
 	const [state, actions] = useAdesState();
 	const [isSubmitting, setSubmitting] = useState(false);
 	const [error, setError] = useState(null);
+<<<<<<< Updated upstream
 	const [tclass, setTClass] = useState('MULTIROTOR');
+=======
+	const [vehicle, setVehicle] = useState({
+		owner_id: userId || username,
+		nNumber: '',
+		faaNumber: '',
+		vehicleName: '',
+		manufacturer: '',
+		model: '',
+		'class': 'MULTIROTOR',
+		accessType: 'accessType',
+		vehicleTypeId: '',
+		'org-uuid': '',
+		registeredBy: 'admin'
+	});
+>>>>>>> Stashed changes
 
 	useEffect(() => {
 		// Only run in mount
@@ -49,29 +91,31 @@ function NewVehicle({userId}) {
 				}
 			</div>
 			<Text
+				vehicle={vehicle}
+				setVehicle={setVehicle}
 				name="nNumber"
 				label={t('vehicle_nNumber')}
 				description="Vehicle number"
 			/>
 			<Text
-				name="faaNumber"
-				label={t('vehicle_faaNumber')}
-				placeholder="N707JT"
-				description="Legal number assigned by the FAA"
-			/>
-			<Text
+				vehicle={vehicle}
+				setVehicle={setVehicle}
 				name="vehicleName"
 				label={t('vehicle_vehicleName')}
 				placeholder="Air Force One"
 				description="Short descriptive name of the vehicle"
 			/>
 			<Text
+				vehicle={vehicle}
+				setVehicle={setVehicle}
 				name="manufacturer"
 				label={t('vehicle_manufacturer')}
 				placeholder="DJI"
 				description="Brand or company that fabricated the vehicle"
 			/>
 			<Text
+				vehicle={vehicle}
+				setVehicle={setVehicle}
 				name="model"
 				label={t('vehicle_model')}
 				placeholder="Phantom 6 Mini"
@@ -86,31 +130,16 @@ function NewVehicle({userId}) {
 				<Radio label="Fixed-wing" value="FIXEDWING" />
 			</RadioGroup>
 			<Text
-				name="accessType"
-				label={t('vehicle_accessType')}
-				placeholder=""
-				disabled={true}
-			/>
-
-			<Text
-				name="vehicleTypeId"
-				label={t('vehicle_vehicleTypeId')}
-				placeholder=""
-				disabled={true}
-			/>
-			<Text
-				name="org-uuid"
-				label={t('vehicle_org-uuid')}
-				placeholder=""
-				disabled={true}
-			/>
-			<Text
+				vehicle={vehicle}
+				setVehicle={setVehicle}
 				name="owner_id"
 				label={'Owner username'}
 				placeholder={userId || username}
 				disabled={true}
 			/>
 			<Text
+				vehicle={vehicle}
+				setVehicle={setVehicle}	
 				name="registeredBy"
 				label={t('vehicle_registeredBy')}
 				placeholder={fM(state.auth.user).username}
@@ -119,6 +148,7 @@ function NewVehicle({userId}) {
 			<Button
 				fill
 				disabled={isSubmitting}
+				intent={Intent.PRIMARY}
 				onClick={() => {
 					const vehicle = {
 						owner_id: userId || username,

@@ -1,0 +1,27 @@
+.div-user-row{
+    margin-top: 1em;
+    margin-bottom: 1em;
+    display: grid;
+    grid-template-columns: 50px auto 40px;
+    gap: 1em;
+    height: 50px;
+}
+
+.div-image{
+    background-color: #30404D;
+}
+
+.div-name{
+    font-size: 16px;
+}
+
+.div-username{
+    font-size: 12px;
+}
+
+.div-quantity{
+    line-height: 40px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 24px;
+}

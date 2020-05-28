@@ -8,7 +8,7 @@ import {useHistory} from 'react-router-dom';
 import useAdesState from '../../state/AdesState';
 import {useTranslation} from 'react-i18next';
 
-const USERS_ONE_PAGE_NUMBER = 5;
+const USERS_ONE_PAGE_NUMBER = 8;
 
 const UsersList = () => {
 	const history = useHistory();
@@ -34,7 +34,7 @@ const UsersList = () => {
 
 	return (
 		<>
-			<h1>UsersList</h1>
+			<h1>Users</h1>
 			{ 	state.users.error &&
 			<>
 				<p>
@@ -90,12 +90,17 @@ const UsersList = () => {
 												>
 													Edit
 												</Button>
-												<Button
-													small={true}
-													onClick={() => history.push('/dashboard/vehicles/' + user.username + '/new/')}
-												>
+												{user.role === 'pilot'
+													?
+													<Button
+														small={true}
+														onClick={() => history.push('/dashboard/vehicles/' + user.username + '/new/')}
+													>
 													Add veh.
-												</Button>
+													</Button>
+													:
+													null
+												}
 											</div>
 										</td>
 									</tr>

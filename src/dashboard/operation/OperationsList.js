@@ -38,12 +38,20 @@ function Operation({children}) {
 					</div>
 				</GenericListLine>
 				<GenericListLine>
-					{t('submit_time')}
-					{children.submit_time}
+					{'Begin'}
+					{children.operation_volumes[0].effective_time_begin}
 				</GenericListLine>
 				<GenericListLine>
-					{t('update_time')}
-					{children.update_time}
+					{'End'}
+					{children.operation_volumes[0].effective_time_end}
+				</GenericListLine>
+				<GenericListLine>
+					{'Min. Altitude'}
+					{children.operation_volumes[0].min_altitude}
+				</GenericListLine>
+				<GenericListLine>
+					{'Max. Altitude'}
+					{children.operation_volumes[0].max_altitude}
 				</GenericListLine>
 				<GenericListLine>
 					{t('aircraft_comments')}
