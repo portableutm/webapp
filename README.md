@@ -14,8 +14,17 @@ Our system is also specially recommended for the usage in emergency disaster res
 The WebApp (also known as **Ades**) is the main hub for authorities and pilots alike. It supports both the monitoring of all airspace under the control of the authority and the management for pilots and UAV operators of their shared data with authorities and request of new authorizations.
 
 ### How to use?
-Assuming a valid and correctly configured instance of the PortableUTM USSCore, *consts.js* has an **API** field that should be pointed to this correct instance.
-Then, **npm install** and **npm start** should do the magic.
+Deploy
+* Download the two repositories: dronfiesuss and webapp.
+* If you don’t have npm installed, install npm.
+* Run the command “npm install” in both projects.
+* Create the database:
+* Install PostgreSQL (v11) and PostGIS (v3) on your computer.
+* Open pgAdmin.
+* Go to your local server, and create a new database called “dev”.
+* Restore the script “dronfiesuss/db_scripts/create_empty_db.sql”.
+* Open the file “dronfiesuss/ormconfig.json” and set the credentials of your local database.
+* Run both projects, using the command “npm start” on the root folder of both projects.
 
 ### How to contribute?
 Please refer to [the code of conduct](https://github.com/portableutm/webapp/blob/develop/CODE_OF_CONDUCT.md) and [the contribution guide](https://github.com/portableutm/webapp/blob/develop/CONTRIBUTING.md) 
