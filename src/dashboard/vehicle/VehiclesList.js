@@ -8,11 +8,12 @@ import {GenericListLine} from '../generic/GenericList';
 function Vehicle({children: v}) {
 	const { t,  } = useTranslation();
 	const [showProperties, setShowProperties] = useState(false);
+
 	return (
 		<Callout
 			key={v.faaNumber}
 			className="dshListItem"
-			title={<div>{v.manufacturer + ' ' + v.model + ' (' + v.nNumber + ')'} <Tag minimal={true}>{showProperties ? t('click_to_collapse') : t('click_to_expand')}</Tag></div>}
+			title={<div>{v.vehicleName + ' (' + v.faaNumber + ')'} <Tag minimal={true}>{showProperties ? t('click_to_collapse') : t('click_to_expand')}</Tag></div>}
 			icon="double-chevron-right"
 			onClick={() => setShowProperties(show => !show)}
 		>
@@ -75,7 +76,6 @@ function Vehicle({children: v}) {
 function VehiclesList() {
 	const { t,  } = useTranslation();
 	const [state, actions] = useAdesState();
-	console.log('state.vehicles.list', state.vehicles.list);
 
 	useEffect(() => {
 		// Only run in mount
@@ -102,7 +102,7 @@ function VehiclesList() {
 			{	!state.vehicles.error && mapValues
 			(state.vehicles.list)
 			(() => <Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>)
-			(vehicle => <Vehicle key={vehicle.nNumber}>{vehicle}</Vehicle>)
+			(vehicle => <Vehicle key={vehicle.faaNumber}>{vehicle}</Vehicle>)
 			}
 		</>
 	);

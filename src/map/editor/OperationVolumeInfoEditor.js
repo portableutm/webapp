@@ -96,7 +96,6 @@ function OperationVolumeInfoEditor(props) {
 						id="effective_time_end"
 						minDate={new Date()}
 						value={info.effective_time_end}
-						onChange={value => editInfo('effective_time_end', value)}
 						timePrecision={TimePrecision.MILLISECOND}
 					/>
 				)}

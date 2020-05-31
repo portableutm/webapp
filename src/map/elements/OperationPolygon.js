@@ -96,11 +96,7 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 		// Redraw if the polygon moved or the state changed
 		if (S.isJust(polygon)) {
 			fM(polygon).setLatLngs(latlngs);
-<<<<<<< Updated upstream
-
-=======
 			fM(polygon).setStyle({fillColor: getColorForOperationState(state)});
->>>>>>> Stashed changes
 		}
 	}, [latlngs, state]); // eslint-disable-line react-hooks/exhaustive-deps
 
