@@ -14,6 +14,7 @@ function LeftOverlay({children, disabled = []}) {
 			<Menu>
 				{children.map((item, index) => {
 					return <MenuItem
+						key={JSON.stringify(item)}
 						intent={index <= clicked ? Intent.SUCCESS : Intent.WARNING}
 						disabled={disabled.includes(index)} text={item.text}
 						onClick={() => {

@@ -1,6 +1,6 @@
 {
   "name": "ades",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.22.3",
@@ -12,6 +12,7 @@
     "axios": "^0.19.1",
     "i18next": "^19.4.2",
     "leaflet": "^1.6.0",
+    "leaflet-geometryutil": "^0.9.3",
     "leaflet-hotline": "^0.4.0",
     "leaflet-rotatedmarker": "^0.2.0",
     "prop-types": "^15.7.2",
@@ -33,6 +34,9 @@
     "test": "react-scripts test --transformIgnorePatterns \\\"node_modules/(?!use-global-hook)/\\\"",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open"
+  },
+  "nyc": {
+    "exclude": "src/serviceWorker.js"
   },
   "browserslist": {
     "production": [

@@ -27,3 +27,5 @@ yarn-error.log*
 util/convert/latvia.mbtiles
 
 .idea/
+
+.nyc_output/

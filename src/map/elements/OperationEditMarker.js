@@ -14,7 +14,7 @@ const EDIT_POLYGON_ICON = L.icon({
 /**
  * @return {null}
  */
-function OperationEditMarker({map, latlng, onDrag}) {
+function OperationEditMarker({map, latlng, onDrag, index }) {
 	//const [marker, setMarker] = useState(S.Nothing);
 
 	useEffect(() => { // Mount and unmount
@@ -28,6 +28,12 @@ function OperationEditMarker({map, latlng, onDrag}) {
 		);
 
 		marker.addTo(map);
+		if (index) {
+			marker.bindTooltip('' + index, {
+				permanent: true,
+				direction: 'right'
+			});
+		}
 		marker.on('drag', (evt) => onDrag(evt.latlng));
 		//marker.on('dragend', (evt) => onDragEnd(evt));
 		//setMarker(S.Just(marker));

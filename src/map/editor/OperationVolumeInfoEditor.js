@@ -17,7 +17,7 @@ function OperationVolumeInfoEditor(props) {
 		});
 	return (
 		<Dialog
-			title={t('editor_vinfo_editingvolume') + " " + S.maybeToNullable(opVolumeIndex)}
+			title={t('editor_vinfo_editingvolume') + ' ' + S.maybeToNullable(opVolumeIndex)}
 			canEscapeKeyClose={true}
 			canOutsideClickClose={true}
 			onClose={() => setOpVolumeIndex(S.Maybe.Nothing)}
@@ -77,6 +77,7 @@ function OperationVolumeInfoEditor(props) {
 				)}
 				<Button
 					fill={true}
+					data-test-id="map#editor#volume#info#effective_time_begin"
 					intent={Intent.PRIMARY}
 					text={!beginCalendarOpen ? t('editor_vinfo_selecttime') : t('editor_vinfo_closecalendar')}
 					onClick={() => setBeginCalendarOpen(current => !current)}
@@ -100,6 +101,7 @@ function OperationVolumeInfoEditor(props) {
 				)}
 				<Button
 					fill={true}
+					data-test-id="map#editor#volume#info#effective_time_end"
 					intent={Intent.PRIMARY}
 					text={!endCalendarOpen ? t('editor_vinfo_selecttime') : t('editor_vinfo_closecalendar')}
 					onClick={() => setEndCalendarOpen(current => !current)}
@@ -120,6 +122,7 @@ function OperationVolumeInfoEditor(props) {
 				<FormGroup label={t('editor_vinfo_maxaltitude')} labelFor="max_altitude">
 					<InputGroup
 						id="max_altitude"
+						data-test-id="map#editor#volume#info#max_altitude"
 						value={info.max_altitude}
 						onChange={evt => editInfo('max_altitude', evt.target.value)}
 					/>

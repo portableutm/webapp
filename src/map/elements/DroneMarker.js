@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 /* Logic */
 import S from 'sanctuary';
@@ -7,7 +7,8 @@ import L from 'leaflet';
 import 'leaflet-rotatedmarker';
 import 'leaflet-hotline';
 import {fM} from '../../libs/SaferSanctuary';
-import {useTranslation} from 'react-i18next';
+import useAdesState from '../../state/AdesState';
+
 
 /* Constants */
 
@@ -56,12 +57,13 @@ const hasToRemoveOldest = (path) => path.length > MAX_POINTS_HISTORY;
 /**
  * @return {null}
  */
-function DroneMarker({map, id, position, heading, altitude, risk}) {
-	const { t, } = useTranslation();
+function DroneMarker({map, id, position, heading, altitude, risk, onClick}) {
 	const [marker, setMarker] = useState(S.Nothing);
+	const [state, ] = useAdesState();
 	const [polyline, setPolyline] = useState(S.Nothing);
 	const [path, setPath] = useState([]);
 	const [timer, setTimer] = useState(null);
+	const onClicksDisabled = useRef(state.map.onClicksDisabled);
 
 	useEffect(() => {
 		// Create marker, add it to map. Remove from map on unmount
@@ -78,12 +80,18 @@ function DroneMarker({map, id, position, heading, altitude, risk}) {
 			min: 0,
 			max: MAX_POINTS_HISTORY - 1
 		});
-		marker.bindPopup(
-			'ID: <b>' + id + '</b></br>' + // ID <b>sfdsafsafasfsafsaf</b>
-			'Lat: <b>' + position.lat + '</b> Lng: <b>' + position.lng + '</b></br>' + // Lat: 32.145 Lng: 48.354
-			t('altitude') + ' <b>' + altitude + 'm</b></br>' + // Altitude: 12m
-			t('heading') + ' <b>' + heading + 'º</b></br>'
-		); // Information of the drone
+
+
+
+		onClick && marker.on('click', (evt) => {
+			if (!onClicksDisabled.current) {
+				onClick(evt.latlng);
+				L.DomEvent.stopPropagation(evt);
+			}
+		});
+
+
+
 		marker.addTo(map);
 		hasToDrawTrail && polyline.addTo(map);
 		// Save initialized values
@@ -112,12 +120,16 @@ function DroneMarker({map, id, position, heading, altitude, risk}) {
 					const pathWithZs = path.map((latlng, index) => [latlng.lat, latlng.lng, index]);
 					// Construct Array with third value Zindex that represents "freshness" of the data.
 					// The higher the Zindex, the darker it will look (older data).
-					polyline.setLatLngs(pathWithZs);
+					if (S.isJust(polyline)) fM(polyline).setLatLngs(pathWithZs);
 				}
 			}
 			setTimer(setTimeout(() => markerGraphic.setIcon(INACTIVE_DRONE_ICON), INACTIVE_TIMEOUT)); // Inactivity after INACTIVE_TIMEOUT seconds
 		}
 	}, [position.lat, position.lng, heading, altitude]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
+		onClicksDisabled.current = state.map.onClicksDisabled;
+	}, [state.map.onClicksDisabled]);
 
 	return null;
 }

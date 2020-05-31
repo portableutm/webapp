@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 /* Logic */
 import S from 'sanctuary';
@@ -7,6 +7,7 @@ import L from 'leaflet';
 /* Global state */
 import {fM} from '../../libs/SaferSanctuary';
 import {useTranslation} from 'react-i18next';
+import useAdesState from '../../state/AdesState';
 
 /* Helpers */
 function getColorForOperationState(state) {
@@ -31,9 +32,12 @@ function getColorForOperationState(state) {
 /**
  * @return {null}
  */
-function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ onClick, onClickPopup}) {
-	const { t,  } = useTranslation();
+function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ onClick, onClickPopup, isSelected = false}) {
+	const {t,} = useTranslation();
+	const [adesState,] = useAdesState();
 	const [polygon, setPolygon] = useState(S.Nothing);
+	const onClicksDisabled = useRef(adesState.map.onClicksDisabled);
+
 	useEffect(() => { // Mount and unmount
 		// Initialize Polygon, draw on Map
 		const polygon = L.polygon(
@@ -48,8 +52,10 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 		);
 
 		onClick && polygon.on('click', (evt) => {
-			onClick(evt.latlng);
-			L.DomEvent.stopPropagation(evt);
+			if (!onClicksDisabled.current) {
+				onClick(evt.latlng);
+				L.DomEvent.stopPropagation(evt);
+			}
 		});
 
 		!onClick && onClickPopup && polygon.bindPopup(onClickPopup);
@@ -72,12 +78,29 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	
+	useEffect(() => {
+		onClicksDisabled.current = adesState.map.onClicksDisabled;
+	}, [adesState.map.onClicksDisabled]);
+
+	useEffect(() => {
+		if (S.isJust(polygon)) {
+			if (isSelected) {
+				fM(polygon)._path.classList.add('animated');
+				fM(polygon)._path.classList.add('flash');
+				fM(polygon)._path.classList.add('infinite');
+			} else {
+				fM(polygon)._path.classList.remove('animated');
+				fM(polygon)._path.classList.remove('flash');
+				fM(polygon)._path.classList.remove('infinite');
+			}
+		}
+	}, [isSelected]); // eslint-disable-line react-hooks/exhaustive-deps
+
 	useEffect(() => {
 		// Redraw if the polygon moved or the state changed
 		if (S.isJust(polygon)) {
-			console.log("Polygon updated!");
 			fM(polygon).setLatLngs(latlngs);
+
 		}
 	}, [latlngs, state]); // eslint-disable-line react-hooks/exhaustive-deps
 

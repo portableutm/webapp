@@ -685,7 +685,7 @@ describe('SP2: (Dashboard)', function () {
 		cy.contains('Dashboard').click();
 	});
 	it('Finds Operations button', function () {
-		cy.contains('List all operations').click();
+		cy.contains('All operations').click();
 	});
 	it('Find operation named ACTIVATED and check it id matches', function () {
 		cy.get('[data-test-id="opACTIVATED"]').click().then(($el) => {

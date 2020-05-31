@@ -1,9 +1,12 @@
-import {Icon, Menu, MenuDivider, MenuItem, Popover, Position} from '@blueprintjs/core';
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {useTranslation} from 'react-i18next';
+import RightAreaButton from '../RightAreaButton';
+import useAdesState from '../../state/AdesState';
+import {maybeValues} from '../../libs/SaferSanctuary';
+import {Button, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
 
 /* Constants */
+/*
 const quickFlyLocations = [
 	{
 		name: 'MVD/SUMU: AIC (Ground)',
@@ -31,36 +34,100 @@ const quickFlyLocations = [
 		cornerSE: {lat: -34.917137, lng: -56.146111}
 	}
 ];
-
-const QuickFlyControl = ({onClick}) => {
-	const { t,  } = useTranslation();
-	return (
-		<div>
-			<Menu>
-				<MenuDivider title={t('map_flyto')}/>
-				{	quickFlyLocations.map((location, index) =>
-					<MenuItem
-						data-test-id={'mapQuickFly' + index}
-						key={location.name}
-						text={location.name}
-						onClick={() => onClick(location)}
-					/>
-				)
-				}
-			</Menu>
-		</div>
-	);
-};
+ */
 
 const QuickFly = ({onClick}) => {
 	//console.log('QuickFly', onClick);
-	return (<div data-test-id='mapButtonQuickFly' className='quickFlyButton'>
-		<Popover content={<QuickFlyControl onClick={onClick}/>} position={Position.BOTTOM_LEFT}>
-			<div className='contextualMenu'>
-				<Icon icon='send-to-map' iconSize={44} color='rgb(50,50,50)'/>
-			</div>
-		</Popover>
-	</div>);
+	const [state, actions] = useAdesState();
+	const [isCreating, showCreate] = useState(false);
+
+	const addNewQuickFlyButton = {
+		name: 'Add new location',
+		isSpecial: true,
+		div: (<div
+			key='thisisauniqueone'
+			className='rightAreaButtonTextsSeparator'
+		>
+			<Button
+				small={true}
+				intent={Intent.PRIMARY}
+				onClick={() => showCreate(true)}
+			>
+				Add new location
+			</Button>
+		</div>),
+	};
+
+	const content = [].concat(maybeValues(state.quickFly.list),addNewQuickFlyButton);
+	return (
+		<>
+			{	!isCreating &&
+				<RightAreaButton
+					useCase='quickFly'
+					icon='send-to-map'
+					label='QUICK FLY'
+					onClick={onClick}
+					simpleChildren={true}
+				>
+					{content}
+				</RightAreaButton>
+			}
+			{	isCreating &&
+				<RightAreaButton
+					className={'animated flash'}
+					useCase='quickFlyNew'
+					icon='cog'
+					label='New QuickFly'
+					forceOpen={true}
+					simpleChildren={false}
+				>
+					<div
+						className='rightAreaButtonText'
+					>
+						<FormGroup
+							label="Name"
+							inline={true}
+							labelFor="qf-name"
+							labelInfo="(required)"
+						>
+							<InputGroup id="qf-name" placeholder="New location" />
+						</FormGroup>
+					</div>
+					<div
+						className='rightAreaButtonTextDisabled'
+					>
+						The position of the new saved location is captured automatically from the current region shown on the map.
+					</div>
+					<div
+						className='rightAreaButtonTextsSeparator'
+					>
+						<Button
+							small={true}
+							intent={Intent.PRIMARY}
+							onClick={() => {
+								actions.quickFly.post(
+									{
+										name: document.getElementById('qf-name').value,
+										cornerNW: state.map.cornerNW,
+										cornerSE: state.map.cornerSE,
+									},
+									() => {
+										actions.map_dialog.open('Quick fly', 'New location created!');
+									},
+									(error) => {
+										actions.map_dialog.open('Quick fly', 'Error: ' + JSON.stringify(error));
+									}
+								);
+								showCreate(false);
+							}}
+						>
+							Save
+						</Button>
+					</div>
+				</RightAreaButton>
+			}
+		</>
+	);
 };
 
 QuickFly.propTypes = {

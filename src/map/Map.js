@@ -12,7 +12,6 @@ import '../css/leaflet.css';
 import S from 'sanctuary';
 
 /* UI */
-import {Card} from '@blueprintjs/core';
 
 /* Components */
 import MapMain from './MapElements';
@@ -22,18 +21,29 @@ import DroneMarker from './elements/DroneMarker';
 import OperationPolygon from './elements/OperationPolygon';
 import OperationInfoEditor from './editor/OperationInfoEditor';
 import OperationVolumeInfoEditor from './editor/OperationVolumeInfoEditor';
-import LeftOverlay from './generic/LeftOverlay';
+import RestrictedFlightVolume from './elements/RestrictedFlightVolume';
+import SelectedOperation from './viewer/SelectedOperation';
+import SimulatorPanel from './actions/SimulatorPanel';
+import EditorPanel from './actions/EditorPanel';
+import OperationEditMarker from './elements/OperationEditMarker';
 
 /* Hooks */
 import useOperationFilter from './hooks/useOperationFilter';
 import useAdesState from '../state/AdesState';
-import {fM, maybeValues} from '../libs/SaferSanctuary';
+import useEditorStepText from './hooks/useEditorStepText';
+import useEditorLogic from './hooks/useEditorLogic';
+import useSimulatorLogic from './hooks/useSimulatorLogic';
 
 /* Auxiliaries */
 import {initializeLeaflet} from './MapAuxs';
-import useEditorStepText from './hooks/useEditorStepText';
-import OperationEditMarker from './elements/OperationEditMarker';
-import useEditorLogic from './hooks/useEditorLogic';
+
+import RightArea from '../layout/RightArea';
+
+import Polyline from './elements/Polyline';
+import {fM, mapValues, maybeValues} from '../libs/SaferSanctuary';
+import SelectedDrone from './viewer/SelectedDrone';
+import {Button, Dialog, Intent} from '@blueprintjs/core';
+
 
 
 /* Main function */
@@ -55,7 +65,7 @@ function Map({ mode }) {
 	const [isOperationInfoPopupOpen, setOperationInfoPopupOpen] = useState(false);
 	const [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, setCurrentStep, setErrorOnSaveCallback] = useEditorLogic(refMapOnClick);
 
-	const [stepsToDefineOperation, stepText, stepsDisabled] =
+	const [stepsToDefineOperation, , stepsDisabled] =
 		useEditorStepText(setOperationInfo, setOperationInfoPopupOpen, setCurrentStep, setErrorOnSaveCallback);
 
 	const [maybeEditingOpVolume, setEditingOperationVolume] = useState(S.Maybe.Nothing);
@@ -64,10 +74,18 @@ function Map({ mode }) {
 	//	notifications.state.all.size > 0
 	//		? ' statusOverMapNotifs'
 	//		: ' statusOverMapNoNotifs';
-	const statusOverMapNotifs = ' statusOverMapNoNotifs';
+
+	const isEditor = S.isJust(mode) && fM(mode) === 'new';
 
 	/* Viewer state */
-	const [ops, opsFiltered, id, ids, filtersSelected, setFiltersSelected, setIds] = useOperationFilter();
+	const [ops, opsFiltered, id, filtersSelected, setFiltersSelected, , idsShowing, setIdsShowing, rfvs, setRfvsShowing] = useOperationFilter();
+	const [currentSelectedOperation, setSelectedOperation] = useState(S.Nothing);
+	const [currentSelectedDrone, setSelectedDrone] = useState(S.Nothing);
+
+	/* Simulator state */
+	const [simPaths, setSimPath, simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic(refMapOnClick, map, fM(state.auth.token));
+	const isSimulator = (S.isJust(mode) && fM(mode) === 'simulator');
+
 
 
 	/* 	Drone related logic	 */
@@ -107,7 +125,6 @@ function Map({ mode }) {
 			setMapInitialized);
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-
 	useEffect(() => {
 		// Each time we visualize another Operation, we clear the feature group not to mix their volumes
 		if (id != null && opsFiltered.length > 0) {
@@ -115,6 +132,13 @@ function Map({ mode }) {
 			actions.map.setCorners(polygon.getBounds().getNorthWest(), polygon.getBounds().getSouthEast());
 		}
 	}, [id, opsFiltered]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
+		if (S.isJust(state.quickFly.list)) {
+			const first = maybeValues(state.quickFly.list)[0];
+			actions.map.setCorners(first.cornerNW, first.cornerSE);
+		}
+	}, [S.isJust(state.quickFly.list)]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		// Change map position if it has changed in the state
@@ -126,35 +150,29 @@ function Map({ mode }) {
 
 	useEffect(() => {
 		console.count('mapUpdated');
-	}, [JSON.stringify(ops), JSON.stringify(opsFiltered), JSON.stringify(drones), JSON.stringify(polygons)]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [JSON.stringify(ops), JSON.stringify(opsFiltered), JSON.stringify(drones), JSON.stringify(polygons), JSON.stringify(simPaths)]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/*	Helpers */
 
+
 	const quickFlyOnClick = (location) => actions.map.setCorners(location.cornerNW, location.cornerSE);
+	const showStandardRightAreaPanels =
+		S.isNothing(currentSelectedOperation) &&
+		S.isNothing(currentSelectedDrone) &&
+		!isEditor;
 
 	return (
 		<>
-			<QuickFly
-				onClick={quickFlyOnClick}
-			/>
-			<Layers
-				filtersSelected={filtersSelected}
-				setFiltersSelected={setFiltersSelected}
-				operations={ops}
-				idsSelected={ids}
-				setIdsSelected={setIds}
-				disabled={id != null}
-			/>
 			{/* Panels of MapEditor */}
 			{S.isJust(mode) && fM(mode) === 'new' &&
 			<>
 				{isOperationInfoPopupOpen &&
-					<OperationInfoEditor
-						isOpen={isOperationInfoPopupOpen}
-						setOpen={setOperationInfoPopupOpen}
-						info={operationInfo}
-						setInfo={setOperationInfo}
-					/>
+				<OperationInfoEditor
+					isOpen={isOperationInfoPopupOpen}
+					setOpen={setOperationInfoPopupOpen}
+					info={operationInfo}
+					setInfo={setOperationInfo}
+				/>
 				}
 				<OperationVolumeInfoEditor
 					info={volume}
@@ -162,19 +180,34 @@ function Map({ mode }) {
 					opVolumeIndex={maybeEditingOpVolume}
 					setOpVolumeIndex={setEditingOperationVolume}
 				/>
-				<Card
-					elevation={4}
-					data-test-id='mapElementEditorStatus'
-					className={'statusOverMap animated fadeInUpBig' + statusOverMapNotifs}
-				>
-					{stepText}
-				</Card>
-				<LeftOverlay disabled={stepsDisabled}>
-					{stepsToDefineOperation}
-				</LeftOverlay>
 			</>
 			}
 			<MapMain map={map.current} mapInitialized={mapInitialized}>
+				<Dialog
+					className='bp3-dark'
+					title={state.map_dialog.title}
+					isOpen={state.map_dialog.open}
+					onClose={() => actions.map_dialog.close()}
+				>
+					<div className='dialogify'>
+						{state.map_dialog.text}
+					</div>
+					<Button
+						style={{margin: '10px'}}
+						onClick={() => {
+							if (S.isJust(state.map_dialog.rightButtonOnClick)) {
+								fM(state.map_dialog.rightButtonOnClick)();
+							} else {
+								actions.map_dialog.close();
+							}
+						}}
+						intent={Intent.PRIMARY}
+					>
+						{S.isJust(state.map_dialog.rightButtonText) ?
+							fM(state.map_dialog.rightButtonText) : 'Accept'
+						}
+					</Button>
+				</Dialog>
 				{/* Live map */}
 				{drones.map((drone) =>
 					<DroneMarker
@@ -185,6 +218,7 @@ function Map({ mode }) {
 						altitude={drone.altitude_gps}
 						position={drone.location.coordinates}
 						risk={drone.risk}
+						onClick={() => setSelectedDrone(S.Just(drone.gufi))}
 					/>
 				)}
 				{opsFiltered.map((op) => {
@@ -193,14 +227,30 @@ function Map({ mode }) {
 							map={map.current}
 							key={op.gufi + '#' + volume.id}
 							id={op.gufi + '#' + volume.id}
+							isSelected={op.gufi === fM(currentSelectedOperation)}
 							latlngs={volume.operation_geography.coordinates}
 							state={op.state}
 							info={op}
+							onClick={() => setSelectedOperation(S.Maybe.Just(op.gufi))}
 						/>;
 					});
 				})}
+				{mapValues(state.rfv.list)(() => {})((rfv) => {
+					if (rfvs.indexOf(rfv.id) !== -1) {
+						return (
+							<RestrictedFlightVolume
+								map={map.current}
+								key={rfv.comments}
+								latlngs={rfv.geography.coordinates}
+								name={rfv.comments}
+							/>
+						);
+					}
+				})}
+
+
 				{/* Operation creation */}
-				{S.isJust(mode) && fM(mode) === 'new' && polygons.map((polygon, index) => {
+				{isEditor && polygons.map((polygon, index) => {
 					return (
 						<OperationPolygon
 							map={map.current}
@@ -213,7 +263,7 @@ function Map({ mode }) {
 						/>
 					);
 				})}
-				{S.isJust(mode) && fM(mode) === 'new' && polygons.map((polygon, index) => {
+				{isEditor && polygons.map((polygon, index) => {
 					return polygon.map((latlng, index2) => {
 						return (
 							<OperationEditMarker
@@ -233,7 +283,82 @@ function Map({ mode }) {
 						);
 					});
 				})}
+				{/* Simulator */}
+				{S.isJust(mode) && fM(mode) === 'simulator' && simPaths.map((path, index) => {
+					return path.map((latlng, index2) => {
+						return (
+							<OperationEditMarker
+								index={'D' + index + '->' + index2}
+								map={map.current}
+								id={'marker' + index2 + 'p' + index}
+								key={'marker' + index2 + 'p' + index}
+								onDrag={latlng => setSimPath(latlng, index2)}
+								latlng={latlng}
+							/>
+						);
+					});
+				})}
+				{S.isJust(mode) && fM(mode) === 'simulator' && simPaths.map((path, index) => {
+					return (
+						<Polyline
+							map={map.current}
+							key={'polyline' + index}
+							latlngs={path}
+						/>
+					);
+				})}
 			</MapMain>
+			<RightArea
+				forceOpen={
+					S.isJust(currentSelectedOperation) ||
+					S.isJust(currentSelectedDrone) ||
+					isSimulator ||
+					isEditor
+				}
+				onClose={() => setSelectedOperation(S.Nothing)}
+			>
+				{ S.isJust(currentSelectedOperation) &&
+					<SelectedOperation gufi={fM(currentSelectedOperation)} />
+				}
+				{ S.isJust(currentSelectedDrone) &&
+					<SelectedDrone gufi={fM(currentSelectedDrone)} />
+				}
+				{ 	showStandardRightAreaPanels &&
+					<QuickFly
+						onClick={quickFlyOnClick}
+					/>
+				}
+				{ 	showStandardRightAreaPanels &&
+					<Layers
+						filtersSelected={filtersSelected}
+						setFiltersSelected={setFiltersSelected}
+						idsSelected={idsShowing}
+						setIdsSelected={setIdsShowing}
+						rfvs={rfvs}
+						setRfvsShowing={setRfvsShowing}
+						operations={ops}
+						disabled={id != null}
+					/>
+				}
+				{/* Editor Panels */}
+				{isEditor &&
+					<EditorPanel
+						steps={stepsToDefineOperation}
+						stepsDisabled={stepsDisabled}
+					/>
+				}
+				{/* Simulator panels*/}
+				{ isSimulator &&
+					<SimulatorPanel
+						paths={simPaths}
+						onClick={onSelectSimDrone}
+						selected={simDroneIndex}
+						newDrone={addNewDrone}
+						startFlying={startFlying}
+						stopFlying={stopFlying}
+					/>
+				}
+			</RightArea>
 		</>
 	);
 }

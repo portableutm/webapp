@@ -404,11 +404,11 @@ const operations = {
 			submit_time: '2020-04-13T08:59:47.892Z',
 			update_time: '2020-04-13T09:00:00.885Z',
 			aircraft_comments: null,
-			flight_comments: 'CLOSED',
+			flight_comments: 'PENDING',
 			volumes_description: 'Simple polygon',
 			airspace_authorization: null,
 			flight_number: '12345678',
-			state: 'CLOSED',
+			state: 'PENDING',
 			controller_location: null,
 			gcs_location: null,
 			faa_rule: 'PART_107',
@@ -683,29 +683,35 @@ describe('SP1: (Map) Layers', function () {
 			url: '/operation',    //
 			response: operations
 		});
+		cy.route({
+			method: 'GET',
+			url: '/restrictedflightvolume',
+			response: {}
+		});
 	});
 
 	it('Clicks use case button', function () {
 		cy.visit('http://localhost:2000/');
-		cy.get('[data-test-id="mapButtonLayers"]').click();
+		cy.get('[data-test-id="rightAreaOpener"]').click();
+		//cy.get('[data-test-id="mapButtonLayers"]').click();
 	});
 
 	it('Deselects all', function () {
-		cy.get('[data-test-id="layersPROPOSED"]').uncheck({force: true});
-		cy.get('[data-test-id="layersACCEPTED"]').uncheck({force: true});
+		/*cy.get('[data-test-id="layersPROPOSED"]').uncheck({force: true});
+		cy.get('[data-test-id="layersACCEPTED"]').uncheck({force: true});*/
 		cy.get('[data-test-id="layersACTIVATED"]').uncheck({force: true});
-		cy.get('[data-test-id="layersCLOSED"]').uncheck({force: true});
+		cy.get('[data-test-id="layersPENDING"]').uncheck({force: true});
 		cy.get('[data-test-id="layersROGUE"]').uncheck({force: true});
 	});
-	it('Check PROPOSED operation', function () {
+	/*it('Check PROPOSED operation', function () {
 		cy.get('[data-test-id="layersPROPOSED"]').check({force: true});
 		cy.get('.leaflet-interactive').click({force: true});
 		cy.get('.leaflet-popup-content').then(($el) =>
 			expect($el).to.contain('Operation PROPOSED')
 		);
 		cy.get('[data-test-id="layersPROPOSED"]').uncheck({force: true});
-	});
-	it('Check ACCEPTED operation', function () {
+	});*/
+	/*it('Check ACCEPTED operation', function () {
 		cy.get('[data-test-id="mapButtonLayers"]').click();
 		cy.get('[data-test-id="layersACCEPTED"]').check({force: true});
 		cy.get('.leaflet-interactive').click({force: true});
@@ -713,32 +719,41 @@ describe('SP1: (Map) Layers', function () {
 			expect($el).to.contain('Operation ACCEPTED')
 		);
 		cy.get('[data-test-id="layersACCEPTED"]').uncheck({force: true});
-	});
+	});*/
 	it('Check ACTIVATED operation', function () {
-		cy.get('[data-test-id="mapButtonLayers"]').click();
+		//cy.get('[data-test-id="rightAreaOpener"]').click();
+		//cy.get('[data-test-id="mapButtonLayers"]').click();
 		cy.get('[data-test-id="layersACTIVATED"]').check({force: true});
 		cy.get('.leaflet-interactive').click({force: true});
-		cy.get('.leaflet-popup-content').then(($el) =>
-			expect($el).to.contain('Operation ACTIVATED')
+		cy.get('[data-test-id="propertyState"]').then(($el) =>
+			expect($el).to.contain('ACTIVATED')
 		);
+		cy.get('.rightAreaCloser').click();
+		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersACTIVATED"]').uncheck({force: true});
 	});
-	it('Check CLOSED operation', function () {
-		cy.get('[data-test-id="mapButtonLayers"]').click();
-		cy.get('[data-test-id="layersCLOSED"]').check({force: true});
+	it('Check PENDING operation', function () {
+		//cy.get('[data-test-id="rightAreaOpener"]').click();
+		//cy.get('[data-test-id="mapButtonLayers"]').click();
+		cy.get('[data-test-id="layersPENDING"]').check({force: true});
 		cy.get('.leaflet-interactive').click({force: true});
-		cy.get('.leaflet-popup-content').then(($el) =>
-			expect($el).to.contain('Operation CLOSED')
+		cy.get('[data-test-id="propertyState"]').then(($el) =>
+			expect($el).to.contain('PENDING')
 		);
-		cy.get('[data-test-id="layersCLOSED"]').uncheck({force: true});
+		cy.get('.rightAreaCloser').click();
+		cy.get('[data-test-id="rightAreaOpener"]').click();
+		cy.get('[data-test-id="layersPENDING"]').uncheck({force: true});
 	});
 	it('Check ROGUE operation', function () {
-		cy.get('[data-test-id="mapButtonLayers"]').click();
+		//cy.get('[data-test-id="rightAreaOpener"]').click();
+		//cy.get('[data-test-id="mapButtonLayers"]').click();
 		cy.get('[data-test-id="layersROGUE"]').check({force: true});
 		cy.get('.leaflet-interactive').click({force: true});
-		cy.get('.leaflet-popup-content').then(($el) =>
-			expect($el).to.contain('Operation ROGUE')
+		cy.get('[data-test-id="propertyState"]').then(($el) =>
+			expect($el).to.contain('ROGUE')
 		);
+		cy.get('.rightAreaCloser').click();
+		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersROGUE"]').uncheck({force: true});
 	});
 });

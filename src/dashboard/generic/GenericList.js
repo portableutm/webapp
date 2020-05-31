@@ -1,8 +1,6 @@
 import React from 'react';
 
 function GenericListLine({children}) {
-	const count = React.Children.count(children);
-	if (count !== 2) console.error('GenericListLine called with ' + count + ' children');
 	return(
 		<div className="dshListItemLine">
 			<div className="dshListItemLineLeft">

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import {Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
+import {Alert, Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
 import A from 'axios';
 import { API } from './consts';
+import {useTranslation} from 'react-i18next';
+import {useCookies} from 'react-cookie';
 
 const Axios = A.create({
 	baseURL: API,
@@ -11,7 +13,7 @@ const Axios = A.create({
 	}
 });
 
-const RegistrationPage = () => {
+const RegistrationScreen = () => {
     
 	//----------------------------------------------------------------------------------
 	//------------------------------------- STATE  -------------------------------------
@@ -25,6 +27,9 @@ const RegistrationPage = () => {
 	const [repeatPassword, setRepeatPassword] = useState('');
 	const [registrationButtonEnabled, setRegistrationButtonEnabled] = useState(true);
 	const [successfullyRegistered, setSuccessFullyRegistered] = useState(false);
+	const [alertMessage, setAlertMessage] = useState(null);
+	const { t, i18n } = useTranslation();
+	const [, setCookie, ] = useCookies(['jwt']);
 
 	//----------------------------------------------------------------------------------
 	//--------------------------------- AUX FUNCTIONS  ---------------------------------
@@ -38,6 +43,16 @@ const RegistrationPage = () => {
 	//----------------------------------------------------------------------------------
 	//--------------------------------- EVENT HANDLERS ---------------------------------
 	//----------------------------------------------------------------------------------
+
+	const changeLanguage = () => {
+		if (i18n.language === 'en') {
+			setCookie('lang', 'es', {path: '/'});
+			i18n.changeLanguage('es');
+		} else {
+			setCookie('lang', 'en', {path: '/'});
+			i18n.changeLanguage('en');
+		}
+	};
     
 	const handleOnSubmit = e => {
 		// avoid submit
@@ -45,27 +60,27 @@ const RegistrationPage = () => {
         
 		// validate data
 		if(firstName.length < 1 || firstName.length > 40){
-			alert('firstName debe tener entre 1 y 40 caracteres');
+			setAlertMessage('firstName debe tener entre 1 y 40 caracteres');
 			return;
 		}
 		if(lastName.length < 1 || lastName.length > 40){
-			alert('lastName debe tener entre 1 y 40 caracteres');
+			setAlertMessage('lastName debe tener entre 1 y 40 caracteres');
 			return;
 		}
 		if(!validEmail(email)){
-			alert('El email ingresado no es valido');
+			setAlertMessage('El email ingresado no es valido');
 			return;
 		}
 		if(username.length < 1 || username.length > 40){
-			alert('username debe tener entre 1 y 40 caracteres');
+			setAlertMessage('username debe tener entre 1 y 40 caracteres');
 			return;
 		}
 		if(password.length < 4 || password.length > 40){
-			alert('password debe tener entre 4 y 40 caracteres');
+			setAlertMessage('password debe tener entre 4 y 40 caracteres');
 			return;
 		}
 		if(password !== repeatPassword){
-			alert('No coinciden los passwords ingresados');
+			setAlertMessage('No coinciden los passwords ingresados');
 			return;
 		}
         
@@ -81,11 +96,8 @@ const RegistrationPage = () => {
 			password
 		};
 		Axios.post('user/register', userToRegister)
-			.then(result => {
+			.then(() => {
 				setSuccessFullyRegistered(true);
-			})
-			.catch(error => {
-				console.error('AdesState: (ERROR)', error);
 			});
 	};
 
@@ -99,17 +111,29 @@ const RegistrationPage = () => {
 
         
 		return (
-			<div className="centeredScreen texturedBackground">
+			<div className="bp3-dark centeredScreen texturedBackground">
 				<Card className="registrationCard" elevation={Elevation.TWO}>
 					<form onSubmit={handleOnSubmit}>
-						<h1>DronfiesUTM - User Registration</h1>
-						<h3>Please fill the form to register.</h3>
-
+						<h1>{t('app_name')}</h1>
+						<h3>{t('app_pleaseregister')}</h3>
+						<Alert
+							confirmButtonText={'OK'}
+							canEscapeKeyCancel={false}
+							canOutsideClickCancel={false}
+							onConfirm={() => setAlertMessage(null)}
+							isOpen={alertMessage != null}
+						>
+							{alertMessage != null && (
+								<p>
+									{alertMessage}
+								</p>
+							)}
+						</Alert>
 						{/*****************************************************************
 					 *************************** First Name ***************************
 						******************************************************************/}
 						<FormGroup
-							label="First Name"
+							label={t('app_firstname')}
 							labelFor="input-first-name">
 							<InputGroup id="input-first-name" value={firstName} onChange={e => setFirstName(e.target.value)}/>
 						</FormGroup>
@@ -118,7 +142,7 @@ const RegistrationPage = () => {
 					 *************************** Last Name  ***************************
 						******************************************************************/}
 						<FormGroup
-							label="Last Name"
+							label={t('app_lastname')}
 							labelFor="input-last-name">
 							<InputGroup id="input-last-name" value={lastName} onChange={e => setLastName(e.target.value)}/>
 						</FormGroup>
@@ -127,7 +151,7 @@ const RegistrationPage = () => {
 					 ***************************** Email  *****************************
 						******************************************************************/}
 						<FormGroup
-							label="Email"
+							label={t('app_email')}
 							labelFor="input-email">
 							<InputGroup id="input-email" value={email} onChange={e => setEmail(e.target.value)}/>
 						</FormGroup>
@@ -136,7 +160,7 @@ const RegistrationPage = () => {
 					 **************************** Username ****************************
 						******************************************************************/}
 						<FormGroup
-							label="Username"
+							label={t('app_user')}
 							labelFor="input-username">
 							<InputGroup id="input-username" value={username} onChange={e => setUsername(e.target.value)}/>
 						</FormGroup>
@@ -145,7 +169,7 @@ const RegistrationPage = () => {
 					 **************************** Password ****************************
 						******************************************************************/}
 						<FormGroup
-							label="Password"
+							label={t('app_password')}
 							labelFor="input-password">
 							<InputGroup
 								id="input-password"
@@ -159,7 +183,7 @@ const RegistrationPage = () => {
 					 ************************ Repeat Password  ************************
 						******************************************************************/}
 						<FormGroup
-							label="Repeat Password"
+							label={t('app_repeatpassword')}
 							labelFor="input-repeat-password">
 							<InputGroup
 								id="input-repeat-password"
@@ -173,16 +197,18 @@ const RegistrationPage = () => {
 					 ************************* Submit Button  *************************
 						******************************************************************/}
 						<div className="loginButtons">
-							<Button
-								fill
+							<Button fill style={{margin: '5px'}} intent={Intent.PRIMARY} onClick={() => changeLanguage()}>
+								{t('app_changelanguage')}
+							</Button>
+							<Button fill
 								style={{margin: '5px'}}
-								intent={Intent.PRIMARY}
+								intent={Intent.SUCCESS}
 								type="submit"
-								disabled={!registrationButtonEnabled}
-							>
-							Register
+								disabled={!registrationButtonEnabled} >
+								{t('app_register')}
 							</Button>
 						</div>
+
 					</form>
 				</Card>
 			</div>
@@ -191,9 +217,13 @@ const RegistrationPage = () => {
 	}else{
 		// after the user is registered, we display this page
 		return(
-			<h1>Usuario Registrado</h1>
+			<div className="bp3-dark centeredScreen texturedBackground">
+				<Card className="registrationCard" elevation={Elevation.TWO}>
+					{t('app_registered')}
+				</Card>
+			</div>
 		);
 	}
 };
 
-export default RegistrationPage;
+export default RegistrationScreen;
