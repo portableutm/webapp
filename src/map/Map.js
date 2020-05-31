@@ -315,7 +315,10 @@ function Map({ mode }) {
 					isSimulator ||
 					isEditor
 				}
-				onClose={() => setSelectedOperation(S.Nothing)}
+				onClose={() => {
+					setSelectedOperation(S.Nothing);
+					setSelectedDrone(S.Nothing);
+				}}
 			>
 				{ S.isJust(currentSelectedOperation) &&
 					<SelectedOperation gufi={fM(currentSelectedOperation)} />
