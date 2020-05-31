@@ -27,7 +27,9 @@ Deploy
 * Run both projects, using the command “npm start” on the root folder of both projects.
 
 ### How to contribute?
-Please refer to [the code of conduct](https://github.com/portableutm/webapp/blob/develop/CODE_OF_CONDUCT.md) and [the contribution guide](https://github.com/portableutm/webapp/blob/develop/CONTRIBUTING.md) 
+Please refer to [the code of conduct](https://github.com/portableutm/webapp/blob/develop/CODE_OF_CONDUCT.md) and [the contribution guide](https://github.com/portableutm/webapp/blob/develop/CONTRIBUTING.md).
+Please note that we use ESLint for source code linting and we run a pre-commit local git hook to check that the commit messages [are properly formatted](https://www.conventionalcommits.org/en/v1.0.0/). 
+
 
 ### Main concepts
 An **Operation** is the authorization request for a future flight to be performed by one or more pilots. By using the WebApp the pilot can define the various characteristics of the flight including Volume reservations, start and end time.
