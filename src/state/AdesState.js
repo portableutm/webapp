@@ -31,11 +31,11 @@ const initialState = {
 		list: S.Nothing,
 		updated: Date.now()
 	},
-	users: {
+	/*users: {
 		list: S.Nothing,
 		updated: 0, // We won't fetch it until we need it.
 		error: false
-	},
+	},*/
 	vehicles: {
 		list: S.Nothing,
 		updated: 0, // Won't fetch until we need it.
@@ -166,14 +166,14 @@ function prepareOperation(operation) {
 
 /* Users */
 
-function addUsers(store, data) {
+/* function addUsers(store, data) {
 	const dataObtained = Array.from(data);
 	const pairs = S.justs(dataObtained.map((user) => {
 		return S.Just(S.Pair(user.username)(user));
 	}));
 	const users = S.fromPairs(pairs);
 	store.setState({users: {updated: Date.now(), list: S.Just(users)}});
-}
+} */
 
 /* Vehicles */
 
@@ -274,7 +274,7 @@ const actions = {
 			store.setState(initialState);
 		}
 	},
-	users: {
+	/*users: {
 		fetch: (store) => {
 			Axios.get(API + 'user', {headers: {auth: fM(store.state.auth.token)}})
 				.then(result => addUsers(store, result.data))
@@ -283,7 +283,7 @@ const actions = {
 					store.setState({users: {updated: 0, error: true, list: S.Nothing}});
 				});
 		}
-	},
+	},*/
 	vehicles: {
 		fetch: (store) => {
 			Axios.get(API + 'vehicle', {headers: {auth: fM(store.state.auth.token)}})

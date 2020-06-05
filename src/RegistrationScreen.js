@@ -28,6 +28,7 @@ const RegistrationScreen = () => {
 	const [registrationButtonEnabled, setRegistrationButtonEnabled] = useState(true);
 	const [successfullyRegistered, setSuccessFullyRegistered] = useState(false);
 	const [alertMessage, setAlertMessage] = useState(null);
+	const [isError, setError] = useState(false);
 	const { t, i18n } = useTranslation();
 	const [, setCookie, ] = useCookies(['jwt']);
 
@@ -98,6 +99,9 @@ const RegistrationScreen = () => {
 		Axios.post('user/register', userToRegister)
 			.then(() => {
 				setSuccessFullyRegistered(true);
+			})
+			.catch(() => {
+				setError(true);
 			});
 	};
 
@@ -105,7 +109,7 @@ const RegistrationScreen = () => {
 	//------------------------------------- RENDER -------------------------------------
 	//----------------------------------------------------------------------------------
 
-	if(!successfullyRegistered){
+	if(!successfullyRegistered && !isError){
         
 		// when the user first opens the page, we show him the registration form
 
@@ -214,12 +218,20 @@ const RegistrationScreen = () => {
 			</div>
 		);
 
-	}else{
+	} else if (successfullyRegistered) {
 		// after the user is registered, we display this page
 		return(
 			<div className="bp3-dark centeredScreen texturedBackground">
 				<Card className="registrationCard" elevation={Elevation.TWO}>
 					{t('app_registered')}
+				</Card>
+			</div>
+		);
+	} else {
+		return(
+			<div className="bp3-dark centeredScreen texturedBackground">
+				<Card className="registrationCard" elevation={Elevation.TWO}>
+					There was an error creating your account. Please, try again with different values.
 				</Card>
 			</div>
 		);

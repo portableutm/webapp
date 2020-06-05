@@ -1,18 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import profile from '../../images/profile.png';
 import {Card, Elevation, FormGroup, InputGroup} from '@blueprintjs/core';
 import {useTranslation} from 'react-i18next';
-import useAdesState from '../../state/AdesState';
-import { useParams } from 'react-router-dom';
-import S from 'sanctuary';
-import {USERS_DATA_TOO_OLD} from '../../consts';
 
-function Pilot({user: passedUser}) {
+function Pilot({user}) {
 	const { t, } = useTranslation();
-	const [ state, actions ] = useAdesState();
-	const { username } = useParams();
-	const [ user, setUser ] = useState(passedUser);
+	//const { username } = useParams();
+	//const [ user, setUser ] = useState(passedUser);
 
+	/*
 	useEffect(() => {
 		// Only run in mount
 		if (Date.now() - USERS_DATA_TOO_OLD - state.users.updated > USERS_DATA_TOO_OLD) {
@@ -29,6 +25,7 @@ function Pilot({user: passedUser}) {
 			}
 		}
 	}, [state.users.updated]); // eslint-disable-line react-hooks/exhaustive-deps
+	 */
 
 	return (
 		<div className='dshPilot'>

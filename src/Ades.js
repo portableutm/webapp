@@ -54,6 +54,8 @@ import { fM } from './libs/SaferSanctuary';
 import Pilot from './dashboard/user/Pilot';
 import VehiclesList from './dashboard/vehicle/VehiclesList';
 import NewVehicle from './dashboard/vehicle/NewVehicle';
+import HomeScreen from './dashboard/main_screen/HomeScreen';
+import VerificationScreen from './state/VerificationScreen';
 
 /*function alertIsImportant(alertUtmMessage) {
 	return (
@@ -193,16 +195,9 @@ function Ades() {
 								</>
 							</MasterPage>
 						</Route>
-						<Route exact path='/dashboard/users/:username'>
-							<MasterPage>
-								<>
-									<Dashboard>
-										<Pilot/>
-									</Dashboard>
-								</>
-							</MasterPage>
-						</Route>
-						<Route exact path='/dashboard/users'>
+						<Route path='/dashboard/users/:username?'>
+							{/* Username is an optional parameter, we don't re-fetch from the API when changing */}
+							{/* from the users list to one particular user */}
 							<MasterPage>
 								<>
 									<Dashboard>
@@ -211,6 +206,15 @@ function Ades() {
 								</>
 							</MasterPage>
 						</Route>
+						{/*<Route exact path='/dashboard/users'>
+							<MasterPage>
+								<>
+									<Dashboard>
+										<UsersList />
+									</Dashboard>
+								</>
+							</MasterPage>
+						</Route>*/}
 						<Route exact path={'/dashboard/vehicles/:username/new'}>
 							<MasterPage>
 								<>
@@ -232,7 +236,9 @@ function Ades() {
 						<Route exact path='/dashboard'>
 							<MasterPage>
 								<>
-									<Dashboard />
+									<Dashboard>
+										<HomeScreen />
+									</Dashboard>
 								</>
 							</MasterPage>
 						</Route>
@@ -316,6 +322,9 @@ function Ades() {
 					<Switch>
 						<Route exact path='/registration'>
 							<RegistrationScreen/>
+						</Route>
+						<Route path='/verify/:username/:token'>
+							<VerificationScreen/>
 						</Route>
 						<Route path='/'>
 							<LoginScreen/>

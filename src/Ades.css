@@ -711,6 +711,7 @@ Dashboard components
 }
 
 .loginButtons {
+  margin-top: 15px;
   display: flex;
   justify-content: space-evenly;
 }
