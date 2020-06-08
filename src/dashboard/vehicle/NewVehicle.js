@@ -40,7 +40,7 @@ function NewVehicle({userId}) {
 		<>
 			<div className={error == null ? 'sticky' : 'sticky error animated flash repeat'}>
 				<h1>
-					{t('dsh_vehicles_new')}
+					{t('dsh.vehicles_new')}
 				</h1>
 				{ error !== null &&
 					<p>
@@ -50,35 +50,35 @@ function NewVehicle({userId}) {
 			</div>
 			<Text
 				name="nNumber"
-				label={t('vehicle_nNumber')}
+				label={t('vehicle.nNumber')}
 				description="Vehicle number"
 			/>
 			<Text
 				name="faaNumber"
-				label={t('vehicle_faaNumber')}
+				label={t('vehicle.faaNumber')}
 				placeholder="N707JT"
 				description="Legal number assigned by the FAA"
 			/>
 			<Text
 				name="vehicleName"
-				label={t('vehicle_vehicleName')}
+				label={t('vehicle.vehicleName')}
 				placeholder="Air Force One"
 				description="Short descriptive name of the vehicle"
 			/>
 			<Text
 				name="manufacturer"
-				label={t('vehicle_manufacturer')}
+				label={t('vehicle.manufacturer')}
 				placeholder="DJI"
 				description="Brand or company that fabricated the vehicle"
 			/>
 			<Text
 				name="model"
-				label={t('vehicle_model')}
+				label={t('vehicle.model')}
 				placeholder="Phantom 6 Mini"
 				description="Model of the vehicle"
 			/>
 			<RadioGroup
-				label={t('vehicle_class')}
+				label={t('vehicle.class')}
 				onChange={(evt) => setTClass(evt.currentTarget.value)}
 				selectedValue={tclass}
 			>
@@ -87,20 +87,20 @@ function NewVehicle({userId}) {
 			</RadioGroup>
 			<Text
 				name="accessType"
-				label={t('vehicle_accessType')}
+				label={t('vehicle.accessType')}
 				placeholder=""
 				disabled={true}
 			/>
 
 			<Text
 				name="vehicleTypeId"
-				label={t('vehicle_vehicleTypeId')}
+				label={t('vehicle.vehicleTypeId')}
 				placeholder=""
 				disabled={true}
 			/>
 			<Text
 				name="org-uuid"
-				label={t('vehicle_org-uuid')}
+				label={t('vehicle.org-uuid')}
 				placeholder=""
 				disabled={true}
 			/>
@@ -112,7 +112,7 @@ function NewVehicle({userId}) {
 			/>
 			<Text
 				name="registeredBy"
-				label={t('vehicle_registeredBy')}
+				label={t('vehicle.registeredBy')}
 				placeholder={fM(state.auth.user).username}
 				disabled={true}
 			/>
@@ -153,7 +153,7 @@ function NewVehicle({userId}) {
     "uvin": "32b858dd-8c63-4e99-9a18-6df064cf64cb",
     "nNumber": "",
     "faaNumber": "AW7B64A",
-    "vehicleName": "vehicle_name8",
+    "vehicleName": "vehicle.name8",
     "manufacturer": "DJI",
     "model": "Phantom 3",
     "class": "FIXEDWING",

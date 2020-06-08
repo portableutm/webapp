@@ -17,10 +17,10 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 	it('Finds button and starts use case', function () {
 		cy.visit('http://localhost:2000/');
 		cy.get('[data-test-id="mapButtonMenu"]').click();
-		cy.contains('Create new operation').click();
+		cy.contains('contextualmenu_createnewop').click();
 	});
 	it('Define Polygon', function () {
-		cy.contains('Define volumes').click();
+		cy.contains('editor.step.definevolumes').click();
 		cy.get('.rightAreaCloser').click();
 		cy.get('[data-test-id="map"]').click('topLeft');
 		cy.get('[data-test-id="map"]').click('topRight');
@@ -28,7 +28,7 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 	});
 	it('Define Volume Info', function () {
 		cy.get('[data-test-id="map"]').click(150,150);
-		cy.contains('Editing').get('[data-test-id="mapEditorVolumeInfoMinAltitude"]').clear().type('-1');
+		cy.contains('editor.volume.editingvolume_count').get('[data-test-id="mapEditorVolumeInfoMinAltitude"]').clear().type('-1');
 		cy.get('[data-test-id="map#editor#volume#info#max_altitude"]').clear().type('50');
 		cy.get('[data-test-id="map#editor#volume#info#near_structure"]').check({force: true});
 		cy.get('[data-test-id="map#editor#volume#info#bvlos"]').check({force: true});
@@ -38,19 +38,19 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 			.not('.DayPicker-Day--selected')
 			.not('.DayPicker-Day--today')
 			.first().click();
-		cy.contains('Close calendar').click();
+		cy.contains('editor.volume.closecalendar').click();
 		cy.get('[data-test-id="map#editor#volume#info#effective_time_end"]').click();
 		cy.get('.DayPicker-Day')
 			.not('.DayPicker-Day--disabled')
 			.not('.DayPicker-Day--selected')
 			.not('.DayPicker-Day--today')
 			.first().click();
-		cy.contains('Close calendar').click();
+		cy.contains('editor.volume.closecalendar').click();
 		cy.get('.bp3-dialog-close-button').click(); // TODO: Change this line if we don't use blueprint3js dialog anymore.
 	});
 	it('Complete Volume information', function () {
 		cy.get('.rightAreaOpener').click();
-		cy.contains('Fill out general information').click();
+		cy.contains('editor.step.defineoperationinfo').click();
 		cy.get('[data-test-id="mapInputEditorName"]')
 			.clear()
 			.type('CreateNewOp#01');
@@ -61,11 +61,10 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 	});
 	it('Finish and post', function () {
 		cy.get('.bp3-dialog-close-button').click(); // TODO: Change this line if we don't use blueprint3js dialog anymore.
-		cy.contains('Finish').click();
+		cy.contains('editor.step.finish').click();
 		cy.wait(3000);
 	});
-	/*
-	it('Find created operation and clean-up', function () {
+	/*it('Find created operation and clean-up', function () {
 		cy.visit('http://localhost:2000/dashboard/operations');
 		cy.contains('CreateNewOp#01')
 			.should('exist')

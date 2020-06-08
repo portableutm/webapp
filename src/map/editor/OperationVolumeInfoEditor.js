@@ -17,7 +17,7 @@ function OperationVolumeInfoEditor(props) {
 		});
 	return (
 		<Dialog
-			title={t('editor_vinfo_editingvolume') + ' ' + S.maybeToNullable(opVolumeIndex)}
+			title={t('editor.volume.editingvolume_count', {count: S.maybeToNullable(opVolumeIndex)})}
 			canEscapeKeyClose={true}
 			canOutsideClickClose={true}
 			onClose={() => setOpVolumeIndex(S.Maybe.Nothing)}
@@ -37,7 +37,7 @@ function OperationVolumeInfoEditor(props) {
 						editInfo('near_structure', change.currentTarget.checked)
 					}
 				>
-					{t('editor_vinfo_nearstructure')}
+					{t('editor.volume.nearstructure')}
 				</Checkbox>
 				{/*
             beyond_visual_line_of_sight*	boolean
@@ -55,7 +55,7 @@ function OperationVolumeInfoEditor(props) {
 						)
 					}
 				>
-					{t('editor_vinfo_bvlos')}
+					{t('editor.volume.bvlos')}
 				</Checkbox>
 				<Divider/>
 				{/*
@@ -64,7 +64,7 @@ function OperationVolumeInfoEditor(props) {
                     Earliest time the operation will use the operation volume. It must be less than effective_time_end.
                     effective_time_begin < effective_time_end MUST be true.
                     */}
-				{t('editor_vinfo_effectivetimebegin')} <br/>
+				{t('volume.effective_time_begin_description')} <br/>
 				{beginCalendarOpen && (
 					<DatePicker
 						className="centerHorizontally"
@@ -79,7 +79,7 @@ function OperationVolumeInfoEditor(props) {
 					fill={true}
 					data-test-id="map#editor#volume#info#effective_time_begin"
 					intent={Intent.PRIMARY}
-					text={!beginCalendarOpen ? t('editor_vinfo_selecttime') : t('editor_vinfo_closecalendar')}
+					text={!beginCalendarOpen ? t('editor.volume.selecttime') : t('editor.volume.closecalendar')}
 					onClick={() => setBeginCalendarOpen(current => !current)}
 				/>
 				<Divider/>
@@ -89,7 +89,7 @@ function OperationVolumeInfoEditor(props) {
             Latest time the operation will done with the operation volume. It must be greater than effective_time_begin.
             effective_time_begin < effective_time_end MUST be true.
             */}
-				{t('editor_vinfo_effectivetimeend')} <br/>
+				{t('volume.effective_time_end_description')} <br/>
 				{endCalendarOpen && (
 					<DatePicker
 						className="centerHorizontally"
@@ -103,7 +103,7 @@ function OperationVolumeInfoEditor(props) {
 					fill={true}
 					data-test-id="map#editor#volume#info#effective_time_end"
 					intent={Intent.PRIMARY}
-					text={!endCalendarOpen ? t('editor_vinfo_selecttime') : t('editor_vinfo_closecalendar')}
+					text={!endCalendarOpen ? t('editor.volume.selecttime') : t('editor.volume.closecalendar')}
 					onClick={() => setEndCalendarOpen(current => !current)}
 				/>
 				<Divider/>
@@ -111,7 +111,7 @@ function OperationVolumeInfoEditor(props) {
             min_altitude*	in feet 30mt = 98.4252 | 60mt = 196.85 | 120mt = 393.701
             max_altitude*	in feet
             */}
-				<FormGroup label={t('editor_vinfo_minaltitude')} labelFor="min_altitude">
+				<FormGroup label={t('volume.min_altitude')} labelFor="min_altitude">
 					<InputGroup
 						id="min_altitude"
 						data-test-id="mapEditorVolumeInfoMinAltitude"
@@ -119,7 +119,7 @@ function OperationVolumeInfoEditor(props) {
 						onChange={evt => editInfo('min_altitude', evt.target.value)}
 					/>
 				</FormGroup>
-				<FormGroup label={t('editor_vinfo_maxaltitude')} labelFor="max_altitude">
+				<FormGroup label={t('volume.max_altitude')} labelFor="max_altitude">
 					<InputGroup
 						id="max_altitude"
 						data-test-id="map#editor#volume#info#max_altitude"

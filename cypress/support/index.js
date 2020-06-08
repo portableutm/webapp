@@ -14,8 +14,12 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import './commands';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
-import '@cypress/code-coverage/support'
+import '@cypress/code-coverage/support';
+
+beforeEach('Set language to none', function () {
+	cy.setCookie('lang', 'none');
+});

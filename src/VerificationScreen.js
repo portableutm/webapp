@@ -3,7 +3,7 @@ import {Button, Card, Elevation, Intent, Spinner} from '@blueprintjs/core';
 import {useTranslation} from 'react-i18next';
 import { useParams, useHistory } from 'react-router-dom';
 import A from 'axios';
-import {API} from '../consts';
+import {API} from './consts';
 
 const Axios = A.create({
 	baseURL: API,
@@ -53,27 +53,26 @@ function VerificationScreen() {
 	return (
 		<div className="centeredScreen texturedBackground">
 			<Card className="loginWindow bp3-dark" elevation={Elevation.TWO}>
-				<h1>{t('app_name')}</h1>
+				<h1>{t('app.name')}</h1>
 				{ 	isLoading &&
 					<>
-						<h3>{t('app_verification_inprogress')}</h3>
+						<h3>{t('app.verification.inprogress')}</h3>
 						<Spinner />
 					</>
 				}
 				{	!isLoading &&
 					!isError &&
 					<>
-						<h3>{t('app_verification')}</h3>
-						Thank you, {username}, for verifying your e-mail. <br/>
-						Your token is {token}
+						<h3>{t('app.verification')}</h3>
+						{t('app.verification.successful', {user: username})}
 						<div className="loginButtons">
 							<Button fill style={{margin: '5px'}} intent={Intent.PRIMARY} onClick={() => changeLanguage()}>
-								{t('app_changelanguage')}
+								{t('app.changelanguage')}
 							</Button>
 							<Button fill style={{margin: '5px'}} intent={Intent.SUCCESS}
 								type="submit"
 								onClick={() => history.push('/')}>
-								{t('app_goto_login')}
+								{t('app.goto_login')}
 							</Button>
 						</div>
 					</>
@@ -81,11 +80,11 @@ function VerificationScreen() {
 				{	!isLoading &&
 					isError &&
 					<>
-						<h3>{t('app_verification')}</h3>
-						We are sorry, {username}, your verification has failed. Try again with the link you received by email.
+						<h3>{t('app.verification.title')}</h3>
+						{t('app.verification.failed', {user: username})}
 						<div className="loginButtons">
 							<Button fill style={{margin: '5px'}} intent={Intent.PRIMARY} onClick={() => changeLanguage()}>
-								{t('app_changelanguage')}
+								{t('app.changelanguage')}
 							</Button>
 						</div>
 					</>
@@ -93,7 +92,7 @@ function VerificationScreen() {
 			</Card>
 			{isError &&
 			<Card className="bp3-dark loginError animated flash" elevation={Elevation.TWO}>
-				{t('app_verification_error')}
+				{t('app.verification.error')}
 			</Card>
 			}
 		</div>

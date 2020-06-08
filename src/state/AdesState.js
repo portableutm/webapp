@@ -3,7 +3,7 @@ import globalHook from '../libs/useGlobalHook';
 import A from 'axios';
 import S from 'sanctuary';
 
-import {API} from '../consts';
+import {API, DEBUG} from '../consts';
 import {Mutex} from 'async-mutex';
 import {fM, maybeValues} from '../libs/SaferSanctuary';
 import io from 'socket.io-client';
@@ -70,7 +70,7 @@ const initialState = {
 		list: S.Nothing,
 		updated: Date.now()
 	},
-	debug: true
+	debug: DEBUG
 };
 
 /* Operations */

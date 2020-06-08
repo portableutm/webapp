@@ -20,12 +20,10 @@ const EditorPanel = ({steps, stepsDisabled}) => {
 					onClick={() => actions.map.onClicksDisabled(!state.map.onClicksDisabled)}
 				>
 					{state.map.onClicksDisabled &&
-					<p>Clicking on operations and restricted flight volumes will <b>NOT</b> show their properties. <i>Click
-						here to change this behaviour</i></p>
+						<p>{t('map.clicks_disabled')}</p>
 					}
 					{!state.map.onClicksDisabled &&
-					<p>Clicking on operations and restricted flight volumes will show their properties. <i>Click here to
-						change this behaviour</i></p>
+						<p>{t('map.clicks_enabled')}</p>
 					}
 				</div>
 			</RightAreaButton>

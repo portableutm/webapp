@@ -1,76 +1,109 @@
 {
   "en": {
     "translation": {
-      "app_name": "PortableUTM",
-      "app_pleaseregister": "Please fill the form to register",
-      "app_pleaselogin": "Please log in to use the system.",
-      "app_changelanguage": "Cambiar a Español (UY)",
-      "app_user": "Username",
-      "app_firstname": "First name",
-      "app_lastname": "Last name",
-      "app_email": "E-mail",
-      "app_role": "Role",
-      "app_user_helper": "As delivered to you by the system administrator.",
-      "app_password": "Password",
-      "app_repeatpassword": "Repeat password",
-      "app_registered": "You have been succesfully registered. Please, look at your e-mail inbox. You'll receive an email to confirm your account.",
-      "app_password_helper": "Fill in your password.",
-      "app_register": "Register",
-      "app_login": "Log in",
-      "app_login_error": "An error has occurred. Please check your credentials and try again.",
-      "app_login_pleasewait": "Logging in... Please wait.",
-      "app_login_successful": "Logged in succesfully",
-      "app_errorocurredfetching": "An error has ocurred while fetching this data, please try again",
-      "app_tryagain": "Try again",
-
-      "dsh_logout_confirmation": "Are you sure you want to log out?",
-      "dsh_logout_details": "You won't be able to use the system if you're not logged in.",
-      "dsh_logout_negative": "No, take me back",
-      "dsh_logout_positive": "Yes, log me out",
-      "dsh_returnmap": "RETURN TO REALTIME MAP",
-      "dsh_dshhome": "Dashboard main screen",
-      "dsh_logout": "Log out",
-
-      "dsh_all_users": "All users",
-      "dsh_operations_list": "All operations",
-      "dsh_operations_list_pilot": "Your operations",
-      "dsh_edit_your_info": "Edit your info",
-      "dsh_vehicles_new": "Add new vehicle",
-      "dsh_vehicles_list": "All vehicles",
-      "dsh_vehicles_list_pilot": "Your vehicles",
+      "app": {
+        "name": "PortableUTM",
+        "changelanguage": "Cambiar a Español (UY)",
+        "password": "Password",
+        "repeatpassword": "Repeat password",
+        "errorocurredfetching": "An error has ocurred while fetching this data, please try again",
+        "tryagain": "Try again",
+        "goto_login": "Continue to log in",
+        "verification": {
+          "title": "Verification",
+          "inprogress": "In progress",
+          "error": "An error has occured while verificating",
+          "succesful": "Thank you, {{user}}, for verifying your e-mail.",
+          "failed": "We are sorry, {{user}}, your verification has failed. Try again with the link you received by email."
+        }
+      },
+      "login": {
+        "pleaseregister": "Please fill the form to register",
+        "pleaselogin": "Please log in to use the system.",
+        "user_helper": "As delivered to you by the system administrator.",
+        "password_helper": "Fill in your password.",
+        "registered": "You have been succesfully registered. Please, look at your e-mail inbox. You'll receive an email to confirm your account.",
+        "register": "Register",
+        "register_error": "There was an error creating your account. Please, try again with different values.",
+        "login": "Log in",
+        "login_error": "An error has occurred. Please check your credentials and try again.",
+        "login_pleasewait": "Logging in... Please wait.",
+        "login_successful": "Logged in succesfully"
+      },
+      "dsh": {
+        "logout_confirmation": "Are you sure you want to log out?",
+        "logout_details": "You won't be able to use the system if you're not logged in.",
+        "logout_negative": "No, take me back",
+        "logout_positive": "Yes, log me out",
+        "returnmap": "RETURN TO REALTIME MAP",
+        "dshhome": "Dashboard main screen",
+        "logout": "Log out",
+        "all_users": "All users",
+        "operations_list": "All operations",
+        "operations_list_pilot": "Your operations",
+        "edit_your_info": "Edit your info",
+        "vehicles_new": "Add new vehicle",
+        "vehicles_list": "All vehicles",
+        "vehicles_list_pilot": "Your vehicles"
+      },
+      "actions": "Actions",
+      "users": "Users",
+      "user": {
+        "generic": "{{count}} User",
+        "generic_plural": "{{count}} Users",
+        "username": "Username",
+        "firstname": "First name",
+        "lastname": "Last name",
+        "email": "E-mail",
+        "role": "Role"
+      },
       "click_to_expand": "Expand",
       "click_to_collapse": "Collapse",
+      "page": "Page",
+      "edit": "Edit",
+      "add_veh": "Add veh.",
       "submit": "Add vehicle",
-
+      "return_to_list": "Return to list",
+      
       "vehicles": "Vehicles",
-      "vehicle_uvin": "UVIN",
-      "vehicle_date": "Registration date",
-      "vehicle_nNumber": "Vehicle number",
-      "vehicle_faaNumber": "FAA Number",
-      "vehicle_vehicleName": "Name",
-      "vehicle_manufacturer": "Manufacturer",
-      "vehicle_model": "Model",
-      "vehicle_class": "Class",
-      "vehicle_accessType": "Access type",
-      "vehicle_vehicleTypeId": "Vehicle type id",
-      "vehicle_org-uuid": "ORG UIID",
-      "vehicle_registeredBy": "Registered by",
+      "vehicle": {
+        "uvin": "UVIN",
+        "date": "Registration date",
+        "nNumber": "Vehicle number",
+        "faaNumber": "FAA Number",
+        "vehicleName": "Name",
+        "manufacturer": "Manufacturer",
+        "model": "Model",
+        "class": "Class",
+        "accessType": "Access type",
+        "vehicleTypeId": "Vehicle type id",
+        "org-uuid": "ORG UIID",
+        "registeredBy": "Registered by"
+      },
 
-      "map_filter_proposed": "Proposed",
-      "map_filter_accepted": "Accepted",
-      "map_filter_activated": "Activated",
-      "map_filter_closed": "Closed",
-      "map_filter_pending": "Pending",
-      "map_filter_nonconforming": "Non-conforming",
-      "map_filter_rogue": "Rogue",
-      "map_filter_bystate": "FILTER BY STATE",
-      "map_filter_byid": "FILTER BY OPERATION",
-      "map_filter_rfvs": "RESTRICTED FLIGHT ZONES",
-      "map_flyto": "Fly in map to",
+      "remove_from_map": "Remove from map",
+      "show_on_map": "Show on map",
+
+      "map": {
+        "clicks_enabled": "Clicking on operations and restricted flight volumes will show their properties. Click here to change this behaviour",
+        "clicks_disabled": "Clicking on operations and restricted flight volumes will NOT show their properties. Click here to change this behaviour",
+        "filter": {
+          "proposed": "Proposed",
+          "accepted": "Accepted",
+          "activated": "Activated",
+          "closed": "Closed",
+          "pending": "Pending",
+          "nonconforming": "Non-conforming",
+          "rogue": "Rogue",
+          "bystate": "FILTER BY STATE",
+          "byid": "FILTER BY OPERATION",
+          "rfvs": "RESTRICTED FLIGHT ZONES"
+        },
+        "flyto": "Fly in map to"
+      },
 
       "undefined": "unknown",
       "not_found": "This page does not exist",
-      "operation": "Operation",
       "selected_operation": "Selected operation",
       "operations": "Operations",
       "name": "Name",
@@ -82,120 +115,201 @@
       "phone": "Phone",
       "altitude": "Altitude",
       "heading": "Heading",
-
-      "submit_time": "Submittal time",
-      "update_time": "Last update time",
-      "aircraft_comments": "Aircraft comments",
-      "volumes_description": "Volumes description",
-      "flight_number": "Flight number",
-      "free_text": "Free text",
-
-
+      
       "contextualmenu_map": "Realtime Map",
       "contextualmenu_dashboard": "Dashboard",
       "contextualmenu_createnewop": "Create new operation",
 
-      "editor_completesteps": "Complete the steps to define a new operation.",
-      "editor_definevolume": "Click on the map to define a polygon.",
-      "editor_defineoperationinfo": "Complete the data required.",
-      "editor_savingoperation": "Saving operation. Please wait",
-      "editor_savingerror": "Please change the affected parameters and retry.",
-      "editor_step_definevolumes": "Step 1: Define volumes of operation.",
-      "editor_step_defineoperationinfo": "Step 2: Fill out general information.",
-      "editor_step_finish": "Step 3: Finish.",
+      
 
-      "editor_vinfo_editingvolume": "Editing Operation's volume ",
-      "editor_vinfo_nearstructure": "Is this operation volume within 400' of a structure?",
-      "editor_vinfo_bvlos": "Describes whether any portion of the operation volume is beyond the visual line of sight of the RPIC.",
-      "editor_vinfo_effectivetimebegin": "Earliest time the operation will use the operation volume.",
-      "editor_vinfo_effectivetimeend": "Latest time the operation will done with the operation volume.",
-      "editor_vinfo_selecttime": "Select time...",
-      "editor_vinfo_closecalendar": "Close calendar",
-      "editor_vinfo_minaltitude": "Minimum altitude (in meters)",
-      "editor_vinfo_maxaltitude": "Maximum altitude (in meters)",
+      "volume": {
+        "effective_time_begin": "Begins at",
+        "effective_time_begin_description": "Earliest time the operation will use the operation volume.",
+        "effective_time_end": "Ends at",
+        "effective_time_end_description": "Latest time the operation will done with the operation volume.",
+        "min_altitude": "Minimum altitude (in meters)",
+        "max_altitude": "Maximum altitude (in meters)"
+      },
 
-      "editor_oinfo_complete": "Editing information of operation",
-      "editor_oinfo_name": "Operation name",
-      "editor_oinfo_untitled":"Untitled",
-      "editor_oinfo_volumesdescription": "Volumes description",
-      "editor_oinfo_defaultvolume": "v0.1 - Restricted to one volume",
-      "editor_oinfo_contact_name": "Contact name",
-      "editor_oinfo_contact_phone": "Contact phone",
-      "editor_oinfo_flightnumber": "Flight number"
+      "operation": {
+        "generic": "Operation",
+        "submit_time": "Submittal time",
+        "update_time": "Last update time",
+        "aircraft_comments": "Aircraft comments",
+        "volumes_description": "Volumes description",
+        "flight_number": "Flight number",
+        "free_text": "Free text",
+        "state": "State"
+      },
+
+      "editor": {
+        "volume": {
+          "editingvolume_count": "Editing volume {{count}} of the operation",
+          "nearstructure": "Is this operation volume within 400' of a structure?",
+          "bvlos": "Describes whether any portion of the operation volume is beyond the visual line of sight of the RPIC.",
+          "selecttime": "Select time...",
+          "closecalendar": "Close calendar"
+        },
+        "operation": {
+          "complete": "Editing information of operation",
+          "name": "Operation name",
+          "untitled":"Untitled",
+          "volumesdescription": "Volumes description",
+          "defaultvolume": "v0.1 - Restricted to one volume",
+          "contact_name": "Contact name",
+          "contact_phone": "Contact phone",
+          "flightnumber": "Flight number"
+        },
+        "completesteps": "Complete the steps to define a new operation.",
+        "definevolume": "Click on the map to define a polygon.",
+        "defineoperationinfo": "Complete the data required.",
+        "savingoperation": "Saving operation. Please wait",
+        "savingerror": "Please change the affected parameters and retry.",
+        "step": {
+          "definevolumes": "Step 1: Define volumes of operation.",
+          "defineoperationinfo": "Step 2: Fill out general information.",
+          "finish": "Step 3: Finish."
+        }
+      },
+
+      "layers": "Layers",
+      "quickfly": {
+        "title": "Quick Fly",
+        "add_new": "Add new location",
+        "name": "Name",
+        "required": "Required",
+        "new_location": "New location",
+        "new_location_created": "New location created!",
+        "creating_new": "Creating new Quick Fly",
+        "save": "Save",
+        "info": "The position of the new saved location is captured automatically from the current region shown on the map."
+      }
     }
   },
   "es": {
     "translation": {
-      "app_name": "PortableUTM",
-      "app_pleaseregister": "Por favor registrate para usar el sistema",
-      "app_pleaselogin": "Por favor, iniciá sesión para usar el sistema",
-      "app_changelanguage": "Change to English (US)",
-      "app_firstname": "Nombre",
-      "app_lastname": "Apellido",
-      "app_registered": "Te registraste correctamente. Por favor, chequeá tu email. Vas a recibir un email de confirmación para activar tu cuenta.",
-      "app_email": "E-mail",
-      "app_user": "Nombre de usuario",
-      "app_user_helper": "Entregado por el administrador",
-      "app_password": "Contraseña",
-      "app_repeatpassword": "Repite tu contraseña",
-      "app_register": "Registrarme",
-      "app_password_helper": "Introducí tu contraseña",
-      "app_login": "Iniciar sesión",
-      "app_login_error": "Ocurrió un error. Revisá tus credenciales e intentalo otra vez.",
-      "app_login_pleasewait": "Iniciando sesión... Por favor, esperá",
-      "app_login_successful": "¡Sesión iniciada correctamente!",
-      "app_errorocurredfetching": "Un error ocurrió consiguiendo esta información. Intentá otra vez",
-      "app_tryagain": "Reintentar",
+      "app": {
+        "name": "PortableUTM",
+        "changelanguage": "Change to English (US)",
+        "password": "Contraseña",
+        "repeatpassword": "Repite tu contraseña",
+        "errorocurredfetching": "Un error ocurrió consiguiendo esta información. Intentá otra vez",
+        "tryagain": "Reintentar",
+        "goto_login": "Iniciar sesión",
+        "verification": {
+          "title": "Verificación",
+          "inprogress": "Verificación en progreso... Por favor, espere.",
+          "error": "Un error ocurrió en la verificación.",
+          "succesful": "Gracias, {{user}}, por verificar tu e-mail. Podés iniciar sesión.",
+          "failed": "Lo lamentamos, {{user}}, la verificación falló. Intentá nuevamente con el enlace que recibiste por e-mail."
+        }
+      },
+      "login": {
+        "pleaseregister": "Por favor registrate para usar el sistema",
+        "pleaselogin": "Por favor, iniciá sesión para usar el sistema",
+        "registered": "Te registraste correctamente. Por favor, chequeá tu email. Vas a recibir un email de confirmación para activar tu cuenta.",
+        "user_helper": "Entregado por el administrador",
+        "register": "Registrarme",
+        "register_error": "Ocurrió un error al crear tu cuenta. Re-intentá con nuevos valores.",
+        "password_helper": "Introducí tu contraseña",
+        "login": "Iniciar sesión",
+        "login_error": "Ocurrió un error. Revisá tus credenciales e intentalo otra vez.",
+        "login_pleasewait": "Iniciando sesión... Por favor, esperá",
+        "login_successful": "¡Sesión iniciada correctamente!"
+      },
+      "dsh": {
+        "logout_confirmation": "¿Estás seguro que querés cerrar tu sesión?",
+        "logout_details": "No podrás usar el sistema una vez cerrada tu sesión.",
+        "logout_negative": "No, volver",
+        "logout_positive": "Si, cerrar sesión",
+        "returnmap": "VOLVER A MAPA EN TIEMPO REAL",
+        "dshhome": "Panel principal",
+        "logout": "Cerrar sesión",
+        "all_users": "Todos los usuarios",
+        "operations_list": "Todas las operaciones",
+        "operations_list_pilot": "Tus operaciones",
+        "edit_your_info": "Editar tus datos",
+        "vehicles_new": "Añadir nuevo vehículo",
+        "vehicles_list": "Todos los vehículos",
+        "vehicles_list_pilot": "Tus vehìculos"
+      },
+      "actions": "Acciones",
+      "users": "Usuarios",
+      "user": {
+        "username": "Nombre de usuario",
+        "firstname": "Nombre",
+        "lastname": "Apellido",
+        "email": "E-mail",
+        "role": "Rol"
+      },
+      "page": "Página",
+      "edit": "Editar",
+      "add_veh": "Agregar veh.",
+      "return_to_list": "Volver a la lista",
+
+      "volume": {
+        "effective_time_begin": "Tiempo de comienzo",
+        "effective_time_begin_description": "Tiempo desde cual la operación usará este volumen",
+        "effective_time_end": "Tiempo de finalización",
+        "effective_time_end_description": "Tiempo hasta el cual la operación usará este volumen",
+        "min_altitude": "Altitud mínima (en metros)",
+        "max_altitude": "Altitud máxima (en metros)"
+      },
+
+      "operation": {
+        "generic": "Operación",
+        "submit_time": "Enviado",
+        "update_time": "Actualizado",
+        "aircraft_comments": "Comentarios de la aeronave",
+        "volumes_description": "Descripción de los volumenes",
+        "flight_number": "Número de vuelo",
+        "free_text": "Texto libre",
+        "state": "Estado"
+      },
+      "remove_from_map": "Remover del mapa",
+      "show_on_map": "Mostrar en mapa",
+      
+      "map": {
+        "filter": {
+          "proposed": "PROPUESTAS",
+          "accepted": "ACEPTADAS",
+          "activated": "ACTIVADAS",
+          "closed": "CERRADAS",
+          "nonconforming": "REBELDES",
+          "rogue": "DESHONESTAS",
+          "pending": "PENDIENTES",
+          "bystate": "Filtrar por estado",
+          "byid": "Mostrar operación específica",
+          "rfvs": "Zonas de vuelo restringido"
+        },
+        "flyto": "Desplazar mapa a"
+      },
 
 
-      "map_filter_proposed": "PROPUESTAS",
-      "map_filter_accepted": "ACEPTADAS",
-      "map_filter_activated": "ACTIVADAS",
-      "map_filter_closed": "CERRADAS",
-      "map_filter_nonconforming": "REBELDES",
-      "map_filter_rogue": "DESHONESTAS",
-      "map_filter_pending": "PENDIENTES",
-      "map_filter_bystate": "Filtrar por estado",
-      "map_filter_byid": "Mostrar operación específica",
-      "map_filter_rfvs": "Zonas de vuelo restringido",
-      "map_flyto": "Desplazar mapa a",
-
-      "dsh_logout_confirmation": "¿Estás seguro que querés cerrar tu sesión?",
-      "dsh_logout_details": "No podrás usar el sistema una vez cerrada tu sesión.",
-      "dsh_logout_negative": "No, volver",
-      "dsh_logout_positive": "Si, cerrar sesión",
-      "dsh_returnmap": "VOLVER A MAPA EN TIEMPO REAL",
-      "dsh_dshhome": "Panel principal",
-      "dsh_logout": "Cerrar sesión",
-      "dsh_all_users": "Todos los Usuarios",
-      "dsh_operations_list": "Todas las operaciones",
-      "dsh_operations_list_pilot": "Tus operaciones",
-      "dsh_edit_your_info": "Editar tus datos",
-      "dsh_vehicles_new": "Añadir nuevo vehículo",
-      "dsh_vehicles_list": "Todos los vehículos",
-      "dsh_vehicles_list_pilot": "Tus vehìculos",
 
       "click_to_expand": "Expander",
       "click_to_collapse": "Contraer",
       "submit": "Añadir vehículo",
 
       "vehicles": "Vehículos",
-      "vehicle_uvin": "UVIN",
-      "vehicle_date": "Fecha de registro",
-      "vehicle_nNumber": "Número de vehículo",
-      "vehicle_faaNumber": "Número de FAA",
-      "vehicle_vehicleName": "Nombre",
-      "vehicle_manufacturer": "Fabricante",
-      "vehicle_model": "Modelo",
-      "vehicle_class": "Clase",
-      "vehicle_accessType": "Tipo de acceso",
-      "vehicle_vehicleTypeId": "Tipo de vehiculo",
-      "vehicle_org-uuid": "ORG UIID",
-      "vehicle_registeredBy": "Registrado por",
+      "vehicle": {
+        "uvin": "UVIN",
+        "date": "Fecha de registro",
+        "nNumber": "Número de vehículo",
+        "faaNumber": "Número de FAA",
+        "vehicleName": "Nombre",
+        "manufacturer": "Fabricante",
+        "model": "Modelo",
+        "class": "Clase",
+        "accessType": "Tipo de acceso",
+        "vehicleTypeId": "Tipo de vehiculo",
+        "org-uuid": "ORG UIID",
+        "registeredBy": "Registrado por"
+      },
+      
 
       "undefined": "desconocido",
       "not_found": "Esta página no existe",
-      "operation": "Operación",
       "selected_operation": "Operación seleccionada",
       "name": "Nombre",
       "operations": "Operaciones",
@@ -218,24 +332,36 @@
       "contextualmenu_map": "Mapa en tiempo real",
       "contextualmenu_dashboard": "Panel de control",
       "contextualmenu_createnewop": "Crear nueva operación",
-
-      "editor_completesteps": "Completá los pasos para definir una nueva operación.",
-      "editor_definevolume": "Hacé click en el mapa para definir un poligono.",
-      "editor_defineoperationinfo": "Completa la información requerida.",
-      "editor_savingoperation": "Guardando operación. Esperá, por favor",
-      "editor_savingerror": "Cambiá los parametros afectados e reintentá",
-      "editor_step_definevolumes": "Paso 1: Definí el volumen de la operación.",
-      "editor_step_defineoperationinfo": "Paso 2: Completá la información de la operación.",
-      "editor_step_finish": "Paso 3: Finalizar.",
-
-      "editor_oinfo_complete": "Editando información de la operación",
-      "editor_oinfo_name": "Nombre de la operación",
-      "editor_oinfo_untitled":"Completar",
-      "editor_oinfo_volumesdescription": "Descripción de volúmenes",
-      "editor_oinfo_defaultvolume": "UNUSED",
-      "editor_oinfo_contact_name": "Nombre del contacto",
-      "editor_oinfo_contact_phone": "Teléfono del contacto",
-      "editor_oinfo_flightnumber": "Número de vuelo"
+      
+      "editor": {
+        "volume": {
+          "editingvolume_count": "Editando volúmen {{count}} de la operación",
+          "nearstructure": "¿Está este volúmen a menos de 400m de una estructura?",
+          "bvlos": "¿Está alguna parte de este volúmen fuera del campo visual del piloto?",
+          "selecttime": "Elegir...",
+          "closecalendar": "Cerrar calendario"
+        },
+        "operation": {
+          "complete": "Editando información de la operación",
+          "name": "Nombre de la operación",
+          "untitled":"Completar",
+          "volumesdescription": "Descripción de volúmenes",
+          "defaultvolume": "UNUSED",
+          "contact_name": "Nombre del contacto",
+          "contact_phone": "Teléfono del contacto",
+          "flightnumber": "Número de vuelo"
+        },
+        "completesteps": "Completá los pasos para definir una nueva operación.",
+        "definevolume": "Hacé click en el mapa para definir un poligono.",
+        "defineoperationinfo": "Completa la información requerida.",
+        "savingoperation": "Guardando operación. Esperá, por favor",
+        "savingerror": "Cambiá los parametros afectados e reintentá",
+        "step": {
+          "definevolumes": "Paso 1: Definí el volúmen de la operación.",
+          "defineoperationinfo": "Paso 2: Completá la información de la operación.",
+          "finish": "Paso 3: Finalizar."
+        }
+      }
     }
   }
 }

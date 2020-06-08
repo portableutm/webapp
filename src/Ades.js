@@ -55,7 +55,7 @@ import Pilot from './dashboard/user/Pilot';
 import VehiclesList from './dashboard/vehicle/VehiclesList';
 import NewVehicle from './dashboard/vehicle/NewVehicle';
 import HomeScreen from './dashboard/main_screen/HomeScreen';
-import VerificationScreen from './state/VerificationScreen';
+import VerificationScreen from './VerificationScreen';
 
 /*function alertIsImportant(alertUtmMessage) {
 	return (
@@ -135,7 +135,11 @@ function Ades() {
 		if (cookies.lang === null || cookies.lang === void 0) {
 			setCookie('lang', i18n.language, {path: '/'});
 		} else {
-			i18n.changeLanguage(cookies.lang);
+			if (state.debug) {
+				i18n.changeLanguage('none');
+			} else {
+				i18n.changeLanguage(cookies.lang);
+			}
 		}
 	}, [JSON.stringify(state.auth), cookies]); // eslint-disable-line react-hooks/exhaustive-deps
 

@@ -682,14 +682,14 @@ describe('SP2: (Dashboard)', function () {
 	it('Visits Web and navigate to Dashboard', function () {
 		cy.visit('http://localhost:2000/');
 		cy.get('[data-test-id="mapButtonMenu"]').click();
-		cy.contains('Dashboard').click();
+		cy.contains('contextualmenu_dashboard').click();
 	});
 	it('Finds Operations button', function () {
-		cy.contains('All operations').click();
+		cy.contains('dsh.operations_list').click();
 	});
 	it('Find operation named ACTIVATED and check it id matches', function () {
 		cy.get('[data-test-id="opACTIVATED"]').click().then(($el) => {
-			expect($el).to.contain("b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63");
+			expect($el).to.contain('b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63');
 		});
 	});
 });

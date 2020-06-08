@@ -725,7 +725,7 @@ describe('SP1: (Map) Layers', function () {
 		//cy.get('[data-test-id="mapButtonLayers"]').click();
 		cy.get('[data-test-id="layersACTIVATED"]').check({force: true});
 		cy.get('.leaflet-interactive').click({force: true});
-		cy.get('[data-test-id="propertyState"]').then(($el) =>
+		cy.get('[data-test-id="propertystate"]').then(($el) =>
 			expect($el).to.contain('ACTIVATED')
 		);
 		cy.get('.rightAreaCloser').click();
@@ -737,7 +737,7 @@ describe('SP1: (Map) Layers', function () {
 		//cy.get('[data-test-id="mapButtonLayers"]').click();
 		cy.get('[data-test-id="layersPENDING"]').check({force: true});
 		cy.get('.leaflet-interactive').click({force: true});
-		cy.get('[data-test-id="propertyState"]').then(($el) =>
+		cy.get('[data-test-id="propertystate"]').then(($el) =>
 			expect($el).to.contain('PENDING')
 		);
 		cy.get('.rightAreaCloser').click();
@@ -749,7 +749,7 @@ describe('SP1: (Map) Layers', function () {
 		//cy.get('[data-test-id="mapButtonLayers"]').click();
 		cy.get('[data-test-id="layersROGUE"]').check({force: true});
 		cy.get('.leaflet-interactive').click({force: true});
-		cy.get('[data-test-id="propertyState"]').then(($el) =>
+		cy.get('[data-test-id="propertystate"]').then(($el) =>
 			expect($el).to.contain('ROGUE')
 		);
 		cy.get('.rightAreaCloser').click();

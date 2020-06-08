@@ -18,7 +18,7 @@ const StateFilters = ({selectedFilters, setSelectedFilters}) => {
 	return (
 		<>
 			<div className='rightAreaButtonTextsSeparator'>
-				{t('map_filter_bystate')}
+				{t('map.filter.bystate')}
 			</div>
 			{states.map((filter, index) => {
 				return (
@@ -63,7 +63,7 @@ const OperationFilters = ({operations, ids, setIds}) => {
 	return (
 		<>
 			<div className='rightAreaButtonTextsSeparator'>
-				{t('map_filter_byid')}
+				{t('map.filter.byid')}
 			</div>
 			{operations.map((op, index) => {
 				if (state.map.ids.indexOf(op.gufi) !== -1) {
@@ -105,7 +105,7 @@ const RfvsFilters = ({rfvs, setRfvs}) => {
 	return (
 		<>
 			<div className='rightAreaButtonTextsSeparator'>
-				{t('map_filter_rfvs')}
+				{t('map.filter.rfvs')}
 			</div>
 			{mapValues(state.rfv.list)(() => {})((rfv, index) => {
 				const isSelected = rfvs.indexOf(rfv.id) !== -1;
@@ -140,7 +140,7 @@ const RfvsFilters = ({rfvs, setRfvs}) => {
 
 /* Button that opens a Menu that permits users selects what layers to show */
 const Layers = ({filtersSelected, setFiltersSelected, operations, disabled, idsSelected, setIdsSelected, rfvs, setRfvsShowing}) => {
-
+	const { t } = useTranslation();
 	return (
 		<>
 			{/*
@@ -163,7 +163,7 @@ const Layers = ({filtersSelected, setFiltersSelected, operations, disabled, idsS
 				forceOpen={true}
 				useCase='Layers'
 				icon='layers'
-				label='LAYERS'
+				label={t('layers').toUpperCase()}
 				simpleChildren={false}
 			>
 				<StateFilters selectedFilters={filtersSelected} setSelectedFilters={setFiltersSelected}/>

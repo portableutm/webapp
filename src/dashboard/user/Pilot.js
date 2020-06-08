@@ -44,32 +44,32 @@ function Pilot({user}) {
 				{	user != null &&
 				<Card className='fullHW' elevation={Elevation.TWO}>
 					<FormGroup
-						label={t('app_user')}
+						label={t('user.username')}
 						labelFor="text-input"
 						labelInfo="(non-editable)"
 					>
 						<InputGroup leftIcon="person" id="text-input" disabled={true} value={user.username}/>
 					</FormGroup>
 					<FormGroup
-						label={t('app_firstname')}
+						label={t('user.firstname')}
 						labelFor="text-input"
 					>
 						<InputGroup leftIcon="person" id="text-input" disabled={true} value={user.firstName}/>
 					</FormGroup>
 					<FormGroup
-						label={t('app_lastname')}
+						label={t('user.lastname')}
 						labelFor="text-input"
 					>
 						<InputGroup leftIcon="person" id="text-input" disabled={true} value={user.lastName}/>
 					</FormGroup>
 					<FormGroup
-						label={t('app_email')}
+						label={t('user.email')}
 						labelFor="text-input"
 					>
 						<InputGroup leftIcon="envelope" id="text-input" disabled={true} value={user.email}/>
 					</FormGroup>
 					<FormGroup
-						label={t('app_role')}
+						label={t('user.role')}
 						labelFor="select_role"
 					>
 						<div id="select-role" className="bp3-select bp3-fill">

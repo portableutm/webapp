@@ -41,14 +41,14 @@ function SideMenu() {
 				isOpen={logoutPressed}
 				onClose={() => setLogoutP(false)}
 			>
-				<h2>{t('dsh_logout_confirmation')}</h2>
-				{t('dsh_logout_details')}
+				<h2>{t('dsh.logout_confirmation')}</h2>
+				{t('dsh.logout_details')}
 				<div className="logoutButtons">
 					<Button style={{margin: '5px'}} intent={Intent.DANGER} onClick={() => setLogoutP(false)}>
-						{t('dsh_logout_negative')}
+						{t('dsh.logout_negative')}
 					</Button>
 					<Button style={{margin: '5px'}} intent={Intent.SUCCESS} onClick={logout}>
-						{t('dsh_logout_positive')}
+						{t('dsh.logout_positive')}
 					</Button>
 				</div>
 			</Dialog>
@@ -63,19 +63,19 @@ function SideMenu() {
 					<Menu>
 						<MenuItem className="animated flash slower infinite"
 							icon="map" intent={Intent.PRIMARY}
-							text={t('dsh_returnmap')}
+							text={t('dsh.returnmap')}
 							onClick={() => history.push('/')}/>
 						<MenuItem icon="home"
-							text={t('dsh_dshhome')}
+							text={t('dsh.dshhome')}
 							onClick={() => history.push('/dashboard')}/>
 						<MenuItem icon="flag"
-							text={t('app_changelanguage')}
+							text={t('app.changelanguage')}
 							onClick={() => changeLanguage()}/>
 						{S.isJust(adesState.auth.user) &&
 						<>
 							<MenuDivider title={fM(adesState.auth.user).firstName}/>
 							<MenuItem icon="person" disabled text={fM(adesState.auth.user).email}/>
-							<MenuItem icon="log-out" text={t('dsh_logout')} onClick={() => setLogoutP(true)}/>
+							<MenuItem icon="log-out" text={t('dsh.logout')} onClick={() => setLogoutP(true)}/>
 						</>
 						}
 						{S.isNothing(adesState.auth.user) &&
@@ -86,25 +86,25 @@ function SideMenu() {
 						</>
 						}
 
-						<MenuDivider title="Users"/>
+						<MenuDivider title={t('users')} />
 						{/* <MenuItem icon="drive-time" text="Add new Operator"/> */}
 						{/* <MenuItem icon="desktop" text="Add new Monitor"/> */}
 						<MenuItem
 							icon="user"
-							text={t('dsh_all_users')}
+							text={t('dsh.all_users')}
 							onClick={() => history.push('/dashboard/users')}/>
-						<MenuDivider title="Operations"/>
+						<MenuDivider title={t('operations')}/>
 						{/* <MenuItem icon="zoom-in" text="Pending assesment"/> */}
 						<MenuItem icon="numbered-list"
-							text={t('dsh_operations_list')}
+							text={t('dsh.operations_list')}
 							onClick={() => history.push('/dashboard/operations')}/>
-						<MenuDivider title="Vehicles"/>
+						<MenuDivider title={t('vehicles')} />
 						{/* As of 0.2 removed as vehicles have owners now...
 						 	<MenuItem icon="airplane"
-							text={t('dsh_vehicles_new')}
+							text={t('dsh.vehicles_new')}
 							onClick={() => history.push('/dashboard/vehicles/new')}/> */}
 						<MenuItem icon="numbered-list"
-							text={t('dsh_vehicles_list')}
+							text={t('dsh.vehicles_list')}
 							onClick={() => history.push('/dashboard/vehicles')}/>
 					</Menu>
 				</div>
@@ -117,17 +117,17 @@ function SideMenu() {
 				<div className="dshSide">
 					<Menu>
 						<MenuItem icon="home"
-							text={t('dsh_dshhome')}
+							text={t('dsh.dshhome')}
 							onClick={() => history.push('/dashboard')}/>
 						<MenuItem icon="flag"
-							text={t('app_changelanguage')}
+							text={t('app.changelanguage')}
 							onClick={() => changeLanguage()}/>
 						{S.isJust(adesState.auth.user) &&
 						<>
 							<MenuDivider title={fM(adesState.auth.user).firstName}/>
 							<MenuItem icon="tick-circle" disabled text="Pilot"/>
-							<MenuItem icon="person" text={t('dsh_edit_your_info')} onClick={() => history.push('/dashboard/users/' + fM(adesState.auth.user).username)}/>
-							<MenuItem icon="log-out" text={t('dsh_logout')} onClick={() => setLogoutP(true)}/>
+							<MenuItem icon="person" text={t('dsh.edit_your_info')} onClick={() => history.push('/dashboard/users/' + fM(adesState.auth.user).username)}/>
+							<MenuItem icon="log-out" text={t('dsh.logout')} onClick={() => setLogoutP(true)}/>
 						</>
 						}
 						{S.isNothing(adesState.auth.user) &&
@@ -140,14 +140,14 @@ function SideMenu() {
 						<MenuDivider title="Operations"/>
 						{/* <MenuItem icon="zoom-in" text="Pending assesment"/> */}
 						<MenuItem icon="numbered-list"
-							text={t('dsh_operations_list_pilot')}
+							text={t('dsh.operations_list_pilot')}
 							onClick={() => history.push('/dashboard/operations')}/>
 						<MenuDivider title="Vehicles"/>
 						<MenuItem icon="airplane"
-							text={t('dsh_vehicles_new')}
+							text={t('dsh.vehicles_new')}
 							onClick={() => history.push('/dashboard/vehicles/new')}/>
 						<MenuItem icon="numbered-list"
-							text={t('dsh_vehicles_list_pilot')}
+							text={t('dsh.vehicles_list_pilot')}
 							onClick={() => history.push('/dashboard/vehicles')}
 						/>
 					</Menu>
@@ -199,16 +199,16 @@ function SideMenu() {
 						{/* <MenuItem icon="zoom-in" text="Pending assesment"/> */}
 						<MenuItem icon="numbered-list"
 							className='bp3-skeleton'
-							text={t('dsh_operations_list')}
+							text={t('dsh.operations_list')}
 						/>
 						<MenuDivider title="Vehicles"/>
 						<MenuItem icon="airplane"
 							className='bp3-skeleton'
-							text={t('dsh_vehicles_new')}
+							text={t('dsh.vehicles_new')}
 						/>
 						<MenuItem icon="numbered-list"
 							className='bp3-skeleton'
-							text={t('dsh_vehicles_list')}
+							text={t('dsh.vehicles_list')}
 						/>
 					</Menu>
 				</div>

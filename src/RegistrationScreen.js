@@ -118,8 +118,8 @@ const RegistrationScreen = () => {
 			<div className="bp3-dark centeredScreen texturedBackground">
 				<Card className="registrationCard" elevation={Elevation.TWO}>
 					<form onSubmit={handleOnSubmit}>
-						<h1>{t('app_name')}</h1>
-						<h3>{t('app_pleaseregister')}</h3>
+						<h1>{t('app.name')}</h1>
+						<h3>{t('login.pleaseregister')}</h3>
 						<Alert
 							confirmButtonText={'OK'}
 							canEscapeKeyCancel={false}
@@ -137,7 +137,7 @@ const RegistrationScreen = () => {
 					 *************************** First Name ***************************
 						******************************************************************/}
 						<FormGroup
-							label={t('app_firstname')}
+							label={t('user.firstname')}
 							labelFor="input-first-name">
 							<InputGroup id="input-first-name" value={firstName} onChange={e => setFirstName(e.target.value)}/>
 						</FormGroup>
@@ -146,7 +146,7 @@ const RegistrationScreen = () => {
 					 *************************** Last Name  ***************************
 						******************************************************************/}
 						<FormGroup
-							label={t('app_lastname')}
+							label={t('user.lastname')}
 							labelFor="input-last-name">
 							<InputGroup id="input-last-name" value={lastName} onChange={e => setLastName(e.target.value)}/>
 						</FormGroup>
@@ -155,7 +155,7 @@ const RegistrationScreen = () => {
 					 ***************************** Email  *****************************
 						******************************************************************/}
 						<FormGroup
-							label={t('app_email')}
+							label={t('user.email')}
 							labelFor="input-email">
 							<InputGroup id="input-email" value={email} onChange={e => setEmail(e.target.value)}/>
 						</FormGroup>
@@ -164,7 +164,7 @@ const RegistrationScreen = () => {
 					 **************************** Username ****************************
 						******************************************************************/}
 						<FormGroup
-							label={t('app_user')}
+							label={t('user.username')}
 							labelFor="input-username">
 							<InputGroup id="input-username" value={username} onChange={e => setUsername(e.target.value)}/>
 						</FormGroup>
@@ -173,7 +173,7 @@ const RegistrationScreen = () => {
 					 **************************** Password ****************************
 						******************************************************************/}
 						<FormGroup
-							label={t('app_password')}
+							label={t('app.password')}
 							labelFor="input-password">
 							<InputGroup
 								id="input-password"
@@ -187,7 +187,7 @@ const RegistrationScreen = () => {
 					 ************************ Repeat Password  ************************
 						******************************************************************/}
 						<FormGroup
-							label={t('app_repeatpassword')}
+							label={t('app.repeatpassword')}
 							labelFor="input-repeat-password">
 							<InputGroup
 								id="input-repeat-password"
@@ -202,14 +202,14 @@ const RegistrationScreen = () => {
 						******************************************************************/}
 						<div className="loginButtons">
 							<Button fill style={{margin: '5px'}} intent={Intent.PRIMARY} onClick={() => changeLanguage()}>
-								{t('app_changelanguage')}
+								{t('app.changelanguage')}
 							</Button>
 							<Button fill
 								style={{margin: '5px'}}
 								intent={Intent.SUCCESS}
 								type="submit"
 								disabled={!registrationButtonEnabled} >
-								{t('app_register')}
+								{t('login.register')}
 							</Button>
 						</div>
 
@@ -223,7 +223,7 @@ const RegistrationScreen = () => {
 		return(
 			<div className="bp3-dark centeredScreen texturedBackground">
 				<Card className="registrationCard" elevation={Elevation.TWO}>
-					{t('app_registered')}
+					{t('login.registered')}
 				</Card>
 			</div>
 		);
@@ -231,7 +231,15 @@ const RegistrationScreen = () => {
 		return(
 			<div className="bp3-dark centeredScreen texturedBackground">
 				<Card className="registrationCard" elevation={Elevation.TWO}>
-					There was an error creating your account. Please, try again with different values.
+					{t('login.register_error')}
+					<Button
+						fill
+						style={{margin: '5px'}}
+						intent={Intent.SUCCESS}
+						onClick={() => {setError(false);setRegistrationButtonEnabled(true);}}
+					>
+						{t('login.register')}
+					</Button>
 				</Card>
 			</div>
 		);

@@ -20,51 +20,51 @@ function Vehicle({children: v}) {
 			{showProperties &&
 			<div className="animated flipInX faster">
 				<GenericListLine>
-					{t('vehicle_uvin')}
+					{t('vehicle.uvin')}
 					{v.uvin}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_date')}
+					{t('vehicle.date')}
 					{v.date}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_nNumber')}
+					{t('vehicle.nNumber')}
 					{v.nNumber}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_faaNumber')}
+					{t('vehicle.faaNumber')}
 					{v.faaNumber}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_name')}
+					{t('vehicle.name')}
 					{v.vehicleName}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_manufacturer')}
+					{t('vehicle.manufacturer')}
 					{v.manufacturer}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_model')}
+					{t('vehicle.model')}
 					{v.model}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_class')}
+					{t('vehicle.class')}
 					{v.class}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_accessType')}
+					{t('vehicle.accessType')}
 					{v.accessType}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_vehicleTypeId')}
+					{t('vehicle.vehicleTypeId')}
 					{v.vehicleTypeId}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_org-uuid')}
+					{t('vehicle.org-uuid')}
 					{v['org-uuid']}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_registeredBy')}
+					{t('vehicle.registeredBy')}
 					{v.registeredBy.firstName + ' ' + v.registeredBy.lastName + ' (' + v.registeredBy.email + ')'}
 				</GenericListLine>
 			</div>
@@ -89,13 +89,13 @@ function VehiclesList() {
 			{ 	state.vehicles.error &&
 				<>
 					<p>
-						{t('app_errorocurredfetching')}
+						{t('app.errorocurredfetching')}
 					</p>
 					<Button
 						intent={Intent.PRIMARY}
 						onClick={() => actions.vehicles.fetch()}
 					>
-						{t('app_tryagain')}
+						{t('app.tryagain')}
 					</Button>
 				</>
 			}

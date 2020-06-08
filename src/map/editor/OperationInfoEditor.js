@@ -27,7 +27,7 @@ function OperationInfoEditor({setOpen, info, setInfo}) {
 		return <div style={{padding: '10px'}}>
 			{/* "flight_comments": "Untitled" */}
 			<FormGroup
-				label={t('editor_oinfo_name')}
+				label={t('editor.operation.name')}
 				labelFor="flight_comments"
 			>
 				<InputGroup
@@ -39,7 +39,7 @@ function OperationInfoEditor({setOpen, info, setInfo}) {
 			</FormGroup>
 			{/* "flight_number": "12345678" */}
 			<FormGroup
-				label={t('editor_oinfo_flightnumber')}
+				label={t('editor.operation.flightnumber')}
 				labelFor="flight_number"
 			>
 				<InputGroup
@@ -51,7 +51,7 @@ function OperationInfoEditor({setOpen, info, setInfo}) {
 			</FormGroup>
 			{/* "Contact Name"*/}
 			<FormGroup
-				label={t('editor_oinfo_contact_name')}
+				label={t('editor.operation.contact_name')}
 				labelFor="contact"
 			>
 				<InputGroup
@@ -63,7 +63,7 @@ function OperationInfoEditor({setOpen, info, setInfo}) {
 			</FormGroup>
 			{/* "Contact Phone"*/}
 			<FormGroup
-				label={t('editor_oinfo_contact_phone')}
+				label={t('editor.operation.contact_phone')}
 				labelFor="contact_phone"
 			>
 				<InputGroup
@@ -78,7 +78,7 @@ function OperationInfoEditor({setOpen, info, setInfo}) {
 
 	return (
 		<Dialog
-			title={t('editor_oinfo_complete')}
+			title={t('editor.operation.complete')}
 			isOpen={true}
 			onClose={() => setOpen(false)}
 		>

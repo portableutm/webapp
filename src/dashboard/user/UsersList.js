@@ -89,20 +89,20 @@ const UsersList = () => {
 			{ 	isError &&
 			<>
 				<p>
-					{t('app_errorocurredfetching')}
+					{t('app.errorocurredfetching')}
 				</p>
 				<Button
 					intent={Intent.PRIMARY}
 					onClick={() => refetch()}
 				>
-					{t('app_tryagain')}
+					{t('app.tryagain')}
 				</Button>
 			</>
 			}
 			{	!isError &&
 				S.isNothing(shownPilot) &&
 				<>
-					<h1>Users</h1>
+					<h1>{t('users')}</h1>
 					<div className="dshUsersListButtons">
 						<Tabs id="dshUsersListsTabs" onChange={tab => {
 							setFirstUser(tab * USERS_ONE_PAGE_NUMBER);
@@ -110,7 +110,7 @@ const UsersList = () => {
 						}}>
 							{tabsTotal.map(tab => {
 								const page = tab + 1;
-								return <Tab id={tab} key={'tab' + tab} title={'Page ' + page}/>;
+								return <Tab id={tab} key={'tab' + tab} title={t('page') + ' ' + page}/>;
 							})
 							}
 						</Tabs>
@@ -119,12 +119,12 @@ const UsersList = () => {
 						<table id="dshUsersList" className="bp3-html-table .bp3-html-table-bordered .bp3-html-table-striped fullHW">
 							<thead>
 								<tr>
-									<th>First Name</th>
-									<th>Last Name</th>
-									<th>Username</th>
-									<th>Email</th>
-									<th>Role</th>
-									<th>Actions</th>
+									<th>{t('user.firstname')}</th>
+									<th>{t('user.lastname')}</th>
+									<th>{t('user.username')}</th>
+									<th>{t('user.email')}</th>
+									<th>{t('user.role')}</th>
+									<th>{t('actions')}</th>
 								</tr>
 							</thead>
 							<tbody className="dshUsersList">
@@ -144,7 +144,7 @@ const UsersList = () => {
 														setShownPilot(S.Just(user));
 													}}
 												>
-													Edit
+													{t('edit')}
 												</Button>
 												{user.role === 'pilot'
 													?
@@ -152,7 +152,7 @@ const UsersList = () => {
 														small={true}
 														onClick={() => history.push('/dashboard/vehicles/' + user.username + '/new/')}
 													>
-													Add veh.
+														{t('add_veh')}
 													</Button>
 													:
 													null
@@ -169,7 +169,7 @@ const UsersList = () => {
 			{	!isError &&
 				S.isJust(shownPilot) &&
 				<>
-					<Button icon="circle-arrow-left" text={'Return to list'} onClick={() => {
+					<Button icon="circle-arrow-left" text={t('return_to_list')} onClick={() => {
 						setShownPilot(S.Nothing);
 						history.push('/dashboard/users');
 					}} />

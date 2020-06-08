@@ -4,6 +4,7 @@ import RightAreaButton from '../RightAreaButton';
 import useAdesState from '../../state/AdesState';
 import {maybeValues} from '../../libs/SaferSanctuary';
 import {Button, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
+import {useTranslation} from 'react-i18next';
 
 /* Constants */
 /*
@@ -39,6 +40,7 @@ const quickFlyLocations = [
 const QuickFly = ({onClick}) => {
 	//console.log('QuickFly', onClick);
 	const [state, actions] = useAdesState();
+	const {t} = useTranslation();
 	const [isCreating, showCreate] = useState(false);
 
 	const addNewQuickFlyButton = {
@@ -53,7 +55,7 @@ const QuickFly = ({onClick}) => {
 				intent={Intent.PRIMARY}
 				onClick={() => showCreate(true)}
 			>
-				Add new location
+				{t('quickfly.add_new')}
 			</Button>
 		</div>),
 	};
@@ -65,7 +67,7 @@ const QuickFly = ({onClick}) => {
 				<RightAreaButton
 					useCase='quickFly'
 					icon='send-to-map'
-					label='QUICK FLY'
+					label={t('quickfly.title').toUpperCase()}
 					onClick={onClick}
 					simpleChildren={true}
 				>
@@ -76,8 +78,8 @@ const QuickFly = ({onClick}) => {
 				<RightAreaButton
 					className={'animated flash'}
 					useCase='quickFlyNew'
+					label={t('quickfly.creating_new')}
 					icon='cog'
-					label='New QuickFly'
 					forceOpen={true}
 					simpleChildren={false}
 				>
@@ -85,18 +87,18 @@ const QuickFly = ({onClick}) => {
 						className='rightAreaButtonText'
 					>
 						<FormGroup
-							label="Name"
+							label={t('quickfly.name')}
 							inline={true}
 							labelFor="qf-name"
-							labelInfo="(required)"
+							labelInfo={'(' + t('quickfly.required') + ')'}
 						>
-							<InputGroup id="qf-name" placeholder="New location" />
+							<InputGroup id="qf-name" placeholder={t('quickfly.new_location')} />
 						</FormGroup>
 					</div>
 					<div
 						className='rightAreaButtonTextDisabled'
 					>
-						The position of the new saved location is captured automatically from the current region shown on the map.
+						{t('quickfly.info')}
 					</div>
 					<div
 						className='rightAreaButtonTextsSeparator'
@@ -112,16 +114,16 @@ const QuickFly = ({onClick}) => {
 										cornerSE: state.map.cornerSE,
 									},
 									() => {
-										actions.map_dialog.open('Quick fly', 'New location created!');
+										actions.map_dialog.open(t('quickfly.title'), t('quickfly.new_location_created'));
 									},
 									(error) => {
-										actions.map_dialog.open('Quick fly', 'Error: ' + JSON.stringify(error));
+										actions.map_dialog.open(t('quickfly.title'), 'Error: ' + JSON.stringify(error));
 									}
 								);
 								showCreate(false);
 							}}
 						>
-							Save
+							{t('quickfly.save')}
 						</Button>
 					</div>
 				</RightAreaButton>

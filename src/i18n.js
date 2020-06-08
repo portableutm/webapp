@@ -7,7 +7,7 @@ i18n
 	.init({
 		resources,
 		lng: 'en',
-		keySeparator: false, // we do not use keys in form messages.welcome
+		keySeparator: '.', // We use keys in format .
 		interpolation: {
 			escapeValue: false // react already safes from xss
 		}

@@ -13,14 +13,24 @@ describe('SP: Dashboard', function () {
 			});
 
 		cy.visit('http://localhost:2000/dashboard/');
-		cy.contains('REALTIME MAP').click();
+		cy.contains('dsh.returnmap').click();
 		cy.visit('http://localhost:2000/dashboard/');
+		cy.contains('app.changelanguage').click();
 		cy.contains('Español').click();
-		cy.contains('English').click();
-		cy.contains('All users').click();
-		cy.contains('All operations').click();
-		cy.contains('All vehicles').click();
-		cy.contains('Log out').click();
+	});
+	it('All buttons of the sidemenu - admin', function() {
+		cy
+			.request('POST', API + 'auth/login', { username: 'admin', password: 'admin' })
+			.then((response) => {
+				// response.body is automatically serialized into JSON
+				cy.setCookie('user', 'admin');
+				cy.setCookie('jwt', response.body);
+			});
+		cy.visit('http://localhost:2000/dashboard/');
+		cy.contains('dsh.all_users').click();
+		cy.contains('dsh.operations_list').click();
+		cy.contains('dsh.vehicles_list').click();
+		cy.contains('dsh.logout').click();
 	});
 	it('All buttons of the sidemenu - pilot', function() {
 		cy

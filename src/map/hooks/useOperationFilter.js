@@ -34,36 +34,36 @@ const useOperationFilter = () => {
 
 	const states = [
 		{
-			text: t('map_filter_accepted'),
+			text: t('map.filter.accepted'),
 			filter: 'ACCEPTED'
 		},
 		{
-			text: t('map_filter_pending'),
+			text: t('map.filter.pending'),
 			filter: 'PENDING'
 		},
 		{
-			text: t('map_filter_activated'),
+			text: t('map.filter.activated'),
 			filter: 'ACTIVATED'
 		},
 		{
-			text: t('map_filter_rogue'),
+			text: t('map.filter.rogue'),
 			filter: 'ROGUE'
 		},
 		/*
 		{
-			text: t('map_filter_proposed'),
+			text: t('map.filter.proposed'),
 			filter: 'PROPOSED'
 		},
 		*/
 		/*
 		{
-			text: t('map_filter_closed'),
+			text: t('map.filter.closed'),
 			filter: 'CLOSED'
 		},
 		*/
 		/*
 		{
-			text: t('map_filter_nonconforming'),
+			text: t('map.filter.nonconforming'),
 			filter: 'NONCONFORMING'
 		},
 		 */

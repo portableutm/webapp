@@ -31,7 +31,7 @@
   },
   "scripts": {
     "start": "set PORT=2000 && react-scripts -r @cypress/instrument-cra start",
-    "start-dev": "SET \"REACT_APP_ADES_API=https://localhost:3000\" && SET PORT=2000 && react-scripts -r @cypress/instrument-cra start",
+    "start-dev": "cross-env REACT_APP_DEBUG=true react-scripts -r @cypress/instrument-cra start",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns \\\"node_modules/(?!use-global-hook)/\\\"",
     "eject": "react-scripts eject",
@@ -69,6 +69,7 @@
     "@cypress/instrument-cra": "^1.1.0",
     "@testing-library/dom": "^6.15.0",
     "@testing-library/react": "^9.5.0",
+    "cross-env": "^7.0.2",
     "cypress": "^4.1.0",
     "eslint": "^6.8.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
