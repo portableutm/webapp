@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, Elevation, FormGroup, InputGroup, Intent, Spinner} from '@blueprintjs/core';
-import S from 'sanctuary';
+import {Button, Card, Elevation, Intent, Spinner} from '@blueprintjs/core';
 import {useTranslation} from 'react-i18next';
 import { useParams, useHistory } from 'react-router-dom';
 import A from 'axios';
@@ -49,7 +48,7 @@ function VerificationScreen() {
 				setLoading(false);
 				setError(true);
 			});
-	}, []);
+	}, [username, token]);
 
 	return (
 		<div className="centeredScreen texturedBackground">

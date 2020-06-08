@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {API, USERS_DATA_TOO_OLD} from '../../consts';
-import {fM, fSM, maybeValues} from '../../libs/SaferSanctuary';
+import {API} from '../../consts';
+import {fM, maybeValues} from '../../libs/SaferSanctuary';
 import S from 'sanctuary';
 import A from 'axios';
 import '../../Ades.css';
@@ -34,10 +34,6 @@ function useUsersState() {
 	const usersListExtracted = maybeValues(usersList);
 
 	useEffect(() => {
-		console.log('Refetch', refetchTime);
-	}, [refetchTime]);
-
-	useEffect(() => {
 		Axios.get(API + 'user', {headers: {auth: fM(state.auth.token)}})
 			.then(result => {
 				const dataObtained = Array.from(result.data);
@@ -53,7 +49,7 @@ function useUsersState() {
 				print(state, true, '*UserState', error);
 				setIsError(true);
 			});
-	}, [refetchTime]); // Fetch users for the first time if empty
+	}, [refetchTime]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return [usersListExtracted, usersUpdated, isEmpty, isError, refetch];
 }
@@ -86,7 +82,7 @@ const UsersList = () => {
 			const selected = users.find(user => user.username === username);
 			setShownPilot(S.Just(selected));
 		}
-	}, [username, usersUpdated]);
+	}, [username, usersUpdated, isEmpty]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<>
