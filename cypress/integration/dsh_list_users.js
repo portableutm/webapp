@@ -39,10 +39,10 @@ describe('SP2: (Dashboard): All Users', function () {
 	it('Visits Web and navigate to Dashboard', function () {
 		cy.visit('http://localhost:2000/');
 		cy.get('[data-test-id="mapButtonMenu"]').click();
-		cy.contains('Dashboard').click();
+		cy.contains('contextualmenu_dashboard').click();
 	});
 	it('Finds Users button', function () {
-		cy.contains('All users').click();
+		cy.contains('dsh.all_users').click();
 	});
 
 	it('Find user jperez and check it id matches, edits it', function () {
@@ -56,7 +56,7 @@ describe('SP2: (Dashboard): All Users', function () {
 			expect($el).to.contain('mfulana@dronfies.com');
 			expect($el).to.contain('pilot');
 		});
-		cy.contains('Edit').first().click();
+		cy.contains('edit').first().click();
 	});
 
 });

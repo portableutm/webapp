@@ -18,8 +18,8 @@ describe('Use Case: Add new vehicle', function () {
 		}).as('postVehicle');
 	});
 	it('Finds button and starts use case', function () {
-		cy.visit('http://localhost:2000/dashboard');
-		cy.contains('Add new vehicle').click();
+		cy.visit('http://localhost:2000/dashboard/users/');
+		cy.contains('dsh.vehicles_new').first().click();
 	});
 	/*it('Tries to create invalid vehicle', function () {
 		cy.contains('Add vehicle').click();
@@ -36,7 +36,7 @@ describe('Use Case: Add new vehicle', function () {
 		cy.get('#text-manufacturer').type('DJI', {force: true});
 		cy.get('#text-model').type(' 303', {force: true});
 		cy.contains('Fixed-wing').click();
-		cy.contains('Add vehicle').click();
+		cy.contains('submit').click();
 		cy.wait('@postVehicle');
 	});
 	
