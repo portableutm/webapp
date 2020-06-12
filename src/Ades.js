@@ -327,7 +327,7 @@ function Ades() {
 						<Route exact path='/registration'>
 							<RegistrationScreen/>
 						</Route>
-						<Route path='/verify/:username/:token'>
+						<Route path='/verify/:username'>
 							<VerificationScreen/>
 						</Route>
 						<Route path='/'>

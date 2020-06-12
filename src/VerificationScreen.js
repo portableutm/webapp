@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Card, Elevation, Intent, Spinner} from '@blueprintjs/core';
 import {useTranslation} from 'react-i18next';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 import A from 'axios';
 import {API, DEBUG} from './consts';
 
@@ -18,7 +18,10 @@ function VerificationScreen() {
 	const [isLoading, setLoading] = useState(true);
 
 	const history = useHistory();
-	const {username, token} = useParams();
+	const {username} = useParams();
+	const location = useLocation();
+	const token = (location.search.split('?token='))[1];
+	console.log(token);
 
 	const { t, i18n } = useTranslation();
 
