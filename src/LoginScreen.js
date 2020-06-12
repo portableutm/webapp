@@ -4,6 +4,7 @@ import useAdesState from './state/AdesState.js';
 import S from 'sanctuary';
 import {useTranslation} from 'react-i18next';
 import {useCookies} from 'react-cookie';
+import {DEBUG} from './consts';
 
 const {isJust} = S;
 
@@ -31,15 +32,17 @@ function LoginScreen() {
 		adesActions.auth.login(user, password, okCallback, badCallback);
 	};
 
-	const changeLanguage = () => {
-		if (i18n.language === 'en') {
-			setCookie('lang', 'es', {path: '/'});
-			i18n.changeLanguage('es');
-		} else {
-			setCookie('lang', 'en', {path: '/'});
-			i18n.changeLanguage('en');
+	useEffect(() => {
+		if (!DEBUG) {
+			if (navigator.language.substring(0, 2) === 'es') {
+				setCookie('lang', 'es', {path: '/'});
+				i18n.changeLanguage('es');
+			} else {
+				setCookie('lang', 'en', {path: '/'});
+				i18n.changeLanguage('en');
+			}
 		}
-	};
+	}, []);
 
 	return (
 		<form onSubmit={login} className="centeredScreen texturedBackground">
@@ -67,10 +70,7 @@ function LoginScreen() {
 						onChange={(evt) => setPassword(evt.target.value)}/>
 				</FormGroup>
 				<div className="loginButtons">
-					<Button fill style={{margin: '5px'}} intent={Intent.PRIMARY} onClick={() => changeLanguage()}>
-						{t('app.changelanguage')}
-					</Button>
-					<Button fill style={{margin: '5px'}} intent={Intent.SUCCESS}
+					<Button style={{margin: '5px'}} intent={Intent.SUCCESS}
 						type="submit"
 						onClick={login}>
 						{t('login.login')}

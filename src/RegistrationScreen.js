@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert, Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
 import A from 'axios';
-import { API } from './consts';
+import {API, DEBUG} from './consts';
 import {useTranslation} from 'react-i18next';
 import {useCookies} from 'react-cookie';
 
@@ -32,6 +32,18 @@ const RegistrationScreen = () => {
 	const { t, i18n } = useTranslation();
 	const [, setCookie, ] = useCookies(['jwt']);
 
+	useEffect(() => {
+		if (!DEBUG) {
+			if (navigator.language.substring(0, 2) === 'es') {
+				setCookie('lang', 'es', {path: '/'});
+				i18n.changeLanguage('es');
+			} else {
+				setCookie('lang', 'en', {path: '/'});
+				i18n.changeLanguage('en');
+			}
+		}
+	}, []);
+
 	//----------------------------------------------------------------------------------
 	//--------------------------------- AUX FUNCTIONS  ---------------------------------
 	//----------------------------------------------------------------------------------
@@ -45,16 +57,6 @@ const RegistrationScreen = () => {
 	//--------------------------------- EVENT HANDLERS ---------------------------------
 	//----------------------------------------------------------------------------------
 
-	const changeLanguage = () => {
-		if (i18n.language === 'en') {
-			setCookie('lang', 'es', {path: '/'});
-			i18n.changeLanguage('es');
-		} else {
-			setCookie('lang', 'en', {path: '/'});
-			i18n.changeLanguage('en');
-		}
-	};
-    
 	const handleOnSubmit = e => {
 		// avoid submit
 		e.preventDefault();
@@ -201,10 +203,7 @@ const RegistrationScreen = () => {
 					 ************************* Submit Button  *************************
 						******************************************************************/}
 						<div className="loginButtons">
-							<Button fill style={{margin: '5px'}} intent={Intent.PRIMARY} onClick={() => changeLanguage()}>
-								{t('app.changelanguage')}
-							</Button>
-							<Button fill
+							<Button
 								style={{margin: '5px'}}
 								intent={Intent.SUCCESS}
 								type="submit"

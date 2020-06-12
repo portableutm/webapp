@@ -3,7 +3,7 @@ import {Button, Card, Elevation, Intent, Spinner} from '@blueprintjs/core';
 import {useTranslation} from 'react-i18next';
 import { useParams, useHistory } from 'react-router-dom';
 import A from 'axios';
-import {API} from './consts';
+import {API, DEBUG} from './consts';
 
 const Axios = A.create({
 	baseURL: API,
@@ -22,13 +22,15 @@ function VerificationScreen() {
 
 	const { t, i18n } = useTranslation();
 
-	const changeLanguage = () => {
-		if (i18n.language === 'en') {
-			i18n.changeLanguage('es');
-		} else {
-			i18n.changeLanguage('en');
+	useEffect(() => {
+		if (!DEBUG) {
+			if (navigator.language.substring(0, 2) === 'es') {
+				i18n.changeLanguage('es');
+			} else {
+				i18n.changeLanguage('en');
+			}
 		}
-	};
+	}, []);
 
 	useEffect(() => {
 		Axios
@@ -66,10 +68,7 @@ function VerificationScreen() {
 						<h3>{t('app.verification')}</h3>
 						{t('app.verification.successful', {user: username})}
 						<div className="loginButtons">
-							<Button fill style={{margin: '5px'}} intent={Intent.PRIMARY} onClick={() => changeLanguage()}>
-								{t('app.changelanguage')}
-							</Button>
-							<Button fill style={{margin: '5px'}} intent={Intent.SUCCESS}
+							<Button style={{margin: '5px'}} intent={Intent.SUCCESS}
 								type="submit"
 								onClick={() => history.push('/')}>
 								{t('app.goto_login')}
@@ -82,11 +81,6 @@ function VerificationScreen() {
 					<>
 						<h3>{t('app.verification.title')}</h3>
 						{t('app.verification.failed', {user: username})}
-						<div className="loginButtons">
-							<Button fill style={{margin: '5px'}} intent={Intent.PRIMARY} onClick={() => changeLanguage()}>
-								{t('app.changelanguage')}
-							</Button>
-						</div>
 					</>
 				}
 			</Card>
