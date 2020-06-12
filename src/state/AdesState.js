@@ -21,6 +21,14 @@ const Axios = A.create({
 	}
 });
 
+const quickFlyLocations = [
+	{
+		name: 'DronfiesLabs',
+		cornerNW: [-56.27059936523438, -34.76615576940305],
+		cornerSE: [-55.948905944824226, -34.95237014224681]
+	}
+];
+
 const initialState = {
 	auth: {
 		user: S.Nothing,
@@ -205,11 +213,12 @@ function addVehicle(store, data) {
 /* RFV */
 
 function addRFV(store, data) {
-	const dataObtained = Array.from(data);
+	const dataObtained = [(Array.from(data))[0]];
 	const pairs = S.justs(dataObtained.map((rfv) => {
 		return S.Just(S.Pair(rfv.id)(convertCoordinatesRFV(rfv)));
 	}));
 	const rfvs = S.fromPairs(pairs);
+	print(store.state, false, 'RFVState', rfvs);
 	store.setState({rfv: {updated: Date.now(), list: S.Just(rfvs)}});
 }
 
@@ -377,6 +386,7 @@ const actions = {
 	map: {
 		setCorners: (store, cornerNW, cornerSE) => {
 			//console.log('MapState: (BOUND) ', JSON.stringify(cornerNW), JSON.stringify(cornerSE));
+			//print(store.state, false, 'MapState', cornerNW, cornerSE);
 			store.setState({map: {...store.state.map, cornerNW, cornerSE}});
 		},
 		addId: (store, id) => {
@@ -427,7 +437,10 @@ const actions = {
 		fetch: (store) => {
 			A.get(API + 'quickfly', {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => addQuickFly(store, result.data))
-				.catch(error => print(store.state, true, 'QuickFlyState', error));
+				.catch(error => {
+					addQuickFly(store, quickFlyLocations);
+					print(store.state, true, 'QuickFlyState', error);
+				});
 		},
 		post: (store, data, callback, errorCallback) => {
 			const olds = maybeValues(store.state.quickFly.list);
