@@ -27,30 +27,6 @@ const EditorPanel = ({steps, stepsDisabled}) => {
 					}
 				</div>
 			</RightAreaButton>
-			<RightAreaButton
-				useCase='editorSteps'
-				icon='flow-linear'
-				label={t('steps')}
-				simpleChildren={false}
-				forceOpen={true}
-			>
-				{steps.map((step, index) => {
-					const isDisabled = stepsDisabled.indexOf(index) !== -1;
-					const className = isDisabled ?
-						'rightAreaButtonTextDisabled' :
-						'rightAreaButtonText';
-					return (
-						<div
-							key={step.text}
-							className={className}
-							onClick={isDisabled ? () => {
-							} : () => step.action()}
-						>
-							{step.text}
-						</div>
-					);
-				})}
-			</RightAreaButton>
 		</>
 	);
 };

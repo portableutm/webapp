@@ -74,25 +74,63 @@ th, td {
 .mainArea::-webkit-scrollbar { width: 0 !important; }
 .mainArea { scrollbar-width: none; }
 .mainArea { -ms-overflow-style: none; }
-
+.mainAreaExpanded {
+  grid-template-columns: 400px minmax(0, 6fr) minmax(0, 3fr) !important;
+}
 
 .rightArea {
   font-weight: normal;
   position: absolute;
-  overflow-y: scroll;
   grid-area: 1 / 1 / 6 / 2;
   height: 100%;
   width: 100%;
-  padding-top: 44px;
   z-index: 2000;
   background-color: rgb(57, 64, 83);
   pointer-events: auto;
   box-shadow: 0 0 0.4em 0 rgba(57, 64, 83, 0.5);
   -moz-box-shadow: 0 0 0.4em 0 rgba(57, 64, 83, 0.5);
-  -webkit-box-shadow: 0 0 0.4em 0 rgba(57, 64, 83, 0.5);}
+  -webkit-box-shadow: 0 0 0.4em 0 rgba(57, 64, 83, 0.5);
+}
 
-.rightArea::-webkit-scrollbar
-{
+.rightArea:before {
+  content: "";
+  position: fixed;
+  top: 0;
+  z-index: 2100;
+  pointer-events: none;
+  background-image:
+          linear-gradient(to top,
+          rgba(57, 64, 83, 0),
+          rgba(57, 64, 83, 1) 100%);
+  width: 100%;
+  height: 44px;
+}
+
+.rightArea:after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  z-index: 2200;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to bottom,
+    rgba(57, 64, 83, 0),
+    rgba(57, 64, 83, 1) 100%);
+  width: 100%;
+  height: 44px;
+}
+
+.rightAreaInside {
+  padding-top: 44px;
+  position: absolute;
+  padding-bottom: 44px;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  pointer-events: auto;
+}
+
+.rightAreaInside::-webkit-scrollbar {
   display: none;
 }
 
@@ -128,6 +166,7 @@ th, td {
   position: absolute;
   top: 5px;
   right: 5px;
+  z-index: 3000;
   width: fit-content;
 }
 
@@ -239,8 +278,8 @@ th, td {
   background-color: rgb(240, 101, 67);
   display: flex;
   justify-content: space-between;
-  padding: 5%;
-  margin-top: 5px;
+  padding: 10px;
+  margin-top: 1px;
   width: 100%;
 }
 
@@ -272,8 +311,29 @@ th, td {
   color: white;
   display: flex;
   justify-content: flex-start;
-  padding: 5px 5px 5px 10px;
-  margin-top: 1px;
+  padding: 5px 10px 5px 10px;
+  margin: 1px 0 0 !important;
+  background-color: rgba(132, 130, 143, 0.25) !important;
+  user-select: none;
+}
+
+.rightAreaButtonTextRight {
+  color: white;
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px 10px 5px 10px;
+  margin: 1px 0 0 !important;
+  background-color: rgba(132, 130, 143, 0.25) !important;
+  user-select: none;
+}
+
+.rightAreaButtonTextVertically {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5px 10px 5px 10px;
+  margin: 1px 0 0 !important;
   background-color: rgba(132, 130, 143, 0.25) !important;
   user-select: none;
 }

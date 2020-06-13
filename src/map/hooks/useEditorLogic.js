@@ -11,7 +11,7 @@ const timeNow2 = new Date();
 timeNow2.setUTCHours(timeNow.getUTCHours() + DEFAULT_OPERATION_VALIDITY);
 const swap = (array) => [array[1], array[0]];
 
-function UseEditorLogic(refMapOnClick) {
+function UseEditorLogic(refMapOnClick, mapInitialized) {
 	const [operationInfo, setOperationInfo] = useState(S.Just({
 		contact: '',
 		contact_phone: '',
@@ -55,7 +55,6 @@ function UseEditorLogic(refMapOnClick) {
 		operation_volumes: null,
 		negotiation_agreements: []
 	}));
-	const [currentStep, setCurrentStep] = useState(0);
 	const [volume, setVolumeInfo] = useState({
 		near_structure: false,
 		effective_time_begin: timeNow,
@@ -70,11 +69,7 @@ function UseEditorLogic(refMapOnClick) {
 	const history = useHistory();
 
 	useEffect(() => {
-		if (currentStep === 0) {
-			// When Map click should do nothing
-			refMapOnClick.current = () => {};
-			actions.map.onClicksDisabled(false);
-		} else if (currentStep === 1) {
+		if (mapInitialized) {
 			refMapOnClick.current = event => {
 				const {latlng} = event;
 				setPolygons(polygons => {
@@ -84,24 +79,34 @@ function UseEditorLogic(refMapOnClick) {
 				});
 			};
 			actions.map.onClicksDisabled(false);
-		} else if (currentStep === 3) {
-			const info = _(operationInfo);
-			info.submit_time = new Date().toISOString();
-			let volumeWithPolygons = {...volume};
-			volumeWithPolygons.operation_geography = {
-				type: 'Polygon',
-				coordinates: polygons.map(listLngLat =>
-					listLngLat.map(lngLat => swap(lngLat))
-				)
-			};
-			info.operation_volumes = [volumeWithPolygons];
-			const callback = () => history.push('/dashboard/operations');
-			actions.operations.post(info, callback, errorOnSaveCallback);
-			actions.map.onClicksDisabled(false);
+		} else {
+			refMapOnClick.current = () => {};
 		}
-	}, [currentStep]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [mapInitialized]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
+		console.log('Updated OperationInfo', S.maybeToNullable(operationInfo));
+	}, [operationInfo]);
+
+
+	const saveOperation = () => {
+		actions.map.onClicksDisabled(false);
+		refMapOnClick.current = () => {};
+		const info = _(operationInfo);
+		info.submit_time = new Date().toISOString();
+		let volumeWithPolygons = {...volume};
+		volumeWithPolygons.operation_geography = {
+			type: 'Polygon',
+			coordinates: polygons.map(listLngLat =>
+				listLngLat.map(lngLat => swap(lngLat))
+			)
+		};
+		info.operation_volumes = [volumeWithPolygons];
+		const callback = () => history.push('/dashboard/operations');
+		actions.operations.post(info, callback, errorOnSaveCallback);
+	};
 	
-	return [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, setCurrentStep, setErrorOnSaveCallback];
+	return [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, setErrorOnSaveCallback];
 }
 
 export default UseEditorLogic;

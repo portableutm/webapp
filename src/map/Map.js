@@ -62,11 +62,13 @@ function Map({ mode }) {
 	});
 
 	/* Editor state */
-	const [isOperationInfoPopupOpen, setOperationInfoPopupOpen] = useState(false);
-	const [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, setCurrentStep, setErrorOnSaveCallback] = useEditorLogic(refMapOnClick);
+	const isEditor = S.isJust(mode) && fM(mode) === 'new';
 
-	const [stepsToDefineOperation, , stepsDisabled] =
-		useEditorStepText(setOperationInfo, setOperationInfoPopupOpen, setCurrentStep, setErrorOnSaveCallback);
+	const [isOperationInfoPopupOpen, setOperationInfoPopupOpen] = useState(false);
+	const [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, setErrorOnSaveCallback] = useEditorLogic(refMapOnClick, mapInitialized && isEditor);
+
+	/*const [stepsToDefineOperation, , stepsDisabled] =
+		useEditorStepText(setOperationInfo, setOperationInfoPopupOpen, saveOperation, setErrorOnSaveCallback);*/
 
 	const [maybeEditingOpVolume, setEditingOperationVolume] = useState(S.Maybe.Nothing);
 	//const notifications = useNotificationStore();
@@ -75,7 +77,7 @@ function Map({ mode }) {
 	//		? ' statusOverMapNotifs'
 	//		: ' statusOverMapNoNotifs';
 
-	const isEditor = S.isJust(mode) && fM(mode) === 'new';
+
 
 	/* Viewer state */
 	const [ops, opsFiltered, id, filtersSelected, setFiltersSelected, , idsShowing, setIdsShowing, rfvs, setRfvsShowing] = useOperationFilter();
@@ -163,25 +165,6 @@ function Map({ mode }) {
 
 	return (
 		<>
-			{/* Panels of MapEditor */}
-			{S.isJust(mode) && fM(mode) === 'new' &&
-			<>
-				{isOperationInfoPopupOpen &&
-				<OperationInfoEditor
-					isOpen={isOperationInfoPopupOpen}
-					setOpen={setOperationInfoPopupOpen}
-					info={operationInfo}
-					setInfo={setOperationInfo}
-				/>
-				}
-				<OperationVolumeInfoEditor
-					info={volume}
-					setInfo={setVolumeInfo}
-					opVolumeIndex={maybeEditingOpVolume}
-					setOpVolumeIndex={setEditingOperationVolume}
-				/>
-			</>
-			}
 			<MapMain map={map.current} mapInitialized={mapInitialized}>
 				<Dialog
 					className='bp3-dark'
@@ -345,10 +328,15 @@ function Map({ mode }) {
 				}
 				{/* Editor Panels */}
 				{isEditor &&
-					<EditorPanel
-						steps={stepsToDefineOperation}
-						stepsDisabled={stepsDisabled}
-					/>
+					<>
+						<OperationInfoEditor
+							info={operationInfo}
+							setInfo={setOperationInfo}
+							volumeInfo={volume}
+							setVolumeInfo={setVolumeInfo}
+							saveOperation={saveOperation}
+						/>
+					</>
 				}
 				{/* Simulator panels*/}
 				{ isSimulator &&

@@ -45,14 +45,14 @@ function RightArea({forceOpen, onClose, children}) {
 			}
 			{	isOpened &&
 			<div className='rightArea animated fadeInLeft bp3-dark'>
-				<>
-					<Icon className="rightAreaCloser" icon="cross"
-						onClick={() => {
-							setOpened(false);
-							onClose();
-						}} iconSize={30}/>
+				<Icon className="rightAreaCloser" icon="cross"
+					onClick={() => {
+						setOpened(false);
+						onClose();
+					}} iconSize={30}/>
+				<div className='rightAreaInside'>
 					{children}
-				</>
+				</div>
 			</div>
 			}
 			{ showCommandBox &&

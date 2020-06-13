@@ -65,13 +65,13 @@ import VerificationScreen from './VerificationScreen';
 	);
 }*/
 
-const MasterPage = ({children}) => {
+const MasterPage = ({leftIsExpanded = false, children}) => {
 	return(
 		<>
 			<LeftArea>
 				{/* <NotificationCenter/> */}
 			</LeftArea>
-			<MainArea>
+			<MainArea leftIsExpanded={leftIsExpanded}>
 				{children}
 			</MainArea>
 			<ActionArea>
@@ -181,7 +181,7 @@ function Ades() {
 							</MasterPage>
 						</Route>
 						<Route exact path='/operation/new'>
-							<MasterPage>
+							<MasterPage leftIsExpanded={true}>
 								<Map mode={S.Maybe.Just('new')}/>
 							</MasterPage>
 						</Route>

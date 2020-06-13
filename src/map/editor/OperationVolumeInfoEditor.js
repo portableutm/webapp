@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 import {Alignment, Button, Checkbox, Dialog, Divider, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
 import S from 'sanctuary';
-import {DatePicker, TimePrecision} from '@blueprintjs/datetime';
+import {DateInput, DatePicker, TimePicker, TimePrecision} from '@blueprintjs/datetime';
 import {useTranslation} from 'react-i18next';
 
 function OperationVolumeInfoEditor(props) {
 	const { t,  } = useTranslation();
 	const [beginCalendarOpen, setBeginCalendarOpen] = useState(false);
 	const [endCalendarOpen, setEndCalendarOpen] = useState(false);
-	const {info, setInfo, opVolumeIndex, setOpVolumeIndex} = props;
+	const {info, setInfo} = props;
 	const editInfo = (property, newValue) =>
 		setInfo(volume => {
 			const newVolume = {...volume};
@@ -16,22 +16,16 @@ function OperationVolumeInfoEditor(props) {
 			return newVolume;
 		});
 	return (
-		<Dialog
-			title={t('editor.volume.editingvolume_count', {count: S.maybeToNullable(opVolumeIndex)})}
-			canEscapeKeyClose={true}
-			canOutsideClickClose={true}
-			onClose={() => setOpVolumeIndex(S.Maybe.Nothing)}
-			isOpen={!S.isNothing(opVolumeIndex)}
-		>
-			{/* Dialog for editing properties of Operation */}
-			<div style={{padding: '10px'}}>
-				{/*
-            near_structure	boolean
-            Is this operation volume within 400' of a structure?
-            */}
+		<div>
+			{/* title={t('editor.volume.editingvolume_count', {count: S.maybeToNullable(opVolumeIndex)})} */}
+			{/*
+			near_structure	boolean
+			Is this operation volume within 400' of a structure?
+			*/}
+			<div className="rightAreaButtonText">
 				<Checkbox
 					checked={info.near_structure}
-					alignIndicator={Alignment.RIGHT}
+					alignIndicator={Alignment.LEFT}
 					data-test-id="map#editor#volume#info#near_structure"
 					onChange={change =>
 						editInfo('near_structure', change.currentTarget.checked)
@@ -39,14 +33,16 @@ function OperationVolumeInfoEditor(props) {
 				>
 					{t('editor.volume.nearstructure')}
 				</Checkbox>
-				{/*
-            beyond_visual_line_of_sight*	boolean
-            x-utm-data-accessibility: OPERATIONAL
-            Describes whether any portion of the operation volume is beyond the visual line of sight of the RPIC.
-            */}
+			</div>
+			{/*
+			beyond_visual_line_of_sight*	boolean
+			x-utm-data-accessibility: OPERATIONAL
+			Describes whether any portion of the operation volume is beyond the visual line of sight of the RPIC.
+			*/}
+			<div className="rightAreaButtonText">
 				<Checkbox
 					checked={info.beyond_visual_line_of_sight}
-					alignIndicator={Alignment.RIGHT}
+					alignIndicator={Alignment.LEFT}
 					data-test-id="map#editor#volume#info#bvlos"
 					onChange={change =>
 						editInfo(
@@ -57,78 +53,68 @@ function OperationVolumeInfoEditor(props) {
 				>
 					{t('editor.volume.bvlos')}
 				</Checkbox>
-				<Divider/>
-				{/*
-                    effective_time_begin*	string($date-time)
-                    example: 2015-08-20T14:11:56.118Z
-                    Earliest time the operation will use the operation volume. It must be less than effective_time_end.
-                    effective_time_begin < effective_time_end MUST be true.
-                    */}
-				{t('volume.effective_time_begin_description')} <br/>
-				{beginCalendarOpen && (
-					<DatePicker
-						className="centerHorizontally"
-						id="effective_time_begin"
-						minDate={new Date()}
-						value={info.effective_time_begin}
-						onChange={value => editInfo('effective_time_begin', value)}
-						timePrecision={TimePrecision.MILLISECOND}
-					/>
-				)}
-				<Button
-					fill={true}
-					data-test-id="map#editor#volume#info#effective_time_begin"
-					intent={Intent.PRIMARY}
-					text={!beginCalendarOpen ? t('editor.volume.selecttime') : t('editor.volume.closecalendar')}
-					onClick={() => setBeginCalendarOpen(current => !current)}
-				/>
-				<Divider/>
-				{/*
-            effective_time_end*	string($date-time)
-            example: 2015-08-20T14:11:56.118Z
-            Latest time the operation will done with the operation volume. It must be greater than effective_time_begin.
-            effective_time_begin < effective_time_end MUST be true.
-            */}
-				{t('volume.effective_time_end_description')} <br/>
-				{endCalendarOpen && (
-					<DatePicker
-						className="centerHorizontally"
-						id="effective_time_end"
-						minDate={new Date()}
-						value={info.effective_time_end}
-						timePrecision={TimePrecision.MILLISECOND}
-					/>
-				)}
-				<Button
-					fill={true}
-					data-test-id="map#editor#volume#info#effective_time_end"
-					intent={Intent.PRIMARY}
-					text={!endCalendarOpen ? t('editor.volume.selecttime') : t('editor.volume.closecalendar')}
-					onClick={() => setEndCalendarOpen(current => !current)}
-				/>
-				<Divider/>
-				{/*
-            min_altitude*	in feet 30mt = 98.4252 | 60mt = 196.85 | 120mt = 393.701
-            max_altitude*	in feet
-            */}
-				<FormGroup label={t('volume.min_altitude')} labelFor="min_altitude">
-					<InputGroup
-						id="min_altitude"
-						data-test-id="mapEditorVolumeInfoMinAltitude"
-						value={info.min_altitude}
-						onChange={evt => editInfo('min_altitude', evt.target.value)}
-					/>
-				</FormGroup>
-				<FormGroup label={t('volume.max_altitude')} labelFor="max_altitude">
-					<InputGroup
-						id="max_altitude"
-						data-test-id="map#editor#volume#info#max_altitude"
-						value={info.max_altitude}
-						onChange={evt => editInfo('max_altitude', evt.target.value)}
-					/>
-				</FormGroup>
 			</div>
-		</Dialog>
+			{/*
+				effective_time_begin*	string($date-time)
+				example: 2015-08-20T14:11:56.118Z
+				Earliest time the operation will use the operation volume. It must be less than effective_time_end.
+				effective_time_begin < effective_time_end MUST be true.
+				*/}
+			<div className="rightAreaButtonText">
+				<p className="centerHorizontally">
+					{t('volume.effective_time_begin')}
+				</p>
+				<DateInput
+					data-test-id="map#editor#volume#info#effective_time_begin"
+					formatDate={date => date.toLocaleString()}
+					parseDate={str => new Date(str)}
+					placeholder="DD/MM/YYYY"
+					value={info.effective_time_begin}
+					timePrecision={TimePrecision.SECOND}
+					onChange={value => editInfo('effective_time_begin', value)}
+				/>
+			</div>
+			{/*
+			effective_time_end*	string($date-time)
+			example: 2015-08-20T14:11:56.118Z
+			Latest time the operation will done with the operation volume. It must be greater than effective_time_begin.
+			effective_time_begin < effective_time_end MUST be true.
+			*/}
+			<div className="rightAreaButtonText">
+				<p className="centerHorizontally">
+					{t('volume.effective_time_end')}
+				</p>
+				<DateInput
+					data-test-id="map#editor#volume#info#effective_time_end"
+					formatDate={date => date.toLocaleString()}
+					parseDate={str => new Date(str)}
+					placeholder="DD/MM/YYYY"
+					value={info.effective_time_end}
+					timePrecision={TimePrecision.SECOND}
+					onChange={value => editInfo('effective_time_end', value)}
+				/>
+			</div>
+			{/*
+			min_altitude*	in meters. Good luck NASA!
+			max_altitude*	in meters
+			*/}
+			<FormGroup className="rightAreaButtonText" label={t('volume.min_altitude')} labelFor="min_altitude">
+				<InputGroup
+					id="min_altitude"
+					data-test-id="mapEditorVolumeInfoMinAltitude"
+					value={info.min_altitude}
+					onChange={evt => editInfo('min_altitude', evt.target.value)}
+				/>
+			</FormGroup>
+			<FormGroup className="rightAreaButtonText" label={t('volume.max_altitude')} labelFor="max_altitude">
+				<InputGroup
+					id="max_altitude"
+					data-test-id="map#editor#volume#info#max_altitude"
+					value={info.max_altitude}
+					onChange={evt => editInfo('max_altitude', evt.target.value)}
+				/>
+			</FormGroup>
+		</div>
 	);
 }
 

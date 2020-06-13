@@ -169,7 +169,8 @@
           "definevolumes": "Step 1: Define volumes of operation.",
           "defineoperationinfo": "Step 2: Fill out general information.",
           "finish": "Step 3: Finish."
-        }
+        },
+        "finish": "Finish"
       },
 
       "layers": "Layers",
@@ -360,7 +361,8 @@
           "definevolumes": "Paso 1: Definí el volúmen de la operación.",
           "defineoperationinfo": "Paso 2: Completá la información de la operación.",
           "finish": "Paso 3: Finalizar."
-        }
+        },
+        "finish": "Finalizar"
       }
     }
   }
