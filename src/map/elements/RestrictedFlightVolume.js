@@ -57,7 +57,6 @@ function RestrictedFlightVolume({map, latlngs, name}) {
 		if (map != null) {
 			if (S.isJust(polygon)) {
 				// Add svg pattern
-				console.log('test');
 				const pattern = document.createElementNS('http://www.w3.org/2000/svg', 'pattern');
 				pattern.setAttribute('id', 'stripes');
 				pattern.setAttribute('patternUnits', 'userSpaceOnUse');

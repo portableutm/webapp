@@ -151,7 +151,7 @@ function addOperations(store, data) {
 }
 
 function updateOperationState(store, gufi, info) {
-	print(store.state, false, 'OperationState-change', gufi, info);
+	print(store.state, false, 'OperationState', 'state changed',gufi, info);
 	const currentOperations = fM(store.state.operations.list);
 	const currentOperation = S.value(gufi)(currentOperations);
 	if (S.isJust(currentOperation)) {
@@ -159,7 +159,7 @@ function updateOperationState(store, gufi, info) {
 		const newOperations = S.insert(gufi)(fM(currentOperation))(currentOperations);
 		store.setState({operations: {updated: Date.now(), list: S.Just(newOperations)}});
 	} else {
-		print(store.state, true, 'OperationState', 'No operation locally with gufi', gufi);
+		store.actions.operations.fetch(store);
 	}
 }
 
