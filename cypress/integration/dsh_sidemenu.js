@@ -15,8 +15,6 @@ describe('SP: Dashboard', function () {
 		cy.visit('http://localhost:2000/dashboard/');
 		cy.contains('dsh.returnmap').click();
 		cy.visit('http://localhost:2000/dashboard/');
-		cy.contains('app.changelanguage').click();
-		cy.contains('Español').click();
 	});
 	it('All buttons of the sidemenu - admin', function() {
 		cy
