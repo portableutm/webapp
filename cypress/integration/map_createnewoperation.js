@@ -13,58 +13,16 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 				cy.setCookie('user', 'admin');
 				cy.setCookie('jwt', response.body);
 			});
+		cy.server();           // enable response stubbing
+		cy.route({
+			method: 'POST',      // Route all GET requests
+			url: '/operation',
+			response: {},
+			status: 200
+		}).as('postOperation');
 	});
-	it('Finds button and starts use case', function () {
-		cy.visit('http://localhost:2000/');
-		cy.get('[data-test-id="mapButtonMenu"]').click();
-		cy.contains('contextualmenu_createnewop').click();
-	});
-	it('Define Polygon', function () {
-		cy.contains('editor.step.definevolumes').click();
-		cy.get('.rightAreaCloser').click();
-		cy.get('[data-test-id="map"]').click('topLeft');
-		cy.get('[data-test-id="map"]').click('topRight');
-		cy.get('[data-test-id="map"]').click('bottomLeft');
-	});
-	it('Define Volume Info', function () {
-		cy.get('[data-test-id="map"]').click(150,150);
-		cy.contains('editor.volume.editingvolume_count').get('[data-test-id="mapEditorVolumeInfoMinAltitude"]').clear().type('-1');
-		cy.get('[data-test-id="map#editor#volume#info#max_altitude"]').clear().type('50');
-		cy.get('[data-test-id="map#editor#volume#info#near_structure"]').check({force: true});
-		cy.get('[data-test-id="map#editor#volume#info#bvlos"]').check({force: true});
-		cy.get('[data-test-id="map#editor#volume#info#effective_time_begin"]').click();
-		cy.get('.DayPicker-Day')
-			.not('.DayPicker-Day--disabled')
-			.not('.DayPicker-Day--selected')
-			.not('.DayPicker-Day--today')
-			.first().click();
-		cy.contains('editor.volume.closecalendar').click();
-		cy.get('[data-test-id="map#editor#volume#info#effective_time_end"]').click();
-		cy.get('.DayPicker-Day')
-			.not('.DayPicker-Day--disabled')
-			.not('.DayPicker-Day--selected')
-			.not('.DayPicker-Day--today')
-			.first().click();
-		cy.contains('editor.volume.closecalendar').click();
-		cy.get('.bp3-dialog-close-button').click(); // TODO: Change this line if we don't use blueprint3js dialog anymore.
-	});
-	it('Complete Volume information', function () {
-		cy.get('.rightAreaOpener').click();
-		cy.contains('editor.step.defineoperationinfo').click();
-		cy.get('[data-test-id="mapInputEditorName"]')
-			.clear()
-			.type('CreateNewOp#01');
-		//cy.get('[data-test-id="mapInputEditorVolumeDescr"]').
-		cy.get('[data-test-id="mapInputEditorFlightNumber"]')
-			.clear()
-			.type('123');
-	});
-	it('Finish and post', function () {
-		cy.get('.bp3-dialog-close-button').click(); // TODO: Change this line if we don't use blueprint3js dialog anymore.
-		cy.contains('editor.step.finish').click();
-		cy.wait(3000);
-	});
-	/*it('Find created operation and clean-up', function () {
+	/*
+	it('Find created operation and clean-up', function () {
 		cy.visit('http://localhost:2000/dashboard/operations');
 		cy.contains('CreateNewOp#01')
 			.should('exist')
@@ -78,5 +36,56 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 					});
 			});
 		});
-	});*/
+	});
+	*/
+	it('Finds button and starts use case', function () {
+		cy.visit('http://localhost:2000/');
+		cy.get('[data-test-id="mapButtonMenu"]').click();
+		cy.contains('contextualmenu_createnewop').click();
+	});
+	it('Define Polygon', function () {
+		cy.get('.rightAreaCloser').click();
+		cy.get('[data-test-id="map"]').click('topLeft');
+		cy.get('[data-test-id="map"]').click('topRight');
+		cy.get('[data-test-id="map"]').click('bottomLeft');
+	});
+	it('Define Volume Info', function () {
+		cy.get('.rightAreaOpener').click();
+		cy.get('[data-test-id="map#editor#volume#info#min_altitude"]').clear().type('-1');
+		cy.get('[data-test-id="map#editor#volume#info#max_altitude"]').clear().type('50');
+		cy.get('[data-test-id="map#editor#volume#info#near_structure"]').check({force: true});
+		cy.get('[data-test-id="map#editor#volume#info#bvlos"]').check({force: true});
+		cy.get('[data-test-id="map#editor#volume#info#effective_time_begin"]').click();
+		cy.get('.DayPicker-Day')
+			.not('.DayPicker-Day--disabled')
+			.not('.DayPicker-Day--selected')
+			.not('.DayPicker-Day--today')
+			.first().click();
+		cy.get('[data-test-id="map#editor#volume#info#effective_time_end"]').click();
+		cy.get('.DayPicker-Day')
+			.last()
+			.not('.DayPicker-Day--disabled')
+			.not('.DayPicker-Day--selected')
+			.not('.DayPicker-Day--today')
+			.first().click();
+	});
+	it('Complete Volume information', function () {
+		cy.get('[data-test-id="mapInputEditorName"]')
+			.clear()
+			.type('CreateNewOp#01');
+		//cy.get('[data-test-id="mapInputEditorVolumeDescr"]').
+		cy.get('[data-test-id="mapInputEditorFlightNumber"]')
+			.clear()
+			.type('123');
+		cy.get('[data-test-id="map#editor#operation#info#contact"]')
+			.clear()
+			.type('E2E Testing');
+		cy.get('[data-test-id="map#editor#operation#info#contact_phone"]')
+			.clear()
+			.type('09123456');
+	});
+	it('Finish and post', function () {
+		cy.contains('finish').click();
+		cy.wait('@postOperation');
+	});
 });

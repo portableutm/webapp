@@ -84,11 +84,6 @@ function UseEditorLogic(refMapOnClick, mapInitialized) {
 		}
 	}, [mapInitialized]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
-		console.log('Updated OperationInfo', S.maybeToNullable(operationInfo));
-	}, [operationInfo]);
-
-
 	const saveOperation = () => {
 		actions.map.onClicksDisabled(false);
 		refMapOnClick.current = () => {};

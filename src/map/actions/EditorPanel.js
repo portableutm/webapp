@@ -3,7 +3,7 @@ import RightAreaButton from '../RightAreaButton';
 import {useTranslation} from 'react-i18next';
 import useAdesState from '../../state/AdesState';
 
-const EditorPanel = ({steps, stepsDisabled}) => {
+const EditorPanel = () => {
 	const {t} = useTranslation();
 	const [state, actions] = useAdesState();
 	return (

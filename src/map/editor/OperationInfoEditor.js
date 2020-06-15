@@ -6,13 +6,12 @@ import React from 'react';
 /*
     UI
  */
-import {Button, Dialog, FormGroup, InputGroup} from '@blueprintjs/core';
+import {Button, FormGroup, InputGroup} from '@blueprintjs/core';
 /*
     Helpers
  */
 import PropTypes from 'prop-types';
 import {Just, maybeToNullable, Maybe} from 'sanctuary';
-import _, {maybeShow} from '../../libs/SaferSanctuary';
 import {useTranslation} from 'react-i18next';
 import RightAreaButton from '../RightAreaButton';
 import OperationVolumeInfoEditor from './OperationVolumeInfoEditor';
@@ -67,7 +66,7 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 			>
 				<InputGroup
 					id="contact"
-					data-test-id="mapInputEditorContact"
+					data-test-id="map#editor#operation#info#contact"
 					value={info.contact}
 					onChange={(evt) => editInfo('contact', evt.target.value)}
 				/>
@@ -80,7 +79,7 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 			>
 				<InputGroup
 					id="contact_phone"
-					data-test-id="mapInputEditorContactPhone"
+					data-test-id="map#editor#operation#info#contact_phone"
 					value={info.contact_phone}
 					onChange={(evt) => editInfo('contact_phone', evt.target.value)}
 				/>

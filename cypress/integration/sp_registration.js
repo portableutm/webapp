@@ -41,6 +41,5 @@ describe('SPx: (Registration)', function () {
 		cy.get( '#input-repeat-password').type('1234');
 		cy.contains('login.register').click();
 		cy.contains('OK').click();
-		cy.contains('app.changelanguage').click();
 	});
 });

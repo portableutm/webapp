@@ -15,7 +15,7 @@ jobs:
         uses: cypress-io/github-action@v1
         with:
           build: npm run build
-          start: npm run start
+          start: npm run start-dev
           wait-on: http://localhost:2000
       - name: Upload coverage
         uses: codecov/codecov-action@v1

@@ -30,7 +30,7 @@ function VerificationScreen() {
 				i18n.changeLanguage('en');
 			}
 		}
-	}, []);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		Axios
@@ -50,7 +50,7 @@ function VerificationScreen() {
 				setLoading(false);
 				setError(true);
 			});
-	}, [username, token]);
+	}, [username, token]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<div className="centeredScreen texturedBackground">

@@ -104,7 +104,7 @@ function Ades() {
 	bc.onmessage = (event) => setAlertUtmMessage(event.data);*/
 
 	/* Auth */
-	const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
+	const [cookies, setCookie, removeCookie] = useCookies(['jwt', 'lang']);
 	const [isLoggedIn, setLoggedIn] = useState(true);
 	const [role, setRole] = useState('none');
 

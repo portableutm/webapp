@@ -20,7 +20,6 @@ import QuickFly from './actions/QuickFly';
 import DroneMarker from './elements/DroneMarker';
 import OperationPolygon from './elements/OperationPolygon';
 import OperationInfoEditor from './editor/OperationInfoEditor';
-import OperationVolumeInfoEditor from './editor/OperationVolumeInfoEditor';
 import RestrictedFlightVolume from './elements/RestrictedFlightVolume';
 import SelectedOperation from './viewer/SelectedOperation';
 import SimulatorPanel from './actions/SimulatorPanel';
@@ -30,7 +29,6 @@ import OperationEditMarker from './elements/OperationEditMarker';
 /* Hooks */
 import useOperationFilter from './hooks/useOperationFilter';
 import useAdesState from '../state/AdesState';
-import useEditorStepText from './hooks/useEditorStepText';
 import useEditorLogic from './hooks/useEditorLogic';
 import useSimulatorLogic from './hooks/useSimulatorLogic';
 
@@ -64,13 +62,12 @@ function Map({ mode }) {
 	/* Editor state */
 	const isEditor = S.isJust(mode) && fM(mode) === 'new';
 
-	const [isOperationInfoPopupOpen, setOperationInfoPopupOpen] = useState(false);
-	const [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, setErrorOnSaveCallback] = useEditorLogic(refMapOnClick, mapInitialized && isEditor);
+	const [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, ] = useEditorLogic(refMapOnClick, mapInitialized && isEditor);
 
 	/*const [stepsToDefineOperation, , stepsDisabled] =
 		useEditorStepText(setOperationInfo, setOperationInfoPopupOpen, saveOperation, setErrorOnSaveCallback);*/
 
-	const [maybeEditingOpVolume, setEditingOperationVolume] = useState(S.Maybe.Nothing);
+	const [, setEditingOperationVolume] = useState(S.Maybe.Nothing);
 	//const notifications = useNotificationStore();
 	//const statusOverMapNotifs =
 	//	notifications.state.all.size > 0
@@ -329,6 +326,7 @@ function Map({ mode }) {
 				{/* Editor Panels */}
 				{isEditor &&
 					<>
+						<EditorPanel />
 						<OperationInfoEditor
 							info={operationInfo}
 							setInfo={setOperationInfo}

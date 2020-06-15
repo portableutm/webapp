@@ -1,13 +1,10 @@
-import React, {useState} from 'react';
-import {Alignment, Button, Checkbox, Dialog, Divider, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
-import S from 'sanctuary';
-import {DateInput, DatePicker, TimePicker, TimePrecision} from '@blueprintjs/datetime';
+import React from 'react';
+import {Alignment, Checkbox, FormGroup, InputGroup} from '@blueprintjs/core';
+import {DateInput, TimePrecision} from '@blueprintjs/datetime';
 import {useTranslation} from 'react-i18next';
 
 function OperationVolumeInfoEditor(props) {
 	const { t,  } = useTranslation();
-	const [beginCalendarOpen, setBeginCalendarOpen] = useState(false);
-	const [endCalendarOpen, setEndCalendarOpen] = useState(false);
 	const {info, setInfo} = props;
 	const editInfo = (property, newValue) =>
 		setInfo(volume => {
@@ -64,15 +61,18 @@ function OperationVolumeInfoEditor(props) {
 				<p className="centerHorizontally">
 					{t('volume.effective_time_begin')}
 				</p>
-				<DateInput
-					data-test-id="map#editor#volume#info#effective_time_begin"
-					formatDate={date => date.toLocaleString()}
-					parseDate={str => new Date(str)}
-					placeholder="DD/MM/YYYY"
-					value={info.effective_time_begin}
-					timePrecision={TimePrecision.SECOND}
-					onChange={value => editInfo('effective_time_begin', value)}
-				/>
+				<div data-test-id="map#editor#volume#info#effective_time_begin">
+					<DateInput
+						canClearSelection={false}
+						minDate={new Date()}
+						formatDate={date => date.toLocaleString()}
+						parseDate={str => new Date(str)}
+						placeholder="DD/MM/YYYY"
+						value={info.effective_time_begin}
+						timePrecision={TimePrecision.SECOND}
+						onChange={value => editInfo('effective_time_begin', value)}
+					/>
+				</div>
 			</div>
 			{/*
 			effective_time_end*	string($date-time)
@@ -84,15 +84,18 @@ function OperationVolumeInfoEditor(props) {
 				<p className="centerHorizontally">
 					{t('volume.effective_time_end')}
 				</p>
-				<DateInput
-					data-test-id="map#editor#volume#info#effective_time_end"
-					formatDate={date => date.toLocaleString()}
-					parseDate={str => new Date(str)}
-					placeholder="DD/MM/YYYY"
-					value={info.effective_time_end}
-					timePrecision={TimePrecision.SECOND}
-					onChange={value => editInfo('effective_time_end', value)}
-				/>
+				<div data-test-id="map#editor#volume#info#effective_time_end">
+					<DateInput
+						canClearSelection={false}
+						minDate={new Date()}
+						formatDate={date => date.toLocaleString()}
+						parseDate={str => new Date(str)}
+						placeholder="DD/MM/YYYY"
+						value={info.effective_time_end}
+						timePrecision={TimePrecision.SECOND}
+						onChange={value => editInfo('effective_time_end', value)}
+					/>
+				</div>
 			</div>
 			{/*
 			min_altitude*	in meters. Good luck NASA!
@@ -101,7 +104,7 @@ function OperationVolumeInfoEditor(props) {
 			<FormGroup className="rightAreaButtonText" label={t('volume.min_altitude')} labelFor="min_altitude">
 				<InputGroup
 					id="min_altitude"
-					data-test-id="mapEditorVolumeInfoMinAltitude"
+					data-test-id="map#editor#volume#info#min_altitude"
 					value={info.min_altitude}
 					onChange={evt => editInfo('min_altitude', evt.target.value)}
 				/>

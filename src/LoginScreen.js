@@ -42,7 +42,7 @@ function LoginScreen() {
 				i18n.changeLanguage('en');
 			}
 		}
-	}, []);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<form onSubmit={login} className="centeredScreen texturedBackground">

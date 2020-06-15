@@ -213,7 +213,7 @@ function addVehicle(store, data) {
 /* RFV */
 
 function addRFV(store, data) {
-	const dataObtained = [(Array.from(data))[0]];
+	const dataObtained = Array.from(data);
 	const pairs = S.justs(dataObtained.map((rfv) => {
 		return S.Just(S.Pair(rfv.id)(convertCoordinatesRFV(rfv)));
 	}));

@@ -42,7 +42,7 @@ const RegistrationScreen = () => {
 				i18n.changeLanguage('en');
 			}
 		}
-	}, []);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	//----------------------------------------------------------------------------------
 	//--------------------------------- AUX FUNCTIONS  ---------------------------------
