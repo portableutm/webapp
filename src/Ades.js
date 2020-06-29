@@ -67,18 +67,8 @@ import VerificationScreen from './VerificationScreen';
 }*/
 
 const MasterPage = ({leftIsExpanded = false, children}) => {
-	const [cookies, ] = useCookies(['jwt', 'lang']);
-	const [state, ] = useAdesState();
-	const decoded = jwtDecode(cookies.jwt);
-	const expDate = new Date(0);
-	expDate.setUTCSeconds(decoded.exp);
 	return(
 		<>
-			{state.debug &&
-			<div className='timeLeftOverlay'>
-				Token expires at {expDate.toLocaleTimeString()}
-			</div>
-			}
 			<LeftArea>
 				{/* <NotificationCenter/> */}
 			</LeftArea>
@@ -118,26 +108,29 @@ function Ades() {
 	const [cookies, setCookie, removeCookie] = useCookies(['jwt', 'lang']);
 	const [isLoggedIn, setLoggedIn] = useState(true);
 	const [role, setRole] = useState('none');
+	const [timeoutUnlogin, setTimeoutUnlogin] = useState(null);
 
 	useEffect(() => {
-		if (cookies.jwt === null || cookies.jwt === void 0) {
+		if (cookies.jwt === null || cookies.jwt === void 0 || cookies.jwt === '') {
 			if (!S.isNothing(state.auth.token)) {
-				setCookie('user', state.auth.username, {path: '/'});
-				setCookie('jwt', fM(state.auth.token), {path: '/'});
+				const tokenExpireDate = new Date(jwtDecode(fM(state.auth.token)).exp * 1000);
+				setCookie('user', state.auth.username, {path: '/', expires: tokenExpireDate});
+				setCookie('jwt', fM(state.auth.token), {path: '/', expires: tokenExpireDate});
 			} else {
 				setLoggedIn(false);
 			}
 		} else {
 			setLoggedIn(true);
-			console.log('jwt', jwtDecode(cookies.jwt));
 			const decoded = jwtDecode(cookies.jwt);
 			setRole(decoded.role);
 
-			setTimeout(() => {
-				setLoggedIn(false);
-				removeCookie('user', {path: '/'});
+			const timeoutUnlogin = setTimeout(() => {
 				removeCookie('jwt', {path: '/'});
+				removeCookie('user', {path: '/'});
+				setLoggedIn(false);
 			}, (decoded.exp * 1000) - new Date().getTime());
+			setTimeoutUnlogin(timeoutUnlogin);
+
 			if (S.isNothing(state.auth.user)) {
 				actions.auth.info(cookies['jwt'], cookies['user'], (user) => {
 					setRole(user.role);
@@ -161,6 +154,9 @@ function Ades() {
 				i18n.changeLanguage(cookies.lang);
 			}
 		}
+		return () => {
+			if (timeoutUnlogin !== null) clearTimeout(timeoutUnlogin);
+		};
 	}, [JSON.stringify(state.auth), cookies]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	if (isLoggedIn && role === 'admin') {

@@ -42,44 +42,54 @@ function Pilot({user}) {
 			</div>
 			<div className='dshPilotBottom'>
 				{	user != null &&
-				<Card className='fullHW' elevation={Elevation.TWO}>
-					<FormGroup
-						label={t('user.username')}
-						labelFor="text-input"
-						labelInfo="(non-editable)"
-					>
-						<InputGroup leftIcon="person" id="text-input" disabled={true} value={user.username}/>
-					</FormGroup>
-					<FormGroup
-						label={t('user.firstname')}
-						labelFor="text-input"
-					>
-						<InputGroup leftIcon="person" id="text-input" disabled={true} value={user.firstName}/>
-					</FormGroup>
-					<FormGroup
-						label={t('user.lastname')}
-						labelFor="text-input"
-					>
-						<InputGroup leftIcon="person" id="text-input" disabled={true} value={user.lastName}/>
-					</FormGroup>
-					<FormGroup
-						label={t('user.email')}
-						labelFor="text-input"
-					>
-						<InputGroup leftIcon="envelope" id="text-input" disabled={true} value={user.email}/>
-					</FormGroup>
-					<FormGroup
-						label={t('user.role')}
-						labelFor="select_role"
-					>
-						<div id="select-role" className="bp3-select bp3-fill">
-							<select disabled={true}>
-								<option selected={user.role === 'admin'} value="admin">Operator</option>
-								<option selected={user.role === 'pilot'} value="pilot">Pilot</option>
-							</select>
-						</div>
-					</FormGroup>
-				</Card>
+					<>
+						<Card className='fullHW' elevation={Elevation.TWO}>
+							<FormGroup
+								label={t('user.username')}
+								labelFor="text-input"
+								labelInfo="(non-editable)"
+							>
+								<InputGroup leftIcon="person" id="text-input" disabled={true} value={user.username}/>
+							</FormGroup>
+							<FormGroup
+								label={t('user.firstname')}
+								labelFor="text-input"
+							>
+								<InputGroup leftIcon="person" id="text-input" disabled={true} value={user.firstName}/>
+							</FormGroup>
+							<FormGroup
+								label={t('user.lastname')}
+								labelFor="text-input"
+							>
+								<InputGroup leftIcon="person" id="text-input" disabled={true} value={user.lastName}/>
+							</FormGroup>
+							<FormGroup
+								label={t('user.email')}
+								labelFor="text-input"
+							>
+								<InputGroup leftIcon="envelope" id="text-input" disabled={true} value={user.email}/>
+							</FormGroup>
+							<FormGroup
+								label={t('user.role')}
+								labelFor="select_role"
+							>
+								<div id="select-role" className="bp3-select bp3-fill">
+									<select disabled={true}>
+										<option selected={user.role === 'admin'} value="admin">Operator</option>
+										<option selected={user.role === 'pilot'} value="pilot">Pilot</option>
+									</select>
+								</div>
+							</FormGroup>
+						</Card>
+						<Card className='fullHW' elevation={Elevation.TWO} style={{marginBottom: '5px'}}>
+							<FormGroup
+								label={t('user.change_password')}
+								labelFor="newpassword"
+							>
+								<InputGroup leftIcon="compass" id="newpassword"/>
+							</FormGroup>
+						</Card>
+					</>
 				}
 			</div>
 		</div>

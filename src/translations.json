@@ -64,7 +64,8 @@
         "firstname": "First name",
         "lastname": "Last name",
         "email": "E-mail",
-        "role": "Role"
+        "role": "Role",
+        "change_password": "Set a new password for this user"
       },
       "click_to_expand": "Expand",
       "click_to_collapse": "Collapse",
