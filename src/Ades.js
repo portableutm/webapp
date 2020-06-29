@@ -13,6 +13,7 @@ import {
 import S from 'sanctuary';
 import { useTranslation } from 'react-i18next';
 import './css/animate.css';
+import jwtDecode from 'jwt-decode';
 
 /*
  * CSS Styling
@@ -66,8 +67,18 @@ import VerificationScreen from './VerificationScreen';
 }*/
 
 const MasterPage = ({leftIsExpanded = false, children}) => {
+	const [cookies, ] = useCookies(['jwt', 'lang']);
+	const [state, ] = useAdesState();
+	const decoded = jwtDecode(cookies.jwt);
+	const expDate = new Date(0);
+	expDate.setUTCSeconds(decoded.exp);
 	return(
 		<>
+			{state.debug &&
+			<div className='timeLeftOverlay'>
+				Token expires at {expDate.toLocaleTimeString()}
+			</div>
+			}
 			<LeftArea>
 				{/* <NotificationCenter/> */}
 			</LeftArea>
@@ -118,6 +129,15 @@ function Ades() {
 			}
 		} else {
 			setLoggedIn(true);
+			console.log('jwt', jwtDecode(cookies.jwt));
+			const decoded = jwtDecode(cookies.jwt);
+			setRole(decoded.role);
+
+			setTimeout(() => {
+				setLoggedIn(false);
+				removeCookie('user', {path: '/'});
+				removeCookie('jwt', {path: '/'});
+			}, (decoded.exp * 1000) - new Date().getTime());
 			if (S.isNothing(state.auth.user)) {
 				actions.auth.info(cookies['jwt'], cookies['user'], (user) => {
 					setRole(user.role);

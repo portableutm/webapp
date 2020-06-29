@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import S from 'sanctuary';
-import _, {fM} from '../../libs/SaferSanctuary';
+import _ from '../../libs/SaferSanctuary';
 import {useHistory} from 'react-router-dom';
 import useAdesState from '../../state/AdesState';
 

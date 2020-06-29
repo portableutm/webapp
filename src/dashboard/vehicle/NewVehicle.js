@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Button, FormGroup, InputGroup, Radio, RadioGroup} from '@blueprintjs/core';
-import {fM} from '../../libs/SaferSanctuary';
 import useAdesState from '../../state/AdesState';
 import { useHistory, useParams } from 'react-router-dom';
+import {fM} from '../../libs/SaferSanctuary';
 
 const Text = ({name, label, description, placeholder = '', ...props}) => (
 	<FormGroup
@@ -132,7 +132,7 @@ function NewVehicle({userId}) {
 						accessType: '',
 						vehicleTypeId: '',
 						'org-uuid': '',
-						registeredBy: document.getElementById('text-registeredBy').value,
+						registeredBy: fM(state.auth.user).username,
 					};
 					setSubmitting(true);
 					actions.vehicles.post(

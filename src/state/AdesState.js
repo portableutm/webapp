@@ -255,6 +255,7 @@ const actions = {
 		info: (store, token, username, okCallback, errorCallback) => {
 			Axios.get('user/' + username, {headers: {'auth': token}})
 				.then(result => {
+					print(store.state, false, 'InfoState', result.data);
 					store.setState({auth: {...store.state.auth, token: S.Just(token), user: S.Just(result.data)}});
 					const socket = io(API, {
 						query: {
