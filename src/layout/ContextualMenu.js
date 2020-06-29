@@ -15,7 +15,7 @@ function ContextualMenu() {
 			<MenuItem icon="map" text={t('contextualmenu_map')} onClick={() => history.push('/')}/>
 			<MenuItem icon="dashboard" text={t('contextualmenu_dashboard')} onClick={() => history.push('/dashboard')}/>
 			<MenuItem icon="plus" text={t('contextualmenu_createnewop')} onClick={() => history.push('/operation/new')}/>
-			<MenuItem text={'Ades v' + adesVersion} disabled={true}/>
+			<MenuItem text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
 		</Menu>
 	);
 }

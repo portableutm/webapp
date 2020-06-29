@@ -65,11 +65,11 @@ function OperationVolumeInfoEditor(props) {
 					<DateInput
 						canClearSelection={false}
 						minDate={new Date()}
-						formatDate={date => date.toLocaleString()}
+						formatDate={date => date.toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit'})}
 						parseDate={str => new Date(str)}
 						placeholder="DD/MM/YYYY"
 						value={info.effective_time_begin}
-						timePrecision={TimePrecision.SECOND}
+						timePrecision={TimePrecision.MINUTE}
 						onChange={value => editInfo('effective_time_begin', value)}
 					/>
 				</div>
@@ -88,11 +88,11 @@ function OperationVolumeInfoEditor(props) {
 					<DateInput
 						canClearSelection={false}
 						minDate={new Date()}
-						formatDate={date => date.toLocaleString()}
+						formatDate={date => date.toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit'})}
 						parseDate={str => new Date(str)}
 						placeholder="DD/MM/YYYY"
 						value={info.effective_time_end}
-						timePrecision={TimePrecision.SECOND}
+						timePrecision={TimePrecision.MINUTE}
 						onChange={value => editInfo('effective_time_end', value)}
 					/>
 				</div>

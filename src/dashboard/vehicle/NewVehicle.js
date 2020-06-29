@@ -57,7 +57,7 @@ function NewVehicle({userId}) {
 				name="faaNumber"
 				label={t('vehicle.faaNumber')}
 				placeholder="N707JT"
-				description="Legal number assigned by the FAA"
+				description={t('vehicle.faaNumber_desc')}
 			/>
 			<Text
 				name="vehicleName"
@@ -104,6 +104,7 @@ function NewVehicle({userId}) {
 				placeholder=""
 				disabled={true}
 			/>
+			{/*
 			<Text
 				name="owner_id"
 				label={'Owner username'}
@@ -115,7 +116,7 @@ function NewVehicle({userId}) {
 				label={t('vehicle.registeredBy')}
 				placeholder={fM(state.auth.user).username}
 				disabled={true}
-			/>
+			/>*/}
 			<Button
 				fill
 				disabled={isSubmitting}
