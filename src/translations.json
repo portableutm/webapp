@@ -5,7 +5,7 @@
         "name": "PortableUTM",
         "changelanguage": "Cambiar a Español (UY)",
         "password": "Password",
-        "repeatpassword": "Repeat password",
+        "repeatpassword": "Repeat the password",
         "errorocurredfetching": "An error has ocurred while fetching this data, please try again",
         "tryagain": "Try again",
         "goto_login": "Continue to log in",
@@ -44,7 +44,16 @@
         "edit_your_info": "Edit your info",
         "vehicles_new": "Add new vehicle",
         "vehicles_list": "All vehicles",
-        "vehicles_list_pilot": "Your vehicles"
+        "vehicles_list_pilot": "Your vehicles",
+        "new_user": {
+          "text": "Add new user",
+          "title": "Creating a new user",
+          "role_admin": "Monitor",
+          "role_pilot": "Operator",
+          "verifying": "Verifying that the token is correct",
+          "verificated": "User created and verified. It can log in now!",
+          "verification_error": "Error verifying the user. Please, contact a System Administrator"
+        }
       },
       "actions": "Actions",
       "users": "Users",
@@ -194,7 +203,7 @@
         "name": "PortableUTM",
         "changelanguage": "Change to English (US)",
         "password": "Contraseña",
-        "repeatpassword": "Repite tu contraseña",
+        "repeatpassword": "Repite la contraseña",
         "errorocurredfetching": "Un error ocurrió consiguiendo esta información. Intentá otra vez",
         "tryagain": "Reintentar",
         "goto_login": "Iniciar sesión",
@@ -211,7 +220,7 @@
         "pleaselogin": "Por favor, iniciá sesión para usar el sistema",
         "registered": "Te registraste correctamente. Por favor, chequeá tu email. Vas a recibir un email de confirmación para activar tu cuenta.",
         "user_helper": "Entregado por el administrador",
-        "register": "Registrarme",
+        "register": "Registrar",
         "register_error": "Ocurrió un error al crear tu cuenta. Re-intentá con nuevos valores.",
         "password_helper": "Introducí tu contraseña",
         "login": "Iniciar sesión",
@@ -233,7 +242,16 @@
         "edit_your_info": "Editar tus datos",
         "vehicles_new": "Añadir nuevo vehículo",
         "vehicles_list": "Todos los vehículos",
-        "vehicles_list_pilot": "Tus vehìculos"
+        "vehicles_list_pilot": "Tus vehìculos",
+        "new_user": {
+          "text": "Crear nuevo usuario",
+          "title": "Creando un nuevo usuario",
+          "role_admin": "Monitor",
+          "role_pilot": "Operador",
+          "verifying": "Verificando que el token de validación es correcto...",
+          "verificated": "Usuario creado y verificado. ¡Ya se puede logear!",
+          "verification_error": "Error verificando el usuario. Por favor, contactar un Administrador del sistema y mencionar este error"
+        }
       },
       "actions": "Acciones",
       "users": "Usuarios",

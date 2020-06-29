@@ -26,7 +26,7 @@ import Map from './map/Map.js';
 //import NotificationCenter from './NotificationCenter.js';
 import Simulator from './debug/Simulator.js';
 import LoginScreen from './LoginScreen';
-import RegistrationScreen from './RegistrationScreen';
+import NewUser from './NewUser';
 
 /**
  * Layout components
@@ -168,7 +168,7 @@ function Ades() {
 				<Router>
 					<Switch>
 						<Route exact path='/registration'>
-							<RegistrationScreen/>
+							<NewUser/>
 						</Route>
 						<Route exact path='/debug'>
 							<MasterPage>
@@ -195,6 +195,15 @@ function Ades() {
 								<>
 									<Dashboard>
 										<OperationList/>
+									</Dashboard>
+								</>
+							</MasterPage>
+						</Route>
+						<Route path='/dashboard/users/new'>
+							<MasterPage>
+								<>
+									<Dashboard>
+										<NewUser isSelfRegistering={false}/>
 									</Dashboard>
 								</>
 							</MasterPage>
@@ -325,7 +334,7 @@ function Ades() {
 				<Router>
 					<Switch>
 						<Route exact path='/registration'>
-							<RegistrationScreen/>
+							<NewUser/>
 						</Route>
 						<Route path='/verify/:username'>
 							<VerificationScreen/>

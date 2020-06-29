@@ -93,6 +93,10 @@ function SideMenu() {
 							icon="user"
 							text={t('dsh.all_users')}
 							onClick={() => history.push('/dashboard/users')}/>
+						<MenuItem
+							icon="new-person"
+							text={t('dsh.new_user.text')}
+							onClick={() => history.push('/dashboard/users/new')}/>
 						<MenuDivider title={t('operations')}/>
 						{/* <MenuItem icon="zoom-in" text="Pending assesment"/> */}
 						<MenuItem icon="numbered-list"
