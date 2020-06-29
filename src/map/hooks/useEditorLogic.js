@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import S from 'sanctuary';
-import _ from '../../libs/SaferSanctuary';
+import _, {fM} from '../../libs/SaferSanctuary';
 import {useHistory} from 'react-router-dom';
 import useAdesState from '../../state/AdesState';
 
@@ -78,6 +78,12 @@ function UseEditorLogic(refMapOnClick, mapInitialized) {
 					return [newPolygon];
 				});
 			};
+			setVolumeInfo(volumeInfo => {
+				volumeInfo.effective_time_begin = new Date();
+				volumeInfo.effective_time_end = new Date();
+				volumeInfo.effective_time_end.setUTCHours(volumeInfo.effective_time_end.getUTCHours() + DEFAULT_OPERATION_VALIDITY);
+				return volumeInfo;
+			});
 			actions.map.onClicksDisabled(false);
 		} else {
 			refMapOnClick.current = () => {};

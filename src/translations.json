@@ -271,13 +271,15 @@
       "show_on_map": "Mostrar en mapa",
       
       "map": {
+        "clicks_enabled": "Cliquear sobre operaciones y volúmenes de vuelo restringido mostrará sus propiedades. Cliquear aquí para cambiar este comportamiento",
+        "clicks_disabled": "Cliquear sobre operaciones y volúmenes de vuelo restringido NO mostrará sus propiedades. Cliquear aquí para cambiar este comportamiento",
         "filter": {
           "proposed": "PROPUESTAS",
           "accepted": "ACEPTADAS",
           "activated": "ACTIVADAS",
           "closed": "CERRADAS",
           "nonconforming": "REBELDES",
-          "rogue": "DESHONESTAS",
+          "rogue": "ROGUE",
           "pending": "PENDIENTES",
           "bystate": "Filtrar por estado",
           "byid": "Mostrar operación específica",
@@ -333,7 +335,19 @@
       "contextualmenu_map": "Mapa en tiempo real",
       "contextualmenu_dashboard": "Panel de control",
       "contextualmenu_createnewop": "Crear nueva operación",
-      
+
+      "layers": "Capas",
+      "quickfly": {
+        "title": "Vuelo rápido",
+        "add_new": "Agregar nuevo punto",
+        "name": "Nombre",
+        "required": "Requerido",
+        "new_location": "Nuevo punto",
+        "new_location_created": "¡Nuevo punto creado!",
+        "creating_new": "Creando nuevo punto de vuelo rápido",
+        "save": "Guardar",
+        "info": "La posición del nuevo punto es capturada automáticamente según el área actualmente visible en el mapa."
+      },
       "editor": {
         "volume": {
           "editingvolume_count": "Editando volúmen {{count}} de la operación",
