@@ -146,17 +146,12 @@ const UsersList = () => {
 												>
 													{t('edit')}
 												</Button>
-												{user.role === 'pilot'
-													?
-													<Button
-														small={true}
-														onClick={() => history.push('/dashboard/vehicles/' + user.username + '/new/')}
-													>
-														{t('add_veh')}
-													</Button>
-													:
-													null
-												}
+												<Button
+													small={true}
+													onClick={() => history.push('/dashboard/vehicles/' + user.username + '/new/')}
+												>
+													{t('add_veh')}
+												</Button>
 											</div>
 										</td>
 									</tr>
