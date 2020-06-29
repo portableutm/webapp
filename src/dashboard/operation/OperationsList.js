@@ -99,7 +99,7 @@ function OperationsList() {
 			<GenericList>
 				{mapValues
 				(state.operations.list)
-				(() => <Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>)
+				(() /* istanbul ignore next */ => <Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>)
 				((op) => <Operation key={op.gufi}>{op}</Operation>)
 				}
 			</GenericList>

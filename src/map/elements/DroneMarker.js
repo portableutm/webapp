@@ -113,7 +113,7 @@ function DroneMarker({map, id, position, heading, altitude, risk, onClick}) {
 			if (!markerGraphic.getLatLng().equals(position)) {
 				// Drone moved
 				markerGraphic.setLatLng(position);
-				if (hasToDrawTrail) {
+				if /* istanbul ignore next */ (hasToDrawTrail) {
 					// Newest values of position are at the start of the array of positions
 					path.unshift(position);
 					if (hasToRemoveOldest(path)) path.splice(path.length - 1, 1);

@@ -27,7 +27,7 @@ function mapValues(maybeMap) {
 				fnEmpty();
 }
 
-function maybeShow(maybe) {
+function maybeShow /* istanbul ignore next */ (maybe) {
 	return S.isJust(maybe) ?
 		(/*fnNothing*/) =>
 			(fnJust) =>
@@ -50,7 +50,7 @@ function maybeKeys(strMapOrNothing) {
 		: [];
 }
 
-function u(maybe) {
+function u /* istanbul ignore next */ (maybe) {
 	return maybe != null && S.isJust(maybe) ? S.maybeToNullable(maybe) : S.Nothing;
 }
 
@@ -66,7 +66,7 @@ function fM(maybe) {
 /**
  * from StrMap, if Nothing then empty StrMap, if not actual StrMap
  */
-function fSM(maybe) {
+function fSM /* istanbul ignore next */ (maybe) {
 	return maybe != null && S.isJust(maybe) ? S.maybeToNullable(maybe) : {};
 }
 

@@ -87,5 +87,7 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 	it('Finish and post', function () {
 		cy.contains('finish').click();
 		cy.wait('@postOperation');
+		cy.get('[data-test-id="mapButtonMenu"]').click();
+		cy.contains('contextualmenu_map').click();
 	});
 });

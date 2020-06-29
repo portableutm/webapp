@@ -92,7 +92,7 @@ const QuickFly = ({onClick}) => {
 							labelFor="qf-name"
 							labelInfo={'(' + t('quickfly.required') + ')'}
 						>
-							<InputGroup id="qf-name" placeholder={t('quickfly.new_location')} />
+							<InputGroup data-test-id="mapquickFlyNew" id="qf-name" placeholder={t('quickfly.new_location')} />
 						</FormGroup>
 					</div>
 					<div

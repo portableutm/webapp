@@ -64,4 +64,10 @@ describe('SP1: (Map) Quick Fly', function () {
 		//cy.get('[data-test-id="mapButtonQuickFly"]').click();
 		cy.get('[data-test-id="mapquickFly2"]').click();
 	});
+	it('Opens sidebar and creates a new QF', function () {
+		cy.contains('quickfly.add_new').click();
+		cy.get('[data-test-id="mapquickFlyNew"]').type('This is a test QF');
+		cy.contains('quickfly.save').click();
+		cy.contains('OK').click();
+	});
 });

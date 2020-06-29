@@ -68,7 +68,7 @@ function VerificationScreen() {
 				{	!isLoading &&
 					!isError &&
 					<>
-						<h3>{t('app.verification')}</h3>
+						<h3>{t('app.verification.title')}</h3>
 						{t('app.verification.successful', {user: username})}
 						<div className="loginButtons">
 							<Button style={{margin: '5px'}} intent={Intent.SUCCESS}

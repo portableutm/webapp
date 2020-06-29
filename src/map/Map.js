@@ -184,7 +184,7 @@ function Map({ mode }) {
 						intent={Intent.PRIMARY}
 					>
 						{S.isJust(state.map_dialog.rightButtonText) ?
-							fM(state.map_dialog.rightButtonText) : 'Accept'
+							fM(state.map_dialog.rightButtonText) : 'OK'
 						}
 					</Button>
 				</Dialog>
@@ -250,7 +250,7 @@ function Map({ mode }) {
 								map={map.current}
 								id={'marker' + index2 + 'p' + index}
 								key={'marker' + index2 + 'p' + index}
-								onDrag={latlng => {
+								onDrag={/* istanbul ignore next */ latlng => {
 									setPolygons(polygons => {
 										// Change position of dragged marker (update polygon)
 										const clonedPolygons = polygons.slice();
@@ -265,7 +265,7 @@ function Map({ mode }) {
 				})}
 				{/* Simulator */}
 				{S.isJust(mode) && fM(mode) === 'simulator' && simPaths.map((path, index) => {
-					return path.map((latlng, index2) => {
+					return /* istanbul ignore next */ path.map((latlng, index2) => {
 						return (
 							<OperationEditMarker
 								index={'D' + index + '->' + index2}

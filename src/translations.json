@@ -13,7 +13,7 @@
           "title": "Verification",
           "inprogress": "In progress",
           "error": "An error has occured while verificating",
-          "succesful": "Thank you, {{user}}, for verifying your e-mail.",
+          "successful": "Thank you, {{user}}, for verifying your e-mail.",
           "failed": "We are sorry, {{user}}, your verification has failed. Try again with the link you received by email."
         }
       },
