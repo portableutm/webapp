@@ -13,6 +13,8 @@ const swap = (array) => [array[1], array[0]];
 
 function UseEditorLogic(refMapOnClick, mapInitialized) {
 	const [operationInfo, setOperationInfo] = useState(S.Just({
+		name: 'Untitled',
+		pilot: 'Not assigned',
 		contact: '',
 		contact_phone: '',
 		flight_comments: '',

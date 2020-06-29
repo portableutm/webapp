@@ -164,6 +164,8 @@
         "operation": {
           "complete": "Editing information of operation",
           "name": "Operation name",
+          "flight_comments": "Flight comments (optional)",
+          "pilot": "Pilot's username",
           "untitled":"Untitled",
           "volumesdescription": "Volumes description",
           "defaultvolume": "v0.1 - Restricted to one volume",

@@ -46,10 +46,10 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 	});
 	it('Define Volume Info', function () {
 		cy.get('[data-test-id="rightAreaOpener"]').click();
-		cy.get('[data-test-id="map#editor#volume#info#min_altitude"]').clear().type('-1');
+		//cy.get('[data-test-id="map#editor#volume#info#min_altitude"]').clear().type('-1');
 		cy.get('[data-test-id="map#editor#volume#info#max_altitude"]').clear().type('50');
-		cy.get('[data-test-id="map#editor#volume#info#near_structure"]').check({force: true});
-		cy.get('[data-test-id="map#editor#volume#info#bvlos"]').check({force: true});
+		//cy.get('[data-test-id="map#editor#volume#info#near_structure"]').check({force: true});
+		//cy.get('[data-test-id="map#editor#volume#info#bvlos"]').check({force: true});
 		cy.get('[data-test-id="map#editor#volume#info#effective_time_begin"]').click();
 		cy.get('.DayPicker-Day')
 			.not('.DayPicker-Day--disabled')
@@ -65,9 +65,6 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 			.first().click();
 	});
 	it('Complete Volume information', function () {
-		cy.get('[data-test-id="mapInputEditorName"]')
-			.clear()
-			.type('CreateNewOp#01');
 		//cy.get('[data-test-id="mapInputEditorVolumeDescr"]').
 		cy.get('[data-test-id="mapInputEditorFlightNumber"]')
 			.clear()
@@ -78,6 +75,8 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 		cy.get('[data-test-id="map#editor#operation#info#contact_phone"]')
 			.clear()
 			.type('09123456');
+		cy.get('[data-test-id="map#editor#operation#info#name"]').clear().type('CreateNewOp#01');
+		cy.get('[data-test-id="map#editor#operation#info#flight_coments"]').clear().type('CreateNewOp#FC');
 	});
 	it('Finish and add', function () {
 		cy.contains('finish').click();

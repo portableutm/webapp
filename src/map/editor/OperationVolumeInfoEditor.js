@@ -20,7 +20,7 @@ function OperationVolumeInfoEditor(props) {
 			near_structure	boolean
 			Is this operation volume within 400' of a structure?
 			*/}
-			<div className={styles.sidebarButtonText}>
+			{/* <div className="rightAreaButtonText">
 				<Checkbox
 					checked={info.near_structure}
 					alignIndicator={Alignment.LEFT}
@@ -31,13 +31,13 @@ function OperationVolumeInfoEditor(props) {
 				>
 					{t('editor.volume.nearstructure')}
 				</Checkbox>
-			</div>
+			</div> */}
 			{/*
 			beyond_visual_line_of_sight*	boolean
 			x-utm-data-accessibility: OPERATIONAL
 			Describes whether any portion of the operation volume is beyond the visual line of sight of the RPIC.
 			*/}
-			<div className={styles.sidebarButtonText}>
+			{/*<div className="rightAreaButtonText">
 				<Checkbox
 					checked={info.beyond_visual_line_of_sight}
 					alignIndicator={Alignment.LEFT}
@@ -51,7 +51,7 @@ function OperationVolumeInfoEditor(props) {
 				>
 					{t('editor.volume.bvlos')}
 				</Checkbox>
-			</div>
+			</div>*/}
 			{/*
 				effective_time_begin*	string($date-time)
 				example: 2015-08-20T14:11:56.118Z
@@ -102,14 +102,14 @@ function OperationVolumeInfoEditor(props) {
 			min_altitude*	in meters. Good luck NASA!
 			max_altitude*	in meters
 			*/}
-			<FormGroup className={styles.sidebarButtonText} label={t('volume.min_altitude')} labelFor="min_altitude">
+			{/* <FormGroup className="rightAreaButtonText" label={t('volume.min_altitude')} labelFor="min_altitude">
 				<InputGroup
 					id="min_altitude"
 					data-test-id="map#editor#volume#info#min_altitude"
 					value={info.min_altitude}
 					onChange={evt => editInfo('min_altitude', evt.target.value)}
 				/>
-			</FormGroup>
+			</FormGroup> */}
 			<FormGroup className={styles.sidebarButtonText} label={t('volume.max_altitude')} labelFor="max_altitude">
 				<InputGroup
 					id="max_altitude"

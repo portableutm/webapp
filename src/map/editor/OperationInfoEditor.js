@@ -33,17 +33,28 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 			simpleChildren={false}
 			forceOpen={true}
 		>
-			{/* "flight_comments": "Untitled" */}
 			<FormGroup
 				className={styles.sidebarButtonText}
 				label={t('editor.operation.name')}
-				labelFor="flight_comments"
+				labelFor="name"
 			>
 				<InputGroup
-					id="flight_comments"
-					data-test-id="mapInputEditorName"
-					value={info.flight_comments}
-					onChange={(evt) => editInfo('flight_comments', evt.target.value)}
+					id="name"
+					data-test-id="map#editor#operation#info#name"
+					value={info.name}
+					onChange={(evt) => editInfo('name', evt.target.value)}
+				/>
+			</FormGroup>
+			<FormGroup
+				className="rightAreaButtonText"
+				label={t('editor.operation.username')}
+				labelFor="name"
+			>
+				<InputGroup
+					id="pilot"
+					data-test-id="map#editor#operation#info#pilot"
+					value={info.pilot}
+					onChange={(evt) => editInfo('pilot', evt.target.value)}
 				/>
 			</FormGroup>
 			{/* "flight_number": "12345678" */}
@@ -83,6 +94,19 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 					data-test-id="map#editor#operation#info#contact_phone"
 					value={info.contact_phone}
 					onChange={(evt) => editInfo('contact_phone', evt.target.value)}
+				/>
+			</FormGroup>
+			{/* "flight_comments": "Untitled" */}
+			<FormGroup
+				className="rightAreaButtonText"
+				label={t('editor.operation.flight_comments')}
+				labelFor="flight_comments"
+			>
+				<InputGroup
+					id="flight_comments"
+					data-test-id="map#editor#operation#info#flight_comments"
+					value={info.flight_comments}
+					onChange={(evt) => editInfo('flight_comments', evt.target.value)}
 				/>
 			</FormGroup>
 			<OperationVolumeInfoEditor
