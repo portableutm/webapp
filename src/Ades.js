@@ -190,6 +190,9 @@ function Ades() {
 			}, (decoded.exp * 1000) - new Date().getTime()));
 			//}, 20000));
 		} else {
+			if (S.isJust(mbSocket)) {
+				fM(mbSocket).removeAllListeners();
+			}
 			actions.auth.logout();
 			setRole('none');
 			setLoggedIn(false);
