@@ -44,7 +44,7 @@ th, td {
   position: absolute;
   left: 0;
   bottom: 0;
-  font-size: 12px;
+  font-size: 48px;
   color: red;
   z-index: 1000000;
 }

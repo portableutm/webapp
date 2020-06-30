@@ -1,25 +1,17 @@
 import React from 'react';
 import globalHook from '../libs/useGlobalHook';
-import A from 'axios';
 import S from 'sanctuary';
-
+import A from 'axios';
 import {API, DEBUG} from '../consts';
 import {Mutex} from 'async-mutex';
 import {fM, maybeValues} from '../libs/SaferSanctuary';
-import io from 'socket.io-client';
 
 /**
  * Global state of Ades
- * @type {{operations: {list: Maybe, updated: number}, auth: {user: Maybe, username: string, token: Maybe}}}
+ * @type {AxiosInstance}
  */
 
-const Axios = A.create({
-	baseURL: API,
-	timeout: 15000,
-	headers: {
-		'Content-Type': 'application/json',
-	}
-});
+let Axios;
 
 const quickFlyLocations = [
 	{
@@ -236,6 +228,21 @@ function addQuickFly(store, data) {
 const actions = {
 	auth: {
 		login: (store, username, password, callback, errorCallback) => {
+			Axios = A.create({
+				baseURL: API,
+				timeout: 15000,
+				headers: {
+					'Content-Type': 'application/json',
+				}
+			});
+			Axios.interceptors.response.use(function (response) {
+				if (response.headers.token) {
+					store.actions.auth.updateToken(response.headers.token);
+				}
+				return response;
+			}, function (error) {
+				return Promise.reject(error);
+			});
 			const authInfo = JSON.stringify({
 				username: username,
 				password: password
@@ -251,27 +258,11 @@ const actions = {
 					errorCallback && error.response && errorCallback(error.response.data);
 				});
 		},
-
 		info: (store, username, okCallback, errorCallback) => {
 			Axios.get('user/' + username, {headers: {auth: fM(store.state.auth.token)}})
 				.then(result => {
 					print(store.state, false, 'InfoState', result.data);
 					store.setState({auth: {...store.state.auth, user: S.Just(result.data)}});
-					const socket = io(API, {
-						query: {
-							token: fM(store.state.auth.token)
-						},
-						transports: ['websocket']
-					});
-					/* Initialize sockets */
-					socket.on('new-position', function (info) {
-						const info2 = {...info};
-						//console.log('DroneState: new-position: ', info2);
-						store.actions.drones.post(info2);
-					});
-					socket.on('operation-state-change', function (info) {
-						updateOperationState(store, info.gufi, info.state);
-					});
 					okCallback && okCallback(result.data);
 				})
 				.catch(error => {
@@ -279,6 +270,12 @@ const actions = {
 					store.setState(initialState);
 					errorCallback && errorCallback();
 				});
+		},
+		updateToken: (store, newToken) => {
+			if (fM(store.state.auth.token) !== newToken) {
+				print(store.state, false, 'Token', newToken);
+				store.setState({auth: {...store.state.auth, token: S.Just(newToken)}});
+			}
 		},
 		logout: (store) => {
 			store.setState(initialState);
@@ -296,7 +293,7 @@ const actions = {
 	},*/
 	vehicles: {
 		fetch: (store) => {
-			Axios.get(API + 'vehicle', {headers: {auth: fM(store.state.auth.token)}})
+			Axios.get('vehicle', {headers: {auth: fM(store.state.auth.token)}})
 				.then(result => addVehicles(store, result.data))
 				.catch(error => {
 					print(store.state, true, 'VehicleState', error);
@@ -309,7 +306,7 @@ const actions = {
 			}
 		},
 		post: (store, vehicle, callback, errorCallback) => {
-			A.post(API + 'vehicle', vehicle, {headers: {auth: fM(store.state.auth.token)}})
+			Axios.post('vehicle', vehicle, {headers: {auth: fM(store.state.auth.token)}})
 				.then(result => {
 					addVehicle(store, result.data);
 					callback && callback();
@@ -326,13 +323,13 @@ const actions = {
 	},
 	operations: {
 		fetch: (store) => {
-			A.get(API + 'operation', {headers: {auth: fM(store.state.auth.token)}})
+			Axios.get('operation', {headers: {auth: fM(store.state.auth.token)}})
 				.then(result => addOperations(store, result.data.ops)) // TODO: Contract
 				.catch(error => print(store.state, true, 'OperationState', error));
 		},
 		post: (store, operation, callback, errorCallback) => {
 			const operationCleaned = prepareOperation(operation);
-			A.post(API + 'operation', operationCleaned, {headers: {auth: fM(store.state.auth.token)}})
+			Axios.post('operation', operationCleaned, {headers: {auth: fM(store.state.auth.token)}})
 				.then(result => {
 					//addOperations(store, result.data);
 					// TODO: Don't ask the server for the operations...
@@ -346,7 +343,7 @@ const actions = {
 		},
 		pendingacceptation: (store, gufi, comments, isApproved) => {
 			const data = {comments: comments, approved: isApproved};
-			A.post(API + 'operation/' + gufi + '/pendingtoaccept', data, {headers: {auth: fM(store.state.auth.token)}})
+			Axios.post('operation/' + gufi + '/pendingtoaccept', data, {headers: {auth: fM(store.state.auth.token)}})
 				.then(() => {
 					// TODO:
 					//  updateOperationState(store, gufi, isApproved ? 'ACCEPTED' : 'NOT_ACCEPTED');
@@ -355,6 +352,9 @@ const actions = {
 					print(store.state, true, 'OperationState', error);
 					//errorCallback && error.response && errorCallback(error.response.data);
 				});
+		},
+		updateOne: (store, gufi, info) => {
+			updateOperationState(store, gufi, info);
 		}
 	},
 	drones: {
@@ -429,14 +429,14 @@ const actions = {
 	},
 	rfv: {
 		fetch: (store) => {
-			A.get(API + 'restrictedflightvolume', {headers: {auth: fM(store.state.auth.token)}})
+			Axios.get('restrictedflightvolume', {headers: {auth: fM(store.state.auth.token)}})
 				.then(result => addRFV(store, result.data))
 				.catch(error => print(store.state, true, 'RFVState', error));
 		}
 	},
 	quickFly: {
 		fetch: (store) => {
-			A.get(API + 'quickfly', {headers: { auth: fM(store.state.auth.token) }})
+			Axios.get('quickfly', {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => addQuickFly(store, result.data))
 				.catch(error => {
 					addQuickFly(store, quickFlyLocations);
@@ -450,7 +450,7 @@ const actions = {
 			olds.push(data);
 			addQuickFly(store, olds);
 			callback && callback();
-			/*A.post(API + 'quickfly', data, {headers: { auth: fM(store.state.auth.token) }})
+			/*Axios.post('quickfly', data, {headers: { auth: fM(store.state.auth.token) }})
 				.then(result => {
 					addQuickFly(result.data);
 					callback && callback();
@@ -504,7 +504,8 @@ export {
 	extractOperationsFromState,
 	filterOperationsByState,
 	filterOperationsByIds,
-	print
+	print,
+	Axios
 };
 
 

@@ -12,14 +12,14 @@ import {
 } from '@blueprintjs/core';
 import S from 'sanctuary';
 import { useTranslation } from 'react-i18next';
-import './css/animate.css';
 import jwtDecode from 'jwt-decode';
+import io from 'socket.io-client';
 
 /*
  * CSS Styling
  */
 import './Ades.css';
-
+import './css/animate.css';
 /*
  * Components
  */
@@ -57,6 +57,7 @@ import VehiclesList from './dashboard/vehicle/VehiclesList';
 import NewVehicle from './dashboard/vehicle/NewVehicle';
 import HomeScreen from './dashboard/main_screen/HomeScreen';
 import VerificationScreen from './VerificationScreen';
+import {API} from './consts';
 
 /*function alertIsImportant(alertUtmMessage) {
 	return (
@@ -135,6 +136,7 @@ function Ades() {
 	const [isLoggedIn, setLoggedIn] = useState(true);
 	const [role, setRole] = useState('none');
 	const [timeoutUnlogin, setTimeoutUnlogin] = useState(0);
+	const [mbSocket, setSocket] = useState(S.Nothing);
 
 	useEffect(() => {
 		if (S.isJust(state.auth.token)) {
@@ -145,7 +147,6 @@ function Ades() {
 			setRole(decoded.role);
 			/* Get user full information if not yet fetched */
 			const username = decoded.username;
-			console.log('User is', username);
 			if (S.isNothing(state.auth.user)) {
 				actions.auth.info(username, () => {
 					actions.operations.fetch();
@@ -156,6 +157,31 @@ function Ades() {
 					setLoggedIn(false);
 					actions.auth.logout();
 				});
+			}
+			if (S.isJust(mbSocket)) {
+				const socket = fM(mbSocket);
+				const token = fM(state.auth.token);
+				if (socket.connected)
+					socket.close();
+				socket.io.opts.query = { token };
+				socket.connect();
+			} else {
+				const newSocket = io(API, {
+					query: {
+						token: fM(state.auth.token)
+					},
+					transports: ['websocket']
+				});
+				/* Initialize sockets */
+				newSocket.on('new-position', function (info) {
+					const info2 = {...info};
+					//console.log('DroneState: new-position: ', info2);
+					actions.drones.post(info2);
+				});
+				newSocket.on('operation-state-change', function (info) {
+					actions.operations.updateOne(info.gufi, info.state);
+				});
+				setSocket(S.Just(newSocket));
 			}
 			setTimeoutUnlogin(setTimeout(() => {
 				actions.auth.logout();

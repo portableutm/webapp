@@ -63,10 +63,10 @@ function UseSimulatorLogic(refMapOnClick, map, token) {
 		});
 
 		if (ratio < 1) {
-			const newTimer = setTimeout(() => fly(ratio + 0.02), 100);
+			const newTimer = setTimeout(() => fly(ratio + 0.02), 1000);
 			setTimer(newTimer);
 		} else {
-			const newTimer = setTimeout(() => fly(0.02), 100);
+			const newTimer = setTimeout(() => fly(0.02), 1000);
 			setTimer(newTimer);
 		}
 	};

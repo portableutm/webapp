@@ -2,23 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {API} from '../../consts';
 import {fM, maybeValues} from '../../libs/SaferSanctuary';
 import S from 'sanctuary';
-import A from 'axios';
 import '../../Ades.css';
 import {Button, Intent, Tab, Tabs} from '@blueprintjs/core';
 import {useHistory} from 'react-router-dom';
-import useAdesState, {print} from '../../state/AdesState';
+import useAdesState, {Axios, print} from '../../state/AdesState';
 import {useTranslation} from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import Pilot from './Pilot';
-
-const Axios = A.create({
-	baseURL: API,
-	timeout: 15000,
-	headers: {
-		'Content-Type': 'application/json',
-	}
-});
 
 const USERS_ONE_PAGE_NUMBER = 8;
 
