@@ -64,6 +64,7 @@ function UseEditorLogic(refMapOnClick, mapInitialized) {
 		beyond_visual_line_of_sight: false
 	}); // TODO: Support more than one volume
 	const [polygons, setPolygons] = useState([[]]);
+	const [canSave, setCanSave] = useState(false);
 	const [errorOnSaveCallback, setErrorOnSaveCallback] = useState(() => () => {});
 	const [, actions] = useAdesState();
 	const history = useHistory();
@@ -75,6 +76,7 @@ function UseEditorLogic(refMapOnClick, mapInitialized) {
 				setPolygons(polygons => {
 					const newPolygon = polygons[0].slice();
 					newPolygon.push([latlng.lat, latlng.lng]);
+					setCanSave(true);
 					return [newPolygon];
 				});
 			};
@@ -107,7 +109,7 @@ function UseEditorLogic(refMapOnClick, mapInitialized) {
 		actions.operations.post(info, callback, errorOnSaveCallback);
 	};
 	
-	return [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, setErrorOnSaveCallback];
+	return [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, setErrorOnSaveCallback, canSave];
 }
 
 export default UseEditorLogic;

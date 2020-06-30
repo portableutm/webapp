@@ -62,7 +62,7 @@ function Map({ mode }) {
 	/* Editor state */
 	const isEditor = S.isJust(mode) && fM(mode) === 'new';
 
-	const [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, ] = useEditorLogic(refMapOnClick, mapInitialized && isEditor);
+	const [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, , canSave] = useEditorLogic(refMapOnClick, mapInitialized && isEditor);
 
 	/*const [stepsToDefineOperation, , stepsDisabled] =
 		useEditorStepText(setOperationInfo, setOperationInfoPopupOpen, saveOperation, setErrorOnSaveCallback);*/
@@ -333,6 +333,7 @@ function Map({ mode }) {
 							volumeInfo={volume}
 							setVolumeInfo={setVolumeInfo}
 							saveOperation={saveOperation}
+							canSave={canSave}
 						/>
 					</>
 				}

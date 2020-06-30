@@ -181,7 +181,8 @@
           "defineoperationinfo": "Step 2: Fill out general information.",
           "finish": "Step 3: Finish."
         },
-        "finish": "Finish"
+        "finish": "Finish",
+        "cant_finish": "You must first draw a polygon that represents the Operation Volume before saving. This warning will disappear when you draw a polygon"
       },
 
       "layers": "Layers",
