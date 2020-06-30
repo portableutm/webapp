@@ -252,14 +252,14 @@ const actions = {
 				});
 		},
 
-		info: (store, token, username, okCallback, errorCallback) => {
-			Axios.get('user/' + username, {headers: {'auth': token}})
+		info: (store, username, okCallback, errorCallback) => {
+			Axios.get('user/' + username, {headers: {auth: fM(store.state.auth.token)}})
 				.then(result => {
 					print(store.state, false, 'InfoState', result.data);
-					store.setState({auth: {...store.state.auth, token: S.Just(token), user: S.Just(result.data)}});
+					store.setState({auth: {...store.state.auth, user: S.Just(result.data)}});
 					const socket = io(API, {
 						query: {
-							token: token
+							token: fM(store.state.auth.token)
 						},
 						transports: ['websocket']
 					});
