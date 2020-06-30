@@ -71,6 +71,10 @@ const initialState = {
 		updated: Date.now()
 	},
 	warning: S.Nothing,
+	notifications: {
+		list: S.Nothing,
+		updated: 0
+	},
 	debug: DEBUG
 };
 
@@ -224,6 +228,11 @@ function addQuickFly(store, data) {
 	const qfs = S.fromPairs(pairs);
 	store.setState({quickFly: {updated: Date.now(), list: S.Just(qfs)}});
 }
+
+/* Notifications */
+
+const notificationMutex = new Mutex();
+
 
 /* Actions */
 const actions = {
@@ -468,6 +477,25 @@ const actions = {
 		},
 		close: (store) => {
 			store.setState({warning: S.Nothing});
+		}
+	},
+	notifications: {
+		add: (store, notification) => {{}
+			notificationMutex
+				.acquire()
+				.then(function (release) {
+					const mbCurrentNotifications = store.state.notifications.list;
+					let notifications;
+					if (S.isJust(mbCurrentNotifications)) {
+						const currentNotifications = fM(mbCurrentNotifications);
+						notifications = S.insert('' + Date.now())(notification)(currentNotifications);
+					} else {
+						notifications = S.singleton('' + Date.now())(notification);
+					}
+					store.setState({notifications: {list: S.Just(notifications), updated: Date.now()}});
+					release();
+				});
+
 		}
 	},
 	debug: (store, toggle) => {

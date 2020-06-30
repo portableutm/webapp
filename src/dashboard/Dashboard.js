@@ -3,14 +3,14 @@ import '../Ades.css';
 import Header from './Header';
 import SideMenu from './SideMenu';
 import Content from './Content';
+import useAdesState from '../state/AdesState';
+import S from 'sanctuary';
 
 function Dashboard({children}) {
-	const darkModeEnabledString = true ? ' bp3-dark' : '';
-	//const notifications = useNotificationStore();
-	//const notificationCenterOpenString =
-	//	notifications.state.all.size > 0 ?
-	//		' dashboardNotifs' : ' dashboardNoNotifs';
-	const notificationCenterOpenString = ' dashboardNoNotifs';
+	const [state, ] = useAdesState();
+	const notificationCenterOpenString =
+		S.isJust(state.notifications.list) ?
+			' dashboardNotifs' : ' dashboardNoNotifs';
 	useEffect(() => {
 		/* Block user scrolling by using keyboard */
 		window.addEventListener('keydown', function (e) {
@@ -22,7 +22,7 @@ function Dashboard({children}) {
 	});
 
 	return (
-		<div className={'dashboard' + darkModeEnabledString + notificationCenterOpenString}>
+		<div className={'dashboard bp3-dark' + notificationCenterOpenString}>
 			<Header/>
 			<SideMenu/>
 			<Content>

@@ -35,16 +35,14 @@ function RightArea({forceOpen, onClose, children}) {
 
 	return (
 		<>
-			{	!isOpened &&
 			<div data-test-id="rightAreaOpener" className='rightAreaOpener' onMouseUp={() => {clearInterval(timer); setTimer(null);}} onMouseDown={() => setTimer(setInterval(() => setShowCommandBox(current => !current), 1000))} onClick={() => setOpened(true)}>
 				<Icon
 					icon="chevron-right"
-					iconSize={44}
+					iconSize={39}
 				/>
 			</div>
-			}
 			{	isOpened &&
-			<div className='rightArea animated fadeInLeft bp3-dark'>
+			<div className='rightArea bp3-dark'>
 				<Icon className="rightAreaCloser" icon="cross"
 					onClick={() => {
 						setOpened(false);

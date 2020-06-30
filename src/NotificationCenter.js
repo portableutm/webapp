@@ -1,31 +1,20 @@
-/*
 import React, {useState, useEffect} from 'react';
 import {Elevation, Card, Button, Icon, Intent} from '@blueprintjs/core';
 import S from 'sanctuary';
 import {Element, animateScroll as scroll} from 'react-scroll';
-/!**
-* Stores
-*!/
-//import {useNotificationStore} from './providers/NotificationProvider';
-/!**
-* Style
-*!/
+import useAdesState from './state/AdesState';
+
+
 import './Ades.css';
 import './css/animate.css';
+import {maybeValues} from './libs/SaferSanctuary';
 
 function NotificationCenter() {
-	const {state, dispatch} = useNotificationStore();
-	const notificationsArray = Array.from(state.all.values());
+	const [state, ] = useAdesState();
+	const notificationsArray = maybeValues(state.notifications.list);
 	const [enlarged, setEnlarged] = useState(-1);
 	const [scrolled, setScrolled] = useState(0);
 	const [maxScroll, setMaxScroll] = useState(0);
-	const deleteNotification = (index, id) => {
-		dispatch(S.Just({
-			type: 'REMOVE',
-			value: id
-		}));
-		setEnlarged(-1);
-	};
 
 	useEffect(() => {
 		scroll.scrollTo(scrolled, {smooth: true, containerId: 'notifications', ignoreCancelEvents: true});
@@ -40,23 +29,24 @@ function NotificationCenter() {
 		<>
 			{   notificationsArray.length > 0 &&
 			<div className="notificationsScrollControl">
-				<Button icon="arrow-up" text="Older notifications" intent={Intent.PRIMARY}
+				<Button icon="arrow-up" intent={Intent.PRIMARY}
 					disabled={scrolled <= 0}
+					style={{marginRight: '5px', backgroundColor: 'rgba(57, 64, 83, 1)'}}
 					onClick={() => {
 						setScrolled(curr => {
 							const calc = curr - (window.innerHeight/2);
 							return calc < 0 ? 0 : calc;
 						});
 					}}/>
-				<Button icon="arrow-down" text="Newer notifications" intent={Intent.PRIMARY}
+				<Button icon="arrow-down" intent={Intent.PRIMARY}
 					disabled={scrolled >= maxScroll}
+					style={{backgroundColor: 'rgba(57, 64, 83, 1)'}}
 					onClick={() => {
 						setScrolled(curr => {
 							const calc = curr + (window.innerHeight/2);
 							return calc > maxScroll ? maxScroll : calc;
 						});
 					}}/>
-				{/!*scrolled*!/}
 			</div>
 			}
 			{notificationsArray.map((notice, index) => {
@@ -66,7 +56,6 @@ function NotificationCenter() {
 				styling = index === enlarged ? 'notificationCard-' + notice.severity + ' animated fast pulse infinite' : styling; // Effect for selected
 				return (
 					<>
-						{/!*index + " >> " + enlarged*!/}
 						<Card
 							className={styling}
 							key={notice.message_id}
@@ -83,7 +72,7 @@ function NotificationCenter() {
 							<div className="notificationActions">
 								<Button small={true} intent={Intent.PRIMARY}>REPLY</Button>
 								<Button small={true} intent={Intent.DANGER}
-									onClick={() => deleteNotification(index, notice.message_id)}>DELETE</Button>
+								>DELETE</Button>
 							</div>
 							}
 						</Card>
@@ -94,4 +83,4 @@ function NotificationCenter() {
 	);
 }
 
-export default NotificationCenter;*/
+export default NotificationCenter;

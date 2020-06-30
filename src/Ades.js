@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 
 /**
  *  Libraries
@@ -59,6 +59,7 @@ import HomeScreen from './dashboard/main_screen/HomeScreen';
 import VerificationScreen from './VerificationScreen';
 import {API} from './consts';
 import BottomArea from './layout/BottomArea';
+import NotificationCenter from './NotificationCenter';
 
 /*function alertIsImportant(alertUtmMessage) {
 	return (
@@ -98,7 +99,7 @@ const MasterPage = ({leftIsExpanded = false, children}) => {
 			</div>
 			}
 			<LeftArea>
-				{/* <NotificationCenter/> */}
+				<NotificationCenter/>
 			</LeftArea>
 			<MainArea leftIsExpanded={leftIsExpanded}>
 				{children}
@@ -107,7 +108,7 @@ const MasterPage = ({leftIsExpanded = false, children}) => {
 			<ActionArea>
 				<Popover content={<ContextualMenu/>} position={Position.BOTTOM_LEFT}>
 					<div data-test-id="mapButtonMenu" className='contextualMenu'>
-						<Icon icon='menu' iconSize={44}/>
+						<Icon icon='menu' iconSize={30}/>
 					</div>
 				</Popover>
 			</ActionArea>
@@ -216,6 +217,20 @@ function Ades() {
 			}
 		}
 	}, [cookies]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	let timeoutDebugNotification;
+
+	useEffect(() => {
+		/* Debug mode notification */
+		if (state.debug) {
+			timeoutDebugNotification = setTimeout(() => {
+				actions.notifications.add({severity: 'EMERGENCY', free_text: 'Test'});
+			}, 1500);
+		}
+		return () => {
+			clearTimeout(timeoutDebugNotification);
+		};
+	}, [state.debug]);
 
 	if (isLoggedIn && role === 'admin') {
 		/* Operator pages */

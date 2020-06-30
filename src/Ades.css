@@ -142,7 +142,7 @@ th, td {
 
 .rightArea:before {
   content: "";
-  position: fixed;
+  position: absolute;
   top: 0;
   z-index: 2100;
   pointer-events: none;
@@ -156,7 +156,7 @@ th, td {
 
 .rightArea:after {
   content: "";
-  position: fixed;
+  position: absolute;
   bottom: 0;
   z-index: 2200;
   pointer-events: none;
@@ -169,7 +169,7 @@ th, td {
 }
 
 .rightAreaInside {
-  padding-top: 44px;
+  padding-top: 50px;
   position: absolute;
   padding-bottom: 44px;
   width: 100%;
@@ -184,16 +184,19 @@ th, td {
 
 .rightAreaOpener {
   position: absolute;
-  width: 44px;
+  display: flex;
+  justify-content: center;
+  vertical-align: middle;
+  width: 40px;
   background-color: rgb(57, 64, 83);
   border-radius: 10px;
   color: white;
-  top: calc(50vh - 22px);
-  height: 44px;
-  bottom: calc(50vh - 22px);
-  left: 5px;
+  top: 5px;
+  height: 40px;
+  left: 50px;
   z-index: 999;
   pointer-events: auto;
+  transition: 1s;
 }
 
 .rightAreaOpener:hover {
@@ -212,7 +215,7 @@ th, td {
 
 .rightAreaCloser {
   position: absolute;
-  top: 5px;
+  top: 10px;
   right: 5px;
   z-index: 3000;
   width: fit-content;
@@ -220,16 +223,16 @@ th, td {
 
 .leftArea {
   position: absolute;
-  grid-area: 1 / 1 / 6 / 2;
-  top: 0;
+  grid-area: 1 / 3 / 6 / 4;
   bottom: 0;
+  top: 0;
   width: 100%;
   padding: 2%;
   /*-webkit-box-shadow: 5px 0px 14px -8px rgba(0,0,0,0.75);
   -moz-box-shadow: 5px 0px 14px -8px rgba(0,0,0,0.75);
   box-shadow: 5px 0px 14px -8px rgba(0,0,0,0.75);*/
   z-index: 150;
-  background-color: rgba(255, 255, 255, 0.0);
+  background-color: rgba(255, 0, 255, 0.0);
   overflow: auto;
   pointer-events: none;
   /* background-color: rgb(255,0,0) */
@@ -257,18 +260,19 @@ th, td {
 
 .hamburgerButton {
   position: absolute;
-  grid-area: 1 / 2 / 2 / 4;
-  height: 53px;
-  width: 53px;
-  top: 10px;
-  right: 10px;
+  height: 40px;
+  width: 40px;
+  top: 5px;
+  left: 5px;
   color: white;
+  z-index: 1000;
   background-color: rgba(57, 64, 83, 1);
   border-radius: 10px;
   box-shadow: 0 0 0.4em 0 rgba(57, 64, 83, 0.5);
   -moz-box-shadow: 0 0 0.4em 0 rgba(57, 64, 83, 0.5);
   -webkit-box-shadow: 0 0 0.4em 0 rgba(57, 64, 83, 0.5);
 /* background-color: rgba(255,0,154, 0.1); */
+  transition: 0.2s;
 }
 
 .hamburgerButton:hover {
@@ -422,8 +426,8 @@ th, td {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 52px;
-  width: 52px;
+  height: 40px;
+  width: 40px;
 }
 
 .centerHorizontally {
@@ -437,10 +441,10 @@ th, td {
 .notificationsScrollControl {
   position: sticky;
   left: 0;
-  top: 0;
+  bottom: 0;
   z-index: 200;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-end;
   pointer-events: auto;
 }
 
@@ -575,7 +579,7 @@ th, td {
 
 .dashboardNotifs {
   position: absolute;
-  grid-area: 1 / 2 / 6 / 5;
+  grid-area: 1 / 1 / 6 / 3;
 }
 
 .dashboard {
