@@ -224,7 +224,7 @@ function Ades() {
 		/* Debug mode notification */
 		if (state.debug) {
 			timeoutDebugNotification = setTimeout(() => {
-				actions.notifications.add({severity: 'EMERGENCY', free_text: 'Test'});
+				actions.notifications.add('INFORMATIONAL', 'DEBUG: Notification System is up and running', false);
 			}, 1500);
 		}
 		return () => {

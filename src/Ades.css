@@ -49,6 +49,16 @@ th, td {
   z-index: 1000000;
 }
 
+.blackFull {
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.75);
+}
+
 .App {
   overflow: hidden;
   display: grid;
@@ -455,6 +465,11 @@ th, td {
   display: flex;
   justify-content: space-around;
   pointer-events: auto;
+}
+
+.notificationFocused {
+  position: relative;
+  z-index: 10000;
 }
 
 .notificationCard-EMERGENCY {

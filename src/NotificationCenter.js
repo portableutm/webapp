@@ -54,6 +54,7 @@ function NotificationCenter() {
 					'notificationCard-' + notice.severity + ' animated fadeIn slower' :
 					'notificationCard-' + notice.severity;
 				styling = index === enlarged ? 'notificationCard-' + notice.severity + ' animated fast pulse infinite' : styling; // Effect for selected
+				styling = notice.focus ? styling + ' notificationFocused' : styling; // Show over overlay for focused notification
 				return (
 					<>
 						<Card
@@ -76,6 +77,11 @@ function NotificationCenter() {
 							</div>
 							}
 						</Card>
+						{ notice.focus &&
+						<div className='blackFull animated fadeIn fast'>
+
+						</div>
+						}
 					</>
 				);
 			})}

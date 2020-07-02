@@ -327,16 +327,16 @@ function Map({ mode }) {
 				}
 				{/* Editor Panels */}
 				{isEditor &&
-				<>
-					<EditorPanel />
-					<OperationInfoEditor
-						info={operationInfo}
-						setInfo={setOperationInfo}
-						volumeInfo={volume}
-						setVolumeInfo={setVolumeInfo}
-						saveOperation={saveOperation}
-					/>
-				</>
+					<>
+						<EditorPanel />
+						<OperationInfoEditor
+							info={operationInfo}
+							setInfo={setOperationInfo}
+							volumeInfo={volume}
+							setVolumeInfo={setVolumeInfo}
+							saveOperation={saveOperation}
+						/>
+					</>
 				}
 				{/* Simulator panels*/}
 				{ isSimulator &&

@@ -480,7 +480,8 @@ const actions = {
 		}
 	},
 	notifications: {
-		add: (store, notification) => {{}
+		add: (store, type, text, shouldFocus) => {
+			const notification = {severity: type, free_text: text, focus: shouldFocus};
 			notificationMutex
 				.acquire()
 				.then(function (release) {
