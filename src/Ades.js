@@ -58,6 +58,7 @@ import NewVehicle from './dashboard/vehicle/NewVehicle';
 import HomeScreen from './dashboard/main_screen/HomeScreen';
 import VerificationScreen from './VerificationScreen';
 import {API} from './consts';
+import BottomArea from './layout/BottomArea';
 
 /*function alertIsImportant(alertUtmMessage) {
 	return (
@@ -102,6 +103,7 @@ const MasterPage = ({leftIsExpanded = false, children}) => {
 			<MainArea leftIsExpanded={leftIsExpanded}>
 				{children}
 			</MainArea>
+			<BottomArea />
 			<ActionArea>
 				<Popover content={<ContextualMenu/>} position={Position.BOTTOM_LEFT}>
 					<div data-test-id="mapButtonMenu" className='contextualMenu'>

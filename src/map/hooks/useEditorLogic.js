@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import S from 'sanctuary';
-import _ from '../../libs/SaferSanctuary';
+import _, {fM} from '../../libs/SaferSanctuary';
 import {useHistory} from 'react-router-dom';
 import useAdesState from '../../state/AdesState';
 
@@ -63,21 +63,26 @@ function UseEditorLogic(refMapOnClick, mapInitialized) {
 		max_altitude: 120,
 		beyond_visual_line_of_sight: false
 	}); // TODO: Support more than one volume
-	const [polygons, setPolygons] = useState([[]]);
-	const [canSave, setCanSave] = useState(false);
+	const [mbPolygons, setPolygons] = useState(S.Nothing);
 	const [errorOnSaveCallback, setErrorOnSaveCallback] = useState(() => () => {});
 	const [, actions] = useAdesState();
 	const history = useHistory();
+	const polygons = _(mbPolygons);
 
 	useEffect(() => {
 		if (mapInitialized) {
 			refMapOnClick.current = event => {
 				const {latlng} = event;
-				setPolygons(polygons => {
-					const newPolygon = polygons[0].slice();
+				actions.warning.close();
+				setPolygons(mbPolygons => {
+					let newPolygon;
+					if (S.isJust(mbPolygons)) {
+						newPolygon = (fM(mbPolygons))[0].slice();
+					} else {
+						newPolygon = [];
+					}
 					newPolygon.push([latlng.lat, latlng.lng]);
-					setCanSave(true);
-					return [newPolygon];
+					return S.Just([newPolygon]);
 				});
 			};
 			setVolumeInfo(volumeInfo => {
@@ -94,13 +99,20 @@ function UseEditorLogic(refMapOnClick, mapInitialized) {
 
 	const saveOperation = () => {
 		actions.map.onClicksDisabled(false);
+		/* Check polygon has been created */
+		if (S.isNothing(mbPolygons)) {
+			actions.warning.setWarning('The OPERATION could not be created, ' +
+				'as the polygon was not defined. Please, define a polygon for where the vehicle can fly, ' +
+				'by clicking on the map on the appropiate positions');
+			return false;
+		}
 		refMapOnClick.current = () => {};
 		const info = _(operationInfo);
 		info.submit_time = new Date().toISOString();
 		let volumeWithPolygons = {...volume};
 		volumeWithPolygons.operation_geography = {
 			type: 'Polygon',
-			coordinates: polygons.map(listLngLat =>
+			coordinates: mbPolygons.map(listLngLat =>
 				listLngLat.map(lngLat => swap(lngLat))
 			)
 		};
@@ -108,8 +120,8 @@ function UseEditorLogic(refMapOnClick, mapInitialized) {
 		const callback = () => history.push('/dashboard/operations');
 		actions.operations.post(info, callback, errorOnSaveCallback);
 	};
-	
-	return [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, setErrorOnSaveCallback, canSave];
+
+	return [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, setErrorOnSaveCallback];
 }
 
 export default UseEditorLogic;

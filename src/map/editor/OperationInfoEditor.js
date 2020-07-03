@@ -6,7 +6,7 @@ import React from 'react';
 /*
     UI
  */
-import {Button, Callout, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
+import {Button, FormGroup, InputGroup} from '@blueprintjs/core';
 /*
     Helpers
  */
@@ -16,7 +16,7 @@ import {useTranslation} from 'react-i18next';
 import RightAreaButton from '../RightAreaButton';
 import OperationVolumeInfoEditor from './OperationVolumeInfoEditor';
 
-function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOperation, canSave}) {
+function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOperation}) {
 	const { t, } = useTranslation();
 	const editInfo = (property, newInfo) => setInfo((data) => {
 		const newData = {...maybeToNullable(data)};
@@ -88,19 +88,11 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 				info={volumeInfo}
 				setInfo={setVolumeInfo}
 			/>
-			{!canSave &&
-			<Callout
-				intent={Intent.DANGER}
-			>
-				{t('editor.cant_finish')}
-			</Callout>
-			}
 			<div
 				className="rightAreaButtonTextRight"
 			>
 				<Button
 					fill
-					disabled={!canSave}
 					onClick={() => saveOperation()}
 				>
 					{t('editor.finish')}

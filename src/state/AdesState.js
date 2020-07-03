@@ -70,6 +70,7 @@ const initialState = {
 		list: S.Nothing,
 		updated: Date.now()
 	},
+	warning: S.Nothing,
 	debug: DEBUG
 };
 
@@ -459,6 +460,14 @@ const actions = {
 					print(store.state, true, 'QuickFlyState', error);
 					errorCallback && error.response && errorCallback(error.response.data);
 				});*/
+		}
+	},
+	warning: {
+		setWarning: (store, text) => {
+			store.setState({warning: S.Just(text)});
+		},
+		close: (store) => {
+			store.setState({warning: S.Nothing});
 		}
 	},
 	debug: (store, toggle) => {

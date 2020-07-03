@@ -62,7 +62,7 @@ function Map({ mode }) {
 	/* Editor state */
 	const isEditor = S.isJust(mode) && fM(mode) === 'new';
 
-	const [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, , canSave] = useEditorLogic(refMapOnClick, mapInitialized && isEditor);
+	const [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, ] = useEditorLogic(refMapOnClick, mapInitialized && isEditor);
 
 	/*const [stepsToDefineOperation, , stepsDisabled] =
 		useEditorStepText(setOperationInfo, setOperationInfoPopupOpen, saveOperation, setErrorOnSaveCallback);*/
@@ -251,11 +251,13 @@ function Map({ mode }) {
 								id={'marker' + index2 + 'p' + index}
 								key={'marker' + index2 + 'p' + index}
 								onDrag={/* istanbul ignore next */ latlng => {
-									setPolygons(polygons => {
-										// Change position of dragged marker (update polygon)
-										const clonedPolygons = polygons.slice();
-										clonedPolygons[index][index2] = [latlng.lat, latlng.lng];
-										return clonedPolygons;
+									setPolygons(mbPolygons => {
+										/* Dragging a marker updates the saved polygon coordinates */
+										if (S.isJust(mbPolygons)) {
+											const clonedPolygons = fM(mbPolygons).slice();
+											clonedPolygons[index][index2] = [latlng.lat, latlng.lng];
+											return S.Just(clonedPolygons);
+										}
 									});
 								}}
 								latlng={latlng}
@@ -301,52 +303,51 @@ function Map({ mode }) {
 				}}
 			>
 				{ S.isJust(currentSelectedOperation) &&
-					<SelectedOperation gufi={fM(currentSelectedOperation)} />
+				<SelectedOperation gufi={fM(currentSelectedOperation)} />
 				}
 				{ S.isJust(currentSelectedDrone) &&
-					<SelectedDrone gufi={fM(currentSelectedDrone)} />
+				<SelectedDrone gufi={fM(currentSelectedDrone)} />
 				}
 				{ 	showStandardRightAreaPanels &&
-					<QuickFly
-						onClick={quickFlyOnClick}
-					/>
+				<QuickFly
+					onClick={quickFlyOnClick}
+				/>
 				}
 				{ 	showStandardRightAreaPanels &&
-					<Layers
-						filtersSelected={filtersSelected}
-						setFiltersSelected={setFiltersSelected}
-						idsSelected={idsShowing}
-						setIdsSelected={setIdsShowing}
-						rfvs={rfvs}
-						setRfvsShowing={setRfvsShowing}
-						operations={ops}
-						disabled={id != null}
-					/>
+				<Layers
+					filtersSelected={filtersSelected}
+					setFiltersSelected={setFiltersSelected}
+					idsSelected={idsShowing}
+					setIdsSelected={setIdsShowing}
+					rfvs={rfvs}
+					setRfvsShowing={setRfvsShowing}
+					operations={ops}
+					disabled={id != null}
+				/>
 				}
 				{/* Editor Panels */}
 				{isEditor &&
-					<>
-						<EditorPanel />
-						<OperationInfoEditor
-							info={operationInfo}
-							setInfo={setOperationInfo}
-							volumeInfo={volume}
-							setVolumeInfo={setVolumeInfo}
-							saveOperation={saveOperation}
-							canSave={canSave}
-						/>
-					</>
+				<>
+					<EditorPanel />
+					<OperationInfoEditor
+						info={operationInfo}
+						setInfo={setOperationInfo}
+						volumeInfo={volume}
+						setVolumeInfo={setVolumeInfo}
+						saveOperation={saveOperation}
+					/>
+				</>
 				}
 				{/* Simulator panels*/}
 				{ isSimulator &&
-					<SimulatorPanel
-						paths={simPaths}
-						onClick={onSelectSimDrone}
-						selected={simDroneIndex}
-						newDrone={addNewDrone}
-						startFlying={startFlying}
-						stopFlying={stopFlying}
-					/>
+				<SimulatorPanel
+					paths={simPaths}
+					onClick={onSelectSimDrone}
+					selected={simDroneIndex}
+					newDrone={addNewDrone}
+					startFlying={startFlying}
+					stopFlying={stopFlying}
+				/>
 				}
 			</RightArea>
 		</>
