@@ -60,6 +60,7 @@ import VerificationScreen from './VerificationScreen';
 import {API} from './consts';
 import BottomArea from './layout/BottomArea';
 import NotificationCenter from './NotificationCenter';
+import {Information, OperationGoneRogue} from './entities/Notification';
 
 /*function alertIsImportant(alertUtmMessage) {
 	return (
@@ -218,17 +219,24 @@ function Ades() {
 		}
 	}, [cookies]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	let timeoutDebugNotification;
+	const timeoutDebugNotification = useRef(0);
+	const timeoutRogueNotification = useRef(0);
 
 	useEffect(() => {
 		/* Debug mode notification */
 		if (state.debug) {
-			timeoutDebugNotification = setTimeout(() => {
-				actions.notifications.add('INFORMATIONAL', 'DEBUG: Notification System is up and running', false);
+			timeoutDebugNotification.current = setTimeout(() => {
+				const notification = new Information('DEBUG', 'Notification System is UP and running!');
+				actions.notifications.add(notification);
 			}, 1500);
+			timeoutRogueNotification.current = setTimeout(() => {
+				const rogueNotification = new OperationGoneRogue('DEBUG', 'An OPERATION has GONE ROGUE! This is of course not the actual text!');
+				actions.notifications.add(rogueNotification);
+			}, 10000);
 		}
 		return () => {
-			clearTimeout(timeoutDebugNotification);
+			clearTimeout(timeoutDebugNotification.current);
+			clearTimeout(timeoutRogueNotification.current);
 		};
 	}, [state.debug]);
 

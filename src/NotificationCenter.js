@@ -1,17 +1,36 @@
 import React, {useState, useEffect} from 'react';
-import {Elevation, Card, Button, Icon, Intent} from '@blueprintjs/core';
-import S from 'sanctuary';
-import {Element, animateScroll as scroll} from 'react-scroll';
+import {Elevation, Card, Button, Intent} from '@blueprintjs/core';
+import {animateScroll as scroll} from 'react-scroll';
 import useAdesState from './state/AdesState';
 
-
+import S from 'sanctuary';
 import './Ades.css';
+import styles from './css/notification.module.css';
 import './css/animate.css';
-import {maybeValues} from './libs/SaferSanctuary';
+import {fM, maybeValues} from './libs/SaferSanctuary';
+import useSound from 'use-sound';
+
+const Sound = ({sound}) => {
+	console.log(`Sound: ${sound}`);
+	const [play, {isPlaying, stop}] = useSound(sound, {interrupt: true});
+	const [repeats, setRepeats] = useState(0);
+
+	useEffect(() => {
+		play();
+		if (isPlaying) {
+			setRepeats(repeats => repeats + 1);
+		}
+		if (repeats === 4) {
+			stop();
+		}
+	}, [play, isPlaying]);
+
+	return null;
+};
 
 function NotificationCenter() {
-	const [state, ] = useAdesState();
-	const notificationsArray = maybeValues(state.notifications.list);
+	const [state, ] = useAdesState(state => state.notifications);
+	const notificationsArray = maybeValues(state.list);
 	const [enlarged, setEnlarged] = useState(-1);
 	const [scrolled, setScrolled] = useState(0);
 	const [maxScroll, setMaxScroll] = useState(0);
@@ -27,8 +46,9 @@ function NotificationCenter() {
 
 	return (
 		<>
+
 			{   notificationsArray.length > 0 &&
-			<div className="notificationsScrollControl">
+			<div className={styles.scrollControl}>
 				<Button icon="arrow-up" intent={Intent.PRIMARY}
 					disabled={scrolled <= 0}
 					style={{marginRight: '5px', backgroundColor: 'rgba(57, 64, 83, 1)'}}
@@ -49,35 +69,48 @@ function NotificationCenter() {
 					}}/>
 			</div>
 			}
-			{notificationsArray.map((notice, index) => {
-				let styling = notice.recent ?
-					'notificationCard-' + notice.severity + ' animated fadeIn slower' :
-					'notificationCard-' + notice.severity;
-				styling = index === enlarged ? 'notificationCard-' + notice.severity + ' animated fast pulse infinite' : styling; // Effect for selected
-				styling = notice.focus ? styling + ' notificationFocused' : styling; // Show over overlay for focused notification
+			{notificationsArray.map((notification, index) => {
+				/*let styling = notification.recent ?
+					'notificationCard-' + notification.severity + ' animated fadeIn slower' :
+					'notificationCard-' + notification.severity;
+				styling = index === enlarged ? 'notificationCard-' + notification.severity + ' animated fast pulse infinite' : styling; // Effect for selected
+				styling = notification.focus ? styling + ' notificationFocused' : styling; // Show over overlay for focused notification
+				 */
+
 				return (
 					<>
+						{	S.isJust(notification.sound) &&
+							<Sound sound={fM(notification.sound)} />
+						}
 						<Card
-							className={styling}
-							key={notice.message_id}
+							className={notification.getStylingString()}
+							key={notification.id}
 							interactive={true}
-							onClick={() => setEnlarged(index === enlarged ? -1 : index)}
+							onClick={() => {
+								if (index === enlarged) {
+									/* It's enlarged - unelarge */
+									notification.isEnlarged = false;
+									setEnlarged( -1 );
+								} else {
+									notification.isEnlarged = true;
+									setEnlarged( index );
+								}
+							}}
 							elevation={Elevation.TWO}
 						>
-							<div className="notificationHeader">
-								<p>{notice.severity}</p>
-								<p>{notice.time_sent}</p>
+							<div className={styles.notificationHeader}>
+								<p>{notification.header}</p>
 							</div>
-							{notice.free_text}
-							{index === enlarged &&
-							<div className="notificationActions">
+							{notification.body}
+							{notification.isEnlarged &&
+							<div className={styles.actions}>
 								<Button small={true} intent={Intent.PRIMARY}>REPLY</Button>
 								<Button small={true} intent={Intent.DANGER}
 								>DELETE</Button>
 							</div>
 							}
 						</Card>
-						{ notice.focus &&
+						{notification.isFocused &&
 						<div className='blackFull animated fadeIn fast'>
 
 						</div>

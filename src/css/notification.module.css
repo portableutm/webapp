@@ -1,0 +1,70 @@
+.scrollControl {
+    position: sticky;
+    left: 0;
+    bottom: 0;
+    z-index: 200;
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: auto;
+}
+
+.clickable {
+    pointer-events: auto;
+}
+
+.actions {
+    position: absolute;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-around;
+    pointer-events: auto;
+}
+
+.notificationHeader {
+    display: flex;
+    color: #d7d7d7;
+    justify-content: space-between;
+}
+
+.notificationFocused {
+    position: relative;
+    z-index: 10000;
+}
+
+.notificationGeneric {
+    margin: 2%;
+    color: #f4f4f4;
+    user-select: none;
+    pointer-events: auto;
+}
+
+.utmmessageEMERGENCY {
+    background: rgb(168, 0, 0);
+    animation: emergencyFlashing 1s alternate infinite linear;
+}
+
+@keyframes emergencyFlashing {
+    from {background-color: rgb(168, 0, 0);}
+    to {background-color: rgb(255, 40, 40);}
+}
+
+.utmmessageALERT {
+    background: rgb(141, 58, 0);
+}
+
+.utmmessageCRITICAL {
+    background: rgb(173, 91, 0);
+}
+
+.utmmessageWARNING {
+    background: rgb(159, 123, 0);
+}
+
+.utmmessageNOTICE {
+    background: rgb(78, 110, 0);
+}
+
+.utmmessageINFORMATIONAL {
+    background: rgb(10, 81, 0);
+}

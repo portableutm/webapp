@@ -11,6 +11,7 @@
     "apexcharts": "^3.19.2",
     "async-mutex": "^0.1.4",
     "axios": "^0.19.1",
+    "classnames": "^2.2.6",
     "i18next": "^19.4.2",
     "jwt-decode": "^2.2.0",
     "leaflet": "^1.6.0",
@@ -28,7 +29,8 @@
     "react-scroll": "^1.7.16",
     "sanctuary": "^2.0.1",
     "socket.io-client": "^2.3.0",
-    "use-deep-compare-effect": "^1.3.1"
+    "use-deep-compare-effect": "^1.3.1",
+    "use-sound": "^1.0.2"
   },
   "scripts": {
     "start": "set PORT=2000 && react-scripts -r @cypress/instrument-cra start",
