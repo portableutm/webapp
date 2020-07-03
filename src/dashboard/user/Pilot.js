@@ -36,7 +36,7 @@ function Pilot({user}) {
 			.put('/user/password/' + newUserData.username, newUserData, {headers: {auth: fM(state.auth.token)}})
 			.then(() =>
 				actions.auth.info(newUserData.username, () => {
-					alert('Password change was successful');
+					actions.warning.setWarning('Password change was successful');
 					setUserDataChangeEnabled(true);
 				}, () => {
 					actions.auth.logout();
@@ -56,14 +56,14 @@ function Pilot({user}) {
 			.put('/user/info/' + newUserData.username, newUserData, {headers: {auth: fM(state.auth.token)}})
 			.then(() =>
 				actions.auth.info(newUserData.username, () => {
-					alert('Data change was successful');
+					actions.warning.setWarning('Data change was successful');
 					setUserDataChangeEnabled(true);
 				}, () => {
 					actions.auth.logout();
 				})
 			)
 			.catch((error) => {
-				alert('Data change failed: ' + error.response.data[0]);
+				actions.warning.setWarning('Data change failed: ' + error.response.data[0]);
 				setUserDataChangeEnabled(true);
 			});
 	};
