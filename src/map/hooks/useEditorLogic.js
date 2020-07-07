@@ -112,7 +112,7 @@ function UseEditorLogic(refMapOnClick, mapInitialized) {
 		let volumeWithPolygons = {...volume};
 		volumeWithPolygons.operation_geography = {
 			type: 'Polygon',
-			coordinates: mbPolygons.map(listLngLat =>
+			coordinates: polygons.map(listLngLat =>
 				listLngLat.map(lngLat => swap(lngLat))
 			)
 		};

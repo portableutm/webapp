@@ -5,6 +5,7 @@ import A from 'axios';
 import {API, DEBUG} from '../consts';
 import {Mutex} from 'async-mutex';
 import {fM, maybeValues} from '../libs/SaferSanctuary';
+import {OperationGoneRogue} from '../entities/Notification';
 
 /**
  * Global state of Ades
@@ -72,7 +73,7 @@ const initialState = {
 	},
 	warning: S.Nothing,
 	notifications: {
-		list: S.Nothing,
+		list: {},
 		updated: 0
 	},
 	debug: DEBUG
@@ -150,10 +151,16 @@ function addOperations(store, data) {
 function updateOperationState(store, gufi, info) {
 	print(store.state, false, 'OperationState', 'state changed',gufi, info);
 	const currentOperations = fM(store.state.operations.list);
-	const currentOperation = S.value(gufi)(currentOperations);
-	if (S.isJust(currentOperation)) {
-		fM(currentOperation).state = info;
-		const newOperations = S.insert(gufi)(fM(currentOperation))(currentOperations);
+	const isRogue = info === 'ROGUE';
+	console.log(gufi, info);
+	const mbCurrentOperation = S.value(gufi)(currentOperations);
+	if (S.isJust(mbCurrentOperation)) {
+		const currentOperation = fM(mbCurrentOperation);
+		if (isRogue) store.actions.notifications.add(
+			new OperationGoneRogue(currentOperation.flight_comments)
+		);
+		currentOperation.state = info;
+		const newOperations = S.insert(gufi)(currentOperation)(currentOperations);
 		store.setState({operations: {updated: Date.now(), list: S.Just(newOperations)}});
 	} else {
 		store.actions.operations.fetch(store);
@@ -464,7 +471,7 @@ const actions = {
 				.then(result => {
 					addQuickFly(result.data);
 					callback && callback();
-				})
+				})w
 				.catch(error => {
 					print(store.state, true, 'QuickFlyState', error);
 					errorCallback && error.response && errorCallback(error.response.data);
@@ -484,18 +491,33 @@ const actions = {
 			notificationMutex
 				.acquire()
 				.then(function (release) {
-					const mbCurrentNotifications = store.state.notifications.list;
-					let notifications;
-					if (S.isJust(mbCurrentNotifications)) {
-						const currentNotifications = fM(mbCurrentNotifications);
-						notifications = S.insert('' + Date.now())(notification)(currentNotifications);
-					} else {
-						notifications = S.singleton('' + Date.now())(notification);
-					}
-					store.setState({notifications: {list: S.Just(notifications), updated: Date.now()}});
+					const currentNotifications = store.state.notifications.list;
+					const notifications = S.insert(notification.id)(notification)(currentNotifications);
+					store.setState({notifications: {list: notifications, updated: Date.now()}});
 					release();
 				});
-
+		},
+		update: (store, notification) => {
+			notificationMutex
+				.acquire()
+				.then(function (release) {
+					const currentNotifications = store.state.notifications.list;
+					const notifications = S.insert(notification.id)(notification)(currentNotifications);
+					store.setState({notifications: {list: notifications, updated: Date.now()}});
+					release();
+				});
+		},
+		remove: (store, id) => {
+			notificationMutex
+				.acquire()
+				.then(function (release) {
+					const currentNotifications = store.state.notifications.list;
+					console.log('Before Remove', currentNotifications);
+					const notifications = S.remove(id)(currentNotifications);
+					console.log('After Remove', notifications);
+					store.setState({notifications: {list: notifications, updated: Date.now()}});
+					release();
+				});
 		}
 	},
 	debug: (store, toggle) => {

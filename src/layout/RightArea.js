@@ -4,6 +4,7 @@ import React, {useEffect, useState} from 'react';
 import '../Ades.css';
 import {Icon} from '@blueprintjs/core';
 import useAdesState from '../state/AdesState';
+import {Information, OperationGoneRogue} from '../entities/Notification';
 
 function RightArea({forceOpen, onClose, children}) {
 	const parseCommand = (value) => {
@@ -21,6 +22,11 @@ function RightArea({forceOpen, onClose, children}) {
 				actions.vehicles.debugSetError();
 				setShowCommandBox(false);
 			}
+		} else if (commands[0] === 'info') {
+			actions.notifications.add(new Information('DEBUG', 'Test test whatever this is a test long text wonderful text' +
+				'and is dangerous to think to much of what to talk emergency WARNING ROGUE text oh yeah yeah yeah'));
+		} else if (commands[0] === 'rogue') {
+			actions.notifications.add(new OperationGoneRogue('DEBUG'));
 		}
 	};
 
@@ -55,7 +61,7 @@ function RightArea({forceOpen, onClose, children}) {
 			}
 			{ showCommandBox &&
 			<div className='commandBox'>
-				<input style={{width: '100%'}} onChange={(evt) => parseCommand(evt.currentTarget.value)}/>
+				<input style={{width: '100%'}} size="20" placeholder="Command box" onChange={(evt) => parseCommand(evt.currentTarget.value)}/>
 			</div>
 			}
 		</>

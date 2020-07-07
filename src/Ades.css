@@ -62,7 +62,7 @@ th, td {
 .App {
   overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr);
+  grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 4fr);
   grid-template-rows: repeat(5, 1fr);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
@@ -237,13 +237,14 @@ th, td {
   bottom: 0;
   top: 0;
   width: 100%;
-  padding: 2%;
+  padding: 2% 2% 2% 20%;
   /*-webkit-box-shadow: 5px 0px 14px -8px rgba(0,0,0,0.75);
   -moz-box-shadow: 5px 0px 14px -8px rgba(0,0,0,0.75);
   box-shadow: 5px 0px 14px -8px rgba(0,0,0,0.75);*/
   z-index: 150;
   background-color: rgba(255, 0, 255, 0.0);
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   pointer-events: none;
   /* background-color: rgb(255,0,0) */
 }

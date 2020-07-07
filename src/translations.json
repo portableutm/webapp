@@ -196,6 +196,13 @@
         "creating_new": "Creating new Quick Fly",
         "save": "Save",
         "info": "The position of the new saved location is captured automatically from the current region shown on the map."
+      },
+
+      "notifications": {
+        "operation_gone_rogue": {
+          "header": "Attention, an Operation is now ROGUE",
+          "body": "The Operation {{operation}} is now in the ROGUE state: the vehicles may be out of their reserved Volume. Advise all nearby vehicles"
+        }
       }
     }
   },

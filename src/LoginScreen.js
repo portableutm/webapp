@@ -23,6 +23,7 @@ function LoginScreen() {
 	const badCallback = () => {setLogging(false); setError(true);};
 
 	useEffect(() => {
+		adesActions.auth.login('admin', 'admin', okCallback, badCallback);
 		setError(false);
 	}, [user, password]);
 

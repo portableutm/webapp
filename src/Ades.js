@@ -220,23 +220,16 @@ function Ades() {
 	}, [cookies]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const timeoutDebugNotification = useRef(0);
-	const timeoutRogueNotification = useRef(0);
 
 	useEffect(() => {
 		/* Debug mode notification */
 		if (state.debug) {
 			timeoutDebugNotification.current = setTimeout(() => {
-				const notification = new Information('DEBUG', 'Notification System is UP and running!');
-				actions.notifications.add(notification);
-			}, 1500);
-			timeoutRogueNotification.current = setTimeout(() => {
-				const rogueNotification = new OperationGoneRogue('DEBUG', 'An OPERATION has GONE ROGUE! This is of course not the actual text!');
-				actions.notifications.add(rogueNotification);
-			}, 10000);
+				actions.notifications.add(new OperationGoneRogue('DEBUG'));
+			}, 5000);
 		}
 		return () => {
 			clearTimeout(timeoutDebugNotification.current);
-			clearTimeout(timeoutRogueNotification.current);
 		};
 	}, [state.debug]);
 
