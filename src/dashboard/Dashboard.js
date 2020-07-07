@@ -9,7 +9,7 @@ import S from 'sanctuary';
 function Dashboard({children}) {
 	const [state, ] = useAdesState();
 	const notificationCenterOpenString =
-		S.isJust(state.notifications.list) ?
+		S.values(state.notifications.list).length > 0 ?
 			' dashboardNotifs' : ' dashboardNoNotifs';
 	useEffect(() => {
 		/* Block user scrolling by using keyboard */
