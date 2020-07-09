@@ -60,7 +60,7 @@ import VerificationScreen from './VerificationScreen';
 import {API} from './consts';
 import BottomArea from './layout/BottomArea';
 import NotificationCenter from './NotificationCenter';
-import {Information, OperationGoneRogue} from './entities/Notification';
+import {OperationGoneRogue} from './entities/Notification';
 
 /*function alertIsImportant(alertUtmMessage) {
 	return (
@@ -238,7 +238,7 @@ function Ades() {
 		return () => {
 			clearTimeout(timeoutDebugNotification.current);
 		};
-	}, [state.debug]);
+	}, [state.debug]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	if (isLoggedIn && role === 'admin') {
 		/* Operator pages */

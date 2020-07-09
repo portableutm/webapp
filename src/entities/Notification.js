@@ -53,12 +53,12 @@ class Notification {
 	}
 
 	get header() {
-		if (!this._header) throw ('Notification: Attempted to get header of default notification. Don\'t use the notification class, only its inherited');
+		if (!this._header) throw (new Error('Notification: Attempted to get header of default notification. Don\'t use the notification class, only its inherited'));
 		return this._header;
 	}
 
 	get body() {
-		if (!this._body) throw ('Notification: Attempted to get body of default notification. Don\'t use the notification class, only its inherited');
+		if (!this._body) throw (new Error('Notification: Attempted to get body of default notification. Don\'t use the notification class, only its inherited'));
 		return this._body;
 	}
 
@@ -111,15 +111,15 @@ class UTMMessage extends Notification {
 	}
 
 	get uss_name() {
-		throw('uss_name is unused');
+		throw(new Error('uss_name is unused'));
 	}
 
 	get discovery_reference() {
-		throw('discovery_reference is unused');
+		throw(new Error('discovery_reference is unused'));
 	}
 
 	get message_type() {
-		throw('message_type is unused');
+		throw(new Error('message_type is unused'));
 	}
 
 	get prev_message_id() {

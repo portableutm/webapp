@@ -9,7 +9,7 @@ import S from 'sanctuary';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import RightAreaButton from '../RightAreaButton';
-import {fM, mapValues} from '../../libs/SaferSanctuary';
+import {fM} from '../../libs/SaferSanctuary';
 import useAdesState from '../../state/AdesState';
 
 const StateFilters = ({selectedFilters, setSelectedFilters}) => {
@@ -107,7 +107,8 @@ const RfvsFilters = ({rfvs, setRfvs}) => {
 			<div className='rightAreaButtonTextsSeparator'>
 				{t('map.filter.rfvs')}
 			</div>
-			{mapValues(state.rfv.list)(() => {})((rfv, index) => {
+			{S.map
+			((rfv, index) => {
 				const isSelected = rfvs.indexOf(rfv.id) !== -1;
 				return (
 					<div
@@ -133,7 +134,9 @@ const RfvsFilters = ({rfvs, setRfvs}) => {
 
 					</div>
 				);
-			})}
+			})
+			(S.values(state.rfv.list))
+			}
 		</>
 	);
 };

@@ -9,7 +9,6 @@ import styles from './css/notification.module.css';
 import './css/animate.css';
 import {fM} from './libs/SaferSanctuary';
 import useSound from 'use-sound';
-import {Information, OperationGoneRogue} from './entities/Notification';
 import * as classnames from 'classnames';
 
 function NotificationCenter() {
@@ -28,7 +27,7 @@ function NotificationCenter() {
 		} else {
 			stop();
 		}
-	}, [sound, play]);
+	}, [sound, play, stop]);
 
 	useEffect(() => {
 		scroll.scrollTo(scrolled, {smooth: true, containerId: 'notifications', ignoreCancelEvents: true});
@@ -48,7 +47,7 @@ function NotificationCenter() {
 			}
 		});
 		if (!hasAnySound) setSound('');
-	}, [state.updated]);
+	}, [state.updated]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<>

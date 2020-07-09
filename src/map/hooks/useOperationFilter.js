@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 
 /* Libraries */
 import S from 'sanctuary';
-import {fM, maybeKeys} from '../../libs/SaferSanctuary';
+import {fM} from '../../libs/SaferSanctuary';
 import {useParams} from 'react-router-dom';
 
 /* Internal state */
@@ -27,7 +27,6 @@ const useOperationFilter = () => {
 	const [adesState, actions] = useAdesState();
 	const {id} = useParams();
 	const [ids, setIds] = useState(adesState.map.ids);
-	const [rfvs, setRfvsShowing] = useState(maybeKeys(adesState.rfv.list));
 	const [allOperations, setOperations] = useState(extractOperationsFromState(adesState));
 	const [filteredOperations, setFilteredOperations] = useState([]);
 	const { t,  } = useTranslation();
@@ -98,10 +97,6 @@ const useOperationFilter = () => {
 		setOperations(extractOperationsFromState(adesState));
 	}, [adesState.operations.updated]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
-		setRfvsShowing(maybeKeys(adesState.rfv.list));
-	}, [adesState.rfv.updated]); // eslint-disable-line react-hooks/exhaustive-deps
-
 	useEffect( () => {
 		//console.log("filteredOperations", filteredOperations);
 	}, [filteredOperations]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -115,7 +110,7 @@ const useOperationFilter = () => {
 		setIds: To show
 	 */
 
-	return [allOperations, filteredOperations, id, selectedFilters, setSelectedFilters, states, ids, setIds, rfvs, setRfvsShowing];
+	return [allOperations, filteredOperations, id, selectedFilters, setSelectedFilters, states, ids, setIds];
 };
 
 export {useOperationFilter as default};

@@ -68,8 +68,8 @@ const initialState = {
 		updated: Date.now()
 	},
 	rfv: {
-		list: S.Nothing,
-		updated: Date.now()
+		list: {},
+		updated: 0
 	},
 	warning: S.Nothing,
 	notifications: {
@@ -223,7 +223,7 @@ function addRFV(store, data) {
 	}));
 	const rfvs = S.fromPairs(pairs);
 	print(store.state, false, 'RFVState', rfvs);
-	store.setState({rfv: {updated: Date.now(), list: S.Just(rfvs)}});
+	store.setState({rfv: {updated: Date.now(), list: rfvs}});
 }
 
 /* QuickFly */

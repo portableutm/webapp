@@ -28,6 +28,7 @@ import OperationEditMarker from './elements/OperationEditMarker';
 
 /* Hooks */
 import useOperationFilter from './hooks/useOperationFilter';
+import useRfvLogic from './hooks/useRfvLogic';
 import useAdesState from '../state/AdesState';
 import useEditorLogic from './hooks/useEditorLogic';
 import useSimulatorLogic from './hooks/useSimulatorLogic';
@@ -38,11 +39,9 @@ import {initializeLeaflet} from './MapAuxs';
 import RightArea from '../layout/RightArea';
 
 import Polyline from './elements/Polyline';
-import {fM, mapValues, maybeValues} from '../libs/SaferSanctuary';
+import {fM, maybeValues} from '../libs/SaferSanctuary';
 import SelectedDrone from './viewer/SelectedDrone';
 import {Button, Dialog, Intent} from '@blueprintjs/core';
-
-
 
 /* Main function */
 function Map({ mode }) {
@@ -77,7 +76,8 @@ function Map({ mode }) {
 
 
 	/* Viewer state */
-	const [ops, opsFiltered, id, filtersSelected, setFiltersSelected, , idsShowing, setIdsShowing, rfvs, setRfvsShowing] = useOperationFilter();
+	const [rfvs, setRfvs] = useRfvLogic();
+	const [ops, opsFiltered, id, filtersSelected, setFiltersSelected, , idsShowing, setIdsShowing] = useOperationFilter();
 	const [currentSelectedOperation, setSelectedOperation] = useState(S.Nothing);
 	const [currentSelectedDrone, setSelectedDrone] = useState(S.Nothing);
 
@@ -215,18 +215,30 @@ function Map({ mode }) {
 						/>;
 					});
 				})}
-				{mapValues(state.rfv.list)(() => {})((rfv) => {
-					if (rfvs.indexOf(rfv.id) !== -1) {
-						return (
-							<RestrictedFlightVolume
-								map={map.current}
-								key={rfv.comments}
-								latlngs={rfv.geography.coordinates}
-								name={rfv.comments}
-							/>
-						);
-					}
-				})}
+				{
+					S.map
+					((rfv) => {
+						if (rfvs.indexOf(rfv.id) !== -1) {
+							/* Rfv is selected to be shown */
+							return (
+								<RestrictedFlightVolume
+									map={map.current}
+									key={rfv.comments}
+									latlngs={rfv.geography.coordinates}
+									name={rfv.comments}
+								/>
+							);
+						} else {
+							return null;
+						}
+					})
+					(S.values(state.rfv.list))
+				}
+
+
+
+
+
 
 
 				{/* Operation creation */}
@@ -320,7 +332,7 @@ function Map({ mode }) {
 					idsSelected={idsShowing}
 					setIdsSelected={setIdsShowing}
 					rfvs={rfvs}
-					setRfvsShowing={setRfvsShowing}
+					setRfvsShowing={setRfvs}
 					operations={ops}
 					disabled={id != null}
 				/>
