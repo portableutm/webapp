@@ -39,7 +39,7 @@ import {initializeLeaflet} from './MapAuxs';
 import RightArea from '../layout/RightArea';
 
 import Polyline from './elements/Polyline';
-import {fM, maybeValues} from '../libs/SaferSanctuary';
+import {fM} from '../libs/SaferSanctuary';
 import SelectedDrone from './viewer/SelectedDrone';
 import {Button, Dialog, Intent} from '@blueprintjs/core';
 
@@ -90,7 +90,7 @@ function Map({ mode }) {
 	/* 	Drone related logic	 */
 	useEffect(() => {
 		const allDrones = state.drones.list;
-		setDrones(maybeValues(allDrones).map((drone) => {
+		setDrones(S.values(allDrones).map((drone) => {
 			// TODO: This should be done in the backend
 			const operationDrone = ops.find((op) => op.gufi === drone.gufi);
 			let risk = 'EXTREME';
@@ -133,11 +133,12 @@ function Map({ mode }) {
 	}, [id, opsFiltered]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		if (S.isJust(state.quickFly.list)) {
-			const first = maybeValues(state.quickFly.list)[0];
+		const quickflies = S.values(state.quickFly.list);
+		if (quickflies.length > 0) {
+			const first = quickflies[0];
 			actions.map.setCorners(first.cornerNW, first.cornerSE);
 		}
-	}, [S.isJust(state.quickFly.list)]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [S.values(state.quickFly.list).length]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		// Change map position if it has changed in the state

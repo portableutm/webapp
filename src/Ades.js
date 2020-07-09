@@ -155,7 +155,7 @@ function Ades() {
 				actions.auth.info(username, () => {
 					actions.operations.fetch();
 					actions.rfv.fetch();
-					//actions.quickFly.fetch();
+					actions.quickFly.fetch();
 				}, () => {
 					setRole('none');
 					setLoggedIn(false);
@@ -181,7 +181,7 @@ function Ades() {
 				newSocket.on('new-position', function (info) {
 					const info2 = {...info};
 					//console.log('DroneState: new-position: ', info2);
-					actions.drones.post(info2);
+					actions.drones.add(info2);
 				});
 				newSocket.on('operation-state-change', function (info) {
 					actions.operations.updateOne(info.gufi, info.state);

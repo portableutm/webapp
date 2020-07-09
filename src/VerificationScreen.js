@@ -21,7 +21,6 @@ function VerificationScreen() {
 	const {username} = useParams();
 	const location = useLocation();
 	const token = (location.search.split('?token='))[1];
-	console.log(token);
 
 	const { t, i18n } = useTranslation();
 

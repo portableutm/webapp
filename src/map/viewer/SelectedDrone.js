@@ -25,10 +25,10 @@ function Property({property, value}) {
 	);
 }
 
-function SelectedOperation ({gufi}) {
+function SelectedDrone ({gufi}) {
 	const { t } = useTranslation();
-	const [state, ] = useAdesState();
-	const drone = fM(S.value(gufi)(fM(state.drones.list)));
+	const [state, ] = useAdesState(state => state.drones);
+	const drone = fM(S.value(gufi)(state.list));
 	const info = [
 		['ID', drone.gufi],
 		['Lat', drone.location.coordinates.lat],
@@ -54,4 +54,4 @@ function SelectedOperation ({gufi}) {
 	);
 }
 
-export default SelectedOperation;
+export default SelectedDrone;

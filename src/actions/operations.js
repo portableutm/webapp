@@ -40,7 +40,6 @@ function updateOperationState(store, gufi, info) {
 	print(store.state, false, 'OperationState', 'state changed',gufi, info);
 	const currentOperations = store.state.operations.list;
 	const isRogue = info === 'ROGUE';
-	console.log(gufi, info);
 	const mbCurrentOperation = S.value(gufi)(currentOperations);
 	if (S.isJust(mbCurrentOperation)) {
 		const currentOperation = fM(mbCurrentOperation);

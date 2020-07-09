@@ -1,5 +1,3 @@
-import {fM, maybeValues} from '../libs/SaferSanctuary';
-import {Axios, print} from '../state/AdesState';
 import S from 'sanctuary';
 
 const quickFlyLocations = [
@@ -17,38 +15,38 @@ function addQuickFly(store, data) {
 		return S.Just(S.Pair(qf.name)(convertCoordinatesQF(qf)));
 	}));
 	const qfs = S.fromPairs(pairs);
-	store.setState({quickFly: {updated: Date.now(), list: S.Just(qfs)}});
+	store.setState({quickFly: {updated: Date.now(), list: qfs}});
 }
 
 const convertCoordinatesQF = (qf) => {
-	console.log('oldQF', qf);
 	const cornerNWswap = [qf.cornerNW[1], qf.cornerNW[0]];
 	const cornerSEswap = [qf.cornerSE[1], qf.cornerSE[0]];
 	const newQf = {...qf};
 	newQf.cornerNW = cornerNWswap;
 	newQf.cornerSE = cornerSEswap;
-	console.log('newQF', newQf);
 	return newQf;
 };
 
 
 /* Actions */
 export const fetch = (store) => {
+	addQuickFly(store, quickFlyLocations);
+	/*
 	Axios.get('quickfly', {headers: { auth: fM(store.state.auth.token) }})
 		.then(result => addQuickFly(store, result.data))
 		.catch(error => {
 			addQuickFly(store, quickFlyLocations);
 			print(store.state, true, 'QuickFlyState', error);
-		});
+		});*/
 };
 export const post = (store, data, callback, ) => {
-	const olds = maybeValues(store.state.quickFly.list);
+	const olds = S.values(store.state.quickFly.list);
 	data.cornerNW = [data.cornerNW.lng, data.cornerNW.lat];
 	data.cornerSE = [data.cornerSE.lng, data.cornerSE.lat];
 	olds.push(data);
 	addQuickFly(store, olds);
 	callback && callback();
-	/*Axios.post('quickfly', data, {headers: { auth: fM(store.state.auth.token) }})
+	/*Axios.add('quickfly', data, {headers: { auth: fM(store.state.auth.token) }})
 		.then(result => {
 			addQuickFly(result.data);
 			callback && callback();

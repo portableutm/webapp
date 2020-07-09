@@ -84,7 +84,7 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 			.clear()
 			.type('09123456');
 	});
-	it('Finish and post', function () {
+	it('Finish and add', function () {
 		cy.contains('finish').click();
 		cy.wait('@postOperation');
 		cy.get('[data-test-id="mapButtonMenu"]').click();

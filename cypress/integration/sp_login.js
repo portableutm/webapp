@@ -7,7 +7,7 @@ describe('UseCase 05. Login', function() {
 		/*cy.get('.loginError').then(($el) =>
 			expect($el).to.contain('Please wait')
 		);*/
-		// TODO: Wait for post
+		// TODO: Wait for add
 	});
 
 	it('Clear cookies, try to login but fails', function() {

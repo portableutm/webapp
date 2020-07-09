@@ -4,7 +4,7 @@ import {Mutex} from 'async-mutex';
 const droneMutex = new Mutex();
 
 /* Actions */
-export const post = (store, data) => {
+export const add = (store, data) => {
 	droneMutex
 		.acquire()
 		.then(function (release) {
@@ -14,16 +14,10 @@ export const post = (store, data) => {
 				coordinates: {lat: data.location.coordinates[1], lng: data.location.coordinates[0]}
 			};
 			const dataLatLng = {...data, location: locationLatLng};
-			const defaultValue = S.singleton(data.gufi)(dataLatLng);
 			store.setState({
 				drones: {
 					updated: Date.now(),
-					list: S.Just(
-						S.maybe
-						(defaultValue)
-						(S.insert(dataLatLng.gufi)(dataLatLng))
-						(drones)
-					)
+					list: S.insert (dataLatLng.gufi) (dataLatLng) (drones)
 				}
 			}); // Creates a new StrMap if it doesn't exist, if not it inserts new position data into it.
 			release();

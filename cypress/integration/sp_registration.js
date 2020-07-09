@@ -1,5 +1,5 @@
 describe('SPx: (Registration)', function () {
-	beforeEach('Intercept post', function () {
+	beforeEach('Intercept add', function () {
 		cy.server();           // enable response stubbing
 		cy.route({
 			method: 'POST',      // Route all GET requests

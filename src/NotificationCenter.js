@@ -22,7 +22,6 @@ function NotificationCenter() {
 
 	useEffect(() => {
 		if (sound !== '') {
-			console.log(sound);
 			play();
 		} else {
 			stop();
@@ -87,7 +86,6 @@ function NotificationCenter() {
 							className={notification.getStylingString()}
 							interactive={true}
 							onClick={() => {
-								console.log('Clickety clack', enlarged, index);
 								if (enlarged === index) {
 									notification.isEnlarged = false;
 									setEnlarged(-1);

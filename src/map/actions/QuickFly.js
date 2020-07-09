@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import RightAreaButton from '../RightAreaButton';
 import useAdesState from '../../state/AdesState';
-import {maybeValues} from '../../libs/SaferSanctuary';
+import S from 'sanctuary';
 import {Button, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
 import {useTranslation} from 'react-i18next';
 
@@ -60,7 +60,7 @@ const QuickFly = ({onClick}) => {
 		</div>),
 	};
 
-	const content = [].concat(maybeValues(state.quickFly.list),addNewQuickFlyButton);
+	const content = [].concat(S.values(state.quickFly.list), addNewQuickFlyButton);
 	return (
 		<>
 			{	!isCreating &&

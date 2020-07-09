@@ -41,7 +41,7 @@ describe('Use Case: Add new vehicle', function () {
 	});
 	
 	/*
-	it('Finish and post', function () {
+	it('Finish and add', function () {
 		cy.get('.bp3-dialog-close-button').click(); // TODO: Change this line if we don't use blueprint3js dialog anymore.
 		cy.contains('Finish').click();
 		cy.wait(@postVehicle);

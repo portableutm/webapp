@@ -29,8 +29,8 @@ const initialState = {
 		error: false
 	},
 	drones: {
-		list: S.Nothing,
-		updated: Date.now()
+		list: {},
+		updated: 0
 	},
 	map: {
 		/* Uruguay
@@ -50,8 +50,8 @@ const initialState = {
 		rightButtonOnClick: S.Nothing
 	},
 	quickFly: {
-		list: S.Nothing,
-		updated: Date.now()
+		list: {},
+		updated: 0
 	},
 	rfv: {
 		list: {},

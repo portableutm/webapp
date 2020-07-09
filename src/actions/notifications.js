@@ -27,9 +27,7 @@ export const remove = (store, id) => {
 		.acquire()
 		.then(function (release) {
 			const currentNotifications = store.state.notifications.list;
-			console.log('Before Remove', currentNotifications);
 			const notifications = S.remove(id)(currentNotifications);
-			console.log('After Remove', notifications);
 			store.setState({notifications: {list: notifications, updated: Date.now()}});
 			release();
 		});

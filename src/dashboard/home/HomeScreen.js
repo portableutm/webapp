@@ -2,7 +2,6 @@ import React from 'react';
 import styles from './home.module.css';
 import useAdesState from '../../state/AdesState';
 import S from 'sanctuary';
-import {maybeValues} from '../../libs/SaferSanctuary';
 
 const SimpleValue = ({title, value, color}) => {
 	return (
@@ -20,9 +19,7 @@ const HomeScreen = () => {
 	const activeCount = (S.filter ((op) => op.state === 'ACTIVE') (operations)).length;
 	const acceptedCount = (S.filter ((op) => op.state === 'ACCEPTED') (operations)).length;
 	const pendingCount = (S.filter ((op) => op.state === 'PENDING') (operations)).length;
-	const dronesCount = maybeValues(state.drones.list).length;
-
-	console.log('Ops', operations);
+	const dronesCount = S.values(state.drones.list).length;
 
 	return (
 		<>
