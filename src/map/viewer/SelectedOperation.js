@@ -29,7 +29,7 @@ function SelectedOperation ({gufi}) {
 	const [state, actions] = useAdesState();
 	const [isDialogShown, showDialog] = useState(false);
 	const [isApproved, setApproved] = useState(false);
-	const operation = fM(S.value(gufi)(fM(state.operations.list)));
+	const operation = fM(S.value(gufi)(state.operations.list));
 	const info = [
 		[t('name'), operation.flight_comments],
 		['ID',operation.gufi],

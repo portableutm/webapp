@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {mapValues} from '../../libs/SaferSanctuary';
+import S from 'sanctuary';
 import GenericList, {GenericListLine} from '../generic/GenericList';
 import {Callout, Spinner, Intent, Button} from '@blueprintjs/core';
 import {useHistory} from 'react-router-dom';
@@ -90,21 +90,28 @@ function Operation({children}) {
 function OperationsList() {
 	const [state, ] = useAdesState();
 	const { t,  } = useTranslation();
-
-	return (
-		<div>
-			<h1>
-				{t('operations')}
-			</h1>
-			<GenericList>
-				{mapValues
-				(state.operations.list)
-				(() /* istanbul ignore next */ => <Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>)
-				((op) => <Operation key={op.gufi}>{op}</Operation>)
-				}
-			</GenericList>
+	const operations = S.values(state.operations.list);
+	const isThereOperations = operations.length !== 0;
+	if (isThereOperations) {
+		return (
+			<div>
+				<h1>
+					{t('operations')}
+				</h1>
+				<GenericList>
+					{S.map
+					((op) => <Operation key={op.gufi}>{op}</Operation>)
+					(operations)
+					}
+				</GenericList>
+			</div>
+		);
+	} else {
+		return (<div className="fullHW" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+			<Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>
 		</div>
-	);
+		);
+	}
 }
 
 export default OperationsList;

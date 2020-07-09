@@ -15,7 +15,7 @@ const SimpleValue = ({title, value, color}) => {
 
 const HomeScreen = () => {
 	const [state, ] = useAdesState();
-	const operations = maybeValues(state.operations.list);
+	const operations = S.values(state.operations.list);
 	const operationCount = operations.length;
 	const activeCount = (S.filter ((op) => op.state === 'ACTIVE') (operations)).length;
 	const acceptedCount = (S.filter ((op) => op.state === 'ACCEPTED') (operations)).length;

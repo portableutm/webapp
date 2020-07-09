@@ -29,8 +29,8 @@ const initialState = {
 		token: S.Nothing
 	},
 	operations: {
-		list: S.Nothing,
-		updated: Date.now()
+		list: {},
+		updated: 0
 	},
 	/*users: {
 		list: S.Nothing,
@@ -140,17 +140,17 @@ function addOperations(store, data) {
 	const dataObtained = Array.from(data);
 	const pairs = S.justs(dataObtained.map((op) => {
 		return validateOperation(op) ? S.Just(S.Pair(op.gufi)(convertCoordinates(op))) : S.Nothing;
-		// L, and therefore the web, uses LatLng coordinates
+		// Leaflet, and therefore the web, uses LatLng coordinates
 		// The DB stores LngLat
 		// Therefore, we got to convert the coordinates of all volumes
 	}));
 	const operations = S.fromPairs(pairs);
-	store.setState({operations: {updated: Date.now(), list: S.Just(operations)}});
+	store.setState({operations: {updated: Date.now(), list: operations}});
 }
 
 function updateOperationState(store, gufi, info) {
 	print(store.state, false, 'OperationState', 'state changed',gufi, info);
-	const currentOperations = fM(store.state.operations.list);
+	const currentOperations = store.state.operations.list;
 	const isRogue = info === 'ROGUE';
 	console.log(gufi, info);
 	const mbCurrentOperation = S.value(gufi)(currentOperations);
@@ -161,7 +161,7 @@ function updateOperationState(store, gufi, info) {
 		);
 		currentOperation.state = info;
 		const newOperations = S.insert(gufi)(currentOperation)(currentOperations);
-		store.setState({operations: {updated: Date.now(), list: S.Just(newOperations)}});
+		store.setState({operations: {updated: Date.now(), list: newOperations}});
 	} else {
 		store.actions.operations.fetch(store);
 	}
@@ -529,7 +529,7 @@ const actions = {
 /* Extract data from global state */
 
 const extractOperationsFromState = (adesState) => {
-	return maybeValues(adesState.operations.list);
+	return S.values(adesState.operations.list);
 };
 
 /* Helper functions */
