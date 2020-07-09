@@ -136,7 +136,7 @@ function Ades() {
 	bc.onmessage = (event) => setAlertUtmMessage(event.data);*/
 
 	/* Auth */
-	const [cookies, setCookie,] = useCookies(['lang']);
+	const [cookies, setCookie,] = useCookies(['lang', 'sneaky', 'hummingbird']);
 	const [isLoggedIn, setLoggedIn] = useState(true);
 	const [role, setRole] = useState('none');
 	const [timeoutUnlogin, setTimeoutUnlogin] = useState(0);
@@ -163,6 +163,7 @@ function Ades() {
 				});
 			}
 			if (S.isJust(mbSocket)) {
+				/* Re-connect to socket.io */
 				const socket = fM(mbSocket);
 				const token = fM(state.auth.token);
 				if (socket.connected)
@@ -216,6 +217,12 @@ function Ades() {
 			} else {
 				i18n.changeLanguage(cookies.lang);
 			}
+		}
+		if (cookies.sneaky !== null &&
+			cookies.sneaky !== void 0 &&
+			cookies.hummingbird !== null &&
+			cookies.hummingbird !== void 0) {
+			actions.auth.login(cookies.sneaky, cookies.hummingbird, () => {}, () => {alert('Sneaky Hummingbird failed');});
 		}
 	}, [cookies]); // eslint-disable-line react-hooks/exhaustive-deps
 
