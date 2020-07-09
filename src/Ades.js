@@ -55,7 +55,7 @@ import { fM } from './libs/SaferSanctuary';
 import Pilot from './dashboard/user/Pilot';
 import VehiclesList from './dashboard/vehicle/VehiclesList';
 import NewVehicle from './dashboard/vehicle/NewVehicle';
-import HomeScreen from './dashboard/main_screen/HomeScreen';
+import HomeScreen from './dashboard/home/HomeScreen';
 import VerificationScreen from './VerificationScreen';
 import {API} from './consts';
 import BottomArea from './layout/BottomArea';

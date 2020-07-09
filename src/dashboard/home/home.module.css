@@ -1,8 +1,34 @@
-.div-container{
+.homeScreen {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 1em;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
+
+.simpleValue {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-height: 80px;
+    margin: 2px;
+    padding: 5%;
+    border-radius: 5px;
+    color: rgb(255, 255, 255);
+    background-image: linear-gradient(0deg, rgb(51, 86, 179), rgb(42, 75, 147));
+    background-blend-mode: color-dodge;
+}
+
+.simpleValue > p {
+    margin: 7px;
+}
+
+.simpleValueText {
+    font-size: 20px;
+}
+
+.simpleValueValue {
+    font-size: 25px;
+    font-weight: bold;
+}
+
 .div-active-ops{
     background-color: #76CA9E;
     height: 120px;
