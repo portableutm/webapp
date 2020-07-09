@@ -17,6 +17,7 @@ const initial = S.fromPairs([
 	S.Pair('1')(true),
 	S.Pair('2')(true),
 	S.Pair('3')(true),
+	S.Pair('4')(false)
 	/*
 	S.Pair('3')(false),
 	S.Pair('4')(true),*/
@@ -31,7 +32,7 @@ const useOperationFilter = () => {
 	const [filteredOperations, setFilteredOperations] = useState([]);
 	const { t,  } = useTranslation();
 
-	const states = [
+	let states = [
 		{
 			text: t('map.filter.accepted'),
 			filter: 'ACCEPTED'
@@ -67,6 +68,12 @@ const useOperationFilter = () => {
 		},
 		 */
 	];
+	const closedState = {
+		text: t('map.filter.closed'),
+		filter: 'CLOSED'
+	};
+
+	if (adesState.debug) states.push(closedState);
 
 	useEffect(() => {
 		actions.map.addId(id);
