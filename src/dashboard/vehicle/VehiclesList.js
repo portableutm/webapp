@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import useAdesState from '../../state/AdesState';
-import {mapValues} from '../../libs/SaferSanctuary';
+import S from 'sanctuary';
 import {Button, Callout, Intent, Spinner, Tag} from '@blueprintjs/core';
 import {useTranslation} from 'react-i18next';
 import {GenericListLine} from '../generic/GenericList';
@@ -75,37 +75,45 @@ function Vehicle({children: v}) {
 
 function VehiclesList() {
 	const { t,  } = useTranslation();
-	const [state, actions] = useAdesState();
-
+	const [state, actions] = useAdesState(state => state.vehicles, actions => actions.vehicles);
+	const vehicles = S.values(state.list);
+	const isThereVehicles = vehicles.length > 0;
 	useEffect(() => {
 		// Only run in mount
 		/* Fetch vehicle data if too old, when loading component */
-		actions.vehicles.fetchIfOld();
+		actions.fetchIfOld();
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	return (
-		<>
-			<h1>{t('vehicles')}</h1>
-			{ 	state.vehicles.error &&
+	if (isThereVehicles) {
+		return (
+			<>
+				<h1>{t('vehicles')}</h1>
+				{ 	state.error &&
 				<>
 					<p>
 						{t('app.errorocurredfetching')}
 					</p>
 					<Button
 						intent={Intent.PRIMARY}
-						onClick={() => actions.vehicles.fetch()}
+						onClick={() => actions.fetch()}
 					>
 						{t('app.tryagain')}
 					</Button>
 				</>
-			}
-			{	!state.vehicles.error && mapValues
-			(state.vehicles.list)
-			(() => <Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>)
-			(vehicle => <Vehicle key={vehicle.faaNumber}>{vehicle}</Vehicle>)
-			}
-		</>
-	);
+				}
+				{	!state.error && S.map
+				(vehicle => <Vehicle key={vehicle.faaNumber}>{vehicle}</Vehicle>)
+				(vehicles)
+				}
+			</>
+		);
+	} else {
+		return (
+			<div className="fullHW" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+				<Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>
+			</div>
+		);
+	}
 }
 
 export default VehiclesList;

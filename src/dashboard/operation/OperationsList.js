@@ -88,9 +88,9 @@ function Operation({children}) {
 }
 
 function OperationsList() {
-	const [state, ] = useAdesState();
+	const [state, ] = useAdesState(state => state.operations);
 	const { t,  } = useTranslation();
-	const operations = S.values(state.operations.list);
+	const operations = S.values(state.list);
 	const isThereOperations = operations.length !== 0;
 	if (isThereOperations) {
 		return (
@@ -107,9 +107,10 @@ function OperationsList() {
 			</div>
 		);
 	} else {
-		return (<div className="fullHW" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-			<Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>
-		</div>
+		return (
+			<div className="fullHW" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+				<Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>
+			</div>
 		);
 	}
 }

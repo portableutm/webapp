@@ -38,8 +38,8 @@ const initialState = {
 		error: false
 	},*/
 	vehicles: {
-		list: S.Nothing,
-		updated: 0, // Won't fetch until we need it.
+		list: {},
+		updated: 0,
 		error: false
 	},
 	drones: {
@@ -197,19 +197,17 @@ function addVehicles(store, data) {
 		return S.Just(S.Pair(vehicle.uvin)(vehicle));
 	}));
 	const vehicles = S.fromPairs(pairs);
-	store.setState({vehicles: {updated: Date.now(), list: S.Just(vehicles)}});
+	store.setState({vehicles: {updated: Date.now(), list: vehicles}});
 }
 
 function addVehicle(store, data) {
 	store.setState({
 		vehicles: {
 			updated: Date.now(),
-			list: S.Just(
-				S.insert
-				(data.uvin)
-				(data)
-				(fM(store.state.vehicles.list))
-			)
+			list: S.insert
+			(data.uvin)
+			(data)
+			(store.state.vehicles.list)
 		}
 	});
 }
