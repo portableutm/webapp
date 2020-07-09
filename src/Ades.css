@@ -685,6 +685,7 @@ th, td {
 
 .dshListItem {
   margin: 1%;
+  min-height: 40px;
 }
 
 .dshListItemLine {
