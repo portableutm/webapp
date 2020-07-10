@@ -5,6 +5,8 @@ import S from 'sanctuary';
 import {useTranslation} from 'react-i18next';
 import {useCookies} from 'react-cookie';
 import {DEBUG} from './consts';
+import logo from './images/logo.png';
+import background from './images/bg.jpg';
 
 const {isJust} = S;
 
@@ -45,54 +47,59 @@ function LoginScreen() {
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
-		<form onSubmit={login} className="centeredScreen texturedBackground">
-			<Card className="loginWindow bp3-dark" elevation={Elevation.TWO}>
-				<h1>{t('app.name')}</h1>
-				<h3>{t('login.pleaselogin')}</h3>
-				<FormGroup
-					helperText={t('login.user_helper')}
-					label={t('user.username')}
-					labelFor="login-user"
-				>
-					<InputGroup id="login-user" fill placeholder={t('user.username')}
-						value={user}
-						disabled={isLogging}
-						onChange={(evt) => setUser(evt.target.value)}/>
-				</FormGroup>
-				<FormGroup
-					helperText={t('login.password_helper')}
-					label={t('app.password')}
-					labelFor="login-password"
-				>
-					<InputGroup id="login-password" fill type="password"
-						value={password}
-						disabled={isLogging}
-						onChange={(evt) => setPassword(evt.target.value)}/>
-				</FormGroup>
-				<div className="loginButtons">
-					<Button style={{margin: '5px'}} intent={Intent.SUCCESS}
-						type="submit"
-						onClick={login}>
-						{t('login.login')}
-					</Button>
-				</div>
-			</Card>
-			{isError &&
+		<>
+			<img className="loginScreenBackground animated fadeIn faster" alt="Background" src={background} />
+			<form onSubmit={login} className="centeredScreen texturedBackground">
+				<Card className="loginWindow" elevation={Elevation.ONE}>
+					<div className="loginScreenLogoWrapper">
+						<img className="loginScreenLogo" alt="PortableUTM" src={logo} />
+					</div>
+					<h3>{t('login.pleaselogin')}</h3>
+					<FormGroup
+						helperText={t('login.user_helper')}
+						label={t('user.username')}
+						labelFor="login-user"
+					>
+						<InputGroup id="login-user" fill
+							value={user}
+							disabled={isLogging}
+							onChange={(evt) => setUser(evt.target.value)}/>
+					</FormGroup>
+					<FormGroup
+						helperText={t('login.password_helper')}
+						label={t('app.password')}
+						labelFor="login-password"
+					>
+						<InputGroup id="login-password" fill type="password"
+							value={password}
+							disabled={isLogging}
+							onChange={(evt) => setPassword(evt.target.value)}/>
+					</FormGroup>
+					<div className="loginButtons">
+						<Button style={{margin: '5px'}} intent={Intent.PRIMARY}
+							type="submit"
+							onClick={login}>
+							{t('login.login')}
+						</Button>
+					</div>
+				</Card>
+				{isError &&
             <Card className="bp3-dark loginError animated flash" elevation={Elevation.TWO}>
             	{t('login.login_error')}
             </Card>
-			}
-			{isLogging &&
+				}
+				{isLogging &&
 			<Card className="bp3-dark loginError animated fadeIn" elevation={Elevation.TWO}>
 				{t('login.login_pleasewait')}
 			</Card>
-			}
-			{ isJust(adesState.auth.token) &&
+				}
+				{ isJust(adesState.auth.token) &&
             <Card className="bp3-dark loginError animated flash" elevation={Elevation.TWO}>
             	{t('login.login_successful')}
             </Card>
-			}
-		</form>
+				}
+			</form>
+		</>
 	);
 }
 
