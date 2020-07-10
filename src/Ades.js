@@ -60,7 +60,7 @@ import VerificationScreen from './VerificationScreen';
 import {API} from './consts';
 import BottomArea from './layout/BottomArea';
 import NotificationCenter from './NotificationCenter';
-import {OperationGoneRogue} from './entities/Notification';
+import {OperationGoneRogue} from './entities/Notification/Notification';
 
 /*function alertIsImportant(alertUtmMessage) {
 	return (

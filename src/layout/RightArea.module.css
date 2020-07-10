@@ -1,0 +1,94 @@
+.area {
+    font-weight: normal;
+    position: absolute;
+    grid-area: 1 / 1 / 6 / 2;
+    height: 100%;
+    width: 100%;
+    z-index: 2000;
+    background-color: rgb(57, 64, 83);
+    pointer-events: auto;
+    box-shadow: 0 0 0.4em 0 rgba(57, 64, 83, 0.5);
+    -moz-box-shadow: 0 0 0.4em 0 rgba(57, 64, 83, 0.5);
+    -webkit-box-shadow: 0 0 0.4em 0 rgba(57, 64, 83, 0.5);
+}
+
+.area:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    z-index: 2100;
+    pointer-events: none;
+    background-image:
+            linear-gradient(to top,
+            rgba(57, 64, 83, 0),
+            rgba(57, 64, 83, 1) 100%);
+    width: 100%;
+    height: 44px;
+}
+
+.area:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    z-index: 2200;
+    pointer-events: none;
+    background-image:
+            linear-gradient(to bottom,
+            rgba(57, 64, 83, 0),
+            rgba(57, 64, 83, 1) 100%);
+    width: 100%;
+    height: 44px;
+}
+
+.inside {
+    padding-top: 50px;
+    position: absolute;
+    padding-bottom: 44px;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    pointer-events: auto;
+}
+
+.inside::-webkit-scrollbar {
+    display: none;
+}
+
+.opener {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    vertical-align: middle;
+    width: 40px;
+    background-color: rgb(57, 64, 83);
+    border-radius: 10px;
+    color: white;
+    top: 5px;
+    height: 40px;
+    left: 50px;
+    z-index: 999;
+    pointer-events: auto;
+    transition: 1s;
+}
+
+.opener:hover {
+    background-color: rgb(240, 101, 67);
+}
+
+.commandBox {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    bottom: 0;
+    z-index: 5000;
+    pointer-events: auto;
+}
+
+.closer {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    z-index: 3000;
+    width: fit-content;
+}

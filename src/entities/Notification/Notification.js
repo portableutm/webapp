@@ -1,6 +1,6 @@
-import styles from '../css/notification.module.css';
+import styles from './notification.module.css';
 import * as classnames from 'classnames';
-import rogueSfx from '../sounds/ROGUE.mp3';
+import rogueSfx from '../../sounds/ROGUE.mp3';
 import S from 'sanctuary';
 import i18n from 'i18next';
 

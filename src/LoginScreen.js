@@ -16,7 +16,6 @@ function LoginScreen() {
 	const [password, setPassword] = useState('');
 	const [isError, setError] = useState(false);
 	const [isLogging, setLogging] = useState(false);
-
 	const { t, i18n } = useTranslation();
 	const [, setCookie, ] = useCookies(['jwt']);
 
@@ -46,9 +45,25 @@ function LoginScreen() {
 		}
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+	/* img from https://pixabay.com/photos/airport-building-sun-weather-sky-1682067/ */
 	return (
 		<>
-			<img className="loginScreenBackground animated fadeIn faster" alt="Background" src={background} />
+			<img
+				ref={(img) => {
+					if (!img) { return; }
+					const image = img;
+					const finishedLoading = () => {
+						image.style.transition = 'all 1s linear';
+						image.style.opacity = '1';
+					};
+					image.onload = finishedLoading;
+					if (image.complete) {
+						finishedLoading();
+					}
+				}}
+				className="loginScreenBackground"
+				alt="Background" src={background}
+			/>
 			<form onSubmit={login} className="centeredScreen texturedBackground">
 				<Card className="loginWindow" elevation={Elevation.ONE}>
 					<div className="loginScreenLogoWrapper">
@@ -84,19 +99,19 @@ function LoginScreen() {
 					</div>
 				</Card>
 				{isError &&
-            <Card className="bp3-dark loginError animated flash" elevation={Elevation.TWO}>
-            	{t('login.login_error')}
-            </Card>
+				<Card className="bp3-dark loginError animated flash" elevation={Elevation.TWO}>
+					{t('login.login_error')}
+				</Card>
 				}
 				{isLogging &&
-			<Card className="bp3-dark loginError animated fadeIn" elevation={Elevation.TWO}>
-				{t('login.login_pleasewait')}
-			</Card>
+				<Card className="bp3-dark loginError animated fadeIn" elevation={Elevation.TWO}>
+					{t('login.login_pleasewait')}
+				</Card>
 				}
 				{ isJust(adesState.auth.token) &&
-            <Card className="bp3-dark loginError animated flash" elevation={Elevation.TWO}>
-            	{t('login.login_successful')}
-            </Card>
+				<Card className="bp3-dark loginError animated flash" elevation={Elevation.TWO}>
+					{t('login.login_successful')}
+				</Card>
 				}
 			</form>
 		</>

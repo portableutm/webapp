@@ -5,7 +5,7 @@ import useAdesState from './state/AdesState';
 
 import S from 'sanctuary';
 import './Ades.css';
-import styles from './css/notification.module.css';
+import styles from './entities/Notification/notification.module.css';
 import './css/animate.css';
 import {fM} from './libs/SaferSanctuary';
 import useSound from 'use-sound';

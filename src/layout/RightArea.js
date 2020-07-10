@@ -1,10 +1,15 @@
 /* istanbul ignore file */
 
 import React, {useEffect, useState} from 'react';
-import '../Ades.css';
+
+/* Libraries */
 import {Icon} from '@blueprintjs/core';
+
+/* Internal */
+import styles from './RightArea.module.css';
 import useAdesState from '../state/AdesState';
-import {Information, OperationGoneRogue} from '../entities/Notification';
+import {Information, OperationGoneRogue} from '../entities/Notification/Notification';
+import * as classnames from 'classnames';
 
 function RightArea({forceOpen, onClose, children}) {
 	const parseCommand = (value) => {
@@ -41,26 +46,26 @@ function RightArea({forceOpen, onClose, children}) {
 
 	return (
 		<>
-			<div data-test-id="rightAreaOpener" className='rightAreaOpener' onMouseUp={() => {clearInterval(timer); setTimer(null);}} onMouseDown={() => setTimer(setInterval(() => setShowCommandBox(current => !current), 1000))} onClick={() => setOpened(true)}>
+			<div data-test-id="rightAreaOpener" className={styles.opener} onMouseUp={() => {clearInterval(timer); setTimer(null);}} onMouseDown={() => setTimer(setInterval(() => setShowCommandBox(current => !current), 1000))} onClick={() => setOpened(true)}>
 				<Icon
 					icon="chevron-right"
 					iconSize={39}
 				/>
 			</div>
 			{	isOpened &&
-			<div className='rightArea bp3-dark'>
-				<Icon className="rightAreaCloser" icon="cross"
-					onClick={() => {
+			<div className={classnames('bp3-dark', styles.area)}>
+				<Icon className={styles.closer} icon="cross"
+					  onClick={() => {
 						setOpened(false);
 						onClose();
 					}} iconSize={30}/>
-				<div className='rightAreaInside'>
+				<div className={styles.inside}>
 					{children}
 				</div>
 			</div>
 			}
 			{ showCommandBox &&
-			<div className='commandBox'>
+			<div className={styles.commandBox}>
 				<input style={{width: '100%'}} size="20" placeholder="Command box" onChange={(evt) => parseCommand(evt.currentTarget.value)}/>
 			</div>
 			}

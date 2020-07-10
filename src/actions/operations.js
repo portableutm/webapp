@@ -1,7 +1,7 @@
 import {fM} from '../libs/SaferSanctuary';
 import {Axios, print} from '../state/AdesState';
 import S from 'sanctuary';
-import {OperationGoneRogue} from '../entities/Notification';
+import {OperationGoneRogue} from '../entities/Notification/Notification';
 
 /* Auxiliaries */
 const validateOperation = (op) => {
