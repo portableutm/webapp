@@ -127,8 +127,14 @@ function Map({ mode }) {
 	useEffect(() => {
 		// Each time we visualize another Operation, we clear the feature group not to mix their volumes
 		if (id != null && opsFiltered.length > 0) {
-			const polygon = L.polygon(opsFiltered[0].operation_volumes[0].operation_geography.coordinates);
-			actions.map.setCorners(polygon.getBounds().getNorthWest(), polygon.getBounds().getSouthEast());
+			opsFiltered.forEach((op) => {
+				if (op.gufi === id) {
+					console.log('GUFI', op.gufi);
+					const polygon = L.polygon(op.operation_volumes[0].operation_geography.coordinates);
+					actions.map.setCorners(polygon.getBounds().getNorthWest(), polygon.getBounds().getSouthEast());
+				}
+			});
+
 		}
 	}, [id, opsFiltered]); // eslint-disable-line react-hooks/exhaustive-deps
 

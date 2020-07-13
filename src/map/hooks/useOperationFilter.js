@@ -8,6 +8,7 @@ import {useParams} from 'react-router-dom';
 /* Internal state */
 import useAdesState, {extractOperationsFromState, filterOperationsByIds, filterOperationsByState} from '../../state/AdesState';
 import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom';
 
 /* Global constants */
 
@@ -31,6 +32,7 @@ const useOperationFilter = () => {
 	const [allOperations, setOperations] = useState(extractOperationsFromState(adesState));
 	const [filteredOperations, setFilteredOperations] = useState([]);
 	const { t,  } = useTranslation();
+	const history = useHistory();
 
 	let states = [
 		{
@@ -76,7 +78,16 @@ const useOperationFilter = () => {
 	if (adesState.debug) states.push(closedState);
 
 	useEffect(() => {
-		actions.map.addId(id);
+		if (id !== null) {
+			actions.map.addId(id);
+			/*setSelectedFilters(S.fromPairs([
+				S.Pair('0')(false),
+				S.Pair('1')(false),
+				S.Pair('2')(false),
+				S.Pair('3')(false),
+				S.Pair('4')(false)]
+			));*/
+		}
 	}, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
@@ -84,12 +95,12 @@ const useOperationFilter = () => {
 	}, [adesState.map.ids]);
 
 	useEffect(() => {
-		const filterNames = id == null ? S.pipe(
+		const filterNames = S.pipe(
 			[
 				S.filter((elem) => fM(S.value(elem)(selectedFilters))),
 				S.map((elem) => states[parseInt(elem)].filter)
 			])
-		(S.keys(selectedFilters)) : [];
+		(S.keys(selectedFilters));
 
 		const filteredOperations = S.join
 		([
