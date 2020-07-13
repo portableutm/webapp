@@ -21,13 +21,8 @@ const users = [
 
 describe('SP2: (Dashboard): All Users', function () {
 	beforeEach('Auth', function () {
-		cy
-			.request('POST', API + 'auth/login', { username: 'admin', password: 'admin' })
-			.then((response) => {
-				// response.body is automatically serialized into JSON
-				cy.setCookie('user', 'admin');
-				cy.setCookie('jwt', response.body);
-			});
+		cy.setCookie('sneaky', 'admin');
+		cy.setCookie('hummingbird', 'admin');
 		cy.server();           // enable response stubbing
 		cy.route({
 			method: 'GET',      // Route all GET requests
