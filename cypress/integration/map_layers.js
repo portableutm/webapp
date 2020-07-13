@@ -670,13 +670,8 @@ const operations = {
 
 describe('SP1: (Map) Layers', function () {
 	before('Auth', function () {
-		cy
-			.request('POST', API + 'auth/login', { username: 'admin', password: 'admin' })
-			.then((response) => {
-				// response.body is automatically serialized into JSON
-				cy.setCookie('user', 'admin');
-				cy.setCookie('jwt', response.body);
-			});
+		cy.setCookie('sneaky', 'admin');
+		cy.setCookie('hummingbird', 'admin');
 		cy.server();           // enable response stubbing
 		cy.route({
 			method: 'GET',      // Route all GET requests
@@ -728,7 +723,7 @@ describe('SP1: (Map) Layers', function () {
 		cy.get('[data-test-id="propertystate"]').then(($el) =>
 			expect($el).to.contain('ACTIVATED')
 		);
-		cy.get('.rightAreaCloser').click();
+		cy.get('[data-test-id="rightAreaCloser"]').click();
 		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersACTIVATED"]').uncheck({force: true});
 	});
@@ -740,7 +735,7 @@ describe('SP1: (Map) Layers', function () {
 		cy.get('[data-test-id="propertystate"]').then(($el) =>
 			expect($el).to.contain('PENDING')
 		);
-		cy.get('.rightAreaCloser').click();
+		cy.get('[data-test-id="rightAreaCloser"]').click();
 		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersPENDING"]').uncheck({force: true});
 	});
@@ -752,7 +747,7 @@ describe('SP1: (Map) Layers', function () {
 		cy.get('[data-test-id="propertystate"]').then(($el) =>
 			expect($el).to.contain('ROGUE')
 		);
-		cy.get('.rightAreaCloser').click();
+		cy.get('[data-test-id="rightAreaCloser"]').click();
 		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersROGUE"]').uncheck({force: true});
 	});

@@ -102,12 +102,12 @@ function LoginScreen() {
 					</div>
 				</Card>
 				{isError &&
-				<Card className={classnames('bp3-dark',styles.error,'animated flash')} elevation={Elevation.TWO}>
+				<Card id='error' className={classnames('bp3-dark',styles.error,'animated flash')} elevation={Elevation.TWO}>
 					{t('login.login_error')}
 				</Card>
 				}
 				{isLogging &&
-				<Card className={classnames('bp3-dark',styles.error,'animated fadeIn')} elevation={Elevation.TWO}>
+				<Card id='error' className={classnames('bp3-dark',styles.error,'animated fadeIn')} elevation={Elevation.TWO}>
 					{t('login.login_pleasewait')}
 				</Card>
 				}

@@ -5,43 +5,42 @@
 
 import {API} from '../../src/consts';
 
-const quickFlyLocations = [
-	{
-		name: 'MVD/SUMU: AIC (Ground)',
-		cornerNW: [-34.816575, -56.052659],
-		cornerSE: [-34.847928, -56.007429]
-	},
-	{
-		name: 'MVD/SUMU: AIC (Approach)',
-		cornerNW: [-34.730198, -56.203753],
-		cornerSE: [-34.910978, -55.827960]
-	},
-	{
-		name: 'PDP/SULS: Laguna del Sauce (Ground)',
-		cornerNW: [-34.839509, -55.135924],
-		cornerSE: [-34.873023, -55.053979]
-	},
-	{
-		name: 'Uruguay',
-		cornerNW: [-29.754889, -58.773215],
-		cornerSE: [-35.149370, -52.615924]
-	},
-	{
-		name: 'DronfiesLabs',
-		cornerNW: [-34.903478, -56.163236],
-		cornerSE: [-34.917137, -56.146111]
-	}
-];
+const quickFlyLocations = [{
+	'id': '214b734b-9f98-4efe-9288-815786ed6ea8',
+	'name': 'SUMU / MVD',
+	'cornerNW': {'type': 'Point', 'coordinates': [-56.0997948892208, -34.7908248678036]},
+	'cornerSE': {'type': 'Point', 'coordinates': [-55.9576592691036, -34.883956865424]}
+}, {
+	'id': '55f5b03f-5074-43e5-ac70-5a59202088da',
+	'name': 'Montevideo',
+	'cornerNW': {'type': 'Point', 'coordinates': [-56.7746035781009, -34.5535481438422]},
+	'cornerSE': {'type': 'Point', 'coordinates': [-55.7199160781009, -34.9788546182835]}
+}, {
+	'id': '67f04bca-a9b7-4fac-9a1c-72bfa2947aa8',
+	'name': 'Punta del Este',
+	'cornerNW': {'type': 'Point', 'coordinates': [-55.1057046878984, -34.8711524180652]},
+	'cornerSE': {'type': 'Point', 'coordinates': [-54.8420328128984, -34.9772755360821]}
+}, {
+	'id': 'd7813206-29c0-4878-a7be-f61c8f625478',
+	'name': 'UVR',
+	'cornerNW': {'type': 'Point', 'coordinates': [-56.4027786254883, -34.753742713705]},
+	'cornerSE': {'type': 'Point', 'coordinates': [-56.1391067504883, -34.8464939800219]}
+}, {
+	'id': 'a5bf99f8-6250-43c6-93b1-44abb2b9a3c1',
+	'name': 'Bañados de Carrasco',
+	'cornerNW': {'type': 'Point', 'coordinates': [-56.1152032435517, -34.828034119045]},
+	'cornerSE': {'type': 'Point', 'coordinates': [-56.0492852748017, -34.854591681274]}
+}, {
+	'id': '80baff8f-df40-4d3e-a713-d7dbb90d3a68',
+	'name': 'This is a test QF',
+	'cornerNW': {'type': 'Point', 'coordinates': [-56.2812423706055, -34.7664352168417]},
+	'cornerSE': {'type': 'Point', 'coordinates': [-55.9379196166992, -34.9523675611099]}
+}];
 
 describe('SP1: (Map) Quick Fly', function () {
 	beforeEach('Auth', function () {
-		cy
-			.request('POST', API + 'auth/login', { username: 'admin', password: 'admin' })
-			.then((response) => {
-				// response.body is automatically serialized into JSON
-				cy.setCookie('user', 'admin');
-				cy.setCookie('jwt', response.body);
-			});
+		cy.setCookie('sneaky', 'admin');
+		cy.setCookie('hummingbird', 'admin');
 		cy.server();           // enable response stubbing
 		cy.route({
 			method: 'GET',      // Route all GET requests

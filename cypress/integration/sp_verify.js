@@ -24,7 +24,7 @@ describe('SPx: (Verification)', function () {
 
 		cy.visit('http://localhost:2000/verify/user/bad_token');
 		cy.wait('@postConfirm');
-		cy.get('.loginError').then(($el) =>
+		cy.get('#error').then(($el) =>
 			expect($el).to.contain('error')
 		);
 	});

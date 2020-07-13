@@ -20,7 +20,7 @@ describe('UseCase 05. Login', function() {
 			expect($el).to.contain('Please wait')
 		);*/
 		cy.wait(2000);
-		cy.get('.loginError').then(($el) =>
+		cy.get('#error').then(($el) =>
 			expect($el).to.contain('error')
 		);
 	});

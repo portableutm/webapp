@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 
 /**
  *  Libraries
@@ -60,7 +60,6 @@ import VerificationScreen from './VerificationScreen';
 import {API} from './consts';
 import BottomArea from './layout/BottomArea';
 import NotificationCenter from './NotificationCenter';
-import {OperationGoneRogue} from './entities/Notification/Notification';
 
 /*function alertIsImportant(alertUtmMessage) {
 	return (
@@ -226,19 +225,6 @@ function Ades() {
 		}
 	}, [cookies]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	const timeoutDebugNotification = useRef(0);
-
-	useEffect(() => {
-		/* Debug mode notification */
-		if (state.debug) {
-			timeoutDebugNotification.current = setTimeout(() => {
-				actions.notifications.add(new OperationGoneRogue('DEBUG'));
-			}, 5000);
-		}
-		return () => {
-			clearTimeout(timeoutDebugNotification.current);
-		};
-	}, [state.debug]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	if (isLoggedIn && role === 'admin') {
 		/* Operator pages */

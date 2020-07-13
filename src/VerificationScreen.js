@@ -4,6 +4,8 @@ import {useTranslation} from 'react-i18next';
 import { useParams, useHistory, useLocation } from 'react-router-dom';
 import A from 'axios';
 import {API, DEBUG} from './consts';
+import styles from './LoginScreen.module.css';
+import * as classnames from 'classnames';
 
 const Axios = A.create({
 	baseURL: API,
@@ -55,8 +57,8 @@ function VerificationScreen() {
 	}, [username, token]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
-		<div className="centeredScreen texturedBackground">
-			<Card className="window bp3-dark" elevation={Elevation.TWO}>
+		<div className={classnames(styles.centeredScreen, styles.texturedBackground)}>
+			<Card className={classnames(styles.window)} elevation={Elevation.TWO}>
 				<h1>{t('app.name')}</h1>
 				{ 	isLoading &&
 					<>
@@ -87,7 +89,7 @@ function VerificationScreen() {
 				}
 			</Card>
 			{isError &&
-			<Card className="bp3-dark error animated flash" elevation={Elevation.TWO}>
+			<Card id="error" className={classnames('bp3-dark',styles.error,'animated flash')} elevation={Elevation.TWO}>
 				{t('app.verification.error')}
 			</Card>
 			}

@@ -4,6 +4,8 @@ import A from 'axios';
 import {API, DEBUG} from './consts';
 import {useTranslation} from 'react-i18next';
 import {useCookies} from 'react-cookie';
+import styles from './LoginScreen.module.css';
+import * as classnames from 'classnames';
 
 const Axios = A.create({
 	baseURL: API,
@@ -16,7 +18,7 @@ const Axios = A.create({
 const UnloggedScreen = ({showUnlogged = true, children}) => {
 	if (showUnlogged) {
 		return (
-			<div className="bp3-dark centeredScreen texturedBackground">
+			<div className={classnames('bp3-dark', styles.centeredScreen, styles.texturedBackground)}>
 				<Card className="registrationCard" elevation={Elevation.TWO}>
 					{children}
 				</Card>

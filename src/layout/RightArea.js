@@ -54,7 +54,7 @@ function RightArea({forceOpen, onClose, children}) {
 			</div>
 			{	isOpened &&
 			<div className={classnames('bp3-dark', styles.area)}>
-				<Icon className={styles.closer} icon="cross"
+				<Icon data-test-id="rightAreaCloser" className={styles.closer} icon="cross"
 					  onClick={() => {
 						setOpened(false);
 						onClose();

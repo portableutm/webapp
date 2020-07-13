@@ -6,13 +6,8 @@ import {API} from '../../src/consts';
 
 describe('Use Case 01A: Create New Operation (valid)', function () {
 	beforeEach('Auth', function () {
-		cy
-			.request('POST', API + 'auth/login', { username: 'admin', password: 'admin' })
-			.then((response) => {
-				// response.body is automatically serialized into JSON
-				cy.setCookie('user', 'admin');
-				cy.setCookie('jwt', response.body);
-			});
+		cy.setCookie('sneaky', 'admin');
+		cy.setCookie('hummingbird', 'admin');
 		cy.server();           // enable response stubbing
 		cy.route({
 			method: 'POST',      // Route all GET requests
@@ -44,13 +39,13 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 		cy.contains('contextualmenu_createnewop').click();
 	});
 	it('Define Polygon', function () {
-		cy.get('.rightAreaCloser').click();
+		cy.get('[data-test-id="rightAreaCloser"]').click();
 		cy.get('[data-test-id="map"]').click('topLeft');
 		cy.get('[data-test-id="map"]').click('topRight');
-		cy.get('[data-test-id="map"]').click('bottomLeft');
+		cy.get('[data-test-id="map"]').click('center');
 	});
 	it('Define Volume Info', function () {
-		cy.get('.rightAreaOpener').click();
+		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="map#editor#volume#info#min_altitude"]').clear().type('-1');
 		cy.get('[data-test-id="map#editor#volume#info#max_altitude"]').clear().type('50');
 		cy.get('[data-test-id="map#editor#volume#info#near_structure"]').check({force: true});
