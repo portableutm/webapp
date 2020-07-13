@@ -66,7 +66,7 @@ function Vehicle({children: v}) {
 				</GenericListLine>
 				<GenericListLine>
 					{t('vehicle.registeredBy')}
-					{v.registeredBy.firstName + ' ' + v.registeredBy.lastName + ' (' + v.registeredBy.email + ')'}
+					{v.registeredBy.username}
 				</GenericListLine>
 			</div>
 			}
