@@ -8,7 +8,6 @@ import {useParams} from 'react-router-dom';
 /* Internal state */
 import useAdesState, {extractOperationsFromState, filterOperationsByIds, filterOperationsByState} from '../../state/AdesState';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
 
 /* Global constants */
 
@@ -32,7 +31,6 @@ const useOperationFilter = () => {
 	const [allOperations, setOperations] = useState(extractOperationsFromState(adesState));
 	const [filteredOperations, setFilteredOperations] = useState([]);
 	const { t,  } = useTranslation();
-	const history = useHistory();
 
 	let states = [
 		{
