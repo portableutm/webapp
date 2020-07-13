@@ -41,7 +41,7 @@ describe('SP2: (Dashboard): All Users', function () {
 	});
 
 	it('Find user jperez and check it id matches, edits it', function () {
-		cy.get('.dshUsersList').then(($el) => {
+		cy.get('#usersList').then(($el) => {
 			expect($el).to.contain('Juan');
 			expect($el).to.contain('Perez');
 			expect($el).to.contain('jperez@dronfies.com');

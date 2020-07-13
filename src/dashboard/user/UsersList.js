@@ -119,7 +119,7 @@ const UsersList = () => {
 						</Tabs>
 					</div>
 					<div>
-						<table id={styles.usersList} className='.bp3-html-table .bp3-html-table-bordered .bp3-html-table-striped fullHW'>
+						<table id='usersList' className='.bp3-html-table .bp3-html-table-bordered .bp3-html-table-striped fullHW'>
 							<thead>
 								<tr>
 									<th>{t('user.firstname')}</th>
