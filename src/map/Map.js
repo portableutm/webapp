@@ -133,14 +133,6 @@ function Map({ mode }) {
 	}, [id, opsFiltered]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		const quickflies = S.values(state.quickFly.list);
-		if (quickflies.length > 0) {
-			const first = quickflies[0];
-			actions.map.setCorners(first.cornerNW, first.cornerSE);
-		}
-	}, [S.values(state.quickFly.list).length]); // eslint-disable-line react-hooks/exhaustive-deps
-
-	useEffect(() => {
 		// Change map position if it has changed in the state
 		if (map.current) {
 			const bounds = L.latLngBounds(state.map.cornerNW, state.map.cornerSE);

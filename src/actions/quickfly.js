@@ -20,17 +20,23 @@ const quickFlyLocations = [
 /* Auxiliaries */
 function addQuickFly(store, data) {
 	const dataObtained = Array.from(data);
-	const pairs = S.justs(dataObtained.map((qf) => {
-		return S.Just(S.Pair(qf.name)(convertCoordinatesQF(qf)));
+	const pairs = S.justs(dataObtained.map((qf, index) => {
+		const newQf = convertCoordinatesQF(qf);
+		if (index === 0) {
+			if (store.state.quickFly.updated === 0)
+				/* Move map to initial position only when this is the first time loading a quick fly */
+				store.actions.map.setCorners(newQf.cornerNW, newQf.cornerSE);
+		}
+		return S.Just(S.Pair(qf.name)(newQf));
 	}));
 	const qfs = S.fromPairs(pairs);
 	store.setState({quickFly: {updated: Date.now(), list: qfs}});
 }
 
 const convertCoordinatesQF = (qf) => {
+	const newQf = {...qf};
 	const cornerNWswap = [qf.cornerNW.coordinates[1], qf.cornerNW.coordinates[0]];
 	const cornerSEswap = [qf.cornerSE.coordinates[1], qf.cornerSE.coordinates[0]];
-	const newQf = {...qf};
 	newQf.cornerNW = cornerNWswap;
 	newQf.cornerSE = cornerSEswap;
 	return newQf;
