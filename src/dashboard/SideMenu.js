@@ -7,6 +7,7 @@ import S from 'sanctuary';
 import {fM} from '../libs/SaferSanctuary';
 import {useCookies} from 'react-cookie';
 import {useTranslation} from 'react-i18next';
+import styles from './Dashboard.module.css';
 
 function SideMenu() {
 	const history = useHistory();
@@ -59,7 +60,7 @@ function SideMenu() {
 		return (
 			<>
 				<LogoutConfirmation />
-				<div className="dshSide">
+				<div className={styles.side}>
 					<Menu>
 						<MenuItem className="animated flash slower infinite"
 							icon="map" intent={Intent.PRIMARY}
@@ -118,7 +119,7 @@ function SideMenu() {
 		return (
 			<>
 				<LogoutConfirmation logoutPressed={logoutPressed} setLogoutPressed={setLogoutP} logout={logout}/>
-				<div className="dshSide">
+				<div className={styles.side}>
 					<Menu>
 						<MenuItem icon="home"
 							text={t('dsh.dshhome')}
@@ -161,7 +162,7 @@ function SideMenu() {
 	} else {
 		return (
 			<div>
-				<div className="dshSide">
+				<div className={styles.side}>
 					<Menu>
 						<MenuItem
 							className='bp3-skeleton'

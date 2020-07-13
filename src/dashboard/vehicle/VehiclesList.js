@@ -4,6 +4,7 @@ import S from 'sanctuary';
 import {Button, Callout, Intent, Spinner, Tag} from '@blueprintjs/core';
 import {useTranslation} from 'react-i18next';
 import {GenericListLine} from '../generic/GenericList';
+import styles from '../generic/GenericList.module.css';
 
 function Vehicle({children: v}) {
 	const { t,  } = useTranslation();
@@ -12,7 +13,7 @@ function Vehicle({children: v}) {
 	return (
 		<Callout
 			key={v.faaNumber}
-			className="dshListItem"
+			className={styles.item}
 			title={<div>{v.vehicleName + ' (' + v.faaNumber + ')'} <Tag minimal={true}>{showProperties ? t('click_to_collapse') : t('click_to_expand')}</Tag></div>}
 			icon="double-chevron-right"
 			onClick={() => setShowProperties(show => !show)}

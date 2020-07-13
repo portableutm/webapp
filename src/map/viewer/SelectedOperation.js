@@ -1,22 +1,23 @@
 import React, {useState} from 'react';
-import RightAreaButton from '../RightAreaButton';
+import SidebarButton from '../SidebarButton';
 import useAdesState from '../../state/AdesState';
 import S from 'sanctuary';
 import {fM} from '../../libs/SaferSanctuary';
 import {useTranslation} from 'react-i18next';
 import {Button, Dialog, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
+import styles from '../Map.module.css';
 
 function Property({property, value}) {
 	return (
 		<>
 			<div
-				className='rightAreaButtonTextsSeparator'
+				className={styles.sidebarSeparator}
 			>
 				{property}
 			</div>
 			<div
 				data-test-id={'property' + property}
-				className='rightAreaButtonText'
+				className={styles.sidebarButtonText}
 			>
 				{value || '-'}
 			</div>
@@ -94,7 +95,7 @@ function SelectedOperation ({gufi}) {
 
 				</div>
 			</Dialog>
-			<RightAreaButton
+			<SidebarButton
 				useCase='SelectedOperation'
 				icon='trending-up'
 				label={t('selected_operation')}
@@ -104,7 +105,7 @@ function SelectedOperation ({gufi}) {
 				{toShow}
 				{operation.state === 'PENDING' &&
 				<div
-					className='rightAreaButtonTextsSeparator'
+					className={styles.sidebarSeparator}
 				>
 					<Button
 						small={true}
@@ -131,7 +132,7 @@ function SelectedOperation ({gufi}) {
 			t('max_altitude') + ' <b>' + info.operation_volumes[0].max_altitude + '</b><br/>' + // Max Altitude 999
 			t('contact') + ' <b>' + info.contact + '</b><br/>' + // Contact Name Lastname
 			t('phone') + ' <b>097431725</b>' // Phone 097431725 */}
-			</RightAreaButton>
+			</SidebarButton>
 		</>
 	);
 }

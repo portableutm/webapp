@@ -13,8 +13,9 @@ import {Button, FormGroup, InputGroup} from '@blueprintjs/core';
 import PropTypes from 'prop-types';
 import {Just, maybeToNullable, Maybe} from 'sanctuary';
 import {useTranslation} from 'react-i18next';
-import RightAreaButton from '../RightAreaButton';
+import SidebarButton from '../SidebarButton';
 import OperationVolumeInfoEditor from './OperationVolumeInfoEditor';
+import styles from '../Map.module.css';
 
 function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOperation}) {
 	const { t, } = useTranslation();
@@ -25,7 +26,7 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 	});
 
 	return (
-		<RightAreaButton
+		<SidebarButton
 			useCase='editorSteps'
 			icon='flow-linear'
 			label={t('editor.operation.complete')}
@@ -34,7 +35,7 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 		>
 			{/* "flight_comments": "Untitled" */}
 			<FormGroup
-				className="rightAreaButtonText"
+				className={styles.sidebarButtonText}
 				label={t('editor.operation.name')}
 				labelFor="flight_comments"
 			>
@@ -47,7 +48,7 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 			</FormGroup>
 			{/* "flight_number": "12345678" */}
 			<FormGroup
-				className="rightAreaButtonText"
+				className={styles.sidebarButtonText}
 				label={t('editor.operation.flightnumber')}
 				labelFor="flight_number"
 			>
@@ -60,7 +61,7 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 			</FormGroup>
 			{/* "Contact Name"*/}
 			<FormGroup
-				className="rightAreaButtonText"
+				className={styles.sidebarButtonText}
 				label={t('editor.operation.contact_name')}
 				labelFor="contact"
 			>
@@ -73,7 +74,7 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 			</FormGroup>
 			{/* "Contact Phone"*/}
 			<FormGroup
-				className="rightAreaButtonText"
+				className={styles.sidebarButtonText}
 				label={t('editor.operation.contact_phone')}
 				labelFor="contact_phone"
 			>
@@ -89,7 +90,7 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 				setInfo={setVolumeInfo}
 			/>
 			<div
-				className="rightAreaButtonTextRight"
+				className={styles.sidebarButtonTextRight}
 			>
 				<Button
 					fill
@@ -98,7 +99,7 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 					{t('editor.finish')}
 				</Button>
 			</div>
-		</RightAreaButton>
+		</SidebarButton>
 	);
 }
 

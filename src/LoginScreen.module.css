@@ -1,0 +1,94 @@
+.background {
+    mix-blend-mode: screen;
+    opacity: 0;
+    position: absolute;
+    height: calc(100vh + 100px);
+    width: 100vw;
+    object-fit: cover;
+    z-index: 500;
+    background-color: black;
+    animation: scaleBackground 60s ease-in-out alternate infinite;
+}
+
+@keyframes scaleBackground {
+    from {transform: translateY(-100px)}
+    to {transform: translateY(0px)}
+}
+
+.centeredScreen {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 5fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(523px, 20fr) minmax(0, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    background-color: #505050;
+
+    /* https://www.heropatterns.com/ */
+}
+
+.logoWrapper {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    left: 0;
+    bottom: calc(100% + 5px);
+    z-index: 10000;
+}
+
+.logo {
+    max-width: 300px;
+    height: auto;
+}
+
+
+
+.window {
+    z-index: 999;
+    position: relative;
+    height: fit-content;
+    width: 100%;
+    grid-area: 2 / 2 / 3 / 3;
+    margin: auto;
+    background-color: rgba(237, 255, 236, 0.8) !important;
+}
+
+.window * {
+    color: #2D2C59 !important;
+}
+
+.error {
+    grid-area: 2 / 2 / 3 / 3;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /*max-height: 250px;*/
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: crimson !important;
+}
+
+.successful {
+    grid-area: 2 / 2 / 3 / 3;
+    bottom: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: darkolivegreen !important;
+}
+
+.buttonArea {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.buttonArea * {
+    background-color: #FFB217 !important;
+}

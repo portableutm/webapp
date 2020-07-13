@@ -1,0 +1,22 @@
+.list {
+    /*background-color: red;*/
+}
+
+.item {
+    margin: 1%;
+    min-height: 40px;
+}
+
+.line {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid black;
+}
+
+.lineLeft {
+
+}
+
+.lineRight {
+
+}

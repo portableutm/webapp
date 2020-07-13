@@ -1,14 +1,15 @@
 import React from 'react';
-import RightAreaButton from '../RightAreaButton';
+import SidebarButton from '../SidebarButton';
 import {useTranslation} from 'react-i18next';
 import useAdesState from '../../state/AdesState';
+import styles from '../Map.module.css';
 
 const EditorPanel = () => {
 	const {t} = useTranslation();
 	const [state, actions] = useAdesState();
 	return (
 		<>
-			<RightAreaButton
+			<SidebarButton
 				useCase='editorOptions'
 				icon='cog'
 				label={t('Options')}
@@ -16,7 +17,7 @@ const EditorPanel = () => {
 				forceOpen={true}
 			>
 				<div
-					className='rightAreaButtonText'
+					className={styles.sidebarButtonText}
 					onClick={() => actions.map.onClicksDisabled(!state.map.onClicksDisabled)}
 				>
 					{state.map.onClicksDisabled &&
@@ -26,7 +27,7 @@ const EditorPanel = () => {
 						<p>{t('map.clicks_enabled')}</p>
 					}
 				</div>
-			</RightAreaButton>
+			</SidebarButton>
 		</>
 	);
 };

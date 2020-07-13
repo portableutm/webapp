@@ -246,7 +246,7 @@ const NewUser = ({isSelfRegistering = true}) => {
 					{/*****************************************************************
 					 ************************* Submit Button  *************************
 					 ******************************************************************/}
-					<div className="loginButtons">
+					<div className="buttonArea">
 						<Button
 							style={{margin: '5px'}}
 							intent={Intent.SUCCESS}

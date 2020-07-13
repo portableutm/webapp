@@ -1,10 +1,11 @@
 import React from 'react';
 import {Card, Elevation} from '@blueprintjs/core';
+import styles from './Dashboard.module.css';
 
 function Content({children}) {
 	return(
-		<div className="dshContent">
-			<Card id="dshContentCont" className="dshInsideContent fullHW" elevation={Elevation.TWO}>
+		<div className={styles.content}>
+			<Card id="dshContentCont" className={styles.inside} elevation={Elevation.TWO}>
 				{children}
 			</Card>
 		</div>

@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import RightAreaButton from '../RightAreaButton';
+import SidebarButton from '../SidebarButton';
 import useAdesState from '../../state/AdesState';
 import S from 'sanctuary';
 import {Button, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
 import {useTranslation} from 'react-i18next';
+import styles from '../Map.module.css';
 
 /* Constants */
 /*
@@ -48,7 +49,7 @@ const QuickFly = ({onClick}) => {
 		isSpecial: true,
 		div: (<div
 			key='thisisauniqueone'
-			className='rightAreaButtonTextsSeparator'
+			className={styles.sidebarSeparator}
 		>
 			<Button
 				small={true}
@@ -64,7 +65,7 @@ const QuickFly = ({onClick}) => {
 	return (
 		<>
 			{	!isCreating &&
-				<RightAreaButton
+				<SidebarButton
 					useCase='quickFly'
 					icon='send-to-map'
 					label={t('quickfly.title').toUpperCase()}
@@ -72,10 +73,10 @@ const QuickFly = ({onClick}) => {
 					simpleChildren={true}
 				>
 					{content}
-				</RightAreaButton>
+				</SidebarButton>
 			}
 			{	isCreating &&
-				<RightAreaButton
+				<SidebarButton
 					className={'animated flash'}
 					useCase='quickFlyNew'
 					label={t('quickfly.creating_new')}
@@ -84,7 +85,7 @@ const QuickFly = ({onClick}) => {
 					simpleChildren={false}
 				>
 					<div
-						className='rightAreaButtonText'
+						className={styles.sidebarButtonText}
 					>
 						<FormGroup
 							label={t('quickfly.name')}
@@ -96,12 +97,12 @@ const QuickFly = ({onClick}) => {
 						</FormGroup>
 					</div>
 					<div
-						className='rightAreaButtonTextDisabled'
+						className={styles.sidebarButtonDisabled}
 					>
 						{t('quickfly.info')}
 					</div>
 					<div
-						className='rightAreaButtonTextsSeparator'
+						className={styles.sidebarSeparator}
 					>
 						<Button
 							small={true}
@@ -126,7 +127,7 @@ const QuickFly = ({onClick}) => {
 							{t('quickfly.save')}
 						</Button>
 					</div>
-				</RightAreaButton>
+				</SidebarButton>
 			}
 		</>
 	);

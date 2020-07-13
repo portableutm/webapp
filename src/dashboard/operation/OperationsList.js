@@ -5,6 +5,7 @@ import {Callout, Spinner, Intent, Button} from '@blueprintjs/core';
 import {useHistory} from 'react-router-dom';
 import useAdesState from '../../state/AdesState';
 import {useTranslation} from 'react-i18next';
+import styles from '../generic/GenericList.module.css';
 
 function Operation({children}) {
 	// Renders one Operation text properties for a list
@@ -23,7 +24,7 @@ function Operation({children}) {
 	return (
 		<Callout
 			key={children.flight_comments}
-			className="dshListItem"
+			className={styles.item}
 			title={children.flight_comments}
 			data-test-id={'op' + children.flight_comments}
 			icon="double-chevron-right"

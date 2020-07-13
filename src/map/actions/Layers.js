@@ -2,13 +2,14 @@ import React from 'react';
 
 /* Visuals */
 import {Button, Checkbox} from '@blueprintjs/core';
+import styles from '../Map.module.css';
 
 /* Logic */
 import useOperationFilter from '../hooks/useOperationFilter';
 import S from 'sanctuary';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import RightAreaButton from '../RightAreaButton';
+import SidebarButton from '../SidebarButton';
 import {fM} from '../../libs/SaferSanctuary';
 import useAdesState from '../../state/AdesState';
 
@@ -17,14 +18,14 @@ const StateFilters = ({selectedFilters, setSelectedFilters}) => {
 	const { t, } = useTranslation();
 	return (
 		<>
-			<div className='rightAreaButtonTextsSeparator'>
+			<div className={styles.sidebarSeparator}>
 				{t('map.filter.bystate')}
 			</div>
 			{states.map((filter, index) => {
 				return (
 					<div
 						key={index + filter.text}
-						className='rightAreaButtonText'
+						className={styles.sidebarButtonText}
 					>
 						<Checkbox
 							className='donotselect'
@@ -62,14 +63,14 @@ const OperationFilters = ({operations, ids, setIds}) => {
 	};
 	return (
 		<>
-			<div className='rightAreaButtonTextsSeparator'>
+			<div className={styles.sidebarSeparator}>
 				{t('map.filter.byid')}
 			</div>
 			{operations.map((op, index) => {
 				if (state.map.ids.indexOf(op.gufi) !== -1) {
 					return (
 						<div
-							className='rightAreaButtonText'
+							className={styles.sidebarButtonText}
 							key={op.gufi + index}
 						>
 							<Checkbox
@@ -78,7 +79,7 @@ const OperationFilters = ({operations, ids, setIds}) => {
 							/>
 							{op.flight_comments}
 							<Button
-								className='rightAreaButtonAlternateButton'
+								className={styles.sidebarButtonAlternate}
 								icon='cross'
 								small={true}
 								onClick={() => actions.map.removeId(op.gufi)}
@@ -104,7 +105,7 @@ const RfvsFilters = ({rfvs, setRfvs}) => {
 	const { t, } = useTranslation();
 	return (
 		<>
-			<div className='rightAreaButtonTextsSeparator'>
+			<div className={styles.sidebarSeparator}>
 				{t('map.filter.rfvs')}
 			</div>
 			{S.map
@@ -113,7 +114,7 @@ const RfvsFilters = ({rfvs, setRfvs}) => {
 				return (
 					<div
 						key={rfv.comments}
-						className='rightAreaButtonText'
+						className={styles.sidebarButtonText}
 					>
 						<Checkbox
 							className='donotselect'
@@ -162,7 +163,7 @@ const Layers = ({filtersSelected, setFiltersSelected, operations, disabled, idsS
 			</Popover>
 		</div>
 		*/}
-			<RightAreaButton
+			<SidebarButton
 				forceOpen={true}
 				useCase='Layers'
 				icon='layers'
@@ -172,7 +173,7 @@ const Layers = ({filtersSelected, setFiltersSelected, operations, disabled, idsS
 				<StateFilters selectedFilters={filtersSelected} setSelectedFilters={setFiltersSelected}/>
 				<OperationFilters operations={operations} ids={idsSelected} setIds={setIdsSelected}/>
 				<RfvsFilters rfvs={rfvs} setRfvs={setRfvsShowing}/>
-			</RightAreaButton>
+			</SidebarButton>
 		</>
 	);
 };

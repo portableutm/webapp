@@ -1,14 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
-import useAdesState from './state/AdesState.js';
+
 import S from 'sanctuary';
 import {useTranslation} from 'react-i18next';
 import {useCookies} from 'react-cookie';
+
+/* Internal */
+import useAdesState from './state/AdesState.js';
 import {DEBUG} from './consts';
 import logo from './images/logo.png';
 import background from './images/bg.jpg';
-
-const {isJust} = S;
+import styles from './LoginScreen.module.css';
+import * as classnames from 'classnames';
 
 function LoginScreen() {
 	const [adesState, adesActions] = useAdesState();
@@ -61,13 +64,13 @@ function LoginScreen() {
 						finishedLoading();
 					}
 				}}
-				className="loginScreenBackground"
+				className={styles.background}
 				alt="Background" src={background}
 			/>
-			<form onSubmit={login} className="centeredScreen texturedBackground">
-				<Card className="loginWindow" elevation={Elevation.ONE}>
-					<div className="loginScreenLogoWrapper">
-						<img className="loginScreenLogo" alt="PortableUTM" src={logo} />
+			<form onSubmit={login} className={styles.centeredScreen}>
+				<Card className={styles.window} elevation={Elevation.ONE}>
+					<div className={styles.logoWrapper}>
+						<img className={styles.logo} alt="PortableUTM" src={logo} />
 					</div>
 					<h3>{t('login.pleaselogin')}</h3>
 					<FormGroup
@@ -90,7 +93,7 @@ function LoginScreen() {
 							disabled={isLogging}
 							onChange={(evt) => setPassword(evt.target.value)}/>
 					</FormGroup>
-					<div className="loginButtons">
+					<div className={styles.buttonArea}>
 						<Button style={{margin: '5px'}} intent={Intent.PRIMARY}
 							type="submit"
 							onClick={login}>
@@ -99,17 +102,17 @@ function LoginScreen() {
 					</div>
 				</Card>
 				{isError &&
-				<Card className="bp3-dark loginError animated flash" elevation={Elevation.TWO}>
+				<Card className={classnames('bp3-dark',styles.error,'animated flash')} elevation={Elevation.TWO}>
 					{t('login.login_error')}
 				</Card>
 				}
 				{isLogging &&
-				<Card className="bp3-dark loginError animated fadeIn" elevation={Elevation.TWO}>
+				<Card className={classnames('bp3-dark',styles.error,'animated fadeIn')} elevation={Elevation.TWO}>
 					{t('login.login_pleasewait')}
 				</Card>
 				}
-				{ isJust(adesState.auth.token) &&
-				<Card className="bp3-dark loginError animated flash" elevation={Elevation.TWO}>
+				{ S.isJust(adesState.auth.token) &&
+				<Card className={classnames('bp3-dark',styles.successful,'animated fadeIn')} elevation={Elevation.TWO}>
 					{t('login.login_successful')}
 				</Card>
 				}

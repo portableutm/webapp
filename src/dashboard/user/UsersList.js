@@ -1,13 +1,25 @@
 import React, {useEffect, useState} from 'react';
-import {API} from '../../consts';
-import {fM, maybeValues} from '../../libs/SaferSanctuary';
-import S from 'sanctuary';
-import '../../Ades.css';
-import {Button, Intent, Tab, Tabs} from '@blueprintjs/core';
-import {useHistory} from 'react-router-dom';
-import useAdesState, {Axios, print} from '../../state/AdesState';
+
+/* External */
 import {useTranslation} from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
+import S from 'sanctuary';
+import {Button, Intent, Tab, Tabs} from '@blueprintjs/core';
+
+/* Internal Libs */
+import {fM, maybeValues} from '../../libs/SaferSanctuary';
+
+/* Constants */
+import {API} from '../../consts';
+import useAdesState, {Axios, print} from '../../state/AdesState';
+import styles from './UsersList.module.css';
+import '../../Ades.css';
+
+
+
+
+
 
 import Pilot from './Pilot';
 
@@ -94,8 +106,8 @@ const UsersList = () => {
 				S.isNothing(shownPilot) &&
 				<>
 					<h1>{t('users')}</h1>
-					<div className="dshUsersListButtons">
-						<Tabs id="dshUsersListsTabs" onChange={tab => {
+					<div className={styles.buttons}>
+						<Tabs id='dshUsersListsTabs' onChange={tab => {
 							setFirstUser(tab * USERS_ONE_PAGE_NUMBER);
 							setLastUser((tab + 1) * USERS_ONE_PAGE_NUMBER);
 						}}>
@@ -107,7 +119,7 @@ const UsersList = () => {
 						</Tabs>
 					</div>
 					<div>
-						<table id="dshUsersList" className="bp3-html-table .bp3-html-table-bordered .bp3-html-table-striped fullHW">
+						<table id={styles.usersList} className='.bp3-html-table .bp3-html-table-bordered .bp3-html-table-striped fullHW'>
 							<thead>
 								<tr>
 									<th>{t('user.firstname')}</th>
@@ -118,7 +130,7 @@ const UsersList = () => {
 									<th>{t('actions')}</th>
 								</tr>
 							</thead>
-							<tbody className="dshUsersList">
+							<tbody className={styles.usersList}>
 								{usersThisPage.map(user => (
 									<tr key={user.username}>
 										<td>{user.firstName}</td>

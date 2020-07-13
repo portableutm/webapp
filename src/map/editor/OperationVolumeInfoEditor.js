@@ -2,6 +2,7 @@ import React from 'react';
 import {Alignment, Checkbox, FormGroup, InputGroup} from '@blueprintjs/core';
 import {DateInput, TimePrecision} from '@blueprintjs/datetime';
 import {useTranslation} from 'react-i18next';
+import styles from '../Map.module.css';
 
 function OperationVolumeInfoEditor(props) {
 	const { t,  } = useTranslation();
@@ -19,7 +20,7 @@ function OperationVolumeInfoEditor(props) {
 			near_structure	boolean
 			Is this operation volume within 400' of a structure?
 			*/}
-			<div className="rightAreaButtonText">
+			<div className={styles.sidebarButtonText}>
 				<Checkbox
 					checked={info.near_structure}
 					alignIndicator={Alignment.LEFT}
@@ -36,7 +37,7 @@ function OperationVolumeInfoEditor(props) {
 			x-utm-data-accessibility: OPERATIONAL
 			Describes whether any portion of the operation volume is beyond the visual line of sight of the RPIC.
 			*/}
-			<div className="rightAreaButtonText">
+			<div className={styles.sidebarButtonText}>
 				<Checkbox
 					checked={info.beyond_visual_line_of_sight}
 					alignIndicator={Alignment.LEFT}
@@ -57,7 +58,7 @@ function OperationVolumeInfoEditor(props) {
 				Earliest time the operation will use the operation volume. It must be less than effective_time_end.
 				effective_time_begin < effective_time_end MUST be true.
 				*/}
-			<div className="rightAreaButtonText">
+			<div className={styles.sidebarButtonText}>
 				<p className="centerHorizontally">
 					{t('volume.effective_time_begin')}
 				</p>
@@ -80,7 +81,7 @@ function OperationVolumeInfoEditor(props) {
 			Latest time the operation will done with the operation volume. It must be greater than effective_time_begin.
 			effective_time_begin < effective_time_end MUST be true.
 			*/}
-			<div className="rightAreaButtonText">
+			<div className={styles.sidebarButtonText}>
 				<p className="centerHorizontally">
 					{t('volume.effective_time_end')}
 				</p>
@@ -101,7 +102,7 @@ function OperationVolumeInfoEditor(props) {
 			min_altitude*	in meters. Good luck NASA!
 			max_altitude*	in meters
 			*/}
-			<FormGroup className="rightAreaButtonText" label={t('volume.min_altitude')} labelFor="min_altitude">
+			<FormGroup className={styles.sidebarButtonText} label={t('volume.min_altitude')} labelFor="min_altitude">
 				<InputGroup
 					id="min_altitude"
 					data-test-id="map#editor#volume#info#min_altitude"
@@ -109,7 +110,7 @@ function OperationVolumeInfoEditor(props) {
 					onChange={evt => editInfo('min_altitude', evt.target.value)}
 				/>
 			</FormGroup>
-			<FormGroup className="rightAreaButtonText" label={t('volume.max_altitude')} labelFor="max_altitude">
+			<FormGroup className={styles.sidebarButtonText} label={t('volume.max_altitude')} labelFor="max_altitude">
 				<InputGroup
 					id="max_altitude"
 					data-test-id="map#editor#volume#info#max_altitude"

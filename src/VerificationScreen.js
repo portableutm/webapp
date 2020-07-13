@@ -56,7 +56,7 @@ function VerificationScreen() {
 
 	return (
 		<div className="centeredScreen texturedBackground">
-			<Card className="loginWindow bp3-dark" elevation={Elevation.TWO}>
+			<Card className="window bp3-dark" elevation={Elevation.TWO}>
 				<h1>{t('app.name')}</h1>
 				{ 	isLoading &&
 					<>
@@ -69,7 +69,7 @@ function VerificationScreen() {
 					<>
 						<h3>{t('app.verification.title')}</h3>
 						{t('app.verification.successful', {user: username})}
-						<div className="loginButtons">
+						<div className="buttonArea">
 							<Button style={{margin: '5px'}} intent={Intent.SUCCESS}
 								type="submit"
 								onClick={() => history.push('/')}>
@@ -87,7 +87,7 @@ function VerificationScreen() {
 				}
 			</Card>
 			{isError &&
-			<Card className="bp3-dark loginError animated flash" elevation={Elevation.TWO}>
+			<Card className="bp3-dark error animated flash" elevation={Elevation.TWO}>
 				{t('app.verification.error')}
 			</Card>
 			}

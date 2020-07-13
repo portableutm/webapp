@@ -1,0 +1,8 @@
+.usersList {
+    overflow-y: scroll;
+    width: 100%;
+}
+
+.buttons {
+    width: 100%;
+}

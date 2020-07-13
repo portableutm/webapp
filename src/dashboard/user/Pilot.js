@@ -1,9 +1,12 @@
 import React, {useState} from 'react';
-import profile from '../../images/profile.png';
-import {Button, Intent, Card, Elevation, FormGroup, InputGroup} from '@blueprintjs/core';
 import {useTranslation} from 'react-i18next';
+import {Button, Intent, Card, Elevation, FormGroup, InputGroup} from '@blueprintjs/core';
+
 import useAdesState, {Axios} from '../../state/AdesState';
 import {fM} from '../../libs/SaferSanctuary';
+
+import profile from '../../images/profile.png';
+import styles from './Pilot.module.css';
 
 function Pilot({user}) {
 	const { t, } = useTranslation();
@@ -88,11 +91,11 @@ function Pilot({user}) {
 	 */
 
 	return (
-		<div className='dshPilot'>
-			<div className='dshPilotLeft'>
-				<img className='dshPilotImg' src={profile} title="User icon by Icons8" alt="Default profile"/>
+		<div className={styles.pilot}>
+			<div className={styles.pilotLeft}>
+				<img className={styles.pilotImg} src={profile} title="User icon by Icons8" alt="Default profile"/>
 			</div>
-			<div className='dshPilotRight'>
+			<div className={styles.pilotRight}>
 				{   user == null &&
 				<h1 className="bp3-heading bp3-skeleton">Loading McLoading</h1>
 				}
@@ -100,7 +103,7 @@ function Pilot({user}) {
 					<h1 className="bp3-heading">{user.firstName + ' ' + user.lastName}</h1>
 				}
 			</div>
-			<div className='dshPilotBottom'>
+			<div className={styles.pilotBottom}>
 				{	user != null &&
 					<>
 						<Card className='fullHW' elevation={Elevation.TWO}>
