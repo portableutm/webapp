@@ -273,6 +273,15 @@ function Ades() {
 								<Map mode={S.Maybe.Just('view')}/>
 							</MasterPage>
 						</Route>
+						<Route exact path='/dashboard/operations/:id'>
+							<MasterPage>
+								<>
+									<Dashboard>
+										<OperationList/>
+									</Dashboard>
+								</>
+							</MasterPage>
+						</Route>
 						<Route exact path='/dashboard/operations'>
 							<MasterPage>
 								<>

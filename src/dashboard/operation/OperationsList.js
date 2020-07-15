@@ -5,9 +5,10 @@ import {Callout, Spinner, Intent, Button} from '@blueprintjs/core';
 import {useHistory} from 'react-router-dom';
 import useAdesState from '../../state/AdesState';
 import {useTranslation} from 'react-i18next';
+import {useParams} from 'react-router-dom';
 import styles from '../generic/GenericList.module.css';
 
-function Operation({children}) {
+function Operation({expanded = false, children}) {
 	// Renders one Operation text properties for a list
 	const history = useHistory();
 	const { t,  } = useTranslation();
@@ -20,7 +21,7 @@ function Operation({children}) {
 			actions.map.addId(children.gufi);
 			history.push('/operation/' + children.gufi);
 		};
-	const [showProperties, setShowProperties] = useState(false);
+	const [showProperties, setShowProperties] = useState(expanded);
 	return (
 		<Callout
 			key={children.name}
@@ -49,12 +50,20 @@ function Operation({children}) {
 			}
 			data-test-id={'op' + children.name}
 			icon="double-chevron-right"
-			onClick={() => setShowProperties(show => !show)}
+			onClick={() => setShowProperties(show => {
+				if (show === false) {
+					history.replace('/dashboard/operations/' + children.gufi);
+					return true;
+				} else {
+					history.replace('/dashboard/operations');
+					return false;
+				}
+			})}
 		>
 			{showProperties &&
 			<div className="animated fadeIn faster">
 				<GenericListLine>
-					gufi
+					ID
 					<div data-test-id='dash#selected#gufi'>
 						{children.gufi}
 					</div>
@@ -71,10 +80,10 @@ function Operation({children}) {
 					{t('volume.effective_time_end')}
 					{new Date(children.operation_volumes[0].effective_time_end).toLocaleString()}
 				</GenericListLine>
-				<GenericListLine>
+				{/*<GenericListLine>
 					{t('volume.min_altitude')}
 					{children.operation_volumes[0].min_altitude}
-				</GenericListLine>
+				</GenericListLine> */}
 				<GenericListLine>
 					{t('volume.max_altitude')}
 					{children.operation_volumes[0].max_altitude}
@@ -83,10 +92,10 @@ function Operation({children}) {
 					{t('operation.aircraft_comments')}
 					{children.aircraft_comments}
 				</GenericListLine>
-				<GenericListLine>
+				{/* <GenericListLine>
 					{t('operation.volumes_description')}
 					{children.volumes_description}
-				</GenericListLine>
+				</GenericListLine> */}
 				<GenericListLine>
 					{t('operation.flight_number')}
 					{children.flight_number}
@@ -112,6 +121,7 @@ function Operation({children}) {
 function OperationsList() {
 	const [state, ] = useAdesState(state => state.operations);
 	const { t,  } = useTranslation();
+	const { id } = useParams();
 	const operations = S.values(state.list);
 	const isThereOperations = operations.length !== 0;
 	if (isThereOperations) {
@@ -122,7 +132,7 @@ function OperationsList() {
 				</h1>
 				<GenericList>
 					{S.map
-					((op) => <Operation key={op.gufi}>{op}</Operation>)
+					((op) => <Operation key={op.gufi} expanded={op.gufi === id}>{op}</Operation>)
 					(operations)
 					}
 				</GenericList>
