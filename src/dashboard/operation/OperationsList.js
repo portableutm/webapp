@@ -23,10 +23,10 @@ function Operation({children}) {
 	const [showProperties, setShowProperties] = useState(false);
 	return (
 		<Callout
-			key={children.flight_comments}
+			key={children.name}
 			className={styles.item}
-			title={children.flight_comments}
-			data-test-id={'op' + children.flight_comments}
+			title={children.name}
+			data-test-id={'op' + children.name}
 			icon="double-chevron-right"
 			onClick={() => setShowProperties(show => !show)}
 		>
@@ -37,6 +37,10 @@ function Operation({children}) {
 					<div data-test-id='dash#selected#gufi'>
 						{children.gufi}
 					</div>
+				</GenericListLine>
+				<GenericListLine>
+					{t('operation.owner')}
+					{children.owner.firstName + ' ' + children.owner.lastName + ' (' + children.owner.username + ')'}
 				</GenericListLine>
 				<GenericListLine>
 					{t('volume.effective_time_begin')}
@@ -69,6 +73,10 @@ function Operation({children}) {
 				<GenericListLine>
 					{t('operation.state')}
 					{children.state}
+				</GenericListLine>
+				<GenericListLine>
+					{t('operation.flight_comments')}
+					{children.flight_comments}
 				</GenericListLine>
 				<GenericListLine>
 					{t('operation.free_text')}

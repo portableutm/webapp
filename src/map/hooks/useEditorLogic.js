@@ -14,12 +14,12 @@ const swap = (array) => [array[1], array[0]];
 function UseEditorLogic(refMapOnClick, mapInitialized) {
 	const [operationInfo, setOperationInfo] = useState(S.Just({
 		name: 'Untitled',
-		pilot: 'Not assigned',
+		owner: 'error error',
 		contact: '',
 		contact_phone: '',
 		flight_comments: '',
 		volumes_description: 'v0.1',
-		flight_number: '',
+		flight_number: Date.now(),
 		submit_time: new Date().toISOString(), // TODO: Proper format for time 2019-12-11T19:59:10Z
 		update_time: new Date().toISOString(),
 		faa_rule: 0,

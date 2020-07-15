@@ -46,18 +46,18 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 				/>
 			</FormGroup>
 			<FormGroup
-				className="rightAreaButtonText"
+				className={styles.sidebarButtonText}
 				label={t('editor.operation.username')}
 				labelFor="name"
 			>
 				<InputGroup
 					id="pilot"
 					data-test-id="map#editor#operation#info#pilot"
-					value={info.pilot}
-					onChange={(evt) => editInfo('pilot', evt.target.value)}
+					value={info.owner}
+					onChange={(evt) => editInfo('owner', evt.target.value)}
 				/>
 			</FormGroup>
-			{/* "flight_number": "12345678" */}
+			{/* "flight_number": "12345678"
 			<FormGroup
 				className={styles.sidebarButtonText}
 				label={t('editor.operation.flightnumber')}
@@ -69,7 +69,7 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 					value={info.flight_number}
 					onChange={(evt) => editInfo('flight_number', evt.target.value)}
 				/>
-			</FormGroup>
+			</FormGroup>*/}
 			{/* "Contact Name"*/}
 			<FormGroup
 				className={styles.sidebarButtonText}
@@ -98,7 +98,7 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 			</FormGroup>
 			{/* "flight_comments": "Untitled" */}
 			<FormGroup
-				className="rightAreaButtonText"
+				className={styles.sidebarButtonText}
 				label={t('editor.operation.flight_comments')}
 				labelFor="flight_comments"
 			>

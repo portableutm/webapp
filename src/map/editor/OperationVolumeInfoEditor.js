@@ -1,5 +1,5 @@
 import React from 'react';
-import {Alignment, Checkbox, FormGroup, InputGroup} from '@blueprintjs/core';
+import {FormGroup, InputGroup} from '@blueprintjs/core';
 import {DateInput, TimePrecision} from '@blueprintjs/datetime';
 import {useTranslation} from 'react-i18next';
 import styles from '../Map.module.css';

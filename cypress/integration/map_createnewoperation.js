@@ -66,9 +66,9 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 	});
 	it('Complete Volume information', function () {
 		//cy.get('[data-test-id="mapInputEditorVolumeDescr"]').
-		cy.get('[data-test-id="mapInputEditorFlightNumber"]')
+		/*cy.get('[data-test-id="mapInputEditorFlightNumber"]')
 			.clear()
-			.type('123');
+			.type('123');*/
 		cy.get('[data-test-id="map#editor#operation#info#contact"]')
 			.clear()
 			.type('E2E Testing');
