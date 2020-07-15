@@ -7,14 +7,43 @@
     min-height: 40px;
 }
 
+.title {
+    display: flex;
+    justify-content: space-between;
+    max-height: 20px;
+}
+
+.button {
+    transition: all 0.5s;
+}
+
+.button .buttonHoveredTooltip {
+    display: flex;
+    height: 20px;
+    align-items: center;
+    max-width: 0;
+    overflow: hidden;
+}
+
+.button:hover {
+    background-color: #2D2C59 !important;
+}
+
+.button:hover .buttonHoveredTooltip {
+    max-width: fit-content;
+}
+
+
+
 .line {
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid black;
+    padding: 2px;
+    border-bottom: 1px solid #2D2C59;
 }
 
 .lineLeft {
-
+    color: #D5D8EC;
 }
 
 .lineRight {

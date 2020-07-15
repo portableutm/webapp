@@ -93,7 +93,7 @@
       },
 
       "remove_from_map": "Remove from map",
-      "show_on_map": "Show on map",
+      "show_on_map": "View in Map",
 
       "map": {
         "clicks_enabled": "Clicking on operations and restricted flight volumes will show their properties. Click here to change this behaviour",

@@ -25,7 +25,28 @@ function Operation({children}) {
 		<Callout
 			key={children.name}
 			className={styles.item}
-			title={children.name}
+			title={
+				<div className={styles.title}>
+					<p>{children.name}</p>
+					<Button
+						className={styles.button}
+						small
+						minimal
+						icon='pin'
+						intent={operationIsSelected ? Intent.DANGER : Intent.SUCCESS}
+						onClick={onClick}
+					>
+						<div className={styles.buttonHoveredTooltip}>
+							{ operationIsSelected &&
+							t('remove_from_map')
+							}
+							{ !operationIsSelected &&
+							t('show_on_map')
+							}
+						</div>
+					</Button>
+				</div>
+			}
 			data-test-id={'op' + children.name}
 			icon="double-chevron-right"
 			onClick={() => setShowProperties(show => !show)}
@@ -44,11 +65,11 @@ function Operation({children}) {
 				</GenericListLine>
 				<GenericListLine>
 					{t('volume.effective_time_begin')}
-					{children.operation_volumes[0].effective_time_begin}
+					{new Date(children.operation_volumes[0].effective_time_begin).toLocaleString()}
 				</GenericListLine>
 				<GenericListLine>
 					{t('volume.effective_time_end')}
-					{children.operation_volumes[0].effective_time_end}
+					{new Date(children.operation_volumes[0].effective_time_end).toLocaleString()}
 				</GenericListLine>
 				<GenericListLine>
 					{t('volume.min_altitude')}
@@ -82,14 +103,6 @@ function Operation({children}) {
 					{t('operation.free_text')}
 					{children.free_text}
 				</GenericListLine>
-				<Button intent={Intent.PRIMARY} onClick={onClick}>
-					{ operationIsSelected &&
-						<>{t('remove_from_map')}</>
-					}
-					{ !operationIsSelected &&
-						<>{t('show_on_map')}</>
-					}
-				</Button>
 			</div>
 			}
 		</Callout>
