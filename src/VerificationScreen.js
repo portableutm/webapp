@@ -24,7 +24,7 @@ function VerificationScreen() {
 	const location = useLocation();
 	const token = (location.search.split('?token='))[1];
 
-	const { t, i18n } = useTranslation();
+	const { t, i18n } = useTranslation('auth');
 
 	useEffect(() => {
 		if (!DEBUG) {
@@ -58,24 +58,24 @@ function VerificationScreen() {
 
 	return (
 		<div className={classnames(styles.centeredScreen, styles.texturedBackground)}>
-			<Card className={classnames(styles.window)} elevation={Elevation.TWO}>
-				<h1>{t('app.name')}</h1>
+			<Card className={classnames(styles.windowVerification)} elevation={Elevation.TWO}>
+				<h1>{t('adesweb')}</h1>
 				{ 	isLoading &&
 					<>
-						<h3>{t('app.verification.inprogress')}</h3>
+						<h3>{t('verification.inprogress')}</h3>
 						<Spinner />
 					</>
 				}
 				{	!isLoading &&
 					!isError &&
 					<>
-						<h3>{t('app.verification.title')}</h3>
-						{t('app.verification.successful', {user: username})}
+						<h3>{t('verification.title')}</h3>
+						{t('verification.successful', {user: username})}
 						<div className="buttonArea">
 							<Button style={{margin: '5px'}} intent={Intent.SUCCESS}
 								type="submit"
 								onClick={() => history.push('/')}>
-								{t('app.goto_login')}
+								{t('goto_login')}
 							</Button>
 						</div>
 					</>
@@ -83,14 +83,14 @@ function VerificationScreen() {
 				{	!isLoading &&
 					isError &&
 					<>
-						<h3>{t('app.verification.title')}</h3>
-						{t('app.verification.failed', {user: username})}
+						<h3>{t('verification.title')}</h3>
+						{t('verification.failed', {user: username})}
 					</>
 				}
 			</Card>
 			{isError &&
 			<Card id="error" className={classnames('bp3-dark',styles.error,'animated flash')} elevation={Elevation.TWO}>
-				{t('app.verification.error')}
+				{t('verification.error')}
 			</Card>
 			}
 		</div>

@@ -52,7 +52,7 @@ const NewUser = ({isSelfRegistering = true}) => {
 	const [role, setRole] = useState('pilot');
 	const VERIFICATION_NOT_STARTED = 0; const VERIFICATION_OK = 1; const VERIFICATION_ERROR = 2;
 	const [verificationStatus, setVerificationStatus] = useState(VERIFICATION_NOT_STARTED);
-	const { t, i18n } = useTranslation();
+	const { t, i18n } = useTranslation(['auth','common']);
 	const [, setCookie, ] = useCookies(['jwt']);
 
 	useEffect(() => {
@@ -156,8 +156,8 @@ const NewUser = ({isSelfRegistering = true}) => {
 		return (
 			<UnloggedScreen showUnlogged={isSelfRegistering}>
 				<form onSubmit={handleOnSubmit}>
-					<h1>{t('app.name')}</h1>
-					<h3>{isSelfRegistering ? t('login.pleaseregister') : t('dsh.new_user.title')}</h3>
+					<h1>{t('adesweb')}</h1>
+					<h3>{isSelfRegistering ? t('login.pleaseregister') : t('dsh.new_common:user.title')}</h3>
 					<Alert
 						confirmButtonText={'OK'}
 						canEscapeKeyCancel={false}
@@ -173,19 +173,19 @@ const NewUser = ({isSelfRegistering = true}) => {
 					</Alert>
 					{!isSelfRegistering &&
 					<RadioGroup
-						label={t('user.role')}
+						label={t('common:user.role')}
 						onChange={(evt) => setRole(evt.currentTarget.value)}
 						selectedValue={role}
 					>
-						<Radio label={t('dsh.new_user.role_admin')} value="admin"/>
-						<Radio label={t('dsh.new_user.role_pilot')} value="pilot"/>
+						<Radio label={t('dsh.new_common:user.role_admin')} value="admin"/>
+						<Radio label={t('dsh.new_common:user.role_pilot')} value="pilot"/>
 					</RadioGroup>
 					}
 					{/*****************************************************************
 					 *************************** First Name ***************************
 					 ******************************************************************/}
 					<FormGroup
-						label={t('user.firstname')}
+						label={t('common:user.firstname')}
 						labelFor="input-first-name">
 						<InputGroup id="input-first-name" value={firstName} onChange={e => setFirstName(e.target.value)}/>
 					</FormGroup>
@@ -194,7 +194,7 @@ const NewUser = ({isSelfRegistering = true}) => {
 					 *************************** Last Name  ***************************
 					 ******************************************************************/}
 					<FormGroup
-						label={t('user.lastname')}
+						label={t('common:user.lastname')}
 						labelFor="input-last-name">
 						<InputGroup id="input-last-name" value={lastName} onChange={e => setLastName(e.target.value)}/>
 					</FormGroup>
@@ -203,7 +203,7 @@ const NewUser = ({isSelfRegistering = true}) => {
 					 ***************************** Email  *****************************
 					 ******************************************************************/}
 					<FormGroup
-						label={t('user.email')}
+						label={t('common:user.email')}
 						labelFor="input-email">
 						<InputGroup id="input-email" value={email} onChange={e => setEmail(e.target.value)}/>
 					</FormGroup>
@@ -212,7 +212,7 @@ const NewUser = ({isSelfRegistering = true}) => {
 					 **************************** Username ****************************
 					 ******************************************************************/}
 					<FormGroup
-						label={t('user.username')}
+						label={t('common:user.username')}
 						labelFor="input-username">
 						<InputGroup id="input-username" value={username} onChange={e => setUsername(e.target.value)}/>
 					</FormGroup>
@@ -221,7 +221,7 @@ const NewUser = ({isSelfRegistering = true}) => {
 					 **************************** Password ****************************
 					 ******************************************************************/}
 					<FormGroup
-						label={t('app.password')}
+						label={t('password')}
 						labelFor="input-password">
 						<InputGroup
 							id="input-password"
@@ -235,7 +235,7 @@ const NewUser = ({isSelfRegistering = true}) => {
 					 ************************ Repeat Password  ************************
 					 ******************************************************************/}
 					<FormGroup
-						label={t('app.repeatpassword')}
+						label={t('password_repeat')}
 						labelFor="input-repeat-password">
 						<InputGroup
 							id="input-repeat-password"
@@ -248,7 +248,7 @@ const NewUser = ({isSelfRegistering = true}) => {
 					{/*****************************************************************
 					 ************************* Submit Button  *************************
 					 ******************************************************************/}
-					<div className="buttonArea">
+					<div className={styles.buttonArea}>
 						<Button
 							style={{margin: '5px'}}
 							intent={Intent.SUCCESS}
@@ -273,19 +273,19 @@ const NewUser = ({isSelfRegistering = true}) => {
 		} else if (verificationStatus === VERIFICATION_NOT_STARTED) {
 			return (
 				<UnloggedScreen showUnlogged={isSelfRegistering}>
-					{t('dsh.new_user.verifying')}
+					{t('dsh.new_common:user.verifying')}
 				</UnloggedScreen>
 			);
 		} else if (verificationStatus === VERIFICATION_OK) {
 			return (
 				<UnloggedScreen showUnlogged={isSelfRegistering}>
-					{t('dsh.new_user.verificated')}
+					{t('dsh.new_common:user.verificated')}
 				</UnloggedScreen>
 			);
 		} else if (verificationStatus === VERIFICATION_ERROR) {
 			return (
 				<UnloggedScreen showUnlogged={isSelfRegistering}>
-					{t('dsh.new_user.verification_error')}
+					{t('dsh.new_common:user.verification_error')}
 				</UnloggedScreen>
 			);
 		}

@@ -1,72 +1,26 @@
 {
+  "user": {
+    "generic": "{{count}} User",
+    "generic_plural": "{{count}} Users",
+    "username": "Username",
+    "firstname": "First name",
+    "lastname": "Last name",
+    "email": "E-mail",
+    "role": "Role",
+    "change_password": "Set a new password for this user"
+  },
   "en": {
     "translation": {
       "app": {
         "name": "PortableUTM",
-        "changelanguage": "Cambiar a Español (UY)",
-        "password": "Password",
-        "repeatpassword": "Repeat the password",
-        "errorocurredfetching": "An error has ocurred while fetching this data, please try again",
-        "tryagain": "Try again",
-        "goto_login": "Continue to log in",
-        "verification": {
-          "title": "Verification",
-          "inprogress": "In progress",
-          "error": "An error has occured while verificating",
-          "successful": "Thank you, {{user}}, for verifying your e-mail.",
-          "failed": "We are sorry, {{user}}, your verification has failed. Try again with the link you received by email."
-        }
+        "changelanguage": "Cambiar a Español (UY)"
+
       },
-      "login": {
-        "pleaseregister": "Please fill the form to register",
-        "pleaselogin": "Please log in to use the system.",
-        "user_helper": "As delivered to you by the system administrator.",
-        "password_helper": "Fill in your password.",
-        "registered": "You have been succesfully registered. Please, look at your e-mail inbox. You'll receive an email to confirm your account.",
-        "register": "Register",
-        "register_error": "There was an error creating your account. Please, try again with different values.",
-        "login": "Log in",
-        "login_error": "An error has occurred. Please check your credentials and try again.",
-        "login_pleasewait": "Logging in... Please wait.",
-        "login_successful": "Logged in succesfully"
-      },
-      "dsh": {
-        "logout_confirmation": "Are you sure you want to log out?",
-        "logout_details": "You won't be able to use the system if you're not logged in.",
-        "logout_negative": "No, take me back",
-        "logout_positive": "Yes, log me out",
-        "returnmap": "RETURN TO REALTIME MAP",
-        "dshhome": "Dashboard main screen",
-        "logout": "Log out",
-        "all_users": "All users",
-        "operations_list": "All operations",
-        "operations_list_pilot": "Your operations",
-        "edit_your_info": "Edit your info",
-        "vehicles_new": "Add new vehicle",
-        "vehicles_list": "All vehicles",
-        "vehicles_list_pilot": "Your vehicles",
-        "new_user": {
-          "text": "Add new user",
-          "title": "Creating a new user",
-          "role_admin": "Monitor",
-          "role_pilot": "Operator",
-          "verifying": "Verifying that the token is correct",
-          "verificated": "User created and verified. It can log in now!",
-          "verification_error": "Error verifying the user. Please, contact a System Administrator"
-        }
-      },
+
+
       "actions": "Actions",
       "users": "Users",
-      "user": {
-        "generic": "{{count}} User",
-        "generic_plural": "{{count}} Users",
-        "username": "Username",
-        "firstname": "First name",
-        "lastname": "Last name",
-        "email": "E-mail",
-        "role": "Role",
-        "change_password": "Set a new password for this user"
-      },
+
       "click_to_expand": "Expand",
       "click_to_collapse": "Collapse",
       "page": "Page",
@@ -212,67 +166,14 @@
     "translation": {
       "app": {
         "name": "PortableUTM",
-        "changelanguage": "Change to English (US)",
-        "password": "Contraseña",
-        "repeatpassword": "Repite la contraseña",
-        "errorocurredfetching": "Un error ocurrió consiguiendo esta información. Intentá otra vez",
-        "tryagain": "Reintentar",
-        "goto_login": "Iniciar sesión",
-        "verification": {
-          "title": "Verificación",
-          "inprogress": "Verificación en progreso... Por favor, espere.",
-          "error": "Un error ocurrió en la verificación.",
-          "succesful": "Gracias, {{user}}, por verificar tu e-mail. Podés iniciar sesión.",
-          "failed": "Lo lamentamos, {{user}}, la verificación falló. Intentá nuevamente con el enlace que recibiste por e-mail."
-        }
+        "changelanguage": "Change to English (US)"
+
       },
-      "login": {
-        "pleaseregister": "Por favor registrate para usar el sistema",
-        "pleaselogin": "Por favor, iniciá sesión para usar el sistema",
-        "registered": "Te registraste correctamente. Por favor, chequeá tu email. Vas a recibir un email de confirmación para activar tu cuenta.",
-        "user_helper": "Entregado por el administrador",
-        "register": "Registrar",
-        "register_error": "Ocurrió un error al crear tu cuenta. Re-intentá con nuevos valores.",
-        "password_helper": "Introducí tu contraseña",
-        "login": "Iniciar sesión",
-        "login_error": "Ocurrió un error. Revisá tus credenciales e intentalo otra vez.",
-        "login_pleasewait": "Iniciando sesión... Por favor, esperá",
-        "login_successful": "¡Sesión iniciada correctamente!"
-      },
-      "dsh": {
-        "logout_confirmation": "¿Estás seguro que querés cerrar tu sesión?",
-        "logout_details": "No podrás usar el sistema una vez cerrada tu sesión.",
-        "logout_negative": "No, volver",
-        "logout_positive": "Si, cerrar sesión",
-        "returnmap": "VOLVER A MAPA EN TIEMPO REAL",
-        "dshhome": "Panel principal",
-        "logout": "Cerrar sesión",
-        "all_users": "Todos los usuarios",
-        "operations_list": "Todas las operaciones",
-        "operations_list_pilot": "Tus operaciones",
-        "edit_your_info": "Editar tus datos",
-        "vehicles_new": "Añadir nuevo vehículo",
-        "vehicles_list": "Todos los vehículos",
-        "vehicles_list_pilot": "Tus vehìculos",
-        "new_user": {
-          "text": "Crear nuevo usuario",
-          "title": "Creando un nuevo usuario",
-          "role_admin": "Monitor",
-          "role_pilot": "Operador",
-          "verifying": "Verificando que el token de validación es correcto...",
-          "verificated": "Usuario creado y verificado. ¡Ya se puede logear!",
-          "verification_error": "Error verificando el usuario. Por favor, contactar un Administrador del sistema y mencionar este error"
-        }
-      },
+
+
       "actions": "Acciones",
       "users": "Usuarios",
-      "user": {
-        "username": "Nombre de usuario",
-        "firstname": "Nombre",
-        "lastname": "Apellido",
-        "email": "E-mail",
-        "role": "Rol"
-      },
+
       "page": "Página",
       "edit": "Editar",
       "add_veh": "Agregar veh.",

@@ -63,6 +63,21 @@
     color: #2D2C59 !important;
 }
 
+.windowVerification {
+    z-index: 999;
+    position: relative;
+    height: fit-content;
+    width: 100%;
+    grid-area: 2 / 2 / 3 / 3;
+    margin: auto;
+    color: rgba(237, 255, 236, 0.8) !important;
+    background-color: #2D2C59!important;
+}
+
+.windowVerification * {
+    color: rgba(237, 255, 236, 0.8)  !important;
+}
+
 .error {
     grid-area: 2 / 2 / 3 / 3;
     position: absolute;
@@ -93,5 +108,6 @@
 }
 
 .buttonArea * {
+    color: black;
     background-color: #FFB217 !important;
 }

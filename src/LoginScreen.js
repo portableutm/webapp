@@ -19,7 +19,7 @@ function LoginScreen() {
 	const [password, setPassword] = useState('');
 	const [isError, setError] = useState(false);
 	const [isLogging, setLogging] = useState(false);
-	const { t, i18n } = useTranslation();
+	const { t, i18n } = useTranslation('auth');
 	const [, setCookie, ] = useCookies(['jwt']);
 
 	/* Callbacks */
@@ -75,7 +75,7 @@ function LoginScreen() {
 					<h3>{t('login.pleaselogin')}</h3>
 					<FormGroup
 						helperText={t('login.user_helper')}
-						label={t('user.username')}
+						label={t('login.username')}
 						labelFor="login-user"
 					>
 						<InputGroup id="login-user" fill
@@ -85,7 +85,7 @@ function LoginScreen() {
 					</FormGroup>
 					<FormGroup
 						helperText={t('login.password_helper')}
-						label={t('app.password')}
+						label={t('login.password')}
 						labelFor="login-password"
 					>
 						<InputGroup id="login-password" fill type="password"
