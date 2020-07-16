@@ -1,0 +1,24 @@
+{
+  "hamburger": {
+    "map": "Realtime Map",
+    "dashboard": "Dashboard",
+    "createnewop": "Create new operation"
+  },
+  "notifications": {
+    "operation_gone_rogue": {
+      "header": "ROGUE OPERATION",
+      "body": "The operation \"{{operation}}\" is now in the ROGUE state: the vehicles may be out of their reserved Volume. Advise all nearby vehicles"
+    }
+  },
+  "forms": {
+    "required": "(required)",
+    "optional": "(optional)"
+  },
+  "show_on_map": "View in map",
+  "remove_from_map": "Remove from map",
+  "cant_edit": "(non-editable)",
+  "change_password": "Change the password of {{name}}",
+  "save_changes": "Save changes",
+  "click_to_expand": "Show properties",
+  "click_to_collapse": "Hide properties"
+}

@@ -15,11 +15,11 @@ import useAdesState from '../../state/AdesState';
 
 const StateFilters = ({selectedFilters, setSelectedFilters}) => {
 	const [, , , , , states] = useOperationFilter();
-	const { t, } = useTranslation();
+	const { t, } = useTranslation('map');
 	return (
 		<>
 			<div className={styles.sidebarSeparator}>
-				{t('map.filter.bystate')}
+				{t('filter.bystate')}
 			</div>
 			{states.map((filter, index) => {
 				return (
@@ -48,7 +48,7 @@ const StateFilters = ({selectedFilters, setSelectedFilters}) => {
 };
 
 const OperationFilters = ({operations, ids, setIds}) => {
-	const { t,  } = useTranslation();
+	const { t,  } = useTranslation('map');
 	const [ state, actions ] = useAdesState();
 	const showOrHide = (id) => {
 		if (ids.indexOf(id) !== -1) {
@@ -64,7 +64,7 @@ const OperationFilters = ({operations, ids, setIds}) => {
 	return (
 		<>
 			<div className={styles.sidebarSeparator}>
-				{t('map.filter.byid')}
+				{t('filter.byid')}
 			</div>
 			{operations.map((op, index) => {
 				if (state.map.ids.indexOf(op.gufi) !== -1) {
@@ -77,7 +77,7 @@ const OperationFilters = ({operations, ids, setIds}) => {
 								checked={ids.indexOf(op.gufi) !== -1}
 								onChange={() => showOrHide(op.gufi)}
 							/>
-							{op.flight_comments}
+							{op.name}
 							<Button
 								className={styles.sidebarButtonAlternate}
 								icon='cross'
@@ -102,11 +102,11 @@ const OperationFilters = ({operations, ids, setIds}) => {
 
 const RfvsFilters = ({rfvs, setRfvs}) => {
 	const [state, ] = useAdesState();
-	const { t, } = useTranslation();
+	const { t, } = useTranslation('map');
 	return (
 		<>
 			<div className={styles.sidebarSeparator}>
-				{t('map.filter.rfvs')}
+				{t('filter.rfvs')}
 			</div>
 			{S.map
 			((rfv, index) => {
@@ -144,7 +144,7 @@ const RfvsFilters = ({rfvs, setRfvs}) => {
 
 /* Button that opens a Menu that permits users selects what layers to show */
 const Layers = ({filtersSelected, setFiltersSelected, operations, disabled, idsSelected, setIdsSelected, rfvs, setRfvsShowing}) => {
-	const { t } = useTranslation();
+	const { t } = useTranslation('glossary');
 	return (
 		<>
 			{/*

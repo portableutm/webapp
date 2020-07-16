@@ -5,14 +5,14 @@ import useAdesState from '../../state/AdesState';
 import styles from '../Map.module.css';
 
 const EditorPanel = () => {
-	const {t} = useTranslation();
+	const {t} = useTranslation('map');
 	const [state, actions] = useAdesState();
 	return (
 		<>
 			<SidebarButton
 				useCase='editorOptions'
 				icon='cog'
-				label={t('Options')}
+				label={t('options')}
 				simpleChildren={false}
 				forceOpen={true}
 			>
@@ -21,10 +21,10 @@ const EditorPanel = () => {
 					onClick={() => actions.map.onClicksDisabled(!state.map.onClicksDisabled)}
 				>
 					{state.map.onClicksDisabled &&
-						<p>{t('map.clicks_disabled')}</p>
+						<p>{t('clicks_disabled')}</p>
 					}
 					{!state.map.onClicksDisabled &&
-						<p>{t('map.clicks_enabled')}</p>
+						<p>{t('clicks_enabled')}</p>
 					}
 				</div>
 			</SidebarButton>

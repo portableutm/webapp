@@ -16,7 +16,7 @@ const BottomArea = () => {
 						<Icon
 							data-test-id="warning#closer"
 							icon="cross"
-							iconSize={30}
+							iconSize={25}
 							onClick={() => actions.close()}
 						/>
 					</div>

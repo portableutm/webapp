@@ -3,6 +3,7 @@ import S from 'sanctuary';
 import _, {fM} from '../../libs/SaferSanctuary';
 import {useHistory} from 'react-router-dom';
 import useAdesState from '../../state/AdesState';
+import {useTranslation} from 'react-i18next';
 
 /* Constants */
 const DEFAULT_OPERATION_VALIDITY = 1; // Value to set by default in a new OperationVolume by defalt, in hours
@@ -12,6 +13,7 @@ timeNow2.setUTCHours(timeNow.getUTCHours() + DEFAULT_OPERATION_VALIDITY);
 const swap = (array) => [array[1], array[0]];
 
 function UseEditorLogic(refMapOnClick, mapInitialized) {
+	const { t } = useTranslation('map');
 	const [operationInfo, setOperationInfo] = useState(S.Just({
 		name: 'Untitled',
 		owner: 'error error',
@@ -99,14 +101,11 @@ function UseEditorLogic(refMapOnClick, mapInitialized) {
 		}
 	}, [mapInitialized]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	const saveOperation = () => {
+	const saveOperation = (hasFinishedSaving) => {
 		actions.map.onClicksDisabled(false);
 		/* Check polygon has been created */
 		if (S.isNothing(mbPolygons)) {
-			actions.warning.setWarning('The OPERATION could not be created, ' +
-				'as the polygon was not defined. Please, define a polygon for where the vehicle can fly, ' +
-				'by clicking on the map on the appropiate positions');
-			return false;
+			actions.warning.setWarning(t('editor.cant_finish'));
 		}
 		refMapOnClick.current = () => {};
 		const info = _(operationInfo);
@@ -119,8 +118,15 @@ function UseEditorLogic(refMapOnClick, mapInitialized) {
 			)
 		};
 		info.operation_volumes = [volumeWithPolygons];
-		const callback = () => history.push('/dashboard/operations');
-		actions.operations.post(info, callback, errorOnSaveCallback);
+		const callback = () => {
+			hasFinishedSaving();
+			history.push('/dashboard/operations');
+		};
+		const errorCallback = () => {
+			hasFinishedSaving();
+			errorOnSaveCallback();
+		};
+		actions.operations.post(info, callback, errorCallback);
 	};
 
 	return [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, setErrorOnSaveCallback];

@@ -11,7 +11,7 @@ import styles from '../generic/GenericList.module.css';
 function Operation({expanded = false, children}) {
 	// Renders one Operation text properties for a list
 	const history = useHistory();
-	const { t,  } = useTranslation();
+	const { t,  } = useTranslation(['glossary','common']);
 	const [ state, actions ] = useAdesState();
 	const operationIsSelected = state.map.ids.indexOf(children.gufi) !== -1;
 	const onClick = operationIsSelected ?
@@ -28,7 +28,7 @@ function Operation({expanded = false, children}) {
 			className={styles.item}
 			title={
 				<div className={styles.title}>
-					<p>{children.name}</p>
+					<p style={{height: '100%', maxWidth: '50%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>{children.name}</p>
 					<Button
 						className={styles.button}
 						small
@@ -39,10 +39,10 @@ function Operation({expanded = false, children}) {
 					>
 						<div className={styles.buttonHoveredTooltip}>
 							{ operationIsSelected &&
-							t('remove_from_map')
+							t('common:remove_from_map')
 							}
 							{ !operationIsSelected &&
-							t('show_on_map')
+							t('common:show_on_map')
 							}
 						</div>
 					</Button>
@@ -69,47 +69,47 @@ function Operation({expanded = false, children}) {
 					</div>
 				</GenericListLine>
 				<GenericListLine>
-					{t('operation.owner')}
+					{t('operations.owner')}
 					{children.owner.firstName + ' ' + children.owner.lastName + ' (' + children.owner.username + ')'}
 				</GenericListLine>
 				<GenericListLine>
-					{t('volume.effective_time_begin')}
+					{t('volumes.effective_time_begin')}
 					{new Date(children.operation_volumes[0].effective_time_begin).toLocaleString()}
 				</GenericListLine>
 				<GenericListLine>
-					{t('volume.effective_time_end')}
+					{t('volumes.effective_time_end')}
 					{new Date(children.operation_volumes[0].effective_time_end).toLocaleString()}
 				</GenericListLine>
 				{/*<GenericListLine>
-					{t('volume.min_altitude')}
+					{t('volumes.min_altitude')}
 					{children.operation_volumes[0].min_altitude}
 				</GenericListLine> */}
 				<GenericListLine>
-					{t('volume.max_altitude')}
+					{t('volumes.max_altitude')}
 					{children.operation_volumes[0].max_altitude}
 				</GenericListLine>
 				<GenericListLine>
-					{t('operation.aircraft_comments')}
+					{t('operations.aircraft_comments')}
 					{children.aircraft_comments}
 				</GenericListLine>
 				{/* <GenericListLine>
-					{t('operation.volumes_description')}
+					{t('operations.volumes_description')}
 					{children.volumes_description}
 				</GenericListLine> */}
 				<GenericListLine>
-					{t('operation.flight_number')}
+					{t('operations.flight_number')}
 					{children.flight_number}
 				</GenericListLine>
 				<GenericListLine>
-					{t('operation.state')}
+					{t('operations.state')}
 					{children.state}
 				</GenericListLine>
 				<GenericListLine>
-					{t('operation.flight_comments')}
+					{t('operations.flight_comments')}
 					{children.flight_comments}
 				</GenericListLine>
 				<GenericListLine>
-					{t('operation.free_text')}
+					{t('operations.free_text')}
 					{children.free_text}
 				</GenericListLine>
 			</div>
@@ -120,23 +120,25 @@ function Operation({expanded = false, children}) {
 
 function OperationsList() {
 	const [state, ] = useAdesState(state => state.operations);
-	const { t,  } = useTranslation();
+	const { t,  } = useTranslation('glossary');
 	const { id } = useParams();
 	const operations = S.values(state.list);
 	const isThereOperations = operations.length !== 0;
 	if (isThereOperations) {
 		return (
-			<div>
-				<h1>
-					{t('operations')}
-				</h1>
+			<>
+				<div className={styles.header}>
+					<h1>
+						{t('operations.plural_generic').toUpperCase()}
+					</h1>
+				</div>
 				<GenericList>
 					{S.map
 					((op) => <Operation key={op.gufi} expanded={op.gufi === id}>{op}</Operation>)
 					(operations)
 					}
 				</GenericList>
-			</div>
+			</>
 		);
 	} else {
 		return (

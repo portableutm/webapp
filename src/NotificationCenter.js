@@ -103,7 +103,8 @@ function NotificationCenter() {
 							elevation={Elevation.TWO}
 						>
 							<div className={styles.notificationHeader}>
-								<p>{notification.header} - {notification.id}</p>
+								<p>{notification.header}</p>
+								<p style={{fontSize: '12px'}}>{(new Date(parseInt(notification.id))).toLocaleTimeString()}</p>
 							</div>
 							{notification.body}
 							<div

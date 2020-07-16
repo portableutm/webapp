@@ -275,6 +275,32 @@ th, td {
     pointer-events: auto;
 }
 
+.polygonSelected {
+    opacity: 1;
+    animation: selected 0.5s ease-in-out alternate infinite;
+}
+
+@keyframes selected {
+    from{
+        fill: rgba(172, 172, 172, 0.5);
+        stroke: black;
+    }
+    to{
+        fill: rgba(172, 172, 172, 0.5);
+        stroke: red;
+    }
+}
+
+.polygonRogue {
+    opacity: 1;
+    animation: rogue 0.5s alternate infinite;
+}
+
+@keyframes rogue {
+    0%{fill: rgb(255, 0, 0);}
+    100%{fill: rgb(255, 119, 0);}
+}
+
 /*
   Login UI
  */

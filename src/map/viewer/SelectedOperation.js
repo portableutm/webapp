@@ -26,20 +26,22 @@ function Property({property, value}) {
 }
 
 function SelectedOperation ({gufi}) {
-	const { t } = useTranslation();
+	const { t } = useTranslation(['glossary','map']);
 	const [state, actions] = useAdesState();
 	const [isDialogShown, showDialog] = useState(false);
 	const [isApproved, setApproved] = useState(false);
 	const operation = fM(S.value(gufi)(state.operations.list));
 	const info = [
-		[t('name'), operation.flight_comments],
+		[t('operations.name'), operation.name],
 		['ID',operation.gufi],
-		[t('state'), operation.state],
-		[t('effective_time_begin'), new Date(operation.operation_volumes[0].effective_time_begin).toLocaleString()],
-		[t('effective_time_end'), new Date(operation.operation_volumes[0].effective_time_end).toLocaleString()],
-		[t('max_altitude'), operation.operation_volumes[0].max_altitude+'m'],
-		[t('contact'), operation.contact],
-		[t('phone'), '097431725'],
+		[t('operations.state'), operation.state],
+		[t('operations.owner'), operation.owner.firstName + ' ' + operation.owner.lastName + ' (' + operation.owner.username + ')'],
+		[t('operations.contact'), operation.contact],
+		[t('operations.phone'), '097431725'],
+		[t('volumes.effective_time_begin'), new Date(operation.operation_volumes[0].effective_time_begin).toLocaleString()],
+		[t('volumes.effective_time_end'), new Date(operation.operation_volumes[0].effective_time_end).toLocaleString()],
+		[t('volumes.max_altitude'), operation.operation_volumes[0].max_altitude+'m'],
+		[t('operations.flight_comments'), operation.flight_comments]
 	];
 
 	const toShow = info.map((propvalue) =>
@@ -50,7 +52,7 @@ function SelectedOperation ({gufi}) {
 		<>
 			<Dialog
 				className='bp3-dark'
-				title={t('editor_oinfo_complete')}
+				title={t('map:editor.operation.complete')}
 				isOpen={isDialogShown}
 				onClose={() => showDialog(false)}
 			>
@@ -98,7 +100,7 @@ function SelectedOperation ({gufi}) {
 			<SidebarButton
 				useCase='SelectedOperation'
 				icon='trending-up'
-				label={t('selected_operation')}
+				label={t('map:selected_operation')}
 				simpleChildren={false}
 				forceOpen={true}
 			>

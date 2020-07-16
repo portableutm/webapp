@@ -30,46 +30,46 @@ const useOperationFilter = () => {
 	const [ids, setIds] = useState(adesState.map.ids);
 	const [allOperations, setOperations] = useState(extractOperationsFromState(adesState));
 	const [filteredOperations, setFilteredOperations] = useState([]);
-	const { t,  } = useTranslation();
+	const { t,  } = useTranslation('map');
 
 	let states = [
 		{
-			text: t('map.filter.accepted'),
+			text: t('filter.accepted'),
 			filter: 'ACCEPTED'
 		},
 		{
-			text: t('map.filter.pending'),
+			text: t('filter.pending'),
 			filter: 'PENDING'
 		},
 		{
-			text: t('map.filter.activated'),
+			text: t('filter.activated'),
 			filter: 'ACTIVATED'
 		},
 		{
-			text: t('map.filter.rogue'),
+			text: t('filter.rogue'),
 			filter: 'ROGUE'
 		},
 		/*
 		{
-			text: t('map.filter.proposed'),
+			text: t('filter.proposed'),
 			filter: 'PROPOSED'
 		},
 		*/
 		/*
 		{
-			text: t('map.filter.closed'),
+			text: t('filter.closed'),
 			filter: 'CLOSED'
 		},
 		*/
 		/*
 		{
-			text: t('map.filter.nonconforming'),
+			text: t('filter.nonconforming'),
 			filter: 'NONCONFORMING'
 		},
 		 */
 	];
 	const closedState = {
-		text: t('map.filter.closed'),
+		text: t('filter.closed'),
 		filter: 'CLOSED'
 	};
 

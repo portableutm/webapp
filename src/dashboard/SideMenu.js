@@ -8,10 +8,11 @@ import {fM} from '../libs/SaferSanctuary';
 import {useCookies} from 'react-cookie';
 import {useTranslation} from 'react-i18next';
 import styles from './Dashboard.module.css';
+import {adesVersion} from '../consts';
 
 function SideMenu() {
 	const history = useHistory();
-	const { t, i18n } = useTranslation('dashboard');
+	const { t, i18n } = useTranslation(['dashboard', 'glossary']);
 
 	/* Auth */
 	const [, setCookie, removeCookie] = useCookies(['jwt']);
@@ -87,7 +88,7 @@ function SideMenu() {
 						</>
 						}
 
-						<MenuDivider title={t('users')} />
+						<MenuDivider title={t('glossary:users.plural_generic')} />
 						{/* <MenuItem icon="drive-time" text="Add new Operator"/> */}
 						{/* <MenuItem icon="desktop" text="Add new Monitor"/> */}
 						<MenuItem
@@ -98,12 +99,12 @@ function SideMenu() {
 							icon="new-person"
 							text={t('sidemenu.new_user.text')}
 							onClick={() => history.push('/dashboard/users/new')}/>
-						<MenuDivider title={t('operations')}/>
+						<MenuDivider title={t('glossary:operations.plural_generic')}/>
 						{/* <MenuItem icon="zoom-in" text="Pending assesment"/> */}
 						<MenuItem icon="numbered-list"
 							text={t('sidemenu.operations_list')}
 							onClick={() => history.push('/dashboard/operations')}/>
-						<MenuDivider title={t('vehicles')} />
+						<MenuDivider title={t('glossary:vehicles.plural_generic')} />
 						{/* As of 0.2 removed as vehicles have owners now...
 						 	<MenuItem icon="airplane"
 							text={t('sidemenu.vehicles_new')}
@@ -111,6 +112,7 @@ function SideMenu() {
 						<MenuItem icon="numbered-list"
 							text={t('sidemenu.vehicles_list')}
 							onClick={() => history.push('/dashboard/vehicles')}/>
+						<MenuItem text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
 					</Menu>
 				</div>
 			</>
@@ -122,10 +124,10 @@ function SideMenu() {
 				<div className={styles.side}>
 					<Menu>
 						<MenuItem icon="home"
-							text={t('sidemenu.sidemenu.ome')}
+							text={t('sidemenu.dshhome')}
 							onClick={() => history.push('/dashboard')}/>
 						<MenuItem icon="flag"
-							text={t('app.changelanguage')}
+							text={t('sidemenu.changelanguage')}
 							onClick={() => changeLanguage()}/>
 						{S.isJust(adesState.auth.user) &&
 						<>
@@ -142,12 +144,12 @@ function SideMenu() {
 							<Spinner />
 						</>
 						}
-						<MenuDivider title="Operations"/>
+						<MenuDivider title={t('glossary:operations.plural_generic')} />
 						{/* <MenuItem icon="zoom-in" text="Pending assesment"/> */}
 						<MenuItem icon="numbered-list"
 							text={t('sidemenu.operations_list_pilot')}
 							onClick={() => history.push('/dashboard/operations')}/>
-						<MenuDivider title="Vehicles"/>
+						<MenuDivider title={t('glossary:vehicles.plural_generic')}/>
 						<MenuItem icon="airplane"
 							text={t('sidemenu.vehicles_new')}
 							onClick={() => history.push('/dashboard/vehicles/new')}/>
@@ -155,6 +157,7 @@ function SideMenu() {
 							text={t('sidemenu.vehicles_list_pilot')}
 							onClick={() => history.push('/dashboard/vehicles')}
 						/>
+						<MenuItem text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
 					</Menu>
 				</div>
 			</>
@@ -215,6 +218,7 @@ function SideMenu() {
 							className='bp3-skeleton'
 							text={t('sidemenu.vehicles_list')}
 						/>
+						<MenuItem text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
 					</Menu>
 				</div>
 			</div>

@@ -1,0 +1,36 @@
+{
+  "sidemenu": {
+    "returnmap": "VOLVER AL MAPA EN TIEMPO REAL",
+    "dshhome": "Vista general",
+    "changelanguage": "Use PortableUTM in English",
+    "edit_your_info": "Editar tu información",
+    "logout": "Cerrar sesión",
+    "logout_confirmation": "¿Estás seguro que querés cerrar tu sesión?",
+    "logout_details": "No podrás usar el sistema si no estás logeado.",
+    "logout_negative": "No, volver",
+    "logout_positive": "Si, cerrar sesión",
+    "all_users": "Todos los usuarios",
+    "new_user": {
+      "text": "Crear nuevo usuario",
+      "title": "Creando un nuevo usuario",
+      "role_admin": "Monitor / Administrador",
+      "role_pilot": "Piloto",
+      "verifying": "Verificando que el token es correcto",
+      "verificated": "Usuario creado y verificado automáticamente. ¡La cuenta está activada!",
+      "verification_error": "Error verificando el usuario. Por favor, contacta a un administrador del sistema."
+    },
+    "operations_list": "Todas las operaciones",
+    "operations_list_pilot": "Tus operaciones",
+    "vehicles_new": "Crear nuevo vehículo",
+    "vehicles_list": "Todos los vehículos",
+    "vehicles_list_pilot": "Tus vehículos"
+  },
+  "home": {
+    "title": "Vista general",
+    "total": "Total de operaciones",
+    "active": "Operaciones activas",
+    "accepted": "Operaciones aceptadas",
+    "pending": "Operaciones pendientes",
+    "vehicles": "Vehículos en el aire"
+  }
+}

@@ -1,29 +1,29 @@
-import React from 'react';
-/*
-    Global
- */
+import React, {useState} from 'react';
 
-/*
-    UI
- */
 import {Button, FormGroup, InputGroup} from '@blueprintjs/core';
-/*
-    Helpers
- */
+
 import PropTypes from 'prop-types';
 import {Just, maybeToNullable, Maybe} from 'sanctuary';
 import {useTranslation} from 'react-i18next';
 import SidebarButton from '../SidebarButton';
 import OperationVolumeInfoEditor from './OperationVolumeInfoEditor';
 import styles from '../Map.module.css';
+import { useHistory } from 'react-router-dom';
 
 function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOperation}) {
-	const { t, } = useTranslation();
+	const { t, } = useTranslation(['map', 'glossary', 'common']);
+	const [isSaving, setSaving] = useState(false);
+	const history = useHistory();
 	const editInfo = (property, newInfo) => setInfo((data) => {
 		const newData = {...maybeToNullable(data)};
 		newData[property] = newInfo;
 		return Just(newData);
 	});
+
+	const saveOperationAndSetSaving = () => {
+		setSaving(true);
+		saveOperation(() => setSaving(false));
+	};
 
 	return (
 		<SidebarButton
@@ -35,7 +35,8 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 		>
 			<FormGroup
 				className={styles.sidebarButtonText}
-				label={t('editor.operation.name')}
+				label={t('glossary:operations.name')}
+				labelInfo={t('common:forms.required')}
 				labelFor="name"
 			>
 				<InputGroup
@@ -47,7 +48,8 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 			</FormGroup>
 			<FormGroup
 				className={styles.sidebarButtonText}
-				label={t('editor.operation.username')}
+				label={t('glossary:operations.owner_editable')}
+				labelInfo={t('common:forms.required')}
 				labelFor="name"
 			>
 				<InputGroup
@@ -73,7 +75,8 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 			{/* "Contact Name"*/}
 			<FormGroup
 				className={styles.sidebarButtonText}
-				label={t('editor.operation.contact_name')}
+				label={t('glossary:operations.contact')}
+				labelInfo={t('common:forms.optional')}
 				labelFor="contact"
 			>
 				<InputGroup
@@ -86,7 +89,8 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 			{/* "Contact Phone"*/}
 			<FormGroup
 				className={styles.sidebarButtonText}
-				label={t('editor.operation.contact_phone')}
+				label={t('glossary:operations.phone')}
+				labelInfo={t('common:forms.optional')}
 				labelFor="contact_phone"
 			>
 				<InputGroup
@@ -99,7 +103,8 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 			{/* "flight_comments": "Untitled" */}
 			<FormGroup
 				className={styles.sidebarButtonText}
-				label={t('editor.operation.flight_comments')}
+				label={t('glossary:operations.flight_comments')}
+				labelInfo={t('common:forms.optional')}
 				labelFor="flight_comments"
 			>
 				<InputGroup
@@ -118,7 +123,18 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 			>
 				<Button
 					fill
-					onClick={() => saveOperation()}
+					icon="undo"
+					style={{marginRight: '2.5px'}}
+					onClick={() => history.push('/')}
+				>
+					{t('editor.return')}
+				</Button>
+				<Button
+					fill
+					icon="floppy-disk"
+					style={{marginLeft: '2.5px'}}
+					loading={isSaving}
+					onClick={() => saveOperationAndSetSaving()}
 				>
 					{t('editor.finish')}
 				</Button>

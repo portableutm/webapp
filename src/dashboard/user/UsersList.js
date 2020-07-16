@@ -13,6 +13,7 @@ import {fM, maybeValues} from '../../libs/SaferSanctuary';
 /* Constants */
 import {API} from '../../consts';
 import useAdesState, {Axios, print} from '../../state/AdesState';
+import genericStyles from '../generic/GenericList.module.css';
 import styles from './UsersList.module.css';
 import '../../Ades.css';
 
@@ -59,7 +60,7 @@ function useUsersState() {
 
 const UsersList = () => {
 	const history = useHistory();
-	const {t} = useTranslation();
+	const {t} = useTranslation(['glossary','common']);
 	const { username } = useParams();
 
 	const [users, usersUpdated, isEmpty, isError, refetch] = useUsersState();
@@ -105,7 +106,11 @@ const UsersList = () => {
 			{	!isError &&
 				S.isNothing(shownPilot) &&
 				<>
-					<h1>{t('users')}</h1>
+					<div className={genericStyles.header}>
+						<h1>
+							{t('users.plural_generic').toUpperCase()}
+						</h1>
+					</div>
 					<div className={styles.buttons}>
 						<Tabs id='dshUsersListsTabs' onChange={tab => {
 							setFirstUser(tab * USERS_ONE_PAGE_NUMBER);
@@ -113,7 +118,7 @@ const UsersList = () => {
 						}}>
 							{tabsTotal.map(tab => {
 								const page = tab + 1;
-								return <Tab id={tab} key={'tab' + tab} title={t('page') + ' ' + page}/>;
+								return <Tab id={tab} key={'tab' + tab} title={t('page', {number: page})}/>;
 							})
 							}
 						</Tabs>
@@ -122,11 +127,11 @@ const UsersList = () => {
 						<table id='usersList' className='.bp3-html-table .bp3-html-table-bordered .bp3-html-table-striped fullHW'>
 							<thead>
 								<tr>
-									<th>{t('user.firstname')}</th>
-									<th>{t('user.lastname')}</th>
-									<th>{t('user.username')}</th>
-									<th>{t('user.email')}</th>
-									<th>{t('user.role')}</th>
+									<th>{t('users.firstname')}</th>
+									<th>{t('users.lastname')}</th>
+									<th>{t('users.username')}</th>
+									<th>{t('users.email')}</th>
+									<th>{t('users.role')}</th>
 									<th>{t('actions')}</th>
 								</tr>
 							</thead>
@@ -142,6 +147,7 @@ const UsersList = () => {
 											<div style={{display: 'flex', justifyContent: 'space-evenly'}}>
 												<Button
 													small={true}
+													disabled
 													onClick={() => {
 														history.push('/dashboard/users/' + user.username);
 														setShownPilot(S.Just(user));
@@ -153,7 +159,7 @@ const UsersList = () => {
 													small={true}
 													onClick={() => history.push('/dashboard/vehicles/' + user.username + '/new/')}
 												>
-													{t('add_veh')}
+													{t('vehicles.add')}
 												</Button>
 											</div>
 										</td>

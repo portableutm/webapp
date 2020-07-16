@@ -34,6 +34,7 @@
 .pilotBottom {
     width: 100%;
     padding-top: 20px;
+    padding-bottom: 40px;
     grid-area: 2 / 1 / 3 / 3;
 }
 

@@ -44,7 +44,7 @@
 .sidebarButtonTextRight {
     color: white;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-evenly;
     padding: 5px 10px 5px 10px;
     margin: 1px 0 0 !important;
     background-color: rgba(132, 130, 143, 0.25) !important;

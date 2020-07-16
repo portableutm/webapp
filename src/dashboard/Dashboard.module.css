@@ -42,7 +42,9 @@
 }
 
 .inside {
+    position: relative;
     height: 100%;
+    padding-bottom: 50px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
@@ -56,14 +58,49 @@
 }
 
 .content {
+    position: relative;
     grid-row-start: 2;
     grid-column-start: 2;
     grid-column-end: -1;
     grid-row-end: 3;
     height: 100%;
+    width: 100%;
     overflow: hidden;
     pointer-events: auto;
 }
+
+.content:before {
+    position: absolute;
+    content: "";
+    top: 0;
+    z-index: 2100;
+    pointer-events: none;
+    background-image:
+            linear-gradient(to top,
+            rgba(57, 64, 83, 0) 0%,
+            rgb(48, 64, 77) 25%,
+            rgb(48, 64, 77) 100%);
+    left: 0;
+    right: 12px;
+    height: 60px;
+}
+
+.content:after {
+    position: absolute;
+    content: "";
+    bottom: 0;
+    z-index: 2100;
+    pointer-events: none;
+    background-image:
+            linear-gradient(to bottom,
+            rgba(57, 64, 83, 0),
+            rgb(48, 64, 77) 100%);
+    left: 0;
+    right: 12px;
+    height: 60px;
+}
+
+
 
 @media only screen and (max-width: 700px) {
     .content {

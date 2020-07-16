@@ -41,7 +41,7 @@ const quickFlyLocations = [
 const QuickFly = ({onClick}) => {
 	//console.log('QuickFly', onClick);
 	const [state, actions] = useAdesState();
-	const {t} = useTranslation();
+	const {t} = useTranslation('map');
 	const [isCreating, showCreate] = useState(false);
 
 	const addNewQuickFlyButton = {

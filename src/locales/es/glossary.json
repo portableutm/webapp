@@ -1,0 +1,67 @@
+{
+  "users": {
+    "plural_generic": "Usuarios",
+    "firstname": "Nombre",
+    "lastname": "Apellido",
+    "username": "Nombre de usuario",
+    "email": "Email",
+    "role": "Rol",
+    "role_pilot": "Piloto",
+    "role_admin": "Monitor"
+  },
+  "operations": {
+    "plural_generic": "Operaciones",
+    "singular_generic": "Operación",
+    "name": "Nombre",
+    "owner": "Piloto",
+    "owner_editable": "Piloto (nombre de usuario)",
+    "contact": "Nombre del contacto",
+    "phone": "Teléfono del contacto",
+    "submit_time": "Creado",
+    "update_time": "Última actualización",
+    "flight_comments": "Comentarios del vuelo",
+    "aircraft_comments": "Comentarios de la aeronave",
+    "volumes_description": "Descripción de los volumenes",
+    "flight_number": "Número de vuelo",
+    "free_text": "Texto libre",
+    "state": "Estado"
+  },
+  "positions": {
+    "latitude": "Latitud",
+    "longitude": "Longitud",
+    "altitude": "Altitud",
+    "heading": "Orientación (-180 | 180)"
+  },
+  "vehicles": {
+    "plural_generic": "Vehículos",
+    "uvin": "UVIN",
+    "date": "Fecha de registro",
+    "nNumber": "Número de vehículo",
+    "owner": "Piloto (usuario)",
+    "faaNumber": "Número de registro oficial",
+    "faaNumber_desc": "En Uruguay, esta es la matrícula entregada por DINACIA",
+    "vehicleName": "Nombre",
+    "manufacturer": "Marca",
+    "model": "Modelo",
+    "class": "Clase",
+    "accessType": "Tipo de acceso",
+    "vehicleTypeId": "Tipo de vehículo",
+    "org-uuid": "ORG-UIID",
+    "registeredBy": "Registrado por",
+    "add": "Crear veh.",
+    "new_vehicle": "Creando nuevo vehículo",
+    "name": "Nombre"
+  },
+  "volumes": {
+    "effective_time_begin": "Tiempo de comienzo",
+    "effective_time_begin_description": "Momento desde el cual la operación usará el espacio aéreo",
+    "effective_time_end": "Tiempo de finalización",
+    "effective_time_end_description": "Momento mas tardío en el cual el vehículo dejará de usar el espacio aéreo",
+    "min_altitude": "Altitud mínima (en metros)",
+    "max_altitude": "Altitud máxima (en metros)"
+  },
+  "actions": "Acciones",
+  "edit": "Editar",
+  "page": "Página Nº {{number}}",
+  "layers": "Capas"
+}

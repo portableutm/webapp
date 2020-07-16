@@ -5,8 +5,10 @@ import A from 'axios';
 import {API, DEBUG} from '../consts';
 import {fM, } from '../libs/SaferSanctuary';
 import * as importedActions from '../actions';
+import io from 'socket.io-client';
 
 let Axios;
+let socket;
 
 const initialState = {
 	auth: {
@@ -105,6 +107,19 @@ const internalActions = {
 				.then(result => {
 					const token = result.data;
 					store.setState({auth: {...store.state.auth, token: S.Just(token), username: username}});
+					socket = io(API + '?token=' + token);
+
+					socket.on('new-position', function (info) {
+						const info2 = {...info};
+						//console.log('DroneState: new-position: ', info2);
+						store.actions.drones.add(info2);
+					});
+
+					socket.on('operation-state-change', function (info) {
+						store.actions.operations.updateOne(info.gufi, info.state);
+					});
+					socket.connect();
+
 					callback && callback();
 				})
 				.catch(error => {

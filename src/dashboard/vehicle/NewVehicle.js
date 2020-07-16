@@ -4,6 +4,7 @@ import {Button, FormGroup, InputGroup, Radio, RadioGroup} from '@blueprintjs/cor
 import useAdesState from '../../state/AdesState';
 import { useHistory, useParams } from 'react-router-dom';
 import {fM} from '../../libs/SaferSanctuary';
+import styles from '../generic/GenericList.module.css';
 
 const Text = ({name, label, description, placeholder = '', ...props}) => (
 	<FormGroup
@@ -23,11 +24,10 @@ const Text = ({name, label, description, placeholder = '', ...props}) => (
 
 function NewVehicle({userId}) {
 	const { username } = useParams();
-	const { t, } = useTranslation();
+	const { t, } = useTranslation('glossary');
 	const history = useHistory();
 	const [state, actions] = useAdesState();
 	const [isSubmitting, setSubmitting] = useState(false);
-	const [error, setError] = useState(null);
 	const [tclass, setTClass] = useState('MULTIROTOR');
 
 	useEffect(() => {
@@ -38,82 +38,77 @@ function NewVehicle({userId}) {
 
 	return (
 		<>
-			<div className={error == null ? 'sticky' : 'sticky error animated flash repeat'}>
+			<div className={styles.header}>
 				<h1>
-					{t('dsh.vehicles_new')}
+					{t('vehicles.new_vehicle').toUpperCase()}
 				</h1>
-				{ error !== null &&
-					<p>
-						{error}
-					</p>
-				}
 			</div>
 			<Text
 				name="nNumber"
-				label={t('vehicle.nNumber')}
+				label={t('vehicles.nNumber')}
 				description="Vehicle number"
 			/>
 			<Text
 				name="faaNumber"
-				label={t('vehicle.faaNumber')}
+				label={t('vehicles.faaNumber')}
 				placeholder="N707JT"
-				description={t('vehicle.faaNumber_desc')}
+				description={t('vehicles.faaNumber_desc')}
 			/>
 			<Text
 				name="vehicleName"
-				label={t('vehicle.vehicleName')}
+				label={t('vehicles.vehicleName')}
 				placeholder="Air Force One"
 				description="Short descriptive name of the vehicle"
 			/>
 			<Text
 				name="manufacturer"
-				label={t('vehicle.manufacturer')}
+				label={t('vehicles.manufacturer')}
 				placeholder="DJI"
 				description="Brand or company that fabricated the vehicle"
 			/>
 			<Text
 				name="model"
-				label={t('vehicle.model')}
+				label={t('vehicles.model')}
 				placeholder="Phantom 6 Mini"
 				description="Model of the vehicle"
 			/>
 			<RadioGroup
-				label={t('vehicle.class')}
+				label={t('vehicles.class')}
 				onChange={(evt) => setTClass(evt.currentTarget.value)}
 				selectedValue={tclass}
 			>
 				<Radio label="Multirotor" value="MULTIROTOR" />
 				<Radio label="Fixed-wing" value="FIXEDWING" />
 			</RadioGroup>
-			<Text
+			{/*<Text
 				name="accessType"
-				label={t('vehicle.accessType')}
+				label={t('vehicles.accessType')}
 				placeholder=""
 				disabled={true}
 			/>
 
 			<Text
 				name="vehicleTypeId"
-				label={t('vehicle.vehicleTypeId')}
+				label={t('vehicles.vehicleTypeId')}
 				placeholder=""
 				disabled={true}
 			/>
 			<Text
 				name="org-uuid"
-				label={t('vehicle.org-uuid')}
+				label={t('vehicles.org-uuid')}
 				placeholder=""
 				disabled={true}
-			/>
-			{/*
+			/>*/}
+
 			<Text
 				name="owner_id"
-				label={'Owner username'}
+				label={t('vehicles.owner')}
 				placeholder={userId || username}
 				disabled={true}
-			/>
+			/>{/*
 			<Text
 				name="registeredBy"
-				label={t('vehicle.registeredBy')}
+				label={t('vehicles.registeredBy')}
 				placeholder={fM(state.auth.user).username}
 				disabled={true}
 			/>*/}
@@ -138,7 +133,7 @@ function NewVehicle({userId}) {
 					actions.vehicles.post(
 						vehicle, 
 						() => history.push('/dashboard/vehicles'),
-						(err) => {setError(err); setSubmitting(false);}
+						(err) => {actions.warning.setWarning(err); setSubmitting(false);}
 					);
 				}}
 			>

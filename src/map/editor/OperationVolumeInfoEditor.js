@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import styles from '../Map.module.css';
 
 function OperationVolumeInfoEditor(props) {
-	const { t,  } = useTranslation();
+	const { t,  } = useTranslation('glossary');
 	const {info, setInfo} = props;
 	const editInfo = (property, newValue) =>
 		setInfo(volume => {
@@ -60,7 +60,7 @@ function OperationVolumeInfoEditor(props) {
 				*/}
 			<div className={styles.sidebarButtonText}>
 				<p className="centerHorizontally">
-					{t('volume.effective_time_begin')}
+					{t('volumes.effective_time_begin')}
 				</p>
 				<div data-test-id="map#editor#volume#info#effective_time_begin">
 					<DateInput
@@ -83,7 +83,7 @@ function OperationVolumeInfoEditor(props) {
 			*/}
 			<div className={styles.sidebarButtonText}>
 				<p className="centerHorizontally">
-					{t('volume.effective_time_end')}
+					{t('volumes.effective_time_end')}
 				</p>
 				<div data-test-id="map#editor#volume#info#effective_time_end">
 					<DateInput
@@ -110,7 +110,7 @@ function OperationVolumeInfoEditor(props) {
 					onChange={evt => editInfo('min_altitude', evt.target.value)}
 				/>
 			</FormGroup> */}
-			<FormGroup className={styles.sidebarButtonText} label={t('volume.max_altitude')} labelFor="max_altitude">
+			<FormGroup className={styles.sidebarButtonText} label={t('volumes.max_altitude')} labelFor="max_altitude">
 				<InputGroup
 					id="max_altitude"
 					data-test-id="map#editor#volume#info#max_altitude"

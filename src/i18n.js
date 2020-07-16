@@ -1,20 +1,30 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import localeCommonEN from './locales/common.en.json';
-import localeAuthEN from './locales/auth.en.json';
-import localeAuthES from './locales/auth.es.json';
-import localeDashboardEN from './locales/dashboard.en.json';
-import localeDashboardES from './locales/dashboard.es.json';
+import localeCommonEN from './locales/en/common.json';
+import localeCommonES from './locales/es/common.json';
+import localeAuthEN from './locales/en/auth.json';
+import localeAuthES from './locales/es/auth.json';
+import localeDashboardEN from './locales/en/dashboard.json';
+import localeDashboardES from './locales/es/dashboard.json';
+import localeGlossaryEN from './locales/en/glossary.json';
+import localeGlossaryES from './locales/es/glossary.json';
+import localeMapEN from './locales/en/map.json';
+import localeMapES from './locales/es/map.json';
 
 const resources = {
 	en: {
 		common: localeCommonEN,
 		dashboard: localeDashboardEN,
-		auth: localeAuthEN
+		auth: localeAuthEN,
+		glossary: localeGlossaryEN,
+		map: localeMapEN
 	},
 	es: {
+		common: localeCommonES,
 		dashboard: localeDashboardES,
-		auth: localeAuthES
+		auth: localeAuthES,
+		glossary: localeGlossaryES,
+		map: localeMapES
 	}
 };
 

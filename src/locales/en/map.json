@@ -1,0 +1,56 @@
+{
+  "quickfly": {
+    "title": "Quick Fly",
+    "add_new": "Add new QuickFly",
+    "name": "Name",
+    "required": "Required",
+    "new_location": "New location",
+    "new_location_created": "New QuickFly created!",
+    "creating_new": "Creating new Quick Fly",
+    "save": "Save",
+    "info": "The position of the new saved location is captured automatically from the current region shown on the map."
+  },
+  "options": "Options",
+  "layers": "Layers",
+  "clicks_enabled": "Clicking on operations and restricted flight volumes will show their properties. Click here to change this behaviour",
+  "clicks_disabled": "Clicking on operations and restricted flight volumes will NOT show their properties. Click here to change this behaviour",
+  "filter": {
+    "proposed": "Proposed",
+    "accepted": "Accepted",
+    "activated": "Activated",
+    "closed": "DEBUG: Closed",
+    "pending": "Pending",
+    "nonconforming": "Non-conforming",
+    "rogue": "Rogue",
+    "bystate": "FILTER BY STATE",
+    "byid": "FILTER BY OPERATION",
+    "rfvs": "RESTRICTED FLIGHT ZONES"
+  },
+  "flyto": "Fly in map to",
+  "selected_operation": "Selected operation",
+  "editor": {
+    "return": "Go back",
+    "volume": {
+      "editingvolume_count": "Editing volume {{count}} of the operation",
+      "nearstructure": "Is this operation volume within 400' of a structure?",
+      "bvlos": "Describes whether any portion of the operation volume is beyond the visual line of sight of the RPIC.",
+      "selecttime": "Select time...",
+      "closecalendar": "Close calendar"
+    },
+    "operation": {
+      "complete": "Editing information of operation"
+    },
+    "completesteps": "Complete the steps to define a new operation.",
+    "definevolume": "Click on the map to define a polygon.",
+    "defineoperationinfo": "Complete the data required.",
+    "savingoperation": "Saving operation. Please wait",
+    "savingerror": "Please change the affected parameters and retry.",
+    "step": {
+      "definevolumes": "Step 1: Define volumes of operation.",
+      "defineoperationinfo": "Step 2: Fill out general information.",
+      "finish": "Step 3: Finish."
+    },
+    "finish": "Finish",
+    "cant_finish": "The OPERATION could not be created, as the polygon was not defined. Please, define a polygon for where the vehicle can fly, by clicking on the map on the appropiate positions"
+  }
+}

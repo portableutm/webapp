@@ -44,7 +44,7 @@ function updateOperationState(store, gufi, info) {
 	if (S.isJust(mbCurrentOperation)) {
 		const currentOperation = fM(mbCurrentOperation);
 		if (isRogue) store.actions.notifications.add(
-			new OperationGoneRogue(currentOperation.flight_comments)
+			new OperationGoneRogue(currentOperation.name)
 		);
 		currentOperation.state = info;
 		const newOperations = S.insert(gufi)(currentOperation)(currentOperations);
@@ -80,6 +80,7 @@ export const post = (store, operation, callback, errorCallback) => {
 		})
 		.catch(error => {
 			print(store.state, true, 'OperationState', error);
+			store.actions.warning.setWarning(error.response.data.detail);
 			errorCallback && error.response && errorCallback(error.response.data);
 		});
 };

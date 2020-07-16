@@ -1,7 +1,9 @@
 import React from 'react';
 import styles from './home.module.css';
+import genericListStyle from '../generic/GenericList.module.css';
 import useAdesState from '../../state/AdesState';
 import S from 'sanctuary';
+import {useTranslation} from 'react-i18next';
 
 const SimpleValue = ({title, value, color}) => {
 	return (
@@ -14,6 +16,7 @@ const SimpleValue = ({title, value, color}) => {
 
 const HomeScreen = () => {
 	const [state, ] = useAdesState();
+	const { t } = useTranslation('dashboard');
 	const operations = S.values(state.operations.list);
 	const operationCount = operations.length;
 	const activeCount = (S.filter ((op) => op.state === 'ACTIVE') (operations)).length;
@@ -23,28 +26,33 @@ const HomeScreen = () => {
 
 	return (
 		<>
+			<div className={genericListStyle.header}>
+				<h1>
+					{t('home.title').toUpperCase()}
+				</h1>
+			</div>
 			<div className={styles.homeScreen}>
 				<SimpleValue
-					title="Total of operations"
+					title={t('home.total')}
 					value={operationCount}
 				/>
 				<SimpleValue
-					title="Active operations"
+					title={t('home.active')}
 					value={activeCount}
 					color="chocolate"
 				/>
 				<SimpleValue
-					title="Accepted operations"
+					title={t('home.accepted')}
 					value={acceptedCount}
 					color="rgb(0,100,0)"
 				/>
 				<SimpleValue
-					title="Pending operations"
+					title={t('home.pending')}
 					value={pendingCount}
 					color="orangered"
 				/>
 				<SimpleValue
-					title="Drones in the air"
+					title={t('home.vehicles')}
 					value={dronesCount}
 					color="darkmagenta"
 				/>

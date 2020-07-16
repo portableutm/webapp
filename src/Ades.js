@@ -13,7 +13,6 @@ import {
 import S from 'sanctuary';
 import { useTranslation } from 'react-i18next';
 import jwtDecode from 'jwt-decode';
-import io from 'socket.io-client';
 
 /*
  * CSS Styling
@@ -57,7 +56,6 @@ import VehiclesList from './dashboard/vehicle/VehiclesList';
 import NewVehicle from './dashboard/vehicle/NewVehicle';
 import HomeScreen from './dashboard/home/HomeScreen';
 import VerificationScreen from './VerificationScreen';
-import {API} from './consts';
 import BottomArea from './layout/BottomArea';
 import NotificationCenter from './NotificationCenter';
 
@@ -139,7 +137,6 @@ function Ades() {
 	const [isLoggedIn, setLoggedIn] = useState(true);
 	const [role, setRole] = useState('none');
 	const [timeoutUnlogin, setTimeoutUnlogin] = useState(0);
-	const [mbSocket, setSocket] = useState(S.Nothing);
 
 	useEffect(() => {
 		if (S.isJust(state.auth.token)) {
@@ -161,32 +158,7 @@ function Ades() {
 					actions.auth.logout();
 				});
 			}
-			if (S.isJust(mbSocket)) {
-				/* Re-connect to socket.io */
-				const socket = fM(mbSocket);
-				const token = fM(state.auth.token);
-				if (socket.connected)
-					socket.close();
-				socket.io.opts.query = { token };
-				socket.connect();
-			} else {
-				const newSocket = io(API, {
-					query: {
-						token: fM(state.auth.token)
-					},
-					transports: ['websocket']
-				});
-				/* Initialize sockets */
-				newSocket.on('new-position', function (info) {
-					const info2 = {...info};
-					//console.log('DroneState: new-position: ', info2);
-					actions.drones.add(info2);
-				});
-				newSocket.on('operation-state-change', function (info) {
-					actions.operations.updateOne(info.gufi, info.state);
-				});
-				setSocket(S.Just(newSocket));
-			}
+
 			setTimeoutUnlogin(setTimeout(() => {
 				actions.auth.logout();
 				setRole('none');
@@ -194,9 +166,6 @@ function Ades() {
 			}, (decoded.exp * 1000) - new Date().getTime()));
 			//}, 20000));
 		} else {
-			if (S.isJust(mbSocket)) {
-				fM(mbSocket).removeAllListeners();
-			}
 			actions.auth.logout();
 			setRole('none');
 			setLoggedIn(false);
@@ -251,6 +220,9 @@ function Ades() {
 				<Router>
 					<Switch>
 						<Route exact path='/registration'>
+							<NewUser/>
+						</Route>
+						<Route exact path='/registro'>
 							<NewUser/>
 						</Route>
 						<Route exact path='/debug'>
@@ -428,8 +400,14 @@ function Ades() {
 						<Route exact path='/registration'>
 							<NewUser/>
 						</Route>
+						<Route exact path='/registro'>
+							<NewUser/>
+						</Route>
 						<Route path='/verify/:username'>
 							<VerificationScreen/>
+						</Route>
+						<Route path='/es'>
+							<LoginScreen/>
 						</Route>
 						<Route path='/'>
 							<LoginScreen/>

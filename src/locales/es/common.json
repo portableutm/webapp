@@ -1,0 +1,24 @@
+{
+  "hamburger": {
+    "map": "Mapa en tiempo real",
+    "dashboard": "Panel de control",
+    "createnewop": "Crear nueva operación"
+  },
+  "notifications": {
+    "operation_gone_rogue": {
+      "header": "OPERACIÓN EN ESTADO ROGUE",
+      "body": "La operación \"{{operation}}\" está en el estado ROGUE. Es posible que los vehículos estén fuera de su volúmen. Es importante notificar a todos los vehículos cercanos."
+    }
+  },
+  "forms": {
+    "required": "(obligatorio)",
+    "optional": "(opcional)"
+  },
+  "show_on_map": "Mostrar en mapa",
+  "remove_from_map": "Remover del mapa",
+  "cant_edit": "(no editable)",
+  "change_password": "Cambiar la contraseña de {{name}}",
+  "save_changes": "Guardar cambios",
+  "click_to_expand": "Mostrar información",
+  "click_to_collapse": "Esconder información"
+}

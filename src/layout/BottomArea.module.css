@@ -15,9 +15,8 @@
 .bottomAreaCloser {
     position: absolute;
     border-radius: 15px;
-    background-color: rgb(57, 64, 83);
-    top: -15px;
-    right: -15px;
+    top: 0;
+    right: 0;
 }
 
 .bottomAreaInside {

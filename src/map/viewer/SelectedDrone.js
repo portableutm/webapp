@@ -27,15 +27,15 @@ function Property({property, value}) {
 }
 
 function SelectedDrone ({gufi}) {
-	const { t } = useTranslation();
+	const { t } = useTranslation('glossary');
 	const [state, ] = useAdesState(state => state.drones);
 	const drone = fM(S.value(gufi)(state.list));
 	const info = [
 		['ID', drone.gufi],
-		['Lat', drone.location.coordinates.lat],
-		['Lng', drone.location.coordinates.lng],
-		[t('altitude'), drone.altitude_gps],
-		[t('heading'), drone.heading]
+		[t('positions.latitude'), drone.location.coordinates.lat],
+		[t('positions.longitude'), drone.location.coordinates.lng],
+		[t('positions.altitude'), drone.altitude_gps],
+		[t('positions.heading'), drone.heading]
 	];
 
 	return(

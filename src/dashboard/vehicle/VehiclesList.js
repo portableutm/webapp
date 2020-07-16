@@ -7,65 +7,87 @@ import {GenericListLine} from '../generic/GenericList';
 import styles from '../generic/GenericList.module.css';
 
 function Vehicle({children: v}) {
-	const { t,  } = useTranslation();
+	const { t,  } = useTranslation(['glossary','common']);
 	const [showProperties, setShowProperties] = useState(false);
 
 	return (
 		<Callout
 			key={v.faaNumber}
 			className={styles.item}
-			title={<div>{v.vehicleName + ' (' + v.faaNumber + ')'} <Tag minimal={true}>{showProperties ? t('click_to_collapse') : t('click_to_expand')}</Tag></div>}
+			title={
+				<div className={styles.title}>
+					<p style={{height: '100%', maxWidth: '50%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
+						{v.vehicleName + ' (' + v.faaNumber + ')'}
+					</p>
+					<Button
+						className={styles.button}
+						small
+						minimal
+						icon='menu-open'
+						intent={showProperties ? Intent.DANGER : Intent.SUCCESS}
+						onClick={() => setShowProperties(show => !show)}
+					>
+						<div className={styles.buttonHoveredTooltip}>
+							{ showProperties &&
+							t('common:click_to_collapse')
+							}
+							{ !showProperties &&
+							t('common:click_to_expand')
+							}
+						</div>
+					</Button>
+				</div>
+			}
 			icon="double-chevron-right"
-			onClick={() => setShowProperties(show => !show)}
 		>
 			{showProperties &&
-			<div className="animated flipInX faster">
+			<div className="animated fadeIn faster">
 				<GenericListLine>
-					{t('vehicle.uvin')}
+					{t('vehicles.uvin')}
 					{v.uvin}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle.date')}
+					{t('vehicles.date')}
 					{v.date}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle.nNumber')}
+					{t('vehicles.nNumber')}
 					{v.nNumber}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle.faaNumber')}
+					{t('vehicles.faaNumber')}
 					{v.faaNumber}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle.name')}
+					{t('vehicles.name')}
 					{v.vehicleName}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle.manufacturer')}
+					{t('vehicles.manufacturer')}
 					{v.manufacturer}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle.model')}
+					{t('vehicles.model')}
 					{v.model}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle.class')}
+					{t('vehicles.class')}
 					{v.class}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle.accessType')}
+					{t('vehicles.accessType')}
 					{v.accessType}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle.vehicleTypeId')}
+					{t('vehicles.vehicleTypeId')}
 					{v.vehicleTypeId}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle.org-uuid')}
+					{t('vehicles.org-uuid')}
 					{v['org-uuid']}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle.registeredBy')}
+					{t('vehicles.registeredBy')}
 					{v.registeredBy.username}
 				</GenericListLine>
 			</div>
@@ -75,7 +97,7 @@ function Vehicle({children: v}) {
 }
 
 function VehiclesList() {
-	const { t,  } = useTranslation();
+	const { t,  } = useTranslation('glossary');
 	const [state, actions] = useAdesState(state => state.vehicles, actions => actions.vehicles);
 	const vehicles = S.values(state.list);
 	const isThereVehicles = vehicles.length > 0;
@@ -88,7 +110,11 @@ function VehiclesList() {
 	if (isThereVehicles) {
 		return (
 			<>
-				<h1>{t('vehicles')}</h1>
+				<div className={styles.header}>
+					<h1>
+						{t('vehicles.plural_generic').toUpperCase()}
+					</h1>
+				</div>
 				{ 	state.error &&
 				<>
 					<p>

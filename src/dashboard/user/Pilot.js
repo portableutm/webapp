@@ -7,9 +7,10 @@ import {fM} from '../../libs/SaferSanctuary';
 
 import profile from '../../images/profile.png';
 import styles from './Pilot.module.css';
+import genericListStyles from '../generic/GenericList.module.css';
 
 function Pilot({user}) {
-	const { t, } = useTranslation();
+	const { t, } = useTranslation(['glossary', 'common']);
 	//const { username } = useParams();
 	//const [ user, setUser ] = useState(passedUser);
 	const [isUserDataChangeEnabled, setUserDataChangeEnabled] = useState(true);
@@ -91,8 +92,14 @@ function Pilot({user}) {
 	 */
 
 	return (
-		<div className={styles.pilot}>
-			<div className={styles.pilotLeft}>
+		<>
+			<div className={genericListStyles.header}>
+				<h1>
+					{user.firstName + ' ' + user.lastName}
+				</h1>
+			</div>
+			<div className={styles.pilot}>
+				{/*<div className={styles.pilotLeft}>
 				<img className={styles.pilotImg} src={profile} title="User icon by Icons8" alt="Default profile"/>
 			</div>
 			<div className={styles.pilotRight}>
@@ -102,76 +109,74 @@ function Pilot({user}) {
 				{	user != null &&
 					<h1 className="bp3-heading">{user.firstName + ' ' + user.lastName}</h1>
 				}
-			</div>
-			<div className={styles.pilotBottom}>
-				{	user != null &&
-					<>
-						<Card className='fullHW' elevation={Elevation.TWO}>
-							<FormGroup
-								label={t('user.username')}
-								labelFor="username"
-								labelInfo="(non-editable)"
-							>
-								<InputGroup leftIcon="person" disabled={true} id="username"  value={user.username}/>
-							</FormGroup>
-							<FormGroup
-								label={t('user.firstname')}
-								labelFor="firstName"
-							>
-								<InputGroup leftIcon="person" disabled={!isUserDataChangeEnabled} id="firstName" defaultValue={user.firstName}/>
-							</FormGroup>
-							<FormGroup
-								label={t('user.lastname')}
-								labelFor="lastName"
-							>
-								<InputGroup leftIcon="person" disabled={!isUserDataChangeEnabled} id="lastName" defaultValue={user.lastName}/>
-							</FormGroup>
-							<FormGroup
-								label={t('user.email')}
-								labelFor="email"
-							>
-								<InputGroup
-									type="email"
-									onChange={onEmailInputChange}
-									leftIcon="envelope"
-									disabled={!isUserDataChangeEnabled}
-									id="email"
-									intent={isEmailValid ? Intent.SUCCESS : Intent.WARNING}
-									defaultValue={user.email}/>
-							</FormGroup>
-							<FormGroup
-								label={t('user.role')}
-								labelFor="role"
-							>
-								<div id="role" className="bp3-select bp3-fill">
-									<select value={user.role} disabled={true}>
-										<option value="admin">Operator</option>
-										<option value="pilot">Pilot</option>
-									</select>
-								</div>
-							</FormGroup>
-							<Button
-								intent={Intent.PRIMARY}
+			</div>*/}
+				<div className={styles.pilotBottom}>
+					<Card className='fullHW' elevation={Elevation.TWO}>
+						<FormGroup
+							label={t('users.username')}
+							labelFor="username"
+							labelInfo={t('common:cant_edit')}
+						>
+							<InputGroup leftIcon="person" disabled={true} id="username"  value={user.username}/>
+						</FormGroup>
+						<FormGroup
+							label={t('users.firstname')}
+							labelFor="firstName"
+						>
+							<InputGroup leftIcon="person" disabled={!isUserDataChangeEnabled} id="firstName" defaultValue={user.firstName}/>
+						</FormGroup>
+						<FormGroup
+							label={t('users.lastname')}
+							labelFor="lastName"
+						>
+							<InputGroup leftIcon="person" disabled={!isUserDataChangeEnabled} id="lastName" defaultValue={user.lastName}/>
+						</FormGroup>
+						<FormGroup
+							label={t('users.email')}
+							labelFor="email"
+						>
+							<InputGroup
+								type="email"
+								onChange={onEmailInputChange}
+								leftIcon="envelope"
 								disabled={!isUserDataChangeEnabled}
-								onClick={() => changeUserData()}
-							>
-								Save changes
-							</Button>
-						</Card>
-						<Card className='fullHW' elevation={Elevation.TWO} style={{marginTop: '10px', marginBottom: '10px'}}>
-							{	!isPasswordChangeEnabled &&
+								id="email"
+								intent={isEmailValid ? Intent.SUCCESS : Intent.WARNING}
+								defaultValue={user.email}/>
+						</FormGroup>
+						<FormGroup
+							label={t('users.role')}
+							labelFor="role"
+						>
+							<div id="role" className="bp3-select bp3-fill">
+								<select value={user.role} disabled={true}>
+									<option value="admin">Operator</option>
+									<option value="pilot">Pilot</option>
+								</select>
+							</div>
+						</FormGroup>
+						<Button
+							intent={Intent.PRIMARY}
+							disabled={!isUserDataChangeEnabled}
+							onClick={() => changeUserData()}
+						>
+							{t('common:save_changes')}
+						</Button>
+					</Card>
+					<Card className='fullHW' elevation={Elevation.TWO} style={{marginTop: '10px', marginBottom: '10px'}}>
+						{	!isPasswordChangeEnabled &&
 								<Button
 									intent={Intent.DANGER}
 									disabled={!isUserDataChangeEnabled}
 									onClick={() => setPasswordChangeEnabled(true)}
 								>
-									Change password
+									{t('common:change_password', {name: user.username})}
 								</Button>
-							}
-							{	isPasswordChangeEnabled &&
+						}
+						{	isPasswordChangeEnabled &&
 								<>
 									<FormGroup
-										label={t('user.change_password')}
+										label={t('common:change_password', {name: user.username})}
 										labelFor="newpassword"
 									>
 										<InputGroup type="password" leftIcon="compass" id="newpassword"/>
@@ -180,15 +185,14 @@ function Pilot({user}) {
 										intent={Intent.PRIMARY}
 										onClick={() => changePassword()}
 									>
-									Save new password
+										{t('common:save_changes')}
 									</Button>
 								</>
-							}
-						</Card>
-					</>
-				}
+						}
+					</Card>
+				</div>
 			</div>
-		</div>
+		</>
 	);
 }
 export default Pilot;

@@ -52,20 +52,18 @@ const NewUser = ({isSelfRegistering = true}) => {
 	const [role, setRole] = useState('pilot');
 	const VERIFICATION_NOT_STARTED = 0; const VERIFICATION_OK = 1; const VERIFICATION_ERROR = 2;
 	const [verificationStatus, setVerificationStatus] = useState(VERIFICATION_NOT_STARTED);
-	const { t, i18n } = useTranslation(['auth','common']);
+	const { t, i18n } = useTranslation(['auth','glossary','common']);
 	const [, setCookie, ] = useCookies(['jwt']);
 
 	useEffect(() => {
-		if (!DEBUG) {
-			if (navigator.language.substring(0, 2) === 'es') {
-				setCookie('lang', 'es', {path: '/'});
-				i18n.changeLanguage('es');
-			} else {
-				setCookie('lang', 'en', {path: '/'});
-				i18n.changeLanguage('en');
-			}
+		if (window.location.pathname === '/registro/') {
+			setCookie('lang', 'es', {path: '/'});
+			i18n.changeLanguage('es');
+		} else if (window.location.pathname === '/registration/') {
+			setCookie('lang', 'en', {path: '/'});
+			i18n.changeLanguage('en');
 		}
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [window.location]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	//----------------------------------------------------------------------------------
 	//--------------------------------- AUX FUNCTIONS  ---------------------------------
@@ -155,9 +153,9 @@ const NewUser = ({isSelfRegistering = true}) => {
         
 		return (
 			<UnloggedScreen showUnlogged={isSelfRegistering}>
-				<form onSubmit={handleOnSubmit}>
-					<h1>{t('adesweb')}</h1>
-					<h3>{isSelfRegistering ? t('login.pleaseregister') : t('dsh.new_common:user.title')}</h3>
+				<form style={{paddingTop: '40px'}} onSubmit={handleOnSubmit}>
+					<h1>{isSelfRegistering ? t('adesweb') : ' '}</h1>
+					<h3>{isSelfRegistering ? t('login.pleaseregister') : ' '}</h3>
 					<Alert
 						confirmButtonText={'OK'}
 						canEscapeKeyCancel={false}
@@ -173,19 +171,19 @@ const NewUser = ({isSelfRegistering = true}) => {
 					</Alert>
 					{!isSelfRegistering &&
 					<RadioGroup
-						label={t('common:user.role')}
+						label={t('glossary:users.role')}
 						onChange={(evt) => setRole(evt.currentTarget.value)}
 						selectedValue={role}
 					>
-						<Radio label={t('dsh.new_common:user.role_admin')} value="admin"/>
-						<Radio label={t('dsh.new_common:user.role_pilot')} value="pilot"/>
+						<Radio label={t('glossary:users.role_admin')} value="admin"/>
+						<Radio label={t('glossary:users.role_pilot')} value="pilot"/>
 					</RadioGroup>
 					}
 					{/*****************************************************************
 					 *************************** First Name ***************************
 					 ******************************************************************/}
 					<FormGroup
-						label={t('common:user.firstname')}
+						label={t('glossary:users.firstname')}
 						labelFor="input-first-name">
 						<InputGroup id="input-first-name" value={firstName} onChange={e => setFirstName(e.target.value)}/>
 					</FormGroup>
@@ -194,7 +192,7 @@ const NewUser = ({isSelfRegistering = true}) => {
 					 *************************** Last Name  ***************************
 					 ******************************************************************/}
 					<FormGroup
-						label={t('common:user.lastname')}
+						label={t('glossary:users.lastname')}
 						labelFor="input-last-name">
 						<InputGroup id="input-last-name" value={lastName} onChange={e => setLastName(e.target.value)}/>
 					</FormGroup>
@@ -203,7 +201,7 @@ const NewUser = ({isSelfRegistering = true}) => {
 					 ***************************** Email  *****************************
 					 ******************************************************************/}
 					<FormGroup
-						label={t('common:user.email')}
+						label={t('glossary:users.email')}
 						labelFor="input-email">
 						<InputGroup id="input-email" value={email} onChange={e => setEmail(e.target.value)}/>
 					</FormGroup>
@@ -212,7 +210,7 @@ const NewUser = ({isSelfRegistering = true}) => {
 					 **************************** Username ****************************
 					 ******************************************************************/}
 					<FormGroup
-						label={t('common:user.username')}
+						label={t('glossary:users.username')}
 						labelFor="input-username">
 						<InputGroup id="input-username" value={username} onChange={e => setUsername(e.target.value)}/>
 					</FormGroup>
@@ -273,19 +271,19 @@ const NewUser = ({isSelfRegistering = true}) => {
 		} else if (verificationStatus === VERIFICATION_NOT_STARTED) {
 			return (
 				<UnloggedScreen showUnlogged={isSelfRegistering}>
-					{t('dsh.new_common:user.verifying')}
+					{t('dsh.new_glossary:users.verifying')}
 				</UnloggedScreen>
 			);
 		} else if (verificationStatus === VERIFICATION_OK) {
 			return (
 				<UnloggedScreen showUnlogged={isSelfRegistering}>
-					{t('dsh.new_common:user.verificated')}
+					{t('dsh.new_glossary:users.verificated')}
 				</UnloggedScreen>
 			);
 		} else if (verificationStatus === VERIFICATION_ERROR) {
 			return (
 				<UnloggedScreen showUnlogged={isSelfRegistering}>
-					{t('dsh.new_common:user.verification_error')}
+					{t('dsh.new_glossary:users.verification_error')}
 				</UnloggedScreen>
 			);
 		}
