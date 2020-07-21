@@ -8,7 +8,7 @@ describe('SP: Simulator', function() {
 
 	it('Try out the drones', function() {
 		cy.visit('http://localhost:2000/simulator');
-		cy.contains('0').click();
+		cy.contains('DRONE 0').click();
 		cy.get('[data-test-id="rightAreaCloser"]').click();
 		cy.get('[data-test-id="map"]').click(150,150);
 		cy.get('[data-test-id="map"]').click('topLeft');
