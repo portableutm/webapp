@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import useAdesState from '../../state/AdesState';
 import S from 'sanctuary';
-import {Button, Callout, Intent, Spinner, Tag} from '@blueprintjs/core';
+import {Button, Callout, Intent, Spinner} from '@blueprintjs/core';
 import {useTranslation} from 'react-i18next';
 import {GenericListLine} from '../generic/GenericList';
 import styles from '../generic/GenericList.module.css';
