@@ -11,7 +11,7 @@ describe('SPx: (Verification)', function () {
 
 		cy.visit('http://localhost:2000/verify/user/token');
 		cy.wait('@postConfirm');
-		cy.contains('app.goto_login').click();
+		cy.contains('goto_login').click();
 	});
 
 	it('Verify FAILS', function () {

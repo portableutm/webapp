@@ -8,8 +8,8 @@ import {useCookies} from 'react-cookie';
 /* External */
 import { useHistory } from 'react-router-dom';
 /* Internal */
+import { DEBUG } from './consts';
 import useAdesState from './state/AdesState.js';
-import {DEBUG} from './consts';
 import logo from './images/logo.png';
 import background from './images/bg.jpg';
 import styles from './LoginScreen.module.css';
@@ -40,7 +40,10 @@ function LoginScreen() {
 	};
 
 	useEffect(() => {
-		if (window.location.pathname === '/es') {
+		if (DEBUG) {
+			setCookie('lang', 'none', {path: '/'});
+			i18n.changeLanguage('none');
+		} else if (window.location.pathname === '/es') {
 			setCookie('lang', 'es', {path: '/'});
 			i18n.changeLanguage('es');
 			history.push('/');

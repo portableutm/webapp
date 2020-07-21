@@ -36,7 +36,7 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 	it('Finds button and starts use case', function () {
 		cy.visit('http://localhost:2000/');
 		cy.get('[data-test-id="mapButtonMenu"]').click();
-		cy.contains('contextualmenu_createnewop').click();
+		cy.contains('hamburger.createnewop').click();
 	});
 	it('Define Polygon', function () {
 		cy.get('[data-test-id="rightAreaCloser"]').click();
@@ -58,11 +58,11 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 			.first().click();
 		cy.get('[data-test-id="map#editor#volume#info#effective_time_end"]').click();
 		cy.get('.DayPicker-Day')
-			.last()
 			.not('.DayPicker-Day--disabled')
+			.not('.DayPicker-Day--outside')
 			.not('.DayPicker-Day--selected')
 			.not('.DayPicker-Day--today')
-			.first().click();
+			.last().click();
 	});
 	it('Complete Volume information', function () {
 		//cy.get('[data-test-id="mapInputEditorVolumeDescr"]').
@@ -76,12 +76,12 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 			.clear()
 			.type('09123456');
 		cy.get('[data-test-id="map#editor#operation#info#name"]').clear().type('CreateNewOp#01');
-		cy.get('[data-test-id="map#editor#operation#info#flight_coments"]').clear().type('CreateNewOp#FC');
+		cy.get('[data-test-id="map#editor#operation#info#pilot"]').clear().type('admin');
 	});
 	it('Finish and add', function () {
 		cy.contains('finish').click();
 		cy.wait('@postOperation');
 		cy.get('[data-test-id="mapButtonMenu"]').click();
-		cy.contains('contextualmenu_map').click();
+		cy.contains('hamburger.map').click();
 	});
 });

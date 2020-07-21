@@ -5,7 +5,7 @@ import {Button, Intent, Card, Elevation, FormGroup, InputGroup} from '@blueprint
 import useAdesState, {Axios} from '../../state/AdesState';
 import {fM} from '../../libs/SaferSanctuary';
 
-import profile from '../../images/profile.png';
+/* import profile from '../../images/profile.png'; */
 import styles from './Pilot.module.css';
 import genericListStyles from '../generic/GenericList.module.css';
 

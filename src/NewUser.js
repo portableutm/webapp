@@ -56,7 +56,10 @@ const NewUser = ({isSelfRegistering = true}) => {
 	const [, setCookie, ] = useCookies(['jwt']);
 
 	useEffect(() => {
-		if (window.location.pathname === '/registro/') {
+		if (DEBUG) {
+			setCookie('lang', 'none', {path: '/'});
+			i18n.changeLanguage('none');
+		} else if (window.location.pathname === '/registro/') {
 			setCookie('lang', 'es', {path: '/'});
 			i18n.changeLanguage('es');
 		} else if (window.location.pathname === '/registration/') {
