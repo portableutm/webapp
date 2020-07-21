@@ -1,0 +1,67 @@
+{
+  "users": {
+    "plural_generic": "Users",
+    "firstname": "First name",
+    "lastname": "Last name",
+    "username": "Username",
+    "email": "E-mail",
+    "role": "Role",
+    "role_pilot": "Pilot",
+    "role_admin": "Monitor"
+  },
+  "operations": {
+    "plural_generic": "Operations",
+    "singular_generic": "Operation",
+    "name": "Name",
+    "owner": "Owner",
+    "owner_editable": "Owner (pilot's username)",
+    "contact": "Contact name",
+    "phone": "Contact phone",
+    "submit_time": "Submitted at",
+    "update_time": "Last updated at",
+    "flight_comments": "Flight comments",
+    "aircraft_comments": "Aircraft comments",
+    "volumes_description": "Volumes description",
+    "flight_number": "Flight number",
+    "free_text": "Free text",
+    "state": "State"
+  },
+  "positions": {
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "altitude": "Altitude",
+    "heading": "Heading (-180 | 180)"
+  },
+  "vehicles": {
+    "plural_generic": "Vehicles",
+    "uvin": "UVIN",
+    "date": "Registration date",
+    "nNumber": "Vehicle number",
+    "owner": "Owner (username)",
+    "faaNumber": "Official registration number",
+    "faaNumber_desc": "For instance, FAA number in the United States",
+    "vehicleName": "Name",
+    "manufacturer": "Manufacturer",
+    "model": "Model",
+    "class": "Class",
+    "accessType": "Access type",
+    "vehicleTypeId": "Vehicle type id",
+    "org-uuid": "ORG UIID",
+    "registeredBy": "Registered by",
+    "add": "Add veh.",
+    "new_vehicle": "Creating new vehicle",
+    "name": "Name"
+  },
+  "volumes": {
+    "effective_time_begin": "Begins at",
+    "effective_time_begin_description": "Earliest time the operation will use the operation volume.",
+    "effective_time_end": "Ends at",
+    "effective_time_end_description": "Latest time the operation will done with the operation volume.",
+    "min_altitude": "Minimum altitude (in meters)",
+    "max_altitude": "Maximum altitude (in meters)"
+  },
+  "layers": "Layers",
+  "actions": "Actions",
+  "edit": "Edit",
+  "page": "Page {{number}}"
+}

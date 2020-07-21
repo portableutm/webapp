@@ -1,12 +1,13 @@
 import React from 'react';
+import styles from './GenericList.module.css';
 
 function GenericListLine({children}) {
 	return(
-		<div className="dshListItemLine">
-			<div className="dshListItemLineLeft">
+		<div className={styles.line}>
+			<div className={styles.lineLeft}>
 				{children[0]}
 			</div>
-			<div className="dshListItemLineRight">
+			<div className={styles.lineRight}>
 				{children[1]}
 			</div>
 		</div>
@@ -16,7 +17,7 @@ function GenericListLine({children}) {
 
 function GenericList({children}) {
 	return(
-		<div className="dshList">
+		<div className={styles.list}>
 			{children}
 		</div>
 	);

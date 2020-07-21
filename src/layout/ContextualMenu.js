@@ -12,10 +12,10 @@ function ContextualMenu() {
 	const { t, } = useTranslation();
 	return(
 		<Menu>
-			<MenuItem icon="map" text={t('contextualmenu_map')} onClick={() => history.push('/')}/>
-			<MenuItem icon="dashboard" text={t('contextualmenu_dashboard')} onClick={() => history.push('/dashboard')}/>
-			<MenuItem icon="plus" text={t('contextualmenu_createnewop')} onClick={() => history.push('/operation/new')}/>
-			<MenuItem text={'Ades v' + adesVersion} disabled={true}/>
+			<MenuItem icon="map" text={t('hamburger.map')} onClick={() => history.push('/')}/>
+			<MenuItem icon="dashboard" text={t('hamburger.dashboard')} onClick={() => history.push('/dashboard')}/>
+			<MenuItem icon="plus" text={t('hamburger.createnewop')} onClick={() => history.push('/operation/new')}/>
+			<MenuItem text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
 		</Menu>
 	);
 }

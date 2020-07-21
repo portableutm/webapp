@@ -1,0 +1,23 @@
+name: Deploy in production server
+on:
+  push:
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: auto update via ssh
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            ls
+            cd /root/dronfiesuss-ades
+            git fetch --all
+            git reset --hard origin/master
+            npm install
+            npm run-script build
+            pm2 reload frontend
+          host: ${{ secrets.SSH_PROD_HOST }}
+          user: root
+          pass: ${{ secrets.SSH_PROD_KEY}}
+          args: "-tt -vvv"

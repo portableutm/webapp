@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 
 /* Libraries */
 import S from 'sanctuary';
-import {fM, maybeKeys} from '../../libs/SaferSanctuary';
+import {fM} from '../../libs/SaferSanctuary';
 import {useParams} from 'react-router-dom';
 
 /* Internal state */
@@ -17,6 +17,7 @@ const initial = S.fromPairs([
 	S.Pair('1')(true),
 	S.Pair('2')(true),
 	S.Pair('3')(true),
+	S.Pair('4')(false)
 	/*
 	S.Pair('3')(false),
 	S.Pair('4')(true),*/
@@ -27,50 +28,64 @@ const useOperationFilter = () => {
 	const [adesState, actions] = useAdesState();
 	const {id} = useParams();
 	const [ids, setIds] = useState(adesState.map.ids);
-	const [rfvs, setRfvsShowing] = useState(maybeKeys(adesState.rfv.list));
 	const [allOperations, setOperations] = useState(extractOperationsFromState(adesState));
 	const [filteredOperations, setFilteredOperations] = useState([]);
-	const { t,  } = useTranslation();
+	const { t,  } = useTranslation('map');
 
-	const states = [
+	let states = [
 		{
-			text: t('map_filter_accepted'),
+			text: t('filter.accepted'),
 			filter: 'ACCEPTED'
 		},
 		{
-			text: t('map_filter_pending'),
+			text: t('filter.pending'),
 			filter: 'PENDING'
 		},
 		{
-			text: t('map_filter_activated'),
+			text: t('filter.activated'),
 			filter: 'ACTIVATED'
 		},
 		{
-			text: t('map_filter_rogue'),
+			text: t('filter.rogue'),
 			filter: 'ROGUE'
 		},
 		/*
 		{
-			text: t('map_filter_proposed'),
+			text: t('filter.proposed'),
 			filter: 'PROPOSED'
 		},
 		*/
 		/*
 		{
-			text: t('map_filter_closed'),
+			text: t('filter.closed'),
 			filter: 'CLOSED'
 		},
 		*/
 		/*
 		{
-			text: t('map_filter_nonconforming'),
+			text: t('filter.nonconforming'),
 			filter: 'NONCONFORMING'
 		},
 		 */
 	];
+	const closedState = {
+		text: t('filter.closed'),
+		filter: 'CLOSED'
+	};
+
+	if (adesState.debug) states.push(closedState);
 
 	useEffect(() => {
-		actions.map.addId(id);
+		if (id !== null) {
+			actions.map.addId(id);
+			/*setSelectedFilters(S.fromPairs([
+				S.Pair('0')(false),
+				S.Pair('1')(false),
+				S.Pair('2')(false),
+				S.Pair('3')(false),
+				S.Pair('4')(false)]
+			));*/
+		}
 	}, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
@@ -78,12 +93,12 @@ const useOperationFilter = () => {
 	}, [adesState.map.ids]);
 
 	useEffect(() => {
-		const filterNames = id == null ? S.pipe(
+		const filterNames = S.pipe(
 			[
 				S.filter((elem) => fM(S.value(elem)(selectedFilters))),
 				S.map((elem) => states[parseInt(elem)].filter)
 			])
-		(S.keys(selectedFilters)) : [];
+		(S.keys(selectedFilters));
 
 		const filteredOperations = S.join
 		([
@@ -98,10 +113,6 @@ const useOperationFilter = () => {
 		setOperations(extractOperationsFromState(adesState));
 	}, [adesState.operations.updated]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
-		setRfvsShowing(maybeKeys(adesState.rfv.list));
-	}, [adesState.rfv.updated]); // eslint-disable-line react-hooks/exhaustive-deps
-
 	useEffect( () => {
 		//console.log("filteredOperations", filteredOperations);
 	}, [filteredOperations]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -115,7 +126,7 @@ const useOperationFilter = () => {
 		setIds: To show
 	 */
 
-	return [allOperations, filteredOperations, id, selectedFilters, setSelectedFilters, states, ids, setIds, rfvs, setRfvsShowing];
+	return [allOperations, filteredOperations, id, selectedFilters, setSelectedFilters, states, ids, setIds];
 };
 
 export {useOperationFilter as default};

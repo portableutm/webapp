@@ -1,8 +1,9 @@
 import {useEffect, useState} from 'react';
 import S from 'sanctuary';
-import _ from '../../libs/SaferSanctuary';
+import _, {fM} from '../../libs/SaferSanctuary';
 import {useHistory} from 'react-router-dom';
 import useAdesState from '../../state/AdesState';
+import {useTranslation} from 'react-i18next';
 
 /* Constants */
 const DEFAULT_OPERATION_VALIDITY = 1; // Value to set by default in a new OperationVolume by defalt, in hours
@@ -11,11 +12,16 @@ const timeNow2 = new Date();
 timeNow2.setUTCHours(timeNow.getUTCHours() + DEFAULT_OPERATION_VALIDITY);
 const swap = (array) => [array[1], array[0]];
 
-function UseEditorLogic(refMapOnClick) {
+function UseEditorLogic(refMapOnClick, mapInitialized) {
+	const { t } = useTranslation('map');
 	const [operationInfo, setOperationInfo] = useState(S.Just({
+		name: 'Untitled',
+		owner: 'error error',
+		contact: '',
+		contact_phone: '',
 		flight_comments: '',
 		volumes_description: 'v0.1',
-		flight_number: '12345678',
+		flight_number: Date.now(),
 		submit_time: new Date().toISOString(), // TODO: Proper format for time 2019-12-11T19:59:10Z
 		update_time: new Date().toISOString(),
 		faa_rule: 0,
@@ -51,72 +57,79 @@ function UseEditorLogic(refMapOnClick) {
 			}
 		],
 		operation_volumes: null,
-		negotiation_agreements: [
-			{
-				free_text: 'Esto es solo una prueba PRUEBAAAA',
-				discovery_reference: 'discovery reference',
-				type: 'INTERSECTION',
-				uss_name: 'dronfies',
-				uss_name_of_originator: 'dronfies',
-				uss_name_of_receiver: 'dronfies'
-			},
-			{
-				free_text: '(2) Esto es solo una prueba',
-				discovery_reference: '(2)discovery reference',
-				type: 'INTERSECTION',
-				uss_name: 'dronfies',
-				uss_name_of_originator: 'dronfies',
-				uss_name_of_receiver: 'dronfies'
-			}
-		]
+		negotiation_agreements: []
 	}));
-	const [currentStep, setCurrentStep] = useState(0);
 	const [volume, setVolumeInfo] = useState({
 		near_structure: false,
 		effective_time_begin: timeNow,
 		effective_time_end: timeNow2,
 		min_altitude: 0,
-		max_altitude: 393,
+		max_altitude: 120,
 		beyond_visual_line_of_sight: false
 	}); // TODO: Support more than one volume
-	const [polygons, setPolygons] = useState([[]]);
+	const [mbPolygons, setPolygons] = useState(S.Nothing);
 	const [errorOnSaveCallback, setErrorOnSaveCallback] = useState(() => () => {});
 	const [, actions] = useAdesState();
 	const history = useHistory();
+	const polygons = _(mbPolygons);
 
 	useEffect(() => {
-		if (currentStep === 0) {
-			// When Map click should do nothing
-			refMapOnClick.current = () => {};
-			actions.map.onClicksDisabled(false);
-		} else if (currentStep === 1) {
+		if (mapInitialized) {
 			refMapOnClick.current = event => {
 				const {latlng} = event;
-				setPolygons(polygons => {
-					const newPolygon = polygons[0].slice();
+				actions.warning.close();
+				setPolygons(mbPolygons => {
+					let newPolygon;
+					if (S.isJust(mbPolygons)) {
+						newPolygon = (fM(mbPolygons))[0].slice();
+					} else {
+						newPolygon = [];
+					}
 					newPolygon.push([latlng.lat, latlng.lng]);
-					return [newPolygon];
+					return S.Just([newPolygon]);
 				});
 			};
+			setVolumeInfo(volumeInfo => {
+				volumeInfo.effective_time_begin = new Date();
+				volumeInfo.effective_time_end = new Date();
+				volumeInfo.effective_time_end.setUTCHours(volumeInfo.effective_time_end.getUTCHours() + DEFAULT_OPERATION_VALIDITY);
+				return volumeInfo;
+			});
 			actions.map.onClicksDisabled(false);
-		} else if (currentStep === 3) {
-			const info = _(operationInfo);
-			info.submit_time = new Date().toISOString();
-			let volumeWithPolygons = {...volume};
-			volumeWithPolygons.operation_geography = {
-				type: 'Polygon',
-				coordinates: polygons.map(listLngLat =>
-					listLngLat.map(lngLat => swap(lngLat))
-				)
-			};
-			info.operation_volumes = [volumeWithPolygons];
-			const callback = () => history.push('/dashboard/operations');
-			actions.operations.post(info, callback, errorOnSaveCallback);
-			actions.map.onClicksDisabled(false);
+		} else {
+			refMapOnClick.current = () => {};
 		}
-	}, [currentStep]); // eslint-disable-line react-hooks/exhaustive-deps
-	
-	return [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, setCurrentStep, setErrorOnSaveCallback];
+	}, [mapInitialized]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	const saveOperation = (hasFinishedSaving) => {
+		actions.map.onClicksDisabled(false);
+		/* Check polygon has been created */
+		if (S.isNothing(mbPolygons)) {
+			actions.warning.setWarning(t('editor.cant_finish'));
+		}
+		refMapOnClick.current = () => {};
+		const info = _(operationInfo);
+		info.submit_time = new Date().toISOString();
+		let volumeWithPolygons = {...volume};
+		volumeWithPolygons.operation_geography = {
+			type: 'Polygon',
+			coordinates: polygons.map(listLngLat =>
+				listLngLat.map(lngLat => swap(lngLat))
+			)
+		};
+		info.operation_volumes = [volumeWithPolygons];
+		const callback = () => {
+			hasFinishedSaving();
+			history.push('/dashboard/operations');
+		};
+		const errorCallback = () => {
+			hasFinishedSaving();
+			errorOnSaveCallback();
+		};
+		actions.operations.post(info, callback, errorCallback);
+	};
+
+	return [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, setErrorOnSaveCallback];
 }
 
 export default UseEditorLogic;

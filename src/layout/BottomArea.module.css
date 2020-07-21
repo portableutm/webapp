@@ -1,0 +1,37 @@
+.bottomArea {
+    font-weight: normal;
+    position: absolute;
+    padding: 20px 30px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    grid-area: 5 / 1 / 6 / 4;
+    height: 100%;
+    width: 100%;
+    z-index: 2000;
+    pointer-events: auto;
+}
+
+.bottomAreaCloser {
+    position: absolute;
+    border-radius: 15px;
+    top: 0;
+    right: 0;
+}
+
+.bottomAreaInside {
+    position: absolute;
+    padding: 25px;
+    border-radius: 5px;
+    background-color: rgb(255, 51, 0);
+    color: #cdcdcd;
+    -webkit-box-shadow: 0 4px 13px 0 rgba(255, 51, 0, 0.75);
+    -moz-box-shadow:    0 4px 13px 0 rgba(255, 51, 0, 0.75);
+    box-shadow:         0 4px 13px 0 rgba(255, 51, 0, 0.75);
+    animation: attentionFadeIn 1s ease-in-out;
+}
+
+@keyframes attentionFadeIn {
+    0% {transform: scale3d(2, 2, 2); opacity: 0;}
+    100% {transform: scale3d(1, 1, 1); opacity: 100%;}
+}

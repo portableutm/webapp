@@ -21,13 +21,8 @@ const users = [
 
 describe('SP2: (Dashboard): All Users', function () {
 	beforeEach('Auth', function () {
-		cy
-			.request('POST', API + 'auth/login', { username: 'admin', password: 'admin' })
-			.then((response) => {
-				// response.body is automatically serialized into JSON
-				cy.setCookie('user', 'admin');
-				cy.setCookie('jwt', response.body);
-			});
+		cy.setCookie('sneaky', 'admin');
+		cy.setCookie('hummingbird', 'admin');
 		cy.server();           // enable response stubbing
 		cy.route({
 			method: 'GET',      // Route all GET requests
@@ -39,22 +34,24 @@ describe('SP2: (Dashboard): All Users', function () {
 	it('Visits Web and navigate to Dashboard', function () {
 		cy.visit('http://localhost:2000/');
 		cy.get('[data-test-id="mapButtonMenu"]').click();
-		cy.contains('Dashboard').click();
+		cy.contains('hamburger.dashboard').click();
 	});
 	it('Finds Users button', function () {
-		cy.contains('All users').click();
+		cy.contains('sidemenu.all_users').click();
 	});
 
-	it('Find user jperez and check it id matches', function () {
-		cy.get('.dshUsersList').then(($el) => {
-			expect($el).to.contain("Juan");
-			expect($el).to.contain("Perez");
-			expect($el).to.contain("jperez@dronfies.com");
-			expect($el).to.contain("admin");
-			expect($el).to.contain("Manola");
-			expect($el).to.contain("Fulana");
-			expect($el).to.contain("mfulana@dronfies.com");
-			expect($el).to.contain("pilot");
+	/*it('Find user jperez and check it id matches, edits it', function () {
+		cy.get('#usersList').then(($el) => {
+			expect($el).to.contain('Juan');
+			expect($el).to.contain('Perez');
+			expect($el).to.contain('jperez@dronfies.com');
+			expect($el).to.contain('admin');
+			expect($el).to.contain('Manola');
+			expect($el).to.contain('Fulana');
+			expect($el).to.contain('mfulana@dronfies.com');
+			expect($el).to.contain('pilot');
 		});
+		cy.contains('edit').first().click();
 	});
+	*/
 });

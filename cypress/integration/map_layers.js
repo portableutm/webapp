@@ -16,9 +16,10 @@ const operations = {
 			submit_time: '2020-04-13T09:10:21.654Z',
 			update_time: '2020-04-13T10:07:31.180Z',
 			aircraft_comments: null,
-			flight_comments: 'PROPOSED',
+			name: 'PROPOSED',
 			volumes_description: 'v0.1 - Restricted to one volume.',
 			airspace_authorization: null,
+			owner: {firstName: 'test', lastName: 'test', username: 'test'},
 			flight_number: '12345678',
 			state: 'PROPOSED',
 			controller_location: null,
@@ -137,10 +138,11 @@ const operations = {
 			gufi: 'a20ef8d5-506d-4f54-a981-874f6c8bd4de',
 			uss_name: null,
 			discovery_reference: null,
+			owner: {firstName: 'test', lastName: 'test', username: 'test'},
 			submit_time: '2020-04-13T08:59:46.146Z',
 			update_time: '2020-04-13T09:00:31.552Z',
 			aircraft_comments: null,
-			flight_comments: 'ACCEPTED',
+			name: 'ACCEPTED',
 			volumes_description: 'Simple polygon',
 			airspace_authorization: null,
 			flight_number: '12345678',
@@ -269,10 +271,11 @@ const operations = {
 			gufi: 'b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63',
 			uss_name: null,
 			discovery_reference: null,
+			owner: {firstName: 'test', lastName: 'test', username: 'test'},
 			submit_time: '2020-04-13T08:59:49.740Z',
 			update_time: '2020-04-13T09:00:01.482Z',
 			aircraft_comments: null,
-			flight_comments: 'ACTIVATED',
+			name: 'ACTIVATED',
 			volumes_description: 'Simple polygon',
 			airspace_authorization: null,
 			flight_number: '12345678',
@@ -401,10 +404,11 @@ const operations = {
 			gufi: 'f7891e78-9bb4-431d-94d3-1a506910c254',
 			uss_name: null,
 			discovery_reference: null,
+			owner: {firstName: 'test', lastName: 'test', username: 'test'},
 			submit_time: '2020-04-13T08:59:47.892Z',
 			update_time: '2020-04-13T09:00:00.885Z',
 			aircraft_comments: null,
-			flight_comments: 'PENDING',
+			name: 'PENDING',
 			volumes_description: 'Simple polygon',
 			airspace_authorization: null,
 			flight_number: '12345678',
@@ -537,10 +541,11 @@ const operations = {
 			gufi: 'ff4b6505-c282-42b1-b013-66f02137f5d5',
 			uss_name: null,
 			discovery_reference: null,
+			owner: {firstName: 'test', lastName: 'test', username: 'test'},
 			submit_time: '2020-04-13T08:59:44.339Z',
 			update_time: '2020-04-13T09:00:31.161Z',
 			aircraft_comments: null,
-			flight_comments: 'ROGUE',
+			name: 'ROGUE',
 			volumes_description: 'Simple polygon',
 			airspace_authorization: null,
 			flight_number: '12345678',
@@ -670,13 +675,8 @@ const operations = {
 
 describe('SP1: (Map) Layers', function () {
 	before('Auth', function () {
-		cy
-			.request('POST', API + 'auth/login', { username: 'admin', password: 'admin' })
-			.then((response) => {
-				// response.body is automatically serialized into JSON
-				cy.setCookie('user', 'admin');
-				cy.setCookie('jwt', response.body);
-			});
+		cy.setCookie('sneaky', 'admin');
+		cy.setCookie('hummingbird', 'admin');
 		cy.server();           // enable response stubbing
 		cy.route({
 			method: 'GET',      // Route all GET requests
@@ -725,10 +725,10 @@ describe('SP1: (Map) Layers', function () {
 		//cy.get('[data-test-id="mapButtonLayers"]').click();
 		cy.get('[data-test-id="layersACTIVATED"]').check({force: true});
 		cy.get('.leaflet-interactive').click({force: true});
-		cy.get('[data-test-id="propertyState"]').then(($el) =>
+		cy.get('[data-test-id="propertyoperations.state"]').then(($el) =>
 			expect($el).to.contain('ACTIVATED')
 		);
-		cy.get('.rightAreaCloser').click();
+		cy.get('[data-test-id="rightAreaCloser"]').click();
 		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersACTIVATED"]').uncheck({force: true});
 	});
@@ -737,10 +737,10 @@ describe('SP1: (Map) Layers', function () {
 		//cy.get('[data-test-id="mapButtonLayers"]').click();
 		cy.get('[data-test-id="layersPENDING"]').check({force: true});
 		cy.get('.leaflet-interactive').click({force: true});
-		cy.get('[data-test-id="propertyState"]').then(($el) =>
+		cy.get('[data-test-id="propertyoperations.state"]').then(($el) =>
 			expect($el).to.contain('PENDING')
 		);
-		cy.get('.rightAreaCloser').click();
+		cy.get('[data-test-id="rightAreaCloser"]').click();
 		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersPENDING"]').uncheck({force: true});
 	});
@@ -749,10 +749,10 @@ describe('SP1: (Map) Layers', function () {
 		//cy.get('[data-test-id="mapButtonLayers"]').click();
 		cy.get('[data-test-id="layersROGUE"]').check({force: true});
 		cy.get('.leaflet-interactive').click({force: true});
-		cy.get('[data-test-id="propertyState"]').then(($el) =>
+		cy.get('[data-test-id="propertyoperations.state"]').then(($el) =>
 			expect($el).to.contain('ROGUE')
 		);
-		cy.get('.rightAreaCloser').click();
+		cy.get('[data-test-id="rightAreaCloser"]').click();
 		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersROGUE"]').uncheck({force: true});
 	});

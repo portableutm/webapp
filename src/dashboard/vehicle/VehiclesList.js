@@ -1,71 +1,94 @@
 import React, {useEffect, useState} from 'react';
 import useAdesState from '../../state/AdesState';
-import {mapValues} from '../../libs/SaferSanctuary';
-import {Button, Callout, Intent, Spinner, Tag} from '@blueprintjs/core';
+import S from 'sanctuary';
+import {Button, Callout, Intent, Spinner} from '@blueprintjs/core';
 import {useTranslation} from 'react-i18next';
 import {GenericListLine} from '../generic/GenericList';
+import styles from '../generic/GenericList.module.css';
 
 function Vehicle({children: v}) {
-	const { t,  } = useTranslation();
+	const { t,  } = useTranslation(['glossary','common']);
 	const [showProperties, setShowProperties] = useState(false);
 
 	return (
 		<Callout
 			key={v.faaNumber}
-			className="dshListItem"
-			title={<div>{v.vehicleName + ' (' + v.faaNumber + ')'} <Tag minimal={true}>{showProperties ? t('click_to_collapse') : t('click_to_expand')}</Tag></div>}
+			className={styles.item}
+			title={
+				<div className={styles.title}>
+					<p style={{height: '100%', maxWidth: '50%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
+						{v.vehicleName + ' (' + v.faaNumber + ')'}
+					</p>
+					<Button
+						className={styles.button}
+						small
+						minimal
+						icon='menu-open'
+						intent={showProperties ? Intent.DANGER : Intent.SUCCESS}
+						onClick={() => setShowProperties(show => !show)}
+					>
+						<div className={styles.buttonHoveredTooltip}>
+							{ showProperties &&
+							t('common:click_to_collapse')
+							}
+							{ !showProperties &&
+							t('common:click_to_expand')
+							}
+						</div>
+					</Button>
+				</div>
+			}
 			icon="double-chevron-right"
-			onClick={() => setShowProperties(show => !show)}
 		>
 			{showProperties &&
-			<div className="animated flipInX faster">
+			<div className="animated fadeIn faster">
 				<GenericListLine>
-					{t('vehicle_uvin')}
+					{t('vehicles.uvin')}
 					{v.uvin}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_date')}
+					{t('vehicles.date')}
 					{v.date}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_nNumber')}
+					{t('vehicles.nNumber')}
 					{v.nNumber}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_faaNumber')}
+					{t('vehicles.faaNumber')}
 					{v.faaNumber}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_name')}
+					{t('vehicles.name')}
 					{v.vehicleName}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_manufacturer')}
+					{t('vehicles.manufacturer')}
 					{v.manufacturer}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_model')}
+					{t('vehicles.model')}
 					{v.model}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_class')}
+					{t('vehicles.class')}
 					{v.class}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_accessType')}
+					{t('vehicles.accessType')}
 					{v.accessType}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_vehicleTypeId')}
+					{t('vehicles.vehicleTypeId')}
 					{v.vehicleTypeId}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_org-uuid')}
+					{t('vehicles.org-uuid')}
 					{v['org-uuid']}
 				</GenericListLine>
 				<GenericListLine>
-					{t('vehicle_registeredBy')}
-					{v.registeredBy.firstName + ' ' + v.registeredBy.lastName + ' (' + v.registeredBy.email + ')'}
+					{t('vehicles.registeredBy')}
+					{v.registeredBy.username}
 				</GenericListLine>
 			</div>
 			}
@@ -74,38 +97,50 @@ function Vehicle({children: v}) {
 }
 
 function VehiclesList() {
-	const { t,  } = useTranslation();
-	const [state, actions] = useAdesState();
-
+	const { t,  } = useTranslation('glossary');
+	const [state, actions] = useAdesState(state => state.vehicles, actions => actions.vehicles);
+	const vehicles = S.values(state.list);
+	const isThereVehicles = vehicles.length > 0;
 	useEffect(() => {
 		// Only run in mount
 		/* Fetch vehicle data if too old, when loading component */
-		actions.vehicles.fetchIfOld();
+		actions.fetchIfOld();
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	return (
-		<>
-			<h1>{t('vehicles')}</h1>
-			{ 	state.vehicles.error &&
+	if (isThereVehicles) {
+		return (
+			<>
+				<div className={styles.header}>
+					<h1>
+						{t('vehicles.plural_generic').toUpperCase()}
+					</h1>
+				</div>
+				{ 	state.error &&
 				<>
 					<p>
-						{t('app_errorocurredfetching')}
+						{t('app.errorocurredfetching')}
 					</p>
 					<Button
 						intent={Intent.PRIMARY}
-						onClick={() => actions.vehicles.fetch()}
+						onClick={() => actions.fetch()}
 					>
-						{t('app_tryagain')}
+						{t('app.tryagain')}
 					</Button>
 				</>
-			}
-			{	!state.vehicles.error && mapValues
-			(state.vehicles.list)
-			(() => <Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>)
-			(vehicle => <Vehicle key={vehicle.faaNumber}>{vehicle}</Vehicle>)
-			}
-		</>
-	);
+				}
+				{	!state.error && S.map
+				(vehicle => <Vehicle key={vehicle.faaNumber}>{vehicle}</Vehicle>)
+				(vehicles)
+				}
+			</>
+		);
+	} else {
+		return (
+			<div className="fullHW" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+				<Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>
+			</div>
+		);
+	}
 }
 
 export default VehiclesList;

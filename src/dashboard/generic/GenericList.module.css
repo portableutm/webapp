@@ -1,0 +1,62 @@
+.list {
+    /*background-color: red;*/
+}
+
+.item {
+    margin: 1%;
+    min-height: 40px;
+    overflow: hidden;
+}
+
+.title {
+    display: flex;
+    justify-content: space-between;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-height: 20px;
+}
+
+.button {
+    transition: all 0.5s;
+}
+
+.button .buttonHoveredTooltip {
+    display: flex;
+    height: 20px;
+    align-items: center;
+    max-width: 0;
+    overflow: hidden;
+}
+
+.button:hover {
+    background-color: #2D2C59 !important;
+}
+
+.button:hover .buttonHoveredTooltip {
+    max-width: fit-content;
+}
+
+
+
+.line {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px;
+    border-bottom: 1px solid #2D2C59;
+}
+
+.lineLeft {
+    color: #D5D8EC;
+}
+
+.lineRight {
+
+}
+
+.header {
+    position: -webkit-sticky;
+    position: sticky;
+    text-align: center;
+    top: -15px;
+    z-index: 9999;
+}

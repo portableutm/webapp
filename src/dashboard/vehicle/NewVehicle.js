@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Button, FormGroup, InputGroup, Radio, RadioGroup} from '@blueprintjs/core';
-import {fM} from '../../libs/SaferSanctuary';
 import useAdesState from '../../state/AdesState';
 import { useHistory, useParams } from 'react-router-dom';
+import {fM} from '../../libs/SaferSanctuary';
+import styles from '../generic/GenericList.module.css';
 
 const Text = ({name, label, description, placeholder = '', ...props}) => (
 	<FormGroup
@@ -23,11 +24,10 @@ const Text = ({name, label, description, placeholder = '', ...props}) => (
 
 function NewVehicle({userId}) {
 	const { username } = useParams();
-	const { t, } = useTranslation();
+	const { t, } = useTranslation('glossary');
 	const history = useHistory();
 	const [state, actions] = useAdesState();
 	const [isSubmitting, setSubmitting] = useState(false);
-	const [error, setError] = useState(null);
 	const [tclass, setTClass] = useState('MULTIROTOR');
 
 	useEffect(() => {
@@ -38,84 +38,80 @@ function NewVehicle({userId}) {
 
 	return (
 		<>
-			<div className={error == null ? 'sticky' : 'sticky error animated flash repeat'}>
+			<div className={styles.header}>
 				<h1>
-					{t('dsh_vehicles_new')}
+					{t('vehicles.new_vehicle').toUpperCase()}
 				</h1>
-				{ error !== null &&
-					<p>
-						{error}
-					</p>
-				}
 			</div>
 			<Text
 				name="nNumber"
-				label={t('vehicle_nNumber')}
+				label={t('vehicles.nNumber')}
 				description="Vehicle number"
 			/>
 			<Text
 				name="faaNumber"
-				label={t('vehicle_faaNumber')}
+				label={t('vehicles.faaNumber')}
 				placeholder="N707JT"
-				description="Legal number assigned by the FAA"
+				description={t('vehicles.faaNumber_desc')}
 			/>
 			<Text
 				name="vehicleName"
-				label={t('vehicle_vehicleName')}
+				label={t('vehicles.vehicleName')}
 				placeholder="Air Force One"
 				description="Short descriptive name of the vehicle"
 			/>
 			<Text
 				name="manufacturer"
-				label={t('vehicle_manufacturer')}
+				label={t('vehicles.manufacturer')}
 				placeholder="DJI"
 				description="Brand or company that fabricated the vehicle"
 			/>
 			<Text
 				name="model"
-				label={t('vehicle_model')}
+				label={t('vehicles.model')}
 				placeholder="Phantom 6 Mini"
 				description="Model of the vehicle"
 			/>
 			<RadioGroup
-				label={t('vehicle_class')}
+				label={t('vehicles.class')}
 				onChange={(evt) => setTClass(evt.currentTarget.value)}
 				selectedValue={tclass}
 			>
 				<Radio label="Multirotor" value="MULTIROTOR" />
 				<Radio label="Fixed-wing" value="FIXEDWING" />
 			</RadioGroup>
-			<Text
+			{/*<Text
 				name="accessType"
-				label={t('vehicle_accessType')}
+				label={t('vehicles.accessType')}
 				placeholder=""
 				disabled={true}
 			/>
 
 			<Text
 				name="vehicleTypeId"
-				label={t('vehicle_vehicleTypeId')}
+				label={t('vehicles.vehicleTypeId')}
 				placeholder=""
 				disabled={true}
 			/>
 			<Text
 				name="org-uuid"
-				label={t('vehicle_org-uuid')}
+				label={t('vehicles.org-uuid')}
 				placeholder=""
 				disabled={true}
-			/>
+			/>*/}
+
 			<Text
 				name="owner_id"
-				label={'Owner username'}
+				label={t('vehicles.owner')}
 				placeholder={userId || username}
 				disabled={true}
-			/>
+			/>{/*
 			<Text
 				name="registeredBy"
-				label={t('vehicle_registeredBy')}
+				label={t('vehicles.registeredBy')}
 				placeholder={fM(state.auth.user).username}
 				disabled={true}
-			/>
+			/>*/}
 			<Button
 				fill
 				disabled={isSubmitting}
@@ -131,13 +127,13 @@ function NewVehicle({userId}) {
 						accessType: '',
 						vehicleTypeId: '',
 						'org-uuid': '',
-						registeredBy: document.getElementById('text-registeredBy').value,
+						registeredBy: fM(state.auth.user).username,
 					};
 					setSubmitting(true);
 					actions.vehicles.post(
 						vehicle, 
 						() => history.push('/dashboard/vehicles'),
-						(err) => {setError(err); setSubmitting(false);}
+						(err) => {actions.warning.setWarning(err); setSubmitting(false);}
 					);
 				}}
 			>
@@ -153,7 +149,7 @@ function NewVehicle({userId}) {
     "uvin": "32b858dd-8c63-4e99-9a18-6df064cf64cb",
     "nNumber": "",
     "faaNumber": "AW7B64A",
-    "vehicleName": "vehicle_name8",
+    "vehicleName": "vehicle.name8",
     "manufacturer": "DJI",
     "model": "Phantom 3",
     "class": "FIXEDWING",

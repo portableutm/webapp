@@ -1,19 +1,12 @@
 import React from 'react';
-import '../Ades.css';
-import {Navbar, Alignment, NavbarHeading, NavbarDivider} from "@blueprintjs/core";
+import styles from './Header.module.css';
+import logo from '../images/logo.png';
 
 function Header() {
-    return(
-        <div className="dshHeader">
-            <Navbar>
-                <Navbar.Group align={Alignment.LEFT}>
-                    <NavbarHeading>
-                        PortableUTM
-                    </NavbarHeading>
-                    <NavbarDivider />
-                </Navbar.Group>
-            </Navbar>
-        </div>
-    )
+	return(
+		<div className={styles.header}>
+			<img src={logo} alt="PortableUTM" className={styles.logo} />
+		</div>
+	);
 }
 export default Header;

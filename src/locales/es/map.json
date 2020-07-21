@@ -1,0 +1,56 @@
+{
+  "quickfly": {
+    "title": "Vuelo rápido",
+    "add_new": "Agregar nuevo punto de VR",
+    "name": "Nombre",
+    "required": "Requerido",
+    "new_location": "Nuevo punto de VR",
+    "new_location_created": "¡Nuevo punto de vuelo rápido creado!",
+    "creating_new": "Creando nuevo punto de vuelo rápido",
+    "save": "Guardar",
+    "info": "La posición del nuevo punto de vuelo rápido es creada automáticamente usando la región actualmente mostrada en el mapa."
+  },
+  "options": "Opciones",
+  "layers": "Capas",
+  "clicks_enabled": "CLICKS HABILITADOS: Al hacer clic en operaciones y volúmenes de vuelo restringidos se mostrarán sus propiedades. Haga clic aquí para cambiar este comportamiento",
+  "clicks_disabled": "CLICKS DESHABILITADOS: Al hacer clic en operaciones y volúmenes de vuelo restringidos NO se mostrarán sus propiedades. Haga clic aquí para cambiar este comportamientor",
+  "filter": {
+    "proposed": "Propuestas",
+    "accepted": "Aceptadas",
+    "activated": "Activadas",
+    "closed": "DEBUG: Cerradas",
+    "pending": "Pendientes",
+    "nonconforming": "Desconformes",
+    "rogue": "Rogue (Furtivas)",
+    "bystate": "FILTRAR POR ESTADO",
+    "byid": "FILTRAR OPERACIONES ESPECÍFICAS",
+    "rfvs": "ZONAS DE VUELO RESTRINGIDO"
+  },
+  "flyto": "Volar en mapa a",
+  "selected_operation": "Operación seleccionada",
+  "editor": {
+    "return": "Volver",
+    "volume": {
+      "editingvolume_count": "Editando el volúmen {{count}} de la operación",
+      "nearstructure": "¿Está la operación a menos de 400 pies de una estructura?",
+      "bvlos": "¿La operación se ejecutará fuera de linea de vista del piloto?",
+      "selecttime": "Elegir fecha y hora...",
+      "closecalendar": "Cerrar calendario"
+    },
+    "operation": {
+      "complete": "Editing information of operation"
+    },
+    "completesteps": "Completar los pasos para definir una nueva operación.",
+    "definevolume": "Hacé click en el mapa para definir un polígono.",
+    "defineoperationinfo": "Completa los datos solicitados.",
+    "savingoperation": "Guardando operación. Por favor, esperá.",
+    "savingerror": "Por favor, cambiá los parámetros afectados y re-intentá.",
+    "step": {
+      "definevolumes": "Paso 1: Definí los volúmenes de la operación.",
+      "defineoperationinfo": "Paso 2: Completar información general.",
+      "finish": "Paso 3: Finalizar."
+    },
+    "finish": "Finalizar",
+    "cant_finish": "No se pudo crear la OPERACIÓN, ya que el polígono no estaba definido. Por favor, defina un polígono donde el vehículo pueda volar, haciendo clic en el mapa en las posiciones apropiadas"
+  }
+}

@@ -3,13 +3,11 @@ describe('UseCase 05. Login', function() {
 		cy.visit('http://localhost:2000/');
 		cy.get('#login-user').type('admin');
 		cy.get('#login-password').type('admin');
-		cy.contains('Español').click();
-		cy.contains('English').click();
-		cy.contains('Log in').click();
+		cy.contains('login.login').click();
 		/*cy.get('.loginError').then(($el) =>
 			expect($el).to.contain('Please wait')
 		);*/
-		// TODO: Wait for post
+		// TODO: Wait for add
 	});
 
 	it('Clear cookies, try to login but fails', function() {
@@ -17,14 +15,12 @@ describe('UseCase 05. Login', function() {
 		cy.visit('http://localhost:2000/');
 		cy.get('#login-user').type('admin');
 		cy.get('#login-password').type('wrongpassword');
-		cy.contains('Español').click();
-		cy.contains('English').click();
-		cy.contains('Log in').click();
+		cy.contains('login.login').click();
 		/*cy.get('.loginError').then(($el) =>
 			expect($el).to.contain('Please wait')
 		);*/
 		cy.wait(2000);
-		cy.get('.loginError').then(($el) =>
+		cy.get('#error').then(($el) =>
 			expect($el).to.contain('error')
 		);
 	});

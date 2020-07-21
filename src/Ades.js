@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 
 /**
  *  Libraries
@@ -12,13 +12,13 @@ import {
 } from '@blueprintjs/core';
 import S from 'sanctuary';
 import { useTranslation } from 'react-i18next';
-import './css/animate.css';
+import jwtDecode from 'jwt-decode';
 
 /*
  * CSS Styling
  */
 import './Ades.css';
-
+import './css/animate.css';
 /*
  * Components
  */
@@ -26,7 +26,7 @@ import Map from './map/Map.js';
 //import NotificationCenter from './NotificationCenter.js';
 import Simulator from './debug/Simulator.js';
 import LoginScreen from './LoginScreen';
-import RegistrationScreen from './RegistrationScreen';
+import NewUser from './NewUser';
 
 /**
  * Layout components
@@ -54,6 +54,10 @@ import { fM } from './libs/SaferSanctuary';
 import Pilot from './dashboard/user/Pilot';
 import VehiclesList from './dashboard/vehicle/VehiclesList';
 import NewVehicle from './dashboard/vehicle/NewVehicle';
+import HomeScreen from './dashboard/home/HomeScreen';
+import VerificationScreen from './VerificationScreen';
+import BottomArea from './layout/BottomArea';
+import NotificationCenter from './NotificationCenter';
 
 /*function alertIsImportant(alertUtmMessage) {
 	return (
@@ -63,19 +67,46 @@ import NewVehicle from './dashboard/vehicle/NewVehicle';
 	);
 }*/
 
-const MasterPage = ({children}) => {
+const MasterPage = ({leftIsExpanded = false, children}) => {
+	const [state, ] = useAdesState();
+	const [expDate, setExpDate] = useState(new Date(0));
+
+	useEffect(() => {
+		const decoded = S.isJust(state.auth.token) ? jwtDecode(fM(state.auth.token)) : {exp: 0};
+		const newExpDate = new Date(0);
+		newExpDate.setUTCSeconds(decoded.exp);
+		setExpDate(newExpDate);
+	}, [state.auth.token]);
+
+	/*
+	const [time, setTime] = useState(decoded.exp - (Math.round(Date.now() / 1000)));
+	const [timeoutSeconds, setTimeoutSeconds] = useState(0);
+
+	useEffect(() => {
+		setTimeoutSeconds(setTimeout(() => {setTime(curr => curr - 1);}, 1000));
+		return () => {
+			clearTimeout(timeoutSeconds);
+		};
+	}, [time]); */
+
 	return(
 		<>
+			{state.debug &&
+			<div className='timeLeftOverlay'>
+				Expires at {expDate.toLocaleTimeString()}
+			</div>
+			}
 			<LeftArea>
-				{/* <NotificationCenter/> */}
+				<NotificationCenter/>
 			</LeftArea>
-			<MainArea>
+			<MainArea leftIsExpanded={leftIsExpanded}>
 				{children}
 			</MainArea>
+			<BottomArea />
 			<ActionArea>
 				<Popover content={<ContextualMenu/>} position={Position.BOTTOM_LEFT}>
 					<div data-test-id="mapButtonMenu" className='contextualMenu'>
-						<Icon icon='menu' iconSize={44}/>
+						<Icon icon='menu' iconSize={30}/>
 					</div>
 				</Popover>
 			</ActionArea>
@@ -102,40 +133,67 @@ function Ades() {
 	bc.onmessage = (event) => setAlertUtmMessage(event.data);*/
 
 	/* Auth */
-	const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
+	const [cookies, setCookie,] = useCookies(['lang', 'sneaky', 'hummingbird']);
 	const [isLoggedIn, setLoggedIn] = useState(true);
 	const [role, setRole] = useState('none');
+	const [timeoutUnlogin, setTimeoutUnlogin] = useState(0);
 
 	useEffect(() => {
-		if (cookies.jwt === null || cookies.jwt === void 0) {
-			if (!S.isNothing(state.auth.token)) {
-				setCookie('user', state.auth.username, {path: '/'});
-				setCookie('jwt', fM(state.auth.token), {path: '/'});
-			} else {
-				setLoggedIn(false);
-			}
-		} else {
+		if (S.isJust(state.auth.token)) {
+			/* User has logged in */
 			setLoggedIn(true);
+			/* Find out role to show appropiate use cases */
+			const decoded = jwtDecode(fM(state.auth.token));
+			setRole(decoded.role);
+			/* Get user full information if not yet fetched */
+			const username = decoded.username;
 			if (S.isNothing(state.auth.user)) {
-				actions.auth.info(cookies['jwt'], cookies['user'], (user) => {
-					setRole(user.role);
+				actions.auth.info(username, () => {
 					actions.operations.fetch();
 					actions.rfv.fetch();
 					actions.quickFly.fetch();
 				}, () => {
-					removeCookie('user', {path: '/'});
-					removeCookie('jwt', {path: '/'});
+					setRole('none');
+					setLoggedIn(false);
+					actions.auth.logout();
 				});
 			}
-		}
 
-		// Language cookie
+			setTimeoutUnlogin(setTimeout(() => {
+				actions.auth.logout();
+				setRole('none');
+				setLoggedIn(false);
+			}, (decoded.exp * 1000) - new Date().getTime()));
+			//}, 20000));
+		} else {
+			actions.auth.logout();
+			setRole('none');
+			setLoggedIn(false);
+		}
+		return () => {
+			clearTimeout(timeoutUnlogin);
+		};
+	}, [state.auth.token]); // eslint-disable-line react-hooks/exhaustive-deps
+
+
+	useEffect(() => {
 		if (cookies.lang === null || cookies.lang === void 0) {
 			setCookie('lang', i18n.language, {path: '/'});
 		} else {
-			i18n.changeLanguage(cookies.lang);
+			if (state.debug) {
+				i18n.changeLanguage('none');
+			} else {
+				i18n.changeLanguage(cookies.lang);
+			}
 		}
-	}, [JSON.stringify(state.auth), cookies]); // eslint-disable-line react-hooks/exhaustive-deps
+		if (cookies.sneaky !== null &&
+			cookies.sneaky !== void 0 &&
+			cookies.hummingbird !== null &&
+			cookies.hummingbird !== void 0) {
+			actions.auth.login(cookies.sneaky, cookies.hummingbird, () => {}, () => {alert('Sneaky Hummingbird failed');});
+		}
+	}, [cookies]); // eslint-disable-line react-hooks/exhaustive-deps
+
 
 	if (isLoggedIn && role === 'admin') {
 		/* Operator pages */
@@ -162,7 +220,10 @@ function Ades() {
 				<Router>
 					<Switch>
 						<Route exact path='/registration'>
-							<RegistrationScreen/>
+							<NewUser/>
+						</Route>
+						<Route exact path='/registro'>
+							<NewUser/>
 						</Route>
 						<Route exact path='/debug'>
 							<MasterPage>
@@ -175,13 +236,22 @@ function Ades() {
 							</MasterPage>
 						</Route>
 						<Route exact path='/operation/new'>
-							<MasterPage>
+							<MasterPage leftIsExpanded={true}>
 								<Map mode={S.Maybe.Just('new')}/>
 							</MasterPage>
 						</Route>
 						<Route exact path='/operation/:id'>
 							<MasterPage>
 								<Map mode={S.Maybe.Just('view')}/>
+							</MasterPage>
+						</Route>
+						<Route exact path='/dashboard/operations/:id'>
+							<MasterPage>
+								<>
+									<Dashboard>
+										<OperationList/>
+									</Dashboard>
+								</>
 							</MasterPage>
 						</Route>
 						<Route exact path='/dashboard/operations'>
@@ -193,16 +263,18 @@ function Ades() {
 								</>
 							</MasterPage>
 						</Route>
-						<Route exact path='/dashboard/users/:username'>
+						<Route path='/dashboard/users/new'>
 							<MasterPage>
 								<>
 									<Dashboard>
-										<Pilot/>
+										<NewUser isSelfRegistering={false}/>
 									</Dashboard>
 								</>
 							</MasterPage>
 						</Route>
-						<Route exact path='/dashboard/users'>
+						<Route path='/dashboard/users/:username?'>
+							{/* Username is an optional parameter, we don't re-fetch from the API when changing */}
+							{/* from the users list to one particular user */}
 							<MasterPage>
 								<>
 									<Dashboard>
@@ -211,6 +283,15 @@ function Ades() {
 								</>
 							</MasterPage>
 						</Route>
+						{/*<Route exact path='/dashboard/users'>
+							<MasterPage>
+								<>
+									<Dashboard>
+										<UsersList />
+									</Dashboard>
+								</>
+							</MasterPage>
+						</Route>*/}
 						<Route exact path={'/dashboard/vehicles/:username/new'}>
 							<MasterPage>
 								<>
@@ -232,7 +313,9 @@ function Ades() {
 						<Route exact path='/dashboard'>
 							<MasterPage>
 								<>
-									<Dashboard />
+									<Dashboard>
+										<HomeScreen />
+									</Dashboard>
 								</>
 							</MasterPage>
 						</Route>
@@ -315,7 +398,16 @@ function Ades() {
 				<Router>
 					<Switch>
 						<Route exact path='/registration'>
-							<RegistrationScreen/>
+							<NewUser/>
+						</Route>
+						<Route exact path='/registro'>
+							<NewUser/>
+						</Route>
+						<Route path='/verify/:username'>
+							<VerificationScreen/>
+						</Route>
+						<Route path='/es'>
+							<LoginScreen/>
 						</Route>
 						<Route path='/'>
 							<LoginScreen/>

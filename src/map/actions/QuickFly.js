@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import RightAreaButton from '../RightAreaButton';
+import SidebarButton from '../SidebarButton';
 import useAdesState from '../../state/AdesState';
-import {maybeValues} from '../../libs/SaferSanctuary';
+import S from 'sanctuary';
 import {Button, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
+import {useTranslation} from 'react-i18next';
+import styles from '../Map.module.css';
 
 /* Constants */
 /*
@@ -39,6 +41,7 @@ const quickFlyLocations = [
 const QuickFly = ({onClick}) => {
 	//console.log('QuickFly', onClick);
 	const [state, actions] = useAdesState();
+	const {t} = useTranslation('map');
 	const [isCreating, showCreate] = useState(false);
 
 	const addNewQuickFlyButton = {
@@ -46,60 +49,60 @@ const QuickFly = ({onClick}) => {
 		isSpecial: true,
 		div: (<div
 			key='thisisauniqueone'
-			className='rightAreaButtonTextsSeparator'
+			className={styles.sidebarSeparator}
 		>
 			<Button
 				small={true}
 				intent={Intent.PRIMARY}
 				onClick={() => showCreate(true)}
 			>
-				Add new location
+				{t('quickfly.add_new')}
 			</Button>
 		</div>),
 	};
 
-	const content = [].concat(maybeValues(state.quickFly.list),addNewQuickFlyButton);
+	const content = [].concat(S.values(state.quickFly.list), addNewQuickFlyButton);
 	return (
 		<>
 			{	!isCreating &&
-				<RightAreaButton
+				<SidebarButton
 					useCase='quickFly'
 					icon='send-to-map'
-					label='QUICK FLY'
+					label={t('quickfly.title').toUpperCase()}
 					onClick={onClick}
 					simpleChildren={true}
 				>
 					{content}
-				</RightAreaButton>
+				</SidebarButton>
 			}
 			{	isCreating &&
-				<RightAreaButton
+				<SidebarButton
 					className={'animated flash'}
 					useCase='quickFlyNew'
+					label={t('quickfly.creating_new')}
 					icon='cog'
-					label='New QuickFly'
 					forceOpen={true}
 					simpleChildren={false}
 				>
 					<div
-						className='rightAreaButtonText'
+						className={styles.sidebarButtonText}
 					>
 						<FormGroup
-							label="Name"
+							label={t('quickfly.name')}
 							inline={true}
 							labelFor="qf-name"
-							labelInfo="(required)"
+							labelInfo={'(' + t('quickfly.required') + ')'}
 						>
-							<InputGroup id="qf-name" placeholder="New location" />
+							<InputGroup data-test-id="mapquickFlyNew" id="qf-name" placeholder={t('quickfly.new_location')} />
 						</FormGroup>
 					</div>
 					<div
-						className='rightAreaButtonTextDisabled'
+						className={styles.sidebarButtonDisabled}
 					>
-						The position of the new saved location is captured automatically from the current region shown on the map.
+						{t('quickfly.info')}
 					</div>
 					<div
-						className='rightAreaButtonTextsSeparator'
+						className={styles.sidebarSeparator}
 					>
 						<Button
 							small={true}
@@ -112,19 +115,19 @@ const QuickFly = ({onClick}) => {
 										cornerSE: state.map.cornerSE,
 									},
 									() => {
-										actions.map_dialog.open('Quick fly', 'New location created!');
+										actions.map_dialog.open(t('quickfly.title'), t('quickfly.new_location_created'));
 									},
 									(error) => {
-										actions.map_dialog.open('Quick fly', 'Error: ' + JSON.stringify(error));
+										actions.map_dialog.open(t('quickfly.title'), 'Error: ' + JSON.stringify(error));
 									}
 								);
 								showCreate(false);
 							}}
 						>
-							Save
+							{t('quickfly.save')}
 						</Button>
 					</div>
-				</RightAreaButton>
+				</SidebarButton>
 			}
 		</>
 	);

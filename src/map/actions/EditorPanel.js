@@ -1,58 +1,33 @@
 import React from 'react';
-import RightAreaButton from '../RightAreaButton';
+import SidebarButton from '../SidebarButton';
 import {useTranslation} from 'react-i18next';
 import useAdesState from '../../state/AdesState';
+import styles from '../Map.module.css';
 
-const EditorPanel = ({steps, stepsDisabled}) => {
-	const {t} = useTranslation();
+const EditorPanel = () => {
+	const {t} = useTranslation('map');
 	const [state, actions] = useAdesState();
 	return (
 		<>
-			<RightAreaButton
+			<SidebarButton
 				useCase='editorOptions'
 				icon='cog'
-				label={t('Options')}
+				label={t('options')}
 				simpleChildren={false}
 				forceOpen={true}
 			>
 				<div
-					className='rightAreaButtonText'
+					className={styles.sidebarButtonText}
 					onClick={() => actions.map.onClicksDisabled(!state.map.onClicksDisabled)}
 				>
 					{state.map.onClicksDisabled &&
-					<p>Clicking on operations and restricted flight volumes will <b>NOT</b> show their properties. <i>Click
-						here to change this behaviour</i></p>
+						<p>{t('clicks_disabled')}</p>
 					}
 					{!state.map.onClicksDisabled &&
-					<p>Clicking on operations and restricted flight volumes will show their properties. <i>Click here to
-						change this behaviour</i></p>
+						<p>{t('clicks_enabled')}</p>
 					}
 				</div>
-			</RightAreaButton>
-			<RightAreaButton
-				useCase='editorSteps'
-				icon='flow-linear'
-				label={t('steps')}
-				simpleChildren={false}
-				forceOpen={true}
-			>
-				{steps.map((step, index) => {
-					const isDisabled = stepsDisabled.indexOf(index) !== -1;
-					const className = isDisabled ?
-						'rightAreaButtonTextDisabled' :
-						'rightAreaButtonText';
-					return (
-						<div
-							key={step.text}
-							className={className}
-							onClick={isDisabled ? () => {
-							} : () => step.action()}
-						>
-							{step.text}
-						</div>
-					);
-				})}
-			</RightAreaButton>
+			</SidebarButton>
 		</>
 	);
 };

@@ -9,19 +9,17 @@ import {fM} from '../../libs/SaferSanctuary';
 import {useTranslation} from 'react-i18next';
 import useAdesState from '../../state/AdesState';
 
+/* Internal */
+
 /* Helpers */
 function getColorForOperationState(state) {
 	switch (state) {
-	case 'PROPOSED':
-		return '#001aff';
 	case 'ACCEPTED':
+		return '#001aff';
+	case 'PENDING':
 		return '#fff300';
 	case 'ACTIVATED':
 		return '#2dff00';
-	case 'CLOSED':
-		return '#5e5e5e';
-	case 'NONCONFORMING':
-		return '#ff00c8';
 	case 'ROGUE':
 		return '#ff0000';
 	default:
@@ -69,6 +67,7 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 			t('contact') + ' <b>' + info.contact + '</b><br/>' + // Contact Name Lastname
 			t('phone') + ' <b>097431725</b>' // Phone 097431725
 		);
+
 		// Only use the popup if there's content for the Popup that happens when clicking the Operation
 		polygon.addTo(map);
 		setPolygon(S.Just(polygon));
@@ -84,14 +83,19 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 
 	useEffect(() => {
 		if (S.isJust(polygon)) {
+			// If the state is ROGUE, draw appropiate flashy classes
+			if (state === 'ROGUE') {
+				fM(polygon)._path.classList.add('polygonRogue');
+			}
+		}
+	}, [polygon]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
+		if (S.isJust(polygon)) {
 			if (isSelected) {
-				fM(polygon)._path.classList.add('animated');
-				fM(polygon)._path.classList.add('flash');
-				fM(polygon)._path.classList.add('infinite');
+				fM(polygon)._path.classList.add('polygonSelected');
 			} else {
-				fM(polygon)._path.classList.remove('animated');
-				fM(polygon)._path.classList.remove('flash');
-				fM(polygon)._path.classList.remove('infinite');
+				fM(polygon)._path.classList.remove('polygonSelected');
 			}
 		}
 	}, [isSelected]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -100,7 +104,12 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 		// Redraw if the polygon moved or the state changed
 		if (S.isJust(polygon)) {
 			fM(polygon).setLatLngs(latlngs);
-
+			fM(polygon).setStyle({fillColor: getColorForOperationState(state)});
+			if (state === 'ROGUE') {
+				fM(polygon)._path.classList.add('polygonRogue');
+			} else {
+				fM(polygon)._path.classList.remove('polygonRogue');
+			}
 		}
 	}, [latlngs, state]); // eslint-disable-line react-hooks/exhaustive-deps
 

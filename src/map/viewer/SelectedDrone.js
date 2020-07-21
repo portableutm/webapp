@@ -1,23 +1,24 @@
 /* istanbul ignore file */
 
 import React from 'react';
-import RightAreaButton from '../RightAreaButton';
+import SidebarButton from '../SidebarButton';
 import useAdesState from '../../state/AdesState';
 import S from 'sanctuary';
 import {fM} from '../../libs/SaferSanctuary';
 import {useTranslation} from 'react-i18next';
+import styles from '../Map.module.css';
 
 function Property({property, value}) {
 	return (
 		<>
 			<div
-				className='rightAreaButtonTextsSeparator'
+				className={styles.sidebarSeparator}
 			>
 				{property}
 			</div>
 			<div
 				data-test-id={'property' + property}
-				className='rightAreaButtonText'
+				className={styles.sidebarButtonText}
 			>
 				{value || '-'}
 			</div>
@@ -25,21 +26,21 @@ function Property({property, value}) {
 	);
 }
 
-function SelectedOperation ({gufi}) {
-	const { t } = useTranslation();
-	const [state, ] = useAdesState();
-	const drone = fM(S.value(gufi)(fM(state.drones.list)));
+function SelectedDrone ({gufi}) {
+	const { t } = useTranslation('glossary');
+	const [state, ] = useAdesState(state => state.drones);
+	const drone = fM(S.value(gufi)(state.list));
 	const info = [
 		['ID', drone.gufi],
-		['Lat', drone.location.coordinates.lat],
-		['Lng', drone.location.coordinates.lng],
-		[t('altitude'), drone.altitude_gps],
-		[t('heading'), drone.heading]
+		[t('positions.latitude'), drone.location.coordinates.lat],
+		[t('positions.longitude'), drone.location.coordinates.lng],
+		[t('positions.altitude'), drone.altitude_gps],
+		[t('positions.heading'), drone.heading]
 	];
 
 	return(
 		<>
-			<RightAreaButton
+			<SidebarButton
 				useCase='SelectedOperation'
 				icon='trending-up'
 				label='Selected drone'
@@ -49,9 +50,9 @@ function SelectedOperation ({gufi}) {
 				{info.map((propvalue) =>
 					<Property key={'raop' + propvalue[0]} property={propvalue[0]} value={propvalue[1]} />
 				)}
-			</RightAreaButton>
+			</SidebarButton>
 		</>
 	);
 }
 
-export default SelectedOperation;
+export default SelectedDrone;

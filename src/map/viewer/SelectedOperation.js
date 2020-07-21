@@ -1,22 +1,23 @@
 import React, {useState} from 'react';
-import RightAreaButton from '../RightAreaButton';
+import SidebarButton from '../SidebarButton';
 import useAdesState from '../../state/AdesState';
 import S from 'sanctuary';
 import {fM} from '../../libs/SaferSanctuary';
 import {useTranslation} from 'react-i18next';
 import {Button, Dialog, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
+import styles from '../Map.module.css';
 
 function Property({property, value}) {
 	return (
 		<>
 			<div
-				className='rightAreaButtonTextsSeparator'
+				className={styles.sidebarSeparator}
 			>
 				{property}
 			</div>
 			<div
 				data-test-id={'property' + property}
-				className='rightAreaButtonText'
+				className={styles.sidebarButtonText}
 			>
 				{value || '-'}
 			</div>
@@ -25,20 +26,22 @@ function Property({property, value}) {
 }
 
 function SelectedOperation ({gufi}) {
-	const { t } = useTranslation();
+	const { t } = useTranslation(['glossary','map']);
 	const [state, actions] = useAdesState();
 	const [isDialogShown, showDialog] = useState(false);
 	const [isApproved, setApproved] = useState(false);
-	const operation = fM(S.value(gufi)(fM(state.operations.list)));
+	const operation = fM(S.value(gufi)(state.operations.list));
 	const info = [
-		[t('name'), operation.flight_comments],
+		[t('operations.name'), operation.name],
 		['ID',operation.gufi],
-		[t('state'), operation.state],
-		[t('effective_time_begin'), new Date(operation.operation_volumes[0].effective_time_begin).toLocaleString()],
-		[t('effective_time_end'), new Date(operation.operation_volumes[0].effective_time_end).toLocaleString()],
-		[t('max_altitude'), operation.operation_volumes[0].max_altitude+'m'],
-		[t('contact'), operation.contact],
-		[t('phone'), '097431725'],
+		[t('operations.state'), operation.state],
+		[t('operations.owner'), operation.owner.firstName + ' ' + operation.owner.lastName + ' (' + operation.owner.username + ')'],
+		[t('operations.contact'), operation.contact],
+		[t('operations.phone'), '097431725'],
+		[t('volumes.effective_time_begin'), new Date(operation.operation_volumes[0].effective_time_begin).toLocaleString()],
+		[t('volumes.effective_time_end'), new Date(operation.operation_volumes[0].effective_time_end).toLocaleString()],
+		[t('volumes.max_altitude'), operation.operation_volumes[0].max_altitude+'m'],
+		[t('operations.flight_comments'), operation.flight_comments]
 	];
 
 	const toShow = info.map((propvalue) =>
@@ -49,7 +52,7 @@ function SelectedOperation ({gufi}) {
 		<>
 			<Dialog
 				className='bp3-dark'
-				title={t('editor_oinfo_complete')}
+				title={t('map:editor.operation.complete')}
 				isOpen={isDialogShown}
 				onClose={() => showDialog(false)}
 			>
@@ -94,17 +97,17 @@ function SelectedOperation ({gufi}) {
 
 				</div>
 			</Dialog>
-			<RightAreaButton
+			<SidebarButton
 				useCase='SelectedOperation'
 				icon='trending-up'
-				label={t('selected_operation')}
+				label={t('map:selected_operation')}
 				simpleChildren={false}
 				forceOpen={true}
 			>
 				{toShow}
 				{operation.state === 'PENDING' &&
 				<div
-					className='rightAreaButtonTextsSeparator'
+					className={styles.sidebarSeparator}
 				>
 					<Button
 						small={true}
@@ -131,7 +134,7 @@ function SelectedOperation ({gufi}) {
 			t('max_altitude') + ' <b>' + info.operation_volumes[0].max_altitude + '</b><br/>' + // Max Altitude 999
 			t('contact') + ' <b>' + info.contact + '</b><br/>' + // Contact Name Lastname
 			t('phone') + ' <b>097431725</b>' // Phone 097431725 */}
-			</RightAreaButton>
+			</SidebarButton>
 		</>
 	);
 }

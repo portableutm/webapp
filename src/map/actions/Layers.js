@@ -2,29 +2,30 @@ import React from 'react';
 
 /* Visuals */
 import {Button, Checkbox} from '@blueprintjs/core';
+import styles from '../Map.module.css';
 
 /* Logic */
 import useOperationFilter from '../hooks/useOperationFilter';
 import S from 'sanctuary';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import RightAreaButton from '../RightAreaButton';
-import {fM, mapValues} from '../../libs/SaferSanctuary';
+import SidebarButton from '../SidebarButton';
+import {fM} from '../../libs/SaferSanctuary';
 import useAdesState from '../../state/AdesState';
 
 const StateFilters = ({selectedFilters, setSelectedFilters}) => {
 	const [, , , , , states] = useOperationFilter();
-	const { t, } = useTranslation();
+	const { t, } = useTranslation('map');
 	return (
 		<>
-			<div className='rightAreaButtonTextsSeparator'>
-				{t('map_filter_bystate')}
+			<div className={styles.sidebarSeparator}>
+				{t('filter.bystate')}
 			</div>
 			{states.map((filter, index) => {
 				return (
 					<div
 						key={index + filter.text}
-						className='rightAreaButtonText'
+						className={styles.sidebarButtonText}
 					>
 						<Checkbox
 							className='donotselect'
@@ -47,7 +48,7 @@ const StateFilters = ({selectedFilters, setSelectedFilters}) => {
 };
 
 const OperationFilters = ({operations, ids, setIds}) => {
-	const { t,  } = useTranslation();
+	const { t,  } = useTranslation('map');
 	const [ state, actions ] = useAdesState();
 	const showOrHide = (id) => {
 		if (ids.indexOf(id) !== -1) {
@@ -62,23 +63,23 @@ const OperationFilters = ({operations, ids, setIds}) => {
 	};
 	return (
 		<>
-			<div className='rightAreaButtonTextsSeparator'>
-				{t('map_filter_byid')}
+			<div className={styles.sidebarSeparator}>
+				{t('filter.byid')}
 			</div>
 			{operations.map((op, index) => {
 				if (state.map.ids.indexOf(op.gufi) !== -1) {
 					return (
 						<div
-							className='rightAreaButtonText'
+							className={styles.sidebarButtonText}
 							key={op.gufi + index}
 						>
 							<Checkbox
 								checked={ids.indexOf(op.gufi) !== -1}
 								onChange={() => showOrHide(op.gufi)}
 							/>
-							{op.flight_comments}
+							{op.name}
 							<Button
-								className='rightAreaButtonAlternateButton'
+								className={styles.sidebarButtonAlternate}
 								icon='cross'
 								small={true}
 								onClick={() => actions.map.removeId(op.gufi)}
@@ -101,18 +102,19 @@ const OperationFilters = ({operations, ids, setIds}) => {
 
 const RfvsFilters = ({rfvs, setRfvs}) => {
 	const [state, ] = useAdesState();
-	const { t, } = useTranslation();
+	const { t, } = useTranslation('map');
 	return (
 		<>
-			<div className='rightAreaButtonTextsSeparator'>
-				{t('map_filter_rfvs')}
+			<div className={styles.sidebarSeparator}>
+				{t('filter.rfvs')}
 			</div>
-			{mapValues(state.rfv.list)(() => {})((rfv, index) => {
+			{S.map
+			((rfv, index) => {
 				const isSelected = rfvs.indexOf(rfv.id) !== -1;
 				return (
 					<div
 						key={rfv.comments}
-						className='rightAreaButtonText'
+						className={styles.sidebarButtonText}
 					>
 						<Checkbox
 							className='donotselect'
@@ -133,14 +135,16 @@ const RfvsFilters = ({rfvs, setRfvs}) => {
 
 					</div>
 				);
-			})}
+			})
+			(S.values(state.rfv.list))
+			}
 		</>
 	);
 };
 
 /* Button that opens a Menu that permits users selects what layers to show */
 const Layers = ({filtersSelected, setFiltersSelected, operations, disabled, idsSelected, setIdsSelected, rfvs, setRfvsShowing}) => {
-
+	const { t } = useTranslation('glossary');
 	return (
 		<>
 			{/*
@@ -159,17 +163,17 @@ const Layers = ({filtersSelected, setFiltersSelected, operations, disabled, idsS
 			</Popover>
 		</div>
 		*/}
-			<RightAreaButton
+			<SidebarButton
 				forceOpen={true}
 				useCase='Layers'
 				icon='layers'
-				label='LAYERS'
+				label={t('layers').toUpperCase()}
 				simpleChildren={false}
 			>
 				<StateFilters selectedFilters={filtersSelected} setSelectedFilters={setFiltersSelected}/>
 				<OperationFilters operations={operations} ids={idsSelected} setIds={setIdsSelected}/>
 				<RfvsFilters rfvs={rfvs} setRfvs={setRfvsShowing}/>
-			</RightAreaButton>
+			</SidebarButton>
 		</>
 	);
 };

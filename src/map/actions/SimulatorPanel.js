@@ -1,7 +1,8 @@
 /* istanbul ignore file */
 
 import React from 'react';
-import RightAreaButton from '../RightAreaButton';
+import SidebarButton from '../SidebarButton';
+import styles from '../Map.module.css';
 
 const SimulatorPanel = ({paths, onClick, selected, newDrone, startFlying, stopFlying}) => {
 	//console.log('QuickFly', onClick);
@@ -21,7 +22,7 @@ const SimulatorPanel = ({paths, onClick, selected, newDrone, startFlying, stopFl
 
 	return(
 		<>
-			<RightAreaButton
+			<SidebarButton
 				useCase='simdrones'
 				icon='airplane'
 				label='SIM-Drones'
@@ -30,8 +31,8 @@ const SimulatorPanel = ({paths, onClick, selected, newDrone, startFlying, stopFl
 				onClick={(elem) => onClick(elem.name)}
 			>
 				{drones}
-			</RightAreaButton>
-			<RightAreaButton
+			</SidebarButton>
+			<SidebarButton
 				useCase='simfunc'
 				icon='cog'
 				label='SIM-Func'
@@ -40,24 +41,24 @@ const SimulatorPanel = ({paths, onClick, selected, newDrone, startFlying, stopFl
 				onClick={(elem) => onClick(elem.name)}
 			>
 				<div
-					className='rightAreaButtonText'
+					className={styles.sidebarButtonText}
 					onClick={() => newDrone()}
 				>
 					New drone
 				</div>
 				<div
-					className='rightAreaButtonText'
+					className={styles.sidebarButtonText}
 					onClick={() => startFlying()}
 				>
 					Start flying
 				</div>
 				<div
-					className='rightAreaButtonText'
+					className={styles.sidebarButtonText}
 					onClick={() => stopFlying()}
 				>
 					Stop flying
 				</div>
-			</RightAreaButton>
+			</SidebarButton>
 		</>
 	);
 };

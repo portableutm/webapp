@@ -1,0 +1,125 @@
+.scrollControl {
+    position: sticky;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: auto;
+}
+
+.clickable {
+    pointer-events: auto;
+}
+
+.actions {
+    z-index: 900;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 0;
+    bottom: 0;
+    right: calc(100% + 4px);
+    pointer-events: auto;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.actionsVisible {
+    opacity: 1;
+}
+
+.notificationHeader {
+    display: flex;
+    color: #d7d7d7;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.notificationFocused {
+    position: relative;
+    z-index: 10000;
+}
+
+.notificationGeneric {
+    z-index: 990;
+    width: 98%;
+    max-height: 50%;
+    position: relative;
+    margin: 2%;
+    color: #f4f4f4;
+    user-select: none;
+    pointer-events: auto;
+    transition: all 0.5s linear;
+}
+
+.notificationRemoved {
+    max-height: 0 !important;
+}
+
+.notificationSelected {
+}
+
+.notificationButtonTop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(57, 64, 83);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    margin-bottom: 2px;
+    box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 1px 1px rgba(16, 22, 26, 0.2), 0 2px 6px rgba(16, 22, 26, 0.2);
+    height: 100%;
+    width: 100%;
+    pointer-events: auto;
+}
+
+.notificationButtonBottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(57, 64, 83);
+    margin-top: 2px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 1px 1px rgba(16, 22, 26, 0.2), 0 2px 6px rgba(16, 22, 26, 0.2);
+    height: 100%;
+    width: 100%;
+    pointer-events: auto;
+}
+
+.notificationHidden {
+    opacity: 0.3 !important;
+}
+
+.utmmessageEMERGENCY {
+    background: rgb(168, 0, 0);
+    animation: emergencyFlashing 1s alternate infinite linear;
+}
+
+@keyframes emergencyFlashing {
+    from {background-color: rgb(168, 0, 0);}
+    to {background-color: rgb(255, 40, 40);}
+}
+
+.utmmessageALERT {
+    background: rgb(141, 58, 0);
+}
+
+.utmmessageCRITICAL {
+    background: rgb(173, 91, 0);
+}
+
+.utmmessageWARNING {
+    background: rgb(159, 123, 0);
+}
+
+.utmmessageNOTICE {
+    background: rgb(78, 110, 0);
+}
+
+.utmmessageINFORMATIONAL {
+    background: rgb(10, 81, 0);
+}

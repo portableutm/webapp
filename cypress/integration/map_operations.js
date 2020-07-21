@@ -9,8 +9,9 @@ const operations = {
 			discovery_reference: null,
 			submit_time: '2020-04-13T09:10:21.654Z',
 			update_time: '2020-04-13T10:07:31.180Z',
+			owner: {firstName: 'test', lastName: 'test', username: 'test'},
 			aircraft_comments: null,
-			flight_comments: 'PROPOSED',
+			name: 'PROPOSED',
 			volumes_description: 'v0.1 - Restricted to one volume.',
 			airspace_authorization: null,
 			flight_number: '12345678',
@@ -131,10 +132,11 @@ const operations = {
 			gufi: 'a20ef8d5-506d-4f54-a981-874f6c8bd4de',
 			uss_name: null,
 			discovery_reference: null,
+			owner: {firstName: 'test', lastName: 'test', username: 'test'},
 			submit_time: '2020-04-13T08:59:46.146Z',
 			update_time: '2020-04-13T09:00:31.552Z',
 			aircraft_comments: null,
-			flight_comments: 'ACCEPTED',
+			name: 'ACCEPTED',
 			volumes_description: 'Simple polygon',
 			airspace_authorization: null,
 			flight_number: '12345678',
@@ -266,7 +268,8 @@ const operations = {
 			submit_time: '2020-04-13T08:59:49.740Z',
 			update_time: '2020-04-13T09:00:01.482Z',
 			aircraft_comments: null,
-			flight_comments: 'ACTIVATED',
+			owner: {firstName: 'test', lastName: 'test', username: 'test'},
+			name: 'ACTIVATED',
 			volumes_description: 'Simple polygon',
 			airspace_authorization: null,
 			flight_number: '12345678',
@@ -398,8 +401,9 @@ const operations = {
 			submit_time: '2020-04-13T08:59:47.892Z',
 			update_time: '2020-04-13T09:00:00.885Z',
 			aircraft_comments: null,
-			flight_comments: 'CLOSED',
+			name: 'CLOSED',
 			volumes_description: 'Simple polygon',
+			owner: {firstName: 'test', lastName: 'test', username: 'test'},
 			airspace_authorization: null,
 			flight_number: '12345678',
 			state: 'CLOSED',
@@ -534,9 +538,10 @@ const operations = {
 			submit_time: '2020-04-13T08:59:44.339Z',
 			update_time: '2020-04-13T09:00:31.161Z',
 			aircraft_comments: null,
-			flight_comments: 'ROGUE',
+			name: 'ROGUE',
 			volumes_description: 'Simple polygon',
 			airspace_authorization: null,
+			owner: {firstName: 'test', lastName: 'test', username: 'test'},
 			flight_number: '12345678',
 			state: 'ROGUE',
 			controller_location: null,
@@ -664,13 +669,8 @@ const operations = {
 
 describe('SP2: (Dashboard)', function () {
 	beforeEach('Auth', function () {
-		cy
-			.request('POST', API + 'auth/login', { username: 'admin', password: 'admin' })
-			.then((response) => {
-				// response.body is automatically serialized into JSON
-				cy.setCookie('user', 'admin');
-				cy.setCookie('jwt', response.body);
-			});
+		cy.setCookie('sneaky', 'admin');
+		cy.setCookie('hummingbird', 'admin');
 		cy.server();           // enable response stubbing
 		cy.route({
 			method: 'GET',      // Route all GET requests
@@ -682,14 +682,21 @@ describe('SP2: (Dashboard)', function () {
 	it('Visits Web and navigate to Dashboard', function () {
 		cy.visit('http://localhost:2000/');
 		cy.get('[data-test-id="mapButtonMenu"]').click();
-		cy.contains('Dashboard').click();
+		cy.contains('hamburger.dashboard').click();
 	});
 	it('Finds Operations button', function () {
-		cy.contains('All operations').click();
+		cy.contains('sidemenu.operations_list').click();
 	});
 	it('Find operation named ACTIVATED and check it id matches', function () {
 		cy.get('[data-test-id="opACTIVATED"]').click().then(($el) => {
-			expect($el).to.contain("b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63");
+			expect($el).to.contain('b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63');
 		});
+		cy.contains('show_on_map').click();
+		cy.wait(2000);
+		cy.get('[data-test-id="mapButtonMenu"]').click();
+		cy.contains('hamburger.dashboard').click();
+		cy.contains('sidemenu.operations_list').click();
+		cy.get('[data-test-id="opACTIVATED"]').click();
+		cy.contains('remove_from_map').click();
 	});
 });

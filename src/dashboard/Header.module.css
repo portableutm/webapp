@@ -1,0 +1,11 @@
+.header {
+    grid-area: 1 / 1 / 2 / -1;
+    display: flex;
+    justify-content: center;
+    padding-top: 3px;
+    padding-bottom: 2px;
+}
+
+.logo {
+    max-height: 40px;
+}

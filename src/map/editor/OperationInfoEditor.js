@@ -1,56 +1,68 @@
-import React from 'react';
-/*
-    Global
- */
+import React, {useState} from 'react';
 
-/*
-    UI
- */
-import {Dialog, FormGroup, InputGroup} from '@blueprintjs/core';
-/*
-    Helpers
- */
+import {Button, FormGroup, InputGroup} from '@blueprintjs/core';
+
 import PropTypes from 'prop-types';
 import {Just, maybeToNullable, Maybe} from 'sanctuary';
-import _, {maybeShow} from '../../libs/SaferSanctuary';
 import {useTranslation} from 'react-i18next';
+import SidebarButton from '../SidebarButton';
+import OperationVolumeInfoEditor from './OperationVolumeInfoEditor';
+import styles from '../Map.module.css';
+import { useHistory } from 'react-router-dom';
 
-function OperationInfoEditor({setOpen, info, setInfo}) {
-	const { t, } = useTranslation();
+function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOperation}) {
+	const { t, } = useTranslation(['map', 'glossary', 'common']);
+	const [isSaving, setSaving] = useState(false);
+	const history = useHistory();
 	const editInfo = (property, newInfo) => setInfo((data) => {
 		const newData = {...maybeToNullable(data)};
 		newData[property] = newInfo;
 		return Just(newData);
 	});
 
-	const renderInfoDialog = (info, editInfo) => {
-		return <div style={{padding: '10px'}}>
-			{/* "flight_comments": "Untitled" */}
+	const saveOperationAndSetSaving = () => {
+		setSaving(true);
+		saveOperation(() => setSaving(false));
+	};
+
+	return (
+		<SidebarButton
+			useCase='editorSteps'
+			icon='flow-linear'
+			label={t('editor.operation.complete')}
+			simpleChildren={false}
+			forceOpen={true}
+		>
 			<FormGroup
-				label={t('editor_oinfo_name')}
-				labelFor="flight_comments"
+				className={styles.sidebarButtonText}
+				label={t('glossary:operations.name')}
+				labelInfo={t('common:forms.required')}
+				labelFor="name"
 			>
 				<InputGroup
-					id="flight_comments"
-					data-test-id="mapInputEditorName"
-					value={info.flight_comments}
-					onChange={(evt) => editInfo('flight_comments', evt.target.value)}
+					id="name"
+					data-test-id="map#editor#operation#info#name"
+					value={info.name}
+					onChange={(evt) => editInfo('name', evt.target.value)}
 				/>
 			</FormGroup>
-			{/* "volumes_description": "v0.1 - Restricted to one volume." */}
 			<FormGroup
-				label={t('editor_oinfo_volumesdescription')}
-				labelFor="volumes_description"
+				className={styles.sidebarButtonText}
+				label={t('glossary:operations.owner_editable')}
+				labelInfo={t('common:forms.required')}
+				labelFor="name"
 			>
 				<InputGroup
-					id="volumes_description"
-					value={info.volumes_description}
-					disabled
+					id="pilot"
+					data-test-id="map#editor#operation#info#pilot"
+					value={info.owner}
+					onChange={(evt) => editInfo('owner', evt.target.value)}
 				/>
 			</FormGroup>
-			{/* "flight_number": "12345678" */}
+			{/* "flight_number": "12345678"
 			<FormGroup
-				label={t('editor_oinfo_flightnumber')}
+				className={styles.sidebarButtonText}
+				label={t('editor.operation.flightnumber')}
 				labelFor="flight_number"
 			>
 				<InputGroup
@@ -59,21 +71,75 @@ function OperationInfoEditor({setOpen, info, setInfo}) {
 					value={info.flight_number}
 					onChange={(evt) => editInfo('flight_number', evt.target.value)}
 				/>
+			</FormGroup>*/}
+			{/* "Contact Name"*/}
+			<FormGroup
+				className={styles.sidebarButtonText}
+				label={t('glossary:operations.contact')}
+				labelInfo={t('common:forms.optional')}
+				labelFor="contact"
+			>
+				<InputGroup
+					id="contact"
+					data-test-id="map#editor#operation#info#contact"
+					value={info.contact}
+					onChange={(evt) => editInfo('contact', evt.target.value)}
+				/>
 			</FormGroup>
-		</div>;
-	};
-
-	return (
-		<Dialog
-			title={t('editor_oinfo_complete')}
-			isOpen={true}
-			onClose={() => setOpen(false)}
-		>
-			{maybeShow(info)
-			(() => 'No info.')
-			(() => renderInfoDialog(_(info),editInfo))
-			}
-		</Dialog>
+			{/* "Contact Phone"*/}
+			<FormGroup
+				className={styles.sidebarButtonText}
+				label={t('glossary:operations.phone')}
+				labelInfo={t('common:forms.optional')}
+				labelFor="contact_phone"
+			>
+				<InputGroup
+					id="contact_phone"
+					data-test-id="map#editor#operation#info#contact_phone"
+					value={info.contact_phone}
+					onChange={(evt) => editInfo('contact_phone', evt.target.value)}
+				/>
+			</FormGroup>
+			{/* "flight_comments": "Untitled" */}
+			<FormGroup
+				className={styles.sidebarButtonText}
+				label={t('glossary:operations.flight_comments')}
+				labelInfo={t('common:forms.optional')}
+				labelFor="flight_comments"
+			>
+				<InputGroup
+					id="flight_comments"
+					data-test-id="map#editor#operation#info#flight_comments"
+					value={info.flight_comments}
+					onChange={(evt) => editInfo('flight_comments', evt.target.value)}
+				/>
+			</FormGroup>
+			<OperationVolumeInfoEditor
+				info={volumeInfo}
+				setInfo={setVolumeInfo}
+			/>
+			<div
+				className={styles.sidebarButtonTextRight}
+			>
+				<Button
+					fill
+					icon="undo"
+					style={{marginRight: '2.5px'}}
+					onClick={() => history.push('/')}
+				>
+					{t('editor.return')}
+				</Button>
+				<Button
+					fill
+					icon="floppy-disk"
+					style={{marginLeft: '2.5px'}}
+					loading={isSaving}
+					onClick={() => saveOperationAndSetSaving()}
+				>
+					{t('editor.finish')}
+				</Button>
+			</div>
+		</SidebarButton>
 	);
 }
 
