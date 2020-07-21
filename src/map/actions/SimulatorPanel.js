@@ -10,11 +10,13 @@ const SimulatorPanel = ({paths, onClick, selected, newDrone, startFlying, stopFl
 		if (selected === index) {
 			return {
 				name: 'SELECTED ' + index,
+				index: index,
 				path: path
 			};
 		} else {
 			return {
-				name: index,
+				name: 'DRONE ' + index,
+				index: index,
 				path: path
 			};
 		}
@@ -28,7 +30,7 @@ const SimulatorPanel = ({paths, onClick, selected, newDrone, startFlying, stopFl
 				label='SIM-Drones'
 				simpleChildren={true}
 				forceOpen={true}
-				onClick={(elem) => onClick(elem.name)}
+				onClick={(elem) => onClick(elem.index)}
 			>
 				{drones}
 			</SidebarButton>
@@ -38,7 +40,7 @@ const SimulatorPanel = ({paths, onClick, selected, newDrone, startFlying, stopFl
 				label='SIM-Func'
 				simpleChildren={false}
 				forceOpen={true}
-				onClick={(elem) => onClick(elem.name)}
+				onClick={(elem) => onClick(elem.index)}
 			>
 				<div
 					className={styles.sidebarButtonText}
