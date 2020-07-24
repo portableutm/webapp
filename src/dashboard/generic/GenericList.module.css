@@ -54,6 +54,7 @@
 }
 
 .header {
+    font-family: "Maven Pro", sans-serif;
     position: -webkit-sticky;
     position: sticky;
     text-align: center;

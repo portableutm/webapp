@@ -112,7 +112,7 @@ function SideMenu() {
 						<MenuItem icon="numbered-list"
 							text={t('sidemenu.vehicles_list')}
 							onClick={() => history.push('/dashboard/vehicles')}/>
-						<MenuItem text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
+						<MenuItem style={{fontFamily: '"Maven Pro", sans-serif'}} text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
 					</Menu>
 				</div>
 			</>
@@ -157,7 +157,7 @@ function SideMenu() {
 							text={t('sidemenu.vehicles_list_pilot')}
 							onClick={() => history.push('/dashboard/vehicles')}
 						/>
-						<MenuItem text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
+						<MenuItem style={{fontFamily: '"Maven Pro", sans-serif'}} text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
 					</Menu>
 				</div>
 			</>
@@ -218,7 +218,7 @@ function SideMenu() {
 							className='bp3-skeleton'
 							text={t('sidemenu.vehicles_list')}
 						/>
-						<MenuItem text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
+						<MenuItem style={{fontFamily: '"Maven Pro", sans-serif'}} text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
 					</Menu>
 				</div>
 			</div>
