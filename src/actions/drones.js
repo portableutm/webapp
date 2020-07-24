@@ -13,7 +13,13 @@ export const add = (store, data) => {
 				...data.location,
 				coordinates: {lat: data.location.coordinates[1], lng: data.location.coordinates[0]}
 			};
-			const dataLatLng = {...data, location: locationLatLng};
+
+			const pilotLocationLatLng = {
+				...data.controller_location,
+				coordinates: {lat: data.controller_location.coordinates[1], lng: data.controller_location.coordinates[0]}
+			};
+
+			const dataLatLng = {...data, location: locationLatLng, controller_location: pilotLocationLatLng};
 			store.setState({
 				drones: {
 					updated: Date.now(),
@@ -23,3 +29,4 @@ export const add = (store, data) => {
 			release();
 		});
 };
+

@@ -30,7 +30,7 @@ function UseSimulatorLogic(refMapOnClick, map, token) {
 		return newPaths;
 	});
 
-	const gufis = ['f7891e78-9bb4-431d-94d3-1a506910c254', 'ff4b6505-c282-42b1-b013-66f02137f5d5', 'a20ef8d5-506d-4f54-a981-874f6c8bd4de', 'b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63'];
+	const gufis = ['903d458c-0a96-4b72-9626-d8000e70c640', 'ff4b6505-c282-42b1-b013-66f02137f5d5', 'a20ef8d5-506d-4f54-a981-874f6c8bd4de', 'b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63'];
 
 	const fly = (ratio) => {
 		paths.forEach((path, index) => {

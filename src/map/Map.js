@@ -42,6 +42,7 @@ import Polyline from './elements/Polyline';
 import {fM} from '../libs/SaferSanctuary';
 import SelectedDrone from './viewer/SelectedDrone';
 import {Button, Dialog, Intent} from '@blueprintjs/core';
+import ControllerLocationMarker from './elements/ControllerLocationMarker';
 
 /* Main function */
 function Map({ mode }) {
@@ -184,16 +185,23 @@ function Map({ mode }) {
 				</Dialog>
 				{/* Live map */}
 				{drones.map((drone) =>
-					<DroneMarker
-						map={map.current}
-						key={drone.gufi}
-						id={drone.gufi}
-						heading={drone.heading}
-						altitude={drone.altitude_gps}
-						position={drone.location.coordinates}
-						risk={drone.risk}
-						onClick={() => setSelectedDrone(S.Just(drone.gufi))}
-					/>
+					<>
+						<ControllerLocationMarker
+							map={map.current}
+							key={'CL' + drone.gufi}
+							position={drone.controller_location.coordinates}
+						/>
+						<DroneMarker
+							map={map.current}
+							key={drone.gufi}
+							id={drone.gufi}
+							heading={drone.heading}
+							altitude={drone.altitude_gps}
+							position={drone.location.coordinates}
+							risk={drone.risk}
+							onClick={() => setSelectedDrone(S.Just(drone.gufi))}
+						/>
+					</>
 				)}
 				{opsFiltered.map((op) => {
 					return op.operation_volumes.map((volume) => {
@@ -220,6 +228,8 @@ function Map({ mode }) {
 									key={rfv.comments}
 									latlngs={rfv.geography.coordinates}
 									name={rfv.comments}
+									minAltitude={rfv.min_altitude}
+									maxAltitude={rfv.max_altitude}
 								/>
 							);
 						} else {

@@ -13,7 +13,7 @@ import useAdesState from '../../state/AdesState';
 /**
  * @return {null}
  */
-function RestrictedFlightVolume({map, latlngs, name}) {
+function RestrictedFlightVolume({map, latlngs, name, minAltitude, maxAltitude}) {
 	const [state, ] = useAdesState();
 	const [polygon, setPolygon] = useState(S.Nothing);
 	const onClicksDisabled = useRef(state.map.onClicksDisabled);
@@ -73,13 +73,28 @@ function RestrictedFlightVolume({map, latlngs, name}) {
 				line.setAttribute('stroke-width', '15');
 				pattern.appendChild(line);
 
+				const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+				const textPath = document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
+				//text.setAttribute('text-anchor', 'middle');
+				text.setAttribute('fill', 'red');
+				text.setAttribute('font-size', '16');
+				textPath.setAttribute('href', '#'+name.replace(/\s/g, ''));
+				textPath.setAttribute('side', 'right');
+				const textContent = document.createTextNode(minAltitude + 'M/' + maxAltitude + 'M AGL');
+				textPath.appendChild(textContent);
+				text.appendChild(textPath);
+
 				const ovp = map.getPanes().overlayPane.firstChild;
 				if (ovp) {
 					const defs = ovp.querySelector('defs') || document.createElementNS('http://www.w3.org/2000/svg', 'defs');
 					defs.appendChild(pattern);
+					const g = ovp.querySelector('g');
+					g.appendChild(text);
 					ovp.insertBefore(defs, ovp.firstChild);
 				}
 
+
+				fM(polygon)._path.setAttribute('id', name.replace(/\s/g, ''));
 				fM(polygon)._path.setAttribute('fill', 'url(#stripes)');
 			}
 		}

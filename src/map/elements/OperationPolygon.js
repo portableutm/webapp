@@ -100,6 +100,7 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 		}
 	}, [isSelected]); // eslint-disable-line react-hooks/exhaustive-deps
 
+
 	useEffect(() => {
 		// Redraw if the polygon moved or the state changed
 		if (S.isJust(polygon)) {

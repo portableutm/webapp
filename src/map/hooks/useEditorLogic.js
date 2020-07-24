@@ -26,6 +26,13 @@ function UseEditorLogic(refMapOnClick, mapInitialized) {
 		update_time: new Date().toISOString(),
 		faa_rule: 0,
 		state: 0,
+		controller_location: {
+			'type': 'Point',
+			'coordinates': [
+				-56.15970075130463,
+				-34.9119507320875
+			]
+		},
 		priority_elements: {
 			priority_level: 1,
 			priority_status: 'EMERGENCY_AIR_AND_GROUND_IMPACT'
