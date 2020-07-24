@@ -112,6 +112,10 @@ function SideMenu() {
 						<MenuItem icon="numbered-list"
 							text={t('sidemenu.vehicles_list')}
 							onClick={() => history.push('/dashboard/vehicles')}/>
+						<MenuDivider title={t('ades_options.title')} />
+						<MenuItem icon="cog"
+							text={t('ades_options.web')}
+							onClick={() => history.push('/dashboard/configuration')}/>
 						<MenuItem style={{fontFamily: '"Maven Pro", sans-serif'}} text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
 					</Menu>
 				</div>

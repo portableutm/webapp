@@ -4,13 +4,14 @@ import {useEffect, useState} from 'react';
 import L from 'leaflet';
 import 'leaflet-geometryutil';
 import A from 'axios';
-import {API} from '../../consts';
+import useAdesState from '../../state/AdesState';
 
 function UseSimulatorLogic(refMapOnClick, map, token) {
 
 	const [droneCurrentlyAdding, setDroneCurrentlyAdding] = useState(-1);
 	const [paths, setPaths] = useState([[]]);
 	const [timer, setTimer] = useState(null);
+	const [state, ] = useAdesState();
 
 	const setPath = (latlng, index = -1) => {
 		setPaths(paths => {
@@ -53,7 +54,7 @@ function UseSimulatorLogic(refMapOnClick, map, token) {
 				'gufi': gufis[index]
 			};
 			console.log('POSITION', position);
-			A.post(API + 'position', position, {headers: { auth: token }})
+			A.post(state.api + 'position', position, {headers: { auth: token }})
 				.then(result => {
 					console.log('POSITION', result.data);
 				})

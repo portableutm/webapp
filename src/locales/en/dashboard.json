@@ -32,5 +32,11 @@
     "accepted": "Accepted operations",
     "pending": "Pending operations",
     "vehicles": "Vehicles in the air"
+  },
+  "ades_options": {
+    "title": "Configuration",
+    "web": "Settings of the web",
+    "endpoint": "URL of PortableUTM DronfiesUSS",
+    "endpoint_helper": "Please, don't change this configuration unless you know what you're doing."
   }
 }

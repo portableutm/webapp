@@ -64,7 +64,8 @@ const initialState = {
 		list: {},
 		updated: 0
 	},
-	debug: DEBUG
+	debug: DEBUG,
+	api: API
 };
 
 const initializer = (store) => {
@@ -85,7 +86,7 @@ const internalActions = {
 	auth: {
 		login: (store, username, password, callback, errorCallback) => {
 			Axios = A.create({
-				baseURL: API,
+				baseURL: store.state.api,
 				timeout: 15000,
 				headers: {
 					'Content-Type': 'application/json',
@@ -107,7 +108,7 @@ const internalActions = {
 				.then(result => {
 					const token = result.data;
 					store.setState({auth: {...store.state.auth, token: S.Just(token), username: username}});
-					socket = io(API + '?token=' + token);
+					socket = io(store.state.api + '?token=' + token);
 
 					socket.on('new-position', function (info) {
 						const info2 = {...info};
@@ -152,6 +153,10 @@ const internalActions = {
 	},
 	debug: (store, toggle) => {
 		store.setState({debug: toggle});
+	},
+	api: (store, newApi) => {
+		store.setState({api: newApi});
+		store.actions.auth.logout();
 	}
 };
 

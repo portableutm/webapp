@@ -11,7 +11,6 @@ import {Button, Intent, Tab, Tabs} from '@blueprintjs/core';
 import {fM, maybeValues} from '../../libs/SaferSanctuary';
 
 /* Constants */
-import {API} from '../../consts';
 import useAdesState, {Axios, print} from '../../state/AdesState';
 import genericStyles from '../generic/GenericList.module.css';
 import styles from './UsersList.module.css';
@@ -38,7 +37,7 @@ function useUsersState() {
 	const usersListExtracted = maybeValues(usersList);
 
 	useEffect(() => {
-		Axios.get(API + 'user', {headers: {auth: fM(state.auth.token)}})
+		Axios.get(state.api + 'user', {headers: {auth: fM(state.auth.token)}})
 			.then(result => {
 				const dataObtained = Array.from(result.data);
 				const pairs = S.justs(dataObtained.map((user) => {

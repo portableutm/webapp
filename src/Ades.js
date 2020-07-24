@@ -58,6 +58,7 @@ import HomeScreen from './dashboard/home/HomeScreen';
 import VerificationScreen from './VerificationScreen';
 import BottomArea from './layout/BottomArea';
 import NotificationCenter from './NotificationCenter';
+import Web from './dashboard/config/Web';
 
 /*function alertIsImportant(alertUtmMessage) {
 	return (
@@ -243,6 +244,15 @@ function Ades() {
 						<Route exact path='/operation/:id'>
 							<MasterPage>
 								<Map mode={S.Maybe.Just('view')}/>
+							</MasterPage>
+						</Route>
+						<Route exact path='/dashboard/configuration'>
+							<MasterPage>
+								<>
+									<Dashboard>
+										<Web/>
+									</Dashboard>
+								</>
 							</MasterPage>
 						</Route>
 						<Route exact path='/dashboard/operations/:id'>
