@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
 import S from 'sanctuary';
 import {Button, Intent, Tab, Tabs} from '@blueprintjs/core';
+import { useQuery } from 'urql';
 
 /* Internal Libs */
 import {fM, maybeValues} from '../../libs/SaferSanctuary';
@@ -25,7 +26,7 @@ import Pilot from './Pilot';
 
 const USERS_ONE_PAGE_NUMBER = 8;
 
-function useUsersState() {
+/* function useUsersState() {
 	const [usersList, setUsersList] = useState(S.Nothing);
 	const [usersUpdated, setUpdated] = useState(0);
 	const [refetchTime, setRefechtime] = useState(0);
@@ -55,119 +56,106 @@ function useUsersState() {
 	}, [refetchTime]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return [usersListExtracted, usersUpdated, isEmpty, isError, refetch];
-}
+} */
+
+const AllUsersQuery = `
+	query {
+		user {
+			firstName
+			lastName
+			username
+			email
+			role
+			operations(order_by: {submit_time: desc}, limit: 1) {
+			  name
+			}
+		}
+	}
+`;
 
 const UsersList = () => {
 	const history = useHistory();
 	const {t} = useTranslation(['glossary','common']);
 	const { username } = useParams();
 
-	const [users, usersUpdated, isEmpty, isError, refetch] = useUsersState();
-	const [shownPilot, setShownPilot] = useState(S.Nothing);
-	const [firstUser, setFirstUser] = useState(0);
-	const [lastUser, setLastUser] = useState(USERS_ONE_PAGE_NUMBER);
+	const [result, execQuery] = useQuery({
+		query: AllUsersQuery
+	});
 
-	/*useEffect(() => {
-		// Only run in mount
-		if (Date.now() - USERS_DATA_TOO_OLD - state.users.updated > USERS_DATA_TOO_OLD) {
-			actions.users.fetch();
-		}
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps*/
+	const { data, fetching, error } = result;
 
-	const usersThisPage = users.slice(firstUser, lastUser); // TODO: Pagination by API
-	let tabsTotal = [];
-	for (let i = 0; i <  users.length / USERS_ONE_PAGE_NUMBER; i++) {
-		tabsTotal.push(i);
-	}
+	console.log('DATA', fetching, error, data);
 
-	useEffect(() => {
-		if (!isEmpty && username != null) {
-			const selected = users.find(user => user.username === username);
-			setShownPilot(S.Just(selected));
-		}
-	}, [username, usersUpdated, isEmpty]); // eslint-disable-line react-hooks/exhaustive-deps
-
-	return (
-		<>
-			{ 	isError &&
+	if (error) {
+		return (
 			<>
 				<p>
 					{t('app.errorocurredfetching')}
 				</p>
 				<Button
 					intent={Intent.PRIMARY}
-					onClick={() => refetch()}
+					onClick={() => {}}
 				>
 					{t('app.tryagain')}
 				</Button>
 			</>
+		);
+	} else if (fetching) {
+		return (
+			<>
+				<p>
+					Fetching
+				</p>
+			</>
+		);
+	} else {
+		return (
+			<>
+				<div className={genericStyles.header}>
+					<h1>
+						{t('users.plural_generic').toUpperCase()}
+					</h1>
+				</div>
+				<div className={styles.buttons}>
+					Disabled
+				</div>
+				<div>
+					<table id='usersList' className='.bp3-html-table .bp3-html-table-bordered .bp3-html-table-striped fullHW'>
+						<thead>
+							<tr>
+								<th>{t('users.firstname')}</th>
+								<th>{t('users.lastname')}</th>
+								<th>{t('users.username')}</th>
+								<th>{t('users.email')}</th>
+								<th>{t('users.role')}</th>
+								<th>last operation</th>
+							</tr>
+						</thead>
+						<tbody className={styles.usersList}>
+							{data.user.map(user => (
+								<tr key={user.username}>
+									<td>{user.firstName}</td>
+									<td>{user.lastName}</td>
+									<td>{user.username}</td>
+									<td>{user.email}</td>
+									<td>{user.role}</td>
+									<td>{user.operations.length > 0 && user.operations[0].name}</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
+			</>
+		);
+	}
+	/* return (
+		<>
+			{ 	isError &&
+
 			}
 			{	!isError &&
 				S.isNothing(shownPilot) &&
-				<>
-					<div className={genericStyles.header}>
-						<h1>
-							{t('users.plural_generic').toUpperCase()}
-						</h1>
-					</div>
-					<div className={styles.buttons}>
-						<Tabs id='dshUsersListsTabs' onChange={tab => {
-							setFirstUser(tab * USERS_ONE_PAGE_NUMBER);
-							setLastUser((tab + 1) * USERS_ONE_PAGE_NUMBER);
-						}}>
-							{tabsTotal.map(tab => {
-								const page = tab + 1;
-								return <Tab id={tab} key={'tab' + tab} title={t('page', {number: page})}/>;
-							})
-							}
-						</Tabs>
-					</div>
-					<div>
-						<table id='usersList' className='.bp3-html-table .bp3-html-table-bordered .bp3-html-table-striped fullHW'>
-							<thead>
-								<tr>
-									<th>{t('users.firstname')}</th>
-									<th>{t('users.lastname')}</th>
-									<th>{t('users.username')}</th>
-									<th>{t('users.email')}</th>
-									<th>{t('users.role')}</th>
-									<th>{t('actions')}</th>
-								</tr>
-							</thead>
-							<tbody className={styles.usersList}>
-								{usersThisPage.map(user => (
-									<tr key={user.username}>
-										<td>{user.firstName}</td>
-										<td>{user.lastName}</td>
-										<td>{user.username}</td>
-										<td>{user.email}</td>
-										<td>{user.role}</td>
-										<td>
-											<div style={{display: 'flex', justifyContent: 'space-evenly'}}>
-												<Button
-													small={true}
-													disabled
-													onClick={() => {
-														history.push('/dashboard/users/' + user.username);
-														setShownPilot(S.Just(user));
-													}}
-												>
-													{t('edit')}
-												</Button>
-												<Button
-													small={true}
-													onClick={() => history.push('/dashboard/vehicles/' + user.username + '/new/')}
-												>
-													{t('vehicles.add')}
-												</Button>
-											</div>
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
-				</>
+
 			}
 			{	!isError &&
 				S.isJust(shownPilot) &&
@@ -180,7 +168,7 @@ const UsersList = () => {
 				</>
 			}
 		</>
-	);
+	); */
 };
  
 export default UsersList;

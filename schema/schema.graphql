@@ -1,0 +1,2746 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+# expression to compare columns of type Boolean. All fields are combined with logical 'AND'.
+input Boolean_comparison_exp {
+  _eq: Boolean
+  _gt: Boolean
+  _gte: Boolean
+  _in: [Boolean!]
+  _is_null: Boolean
+  _lt: Boolean
+  _lte: Boolean
+  _neq: Boolean
+  _nin: [Boolean!]
+}
+
+scalar geography
+
+# Expression to compare the result of casting a column of type geography. Multiple
+# cast targets are combined with logical 'AND'.
+input geography_cast_exp {
+  geometry: geometry_comparison_exp
+}
+
+# expression to compare columns of type geography. All fields are combined with logical 'AND'.
+input geography_comparison_exp {
+  _cast: geography_cast_exp
+  _eq: geography
+  _gt: geography
+  _gte: geography
+  _in: [geography!]
+  _is_null: Boolean
+  _lt: geography
+  _lte: geography
+  _neq: geography
+  _nin: [geography!]
+
+  # is the column within a distance from a geography value
+  _st_d_within: st_d_within_geography_input
+
+  # does the column spatially intersect the given geography value
+  _st_intersects: geography
+}
+
+scalar geometry
+
+# Expression to compare the result of casting a column of type geometry. Multiple
+# cast targets are combined with logical 'AND'.
+input geometry_cast_exp {
+  geography: geography_comparison_exp
+}
+
+# expression to compare columns of type geometry. All fields are combined with logical 'AND'.
+input geometry_comparison_exp {
+  _cast: geometry_cast_exp
+  _eq: geometry
+  _gt: geometry
+  _gte: geometry
+  _in: [geometry!]
+  _is_null: Boolean
+  _lt: geometry
+  _lte: geometry
+  _neq: geometry
+  _nin: [geometry!]
+
+  # does the column contain the given geometry value
+  _st_contains: geometry
+
+  # does the column crosses the given geometry value
+  _st_crosses: geometry
+
+  # is the column within a distance from a geometry value
+  _st_d_within: st_d_within_input
+
+  # is the column equal to given geometry value. Directionality is ignored
+  _st_equals: geometry
+
+  # does the column spatially intersect the given geometry value
+  _st_intersects: geometry
+
+  # does the column 'spatially overlap' (intersect but not completely contain) the given geometry value
+  _st_overlaps: geometry
+
+  # does the column have atleast one point in common with the given geometry value
+  _st_touches: geometry
+
+  # is the column contained in the given geometry value
+  _st_within: geometry
+}
+
+# expression to compare columns of type Int. All fields are combined with logical 'AND'.
+input Int_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int!]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int!]
+}
+
+# mutation root
+type mutation_root {
+  # delete data from the table: "operation"
+  delete_operation(
+    # filter the rows which have to be deleted
+    where: operation_bool_exp!
+  ): operation_mutation_response
+
+  # delete single row from the table: "operation"
+  delete_operation_by_pk(
+    # required
+    gufi: uuid!
+  ): operation
+
+  # delete data from the table: "operation_volume"
+  delete_operation_volume(
+    # filter the rows which have to be deleted
+    where: operation_volume_bool_exp!
+  ): operation_volume_mutation_response
+
+  # delete single row from the table: "operation_volume"
+  delete_operation_volume_by_pk(id: Int!): operation_volume
+
+  # delete data from the table: "position"
+  delete_position(
+    # filter the rows which have to be deleted
+    where: position_bool_exp!
+  ): position_mutation_response
+
+  # delete single row from the table: "position"
+  delete_position_by_pk(id: Int!): position
+
+  # delete data from the table: "quickfly"
+  delete_quickfly(
+    # filter the rows which have to be deleted
+    where: quickfly_bool_exp!
+  ): quickfly_mutation_response
+
+  # delete single row from the table: "quickfly"
+  delete_quickfly_by_pk(gufi: uuid!): quickfly
+
+  # delete data from the table: "user"
+  delete_user(
+    # filter the rows which have to be deleted
+    where: user_bool_exp!
+  ): user_mutation_response
+
+  # delete single row from the table: "user"
+  delete_user_by_pk(username: String!): user
+
+  # insert data into the table: "operation"
+  insert_operation(
+    # the rows to be inserted
+    objects: [operation_insert_input!]!
+
+    # on conflict condition
+    on_conflict: operation_on_conflict
+  ): operation_mutation_response
+
+  # insert a single row into the table: "operation"
+  insert_operation_one(
+    # the row to be inserted
+    object: operation_insert_input!
+
+    # on conflict condition
+    on_conflict: operation_on_conflict
+  ): operation
+
+  # insert data into the table: "operation_volume"
+  insert_operation_volume(
+    # the rows to be inserted
+    objects: [operation_volume_insert_input!]!
+
+    # on conflict condition
+    on_conflict: operation_volume_on_conflict
+  ): operation_volume_mutation_response
+
+  # insert a single row into the table: "operation_volume"
+  insert_operation_volume_one(
+    # the row to be inserted
+    object: operation_volume_insert_input!
+
+    # on conflict condition
+    on_conflict: operation_volume_on_conflict
+  ): operation_volume
+
+  # insert data into the table: "position"
+  insert_position(
+    # the rows to be inserted
+    objects: [position_insert_input!]!
+
+    # on conflict condition
+    on_conflict: position_on_conflict
+  ): position_mutation_response
+
+  # insert a single row into the table: "position"
+  insert_position_one(
+    # the row to be inserted
+    object: position_insert_input!
+
+    # on conflict condition
+    on_conflict: position_on_conflict
+  ): position
+
+  # insert data into the table: "quickfly"
+  insert_quickfly(
+    # the rows to be inserted
+    objects: [quickfly_insert_input!]!
+
+    # on conflict condition
+    on_conflict: quickfly_on_conflict
+  ): quickfly_mutation_response
+
+  # insert a single row into the table: "quickfly"
+  insert_quickfly_one(
+    # the row to be inserted
+    object: quickfly_insert_input!
+
+    # on conflict condition
+    on_conflict: quickfly_on_conflict
+  ): quickfly
+
+  # insert data into the table: "user"
+  insert_user(
+    # the rows to be inserted
+    objects: [user_insert_input!]!
+
+    # on conflict condition
+    on_conflict: user_on_conflict
+  ): user_mutation_response
+
+  # insert a single row into the table: "user"
+  insert_user_one(
+    # the row to be inserted
+    object: user_insert_input!
+
+    # on conflict condition
+    on_conflict: user_on_conflict
+  ): user
+
+  # update data of the table: "operation"
+  update_operation(
+    # increments the integer columns with given value of the filtered values
+    _inc: operation_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: operation_set_input
+
+    # filter the rows which have to be updated
+    where: operation_bool_exp!
+  ): operation_mutation_response
+
+  # update single row of the table: "operation"
+  update_operation_by_pk(
+    # increments the integer columns with given value of the filtered values
+    _inc: operation_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: operation_set_input
+    pk_columns: operation_pk_columns_input!
+  ): operation
+
+  # update data of the table: "operation_volume"
+  update_operation_volume(
+    # increments the integer columns with given value of the filtered values
+    _inc: operation_volume_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: operation_volume_set_input
+
+    # filter the rows which have to be updated
+    where: operation_volume_bool_exp!
+  ): operation_volume_mutation_response
+
+  # update single row of the table: "operation_volume"
+  update_operation_volume_by_pk(
+    # increments the integer columns with given value of the filtered values
+    _inc: operation_volume_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: operation_volume_set_input
+    pk_columns: operation_volume_pk_columns_input!
+  ): operation_volume
+
+  # update data of the table: "position"
+  update_position(
+    # increments the integer columns with given value of the filtered values
+    _inc: position_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: position_set_input
+
+    # filter the rows which have to be updated
+    where: position_bool_exp!
+  ): position_mutation_response
+
+  # update single row of the table: "position"
+  update_position_by_pk(
+    # increments the integer columns with given value of the filtered values
+    _inc: position_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: position_set_input
+    pk_columns: position_pk_columns_input!
+  ): position
+
+  # update data of the table: "quickfly"
+  update_quickfly(
+    # sets the columns of the filtered rows to the given values
+    _set: quickfly_set_input
+
+    # filter the rows which have to be updated
+    where: quickfly_bool_exp!
+  ): quickfly_mutation_response
+
+  # update single row of the table: "quickfly"
+  update_quickfly_by_pk(
+    # sets the columns of the filtered rows to the given values
+    _set: quickfly_set_input
+    pk_columns: quickfly_pk_columns_input!
+  ): quickfly
+
+  # update data of the table: "user"
+  update_user(
+    # increments the integer columns with given value of the filtered values
+    _inc: user_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: user_set_input
+
+    # filter the rows which have to be updated
+    where: user_bool_exp!
+  ): user_mutation_response
+
+  # update single row of the table: "user"
+  update_user_by_pk(
+    # increments the integer columns with given value of the filtered values
+    _inc: user_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: user_set_input
+    pk_columns: user_pk_columns_input!
+  ): user
+}
+
+scalar numeric
+
+# expression to compare columns of type numeric. All fields are combined with logical 'AND'.
+input numeric_comparison_exp {
+  _eq: numeric
+  _gt: numeric
+  _gte: numeric
+  _in: [numeric!]
+  _is_null: Boolean
+  _lt: numeric
+  _lte: numeric
+  _neq: numeric
+  _nin: [numeric!]
+}
+
+# columns and relationships of "operation"
+type operation {
+  aircraft_comments: String
+  airspace_authorization: String
+  contact: String
+  contact_phone: String
+  controller_location: geography
+
+  # An object relationship
+  creator: user!
+
+  # required
+  creatorUsername: String!
+  discovery_reference: String
+  faa_rule: String
+  flight_comments: String
+  flight_number: Int!
+  gcs_location: geometry
+
+  # required
+  gufi: uuid!
+
+  # required
+  name: String!
+
+  # An array relationship
+  operation_volumes(
+    # distinct select on columns
+    distinct_on: [operation_volume_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [operation_volume_order_by!]
+
+    # filter the rows returned
+    where: operation_volume_bool_exp
+  ): [operation_volume!]!
+
+  # An aggregated array relationship
+  operation_volumes_aggregate(
+    # distinct select on columns
+    distinct_on: [operation_volume_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [operation_volume_order_by!]
+
+    # filter the rows returned
+    where: operation_volume_bool_exp
+  ): operation_volume_aggregate!
+
+  # An object relationship
+  owner: user!
+
+  # required
+  ownerUsername: String!
+
+  # An array relationship
+  positions(
+    # distinct select on columns
+    distinct_on: [position_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [position_order_by!]
+
+    # filter the rows returned
+    where: position_bool_exp
+  ): [position!]!
+
+  # An aggregated array relationship
+  positions_aggregate(
+    # distinct select on columns
+    distinct_on: [position_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [position_order_by!]
+
+    # filter the rows returned
+    where: position_bool_exp
+  ): position_aggregate!
+  state: operation_state!
+  submit_time: timestamp!
+  update_time: timestamp!
+  uss_name: String
+  volumes_description: String
+}
+
+# aggregated selection of "operation"
+type operation_aggregate {
+  aggregate: operation_aggregate_fields
+  nodes: [operation!]!
+}
+
+# aggregate fields of "operation"
+type operation_aggregate_fields {
+  avg: operation_avg_fields
+  count(columns: [operation_select_column!], distinct: Boolean): Int
+  max: operation_max_fields
+  min: operation_min_fields
+  stddev: operation_stddev_fields
+  stddev_pop: operation_stddev_pop_fields
+  stddev_samp: operation_stddev_samp_fields
+  sum: operation_sum_fields
+  var_pop: operation_var_pop_fields
+  var_samp: operation_var_samp_fields
+  variance: operation_variance_fields
+}
+
+# order by aggregate values of table "operation"
+input operation_aggregate_order_by {
+  avg: operation_avg_order_by
+  count: order_by
+  max: operation_max_order_by
+  min: operation_min_order_by
+  stddev: operation_stddev_order_by
+  stddev_pop: operation_stddev_pop_order_by
+  stddev_samp: operation_stddev_samp_order_by
+  sum: operation_sum_order_by
+  var_pop: operation_var_pop_order_by
+  var_samp: operation_var_samp_order_by
+  variance: operation_variance_order_by
+}
+
+# input type for inserting array relation for remote table "operation"
+input operation_arr_rel_insert_input {
+  data: [operation_insert_input!]!
+  on_conflict: operation_on_conflict
+}
+
+# aggregate avg on columns
+type operation_avg_fields {
+  flight_number: Float
+}
+
+# order by avg() on columns of table "operation"
+input operation_avg_order_by {
+  flight_number: order_by
+}
+
+# Boolean expression to filter rows from the table "operation". All fields are combined with a logical 'AND'.
+input operation_bool_exp {
+  _and: [operation_bool_exp]
+  _not: operation_bool_exp
+  _or: [operation_bool_exp]
+  aircraft_comments: String_comparison_exp
+  airspace_authorization: String_comparison_exp
+  contact: String_comparison_exp
+  contact_phone: String_comparison_exp
+  controller_location: geography_comparison_exp
+  creator: user_bool_exp
+  creatorUsername: String_comparison_exp
+  discovery_reference: String_comparison_exp
+  faa_rule: String_comparison_exp
+  flight_comments: String_comparison_exp
+  flight_number: Int_comparison_exp
+  gcs_location: geometry_comparison_exp
+  gufi: uuid_comparison_exp
+  name: String_comparison_exp
+  operation_volumes: operation_volume_bool_exp
+  owner: user_bool_exp
+  ownerUsername: String_comparison_exp
+  positions: position_bool_exp
+  state: operation_state_comparison_exp
+  submit_time: timestamp_comparison_exp
+  update_time: timestamp_comparison_exp
+  uss_name: String_comparison_exp
+  volumes_description: String_comparison_exp
+}
+
+# unique or primary key constraints on table "operation"
+enum operation_constraint {
+  # unique or primary key constraint
+  PK_e1bda9c1cfec0b07d241b467f89
+}
+
+# input type for incrementing integer column in table "operation"
+input operation_inc_input {
+  flight_number: Int
+}
+
+# input type for inserting data into table "operation"
+input operation_insert_input {
+  aircraft_comments: String
+  airspace_authorization: String
+  contact: String
+  contact_phone: String
+  controller_location: geography
+  creator: user_obj_rel_insert_input
+  creatorUsername: String
+  discovery_reference: String
+  faa_rule: String
+  flight_comments: String
+  flight_number: Int
+  gcs_location: geometry
+  gufi: uuid
+  name: String
+  operation_volumes: operation_volume_arr_rel_insert_input
+  owner: user_obj_rel_insert_input
+  ownerUsername: String
+  positions: position_arr_rel_insert_input
+  state: operation_state
+  submit_time: timestamp
+  update_time: timestamp
+  uss_name: String
+  volumes_description: String
+}
+
+# aggregate max on columns
+type operation_max_fields {
+  aircraft_comments: String
+  airspace_authorization: String
+  contact: String
+  contact_phone: String
+  creatorUsername: String
+  discovery_reference: String
+  faa_rule: String
+  flight_comments: String
+  flight_number: Int
+  gufi: uuid
+  name: String
+  ownerUsername: String
+  submit_time: timestamp
+  update_time: timestamp
+  uss_name: String
+  volumes_description: String
+}
+
+# order by max() on columns of table "operation"
+input operation_max_order_by {
+  aircraft_comments: order_by
+  airspace_authorization: order_by
+  contact: order_by
+  contact_phone: order_by
+  creatorUsername: order_by
+  discovery_reference: order_by
+  faa_rule: order_by
+  flight_comments: order_by
+  flight_number: order_by
+  gufi: order_by
+  name: order_by
+  ownerUsername: order_by
+  submit_time: order_by
+  update_time: order_by
+  uss_name: order_by
+  volumes_description: order_by
+}
+
+# aggregate min on columns
+type operation_min_fields {
+  aircraft_comments: String
+  airspace_authorization: String
+  contact: String
+  contact_phone: String
+  creatorUsername: String
+  discovery_reference: String
+  faa_rule: String
+  flight_comments: String
+  flight_number: Int
+  gufi: uuid
+  name: String
+  ownerUsername: String
+  submit_time: timestamp
+  update_time: timestamp
+  uss_name: String
+  volumes_description: String
+}
+
+# order by min() on columns of table "operation"
+input operation_min_order_by {
+  aircraft_comments: order_by
+  airspace_authorization: order_by
+  contact: order_by
+  contact_phone: order_by
+  creatorUsername: order_by
+  discovery_reference: order_by
+  faa_rule: order_by
+  flight_comments: order_by
+  flight_number: order_by
+  gufi: order_by
+  name: order_by
+  ownerUsername: order_by
+  submit_time: order_by
+  update_time: order_by
+  uss_name: order_by
+  volumes_description: order_by
+}
+
+# response of any mutation on the table "operation"
+type operation_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [operation!]!
+}
+
+# input type for inserting object relation for remote table "operation"
+input operation_obj_rel_insert_input {
+  data: operation_insert_input!
+  on_conflict: operation_on_conflict
+}
+
+# on conflict condition type for table "operation"
+input operation_on_conflict {
+  constraint: operation_constraint!
+  update_columns: [operation_update_column!]!
+  where: operation_bool_exp
+}
+
+# ordering options when selecting data from "operation"
+input operation_order_by {
+  aircraft_comments: order_by
+  airspace_authorization: order_by
+  contact: order_by
+  contact_phone: order_by
+  controller_location: order_by
+  creator: user_order_by
+  creatorUsername: order_by
+  discovery_reference: order_by
+  faa_rule: order_by
+  flight_comments: order_by
+  flight_number: order_by
+  gcs_location: order_by
+  gufi: order_by
+  name: order_by
+  operation_volumes_aggregate: operation_volume_aggregate_order_by
+  owner: user_order_by
+  ownerUsername: order_by
+  positions_aggregate: position_aggregate_order_by
+  state: order_by
+  submit_time: order_by
+  update_time: order_by
+  uss_name: order_by
+  volumes_description: order_by
+}
+
+# primary key columns input for table: "operation"
+input operation_pk_columns_input {
+  # required
+  gufi: uuid!
+}
+
+# select columns of table "operation"
+enum operation_select_column {
+  # column name
+  aircraft_comments
+
+  # column name
+  airspace_authorization
+
+  # column name
+  contact
+
+  # column name
+  contact_phone
+
+  # column name
+  controller_location
+
+  # column name
+  creatorUsername
+
+  # column name
+  discovery_reference
+
+  # column name
+  faa_rule
+
+  # column name
+  flight_comments
+
+  # column name
+  flight_number
+
+  # column name
+  gcs_location
+
+  # column name
+  gufi
+
+  # column name
+  name
+
+  # column name
+  ownerUsername
+
+  # column name
+  state
+
+  # column name
+  submit_time
+
+  # column name
+  update_time
+
+  # column name
+  uss_name
+
+  # column name
+  volumes_description
+}
+
+# input type for updating data in table "operation"
+input operation_set_input {
+  aircraft_comments: String
+  airspace_authorization: String
+  contact: String
+  contact_phone: String
+  controller_location: geography
+  creatorUsername: String
+  discovery_reference: String
+  faa_rule: String
+  flight_comments: String
+  flight_number: Int
+  gcs_location: geometry
+  gufi: uuid
+  name: String
+  ownerUsername: String
+  state: operation_state
+  submit_time: timestamp
+  update_time: timestamp
+  uss_name: String
+  volumes_description: String
+}
+
+scalar operation_state
+
+# expression to compare columns of type operation_state. All fields are combined with logical 'AND'.
+input operation_state_comparison_exp {
+  _eq: operation_state
+  _gt: operation_state
+  _gte: operation_state
+  _in: [operation_state!]
+  _is_null: Boolean
+  _lt: operation_state
+  _lte: operation_state
+  _neq: operation_state
+  _nin: [operation_state!]
+}
+
+# aggregate stddev on columns
+type operation_stddev_fields {
+  flight_number: Float
+}
+
+# order by stddev() on columns of table "operation"
+input operation_stddev_order_by {
+  flight_number: order_by
+}
+
+# aggregate stddev_pop on columns
+type operation_stddev_pop_fields {
+  flight_number: Float
+}
+
+# order by stddev_pop() on columns of table "operation"
+input operation_stddev_pop_order_by {
+  flight_number: order_by
+}
+
+# aggregate stddev_samp on columns
+type operation_stddev_samp_fields {
+  flight_number: Float
+}
+
+# order by stddev_samp() on columns of table "operation"
+input operation_stddev_samp_order_by {
+  flight_number: order_by
+}
+
+# aggregate sum on columns
+type operation_sum_fields {
+  flight_number: Int
+}
+
+# order by sum() on columns of table "operation"
+input operation_sum_order_by {
+  flight_number: order_by
+}
+
+# update columns of table "operation"
+enum operation_update_column {
+  # column name
+  aircraft_comments
+
+  # column name
+  airspace_authorization
+
+  # column name
+  contact
+
+  # column name
+  contact_phone
+
+  # column name
+  controller_location
+
+  # column name
+  creatorUsername
+
+  # column name
+  discovery_reference
+
+  # column name
+  faa_rule
+
+  # column name
+  flight_comments
+
+  # column name
+  flight_number
+
+  # column name
+  gcs_location
+
+  # column name
+  gufi
+
+  # column name
+  name
+
+  # column name
+  ownerUsername
+
+  # column name
+  state
+
+  # column name
+  submit_time
+
+  # column name
+  update_time
+
+  # column name
+  uss_name
+
+  # column name
+  volumes_description
+}
+
+# aggregate var_pop on columns
+type operation_var_pop_fields {
+  flight_number: Float
+}
+
+# order by var_pop() on columns of table "operation"
+input operation_var_pop_order_by {
+  flight_number: order_by
+}
+
+# aggregate var_samp on columns
+type operation_var_samp_fields {
+  flight_number: Float
+}
+
+# order by var_samp() on columns of table "operation"
+input operation_var_samp_order_by {
+  flight_number: order_by
+}
+
+# aggregate variance on columns
+type operation_variance_fields {
+  flight_number: Float
+}
+
+# order by variance() on columns of table "operation"
+input operation_variance_order_by {
+  flight_number: order_by
+}
+
+# columns and relationships of "operation_volume"
+type operation_volume {
+  actual_time_end: timestamp
+  beyond_visual_line_of_sight: Boolean
+  effective_time_begin: timestamp!
+  effective_time_end: timestamp!
+  id: Int!
+  max_altitude: numeric!
+  min_altitude: numeric!
+  near_structure: Boolean
+  operationGufi: uuid
+  operation_geography: geography!
+  ordinal: Int!
+  volume_type: String
+}
+
+# aggregated selection of "operation_volume"
+type operation_volume_aggregate {
+  aggregate: operation_volume_aggregate_fields
+  nodes: [operation_volume!]!
+}
+
+# aggregate fields of "operation_volume"
+type operation_volume_aggregate_fields {
+  avg: operation_volume_avg_fields
+  count(columns: [operation_volume_select_column!], distinct: Boolean): Int
+  max: operation_volume_max_fields
+  min: operation_volume_min_fields
+  stddev: operation_volume_stddev_fields
+  stddev_pop: operation_volume_stddev_pop_fields
+  stddev_samp: operation_volume_stddev_samp_fields
+  sum: operation_volume_sum_fields
+  var_pop: operation_volume_var_pop_fields
+  var_samp: operation_volume_var_samp_fields
+  variance: operation_volume_variance_fields
+}
+
+# order by aggregate values of table "operation_volume"
+input operation_volume_aggregate_order_by {
+  avg: operation_volume_avg_order_by
+  count: order_by
+  max: operation_volume_max_order_by
+  min: operation_volume_min_order_by
+  stddev: operation_volume_stddev_order_by
+  stddev_pop: operation_volume_stddev_pop_order_by
+  stddev_samp: operation_volume_stddev_samp_order_by
+  sum: operation_volume_sum_order_by
+  var_pop: operation_volume_var_pop_order_by
+  var_samp: operation_volume_var_samp_order_by
+  variance: operation_volume_variance_order_by
+}
+
+# input type for inserting array relation for remote table "operation_volume"
+input operation_volume_arr_rel_insert_input {
+  data: [operation_volume_insert_input!]!
+  on_conflict: operation_volume_on_conflict
+}
+
+# aggregate avg on columns
+type operation_volume_avg_fields {
+  id: Float
+  max_altitude: Float
+  min_altitude: Float
+  ordinal: Float
+}
+
+# order by avg() on columns of table "operation_volume"
+input operation_volume_avg_order_by {
+  id: order_by
+  max_altitude: order_by
+  min_altitude: order_by
+  ordinal: order_by
+}
+
+# Boolean expression to filter rows from the table "operation_volume". All fields are combined with a logical 'AND'.
+input operation_volume_bool_exp {
+  _and: [operation_volume_bool_exp]
+  _not: operation_volume_bool_exp
+  _or: [operation_volume_bool_exp]
+  actual_time_end: timestamp_comparison_exp
+  beyond_visual_line_of_sight: Boolean_comparison_exp
+  effective_time_begin: timestamp_comparison_exp
+  effective_time_end: timestamp_comparison_exp
+  id: Int_comparison_exp
+  max_altitude: numeric_comparison_exp
+  min_altitude: numeric_comparison_exp
+  near_structure: Boolean_comparison_exp
+  operationGufi: uuid_comparison_exp
+  operation_geography: geography_comparison_exp
+  ordinal: Int_comparison_exp
+  volume_type: String_comparison_exp
+}
+
+# unique or primary key constraints on table "operation_volume"
+enum operation_volume_constraint {
+  # unique or primary key constraint
+  PK_6f8d7a4f746c0dae8122a6c66ef
+}
+
+# input type for incrementing integer column in table "operation_volume"
+input operation_volume_inc_input {
+  id: Int
+  max_altitude: numeric
+  min_altitude: numeric
+  ordinal: Int
+}
+
+# input type for inserting data into table "operation_volume"
+input operation_volume_insert_input {
+  actual_time_end: timestamp
+  beyond_visual_line_of_sight: Boolean
+  effective_time_begin: timestamp
+  effective_time_end: timestamp
+  id: Int
+  max_altitude: numeric
+  min_altitude: numeric
+  near_structure: Boolean
+  operationGufi: uuid
+  operation_geography: geography
+  ordinal: Int
+  volume_type: String
+}
+
+# aggregate max on columns
+type operation_volume_max_fields {
+  actual_time_end: timestamp
+  effective_time_begin: timestamp
+  effective_time_end: timestamp
+  id: Int
+  max_altitude: numeric
+  min_altitude: numeric
+  operationGufi: uuid
+  ordinal: Int
+  volume_type: String
+}
+
+# order by max() on columns of table "operation_volume"
+input operation_volume_max_order_by {
+  actual_time_end: order_by
+  effective_time_begin: order_by
+  effective_time_end: order_by
+  id: order_by
+  max_altitude: order_by
+  min_altitude: order_by
+  operationGufi: order_by
+  ordinal: order_by
+  volume_type: order_by
+}
+
+# aggregate min on columns
+type operation_volume_min_fields {
+  actual_time_end: timestamp
+  effective_time_begin: timestamp
+  effective_time_end: timestamp
+  id: Int
+  max_altitude: numeric
+  min_altitude: numeric
+  operationGufi: uuid
+  ordinal: Int
+  volume_type: String
+}
+
+# order by min() on columns of table "operation_volume"
+input operation_volume_min_order_by {
+  actual_time_end: order_by
+  effective_time_begin: order_by
+  effective_time_end: order_by
+  id: order_by
+  max_altitude: order_by
+  min_altitude: order_by
+  operationGufi: order_by
+  ordinal: order_by
+  volume_type: order_by
+}
+
+# response of any mutation on the table "operation_volume"
+type operation_volume_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [operation_volume!]!
+}
+
+# input type for inserting object relation for remote table "operation_volume"
+input operation_volume_obj_rel_insert_input {
+  data: operation_volume_insert_input!
+  on_conflict: operation_volume_on_conflict
+}
+
+# on conflict condition type for table "operation_volume"
+input operation_volume_on_conflict {
+  constraint: operation_volume_constraint!
+  update_columns: [operation_volume_update_column!]!
+  where: operation_volume_bool_exp
+}
+
+# ordering options when selecting data from "operation_volume"
+input operation_volume_order_by {
+  actual_time_end: order_by
+  beyond_visual_line_of_sight: order_by
+  effective_time_begin: order_by
+  effective_time_end: order_by
+  id: order_by
+  max_altitude: order_by
+  min_altitude: order_by
+  near_structure: order_by
+  operationGufi: order_by
+  operation_geography: order_by
+  ordinal: order_by
+  volume_type: order_by
+}
+
+# primary key columns input for table: "operation_volume"
+input operation_volume_pk_columns_input {
+  id: Int!
+}
+
+# select columns of table "operation_volume"
+enum operation_volume_select_column {
+  # column name
+  actual_time_end
+
+  # column name
+  beyond_visual_line_of_sight
+
+  # column name
+  effective_time_begin
+
+  # column name
+  effective_time_end
+
+  # column name
+  id
+
+  # column name
+  max_altitude
+
+  # column name
+  min_altitude
+
+  # column name
+  near_structure
+
+  # column name
+  operationGufi
+
+  # column name
+  operation_geography
+
+  # column name
+  ordinal
+
+  # column name
+  volume_type
+}
+
+# input type for updating data in table "operation_volume"
+input operation_volume_set_input {
+  actual_time_end: timestamp
+  beyond_visual_line_of_sight: Boolean
+  effective_time_begin: timestamp
+  effective_time_end: timestamp
+  id: Int
+  max_altitude: numeric
+  min_altitude: numeric
+  near_structure: Boolean
+  operationGufi: uuid
+  operation_geography: geography
+  ordinal: Int
+  volume_type: String
+}
+
+# aggregate stddev on columns
+type operation_volume_stddev_fields {
+  id: Float
+  max_altitude: Float
+  min_altitude: Float
+  ordinal: Float
+}
+
+# order by stddev() on columns of table "operation_volume"
+input operation_volume_stddev_order_by {
+  id: order_by
+  max_altitude: order_by
+  min_altitude: order_by
+  ordinal: order_by
+}
+
+# aggregate stddev_pop on columns
+type operation_volume_stddev_pop_fields {
+  id: Float
+  max_altitude: Float
+  min_altitude: Float
+  ordinal: Float
+}
+
+# order by stddev_pop() on columns of table "operation_volume"
+input operation_volume_stddev_pop_order_by {
+  id: order_by
+  max_altitude: order_by
+  min_altitude: order_by
+  ordinal: order_by
+}
+
+# aggregate stddev_samp on columns
+type operation_volume_stddev_samp_fields {
+  id: Float
+  max_altitude: Float
+  min_altitude: Float
+  ordinal: Float
+}
+
+# order by stddev_samp() on columns of table "operation_volume"
+input operation_volume_stddev_samp_order_by {
+  id: order_by
+  max_altitude: order_by
+  min_altitude: order_by
+  ordinal: order_by
+}
+
+# aggregate sum on columns
+type operation_volume_sum_fields {
+  id: Int
+  max_altitude: numeric
+  min_altitude: numeric
+  ordinal: Int
+}
+
+# order by sum() on columns of table "operation_volume"
+input operation_volume_sum_order_by {
+  id: order_by
+  max_altitude: order_by
+  min_altitude: order_by
+  ordinal: order_by
+}
+
+# update columns of table "operation_volume"
+enum operation_volume_update_column {
+  # column name
+  actual_time_end
+
+  # column name
+  beyond_visual_line_of_sight
+
+  # column name
+  effective_time_begin
+
+  # column name
+  effective_time_end
+
+  # column name
+  id
+
+  # column name
+  max_altitude
+
+  # column name
+  min_altitude
+
+  # column name
+  near_structure
+
+  # column name
+  operationGufi
+
+  # column name
+  operation_geography
+
+  # column name
+  ordinal
+
+  # column name
+  volume_type
+}
+
+# aggregate var_pop on columns
+type operation_volume_var_pop_fields {
+  id: Float
+  max_altitude: Float
+  min_altitude: Float
+  ordinal: Float
+}
+
+# order by var_pop() on columns of table "operation_volume"
+input operation_volume_var_pop_order_by {
+  id: order_by
+  max_altitude: order_by
+  min_altitude: order_by
+  ordinal: order_by
+}
+
+# aggregate var_samp on columns
+type operation_volume_var_samp_fields {
+  id: Float
+  max_altitude: Float
+  min_altitude: Float
+  ordinal: Float
+}
+
+# order by var_samp() on columns of table "operation_volume"
+input operation_volume_var_samp_order_by {
+  id: order_by
+  max_altitude: order_by
+  min_altitude: order_by
+  ordinal: order_by
+}
+
+# aggregate variance on columns
+type operation_volume_variance_fields {
+  id: Float
+  max_altitude: Float
+  min_altitude: Float
+  ordinal: Float
+}
+
+# order by variance() on columns of table "operation_volume"
+input operation_volume_variance_order_by {
+  id: order_by
+  max_altitude: order_by
+  min_altitude: order_by
+  ordinal: order_by
+}
+
+# column ordering options
+enum order_by {
+  # in the ascending order, nulls last
+  asc
+
+  # in the ascending order, nulls first
+  asc_nulls_first
+
+  # in the ascending order, nulls last
+  asc_nulls_last
+
+  # in the descending order, nulls first
+  desc
+
+  # in the descending order, nulls first
+  desc_nulls_first
+
+  # in the descending order, nulls last
+  desc_nulls_last
+}
+
+# columns and relationships of "position"
+type position {
+  altitude_gps: numeric
+  heading: Int
+  id: Int!
+  location: geography!
+
+  # An object relationship
+  operation: operation
+  operationGufi: uuid
+  time_sent: timestamp!
+}
+
+# aggregated selection of "position"
+type position_aggregate {
+  aggregate: position_aggregate_fields
+  nodes: [position!]!
+}
+
+# aggregate fields of "position"
+type position_aggregate_fields {
+  avg: position_avg_fields
+  count(columns: [position_select_column!], distinct: Boolean): Int
+  max: position_max_fields
+  min: position_min_fields
+  stddev: position_stddev_fields
+  stddev_pop: position_stddev_pop_fields
+  stddev_samp: position_stddev_samp_fields
+  sum: position_sum_fields
+  var_pop: position_var_pop_fields
+  var_samp: position_var_samp_fields
+  variance: position_variance_fields
+}
+
+# order by aggregate values of table "position"
+input position_aggregate_order_by {
+  avg: position_avg_order_by
+  count: order_by
+  max: position_max_order_by
+  min: position_min_order_by
+  stddev: position_stddev_order_by
+  stddev_pop: position_stddev_pop_order_by
+  stddev_samp: position_stddev_samp_order_by
+  sum: position_sum_order_by
+  var_pop: position_var_pop_order_by
+  var_samp: position_var_samp_order_by
+  variance: position_variance_order_by
+}
+
+# input type for inserting array relation for remote table "position"
+input position_arr_rel_insert_input {
+  data: [position_insert_input!]!
+  on_conflict: position_on_conflict
+}
+
+# aggregate avg on columns
+type position_avg_fields {
+  altitude_gps: Float
+  heading: Float
+  id: Float
+}
+
+# order by avg() on columns of table "position"
+input position_avg_order_by {
+  altitude_gps: order_by
+  heading: order_by
+  id: order_by
+}
+
+# Boolean expression to filter rows from the table "position". All fields are combined with a logical 'AND'.
+input position_bool_exp {
+  _and: [position_bool_exp]
+  _not: position_bool_exp
+  _or: [position_bool_exp]
+  altitude_gps: numeric_comparison_exp
+  heading: Int_comparison_exp
+  id: Int_comparison_exp
+  location: geography_comparison_exp
+  operation: operation_bool_exp
+  operationGufi: uuid_comparison_exp
+  time_sent: timestamp_comparison_exp
+}
+
+# unique or primary key constraints on table "position"
+enum position_constraint {
+  # unique or primary key constraint
+  PK_b7f483581562b4dc62ae1a5b7e2
+}
+
+# input type for incrementing integer column in table "position"
+input position_inc_input {
+  altitude_gps: numeric
+  heading: Int
+  id: Int
+}
+
+# input type for inserting data into table "position"
+input position_insert_input {
+  altitude_gps: numeric
+  heading: Int
+  id: Int
+  location: geography
+  operation: operation_obj_rel_insert_input
+  operationGufi: uuid
+  time_sent: timestamp
+}
+
+# aggregate max on columns
+type position_max_fields {
+  altitude_gps: numeric
+  heading: Int
+  id: Int
+  operationGufi: uuid
+  time_sent: timestamp
+}
+
+# order by max() on columns of table "position"
+input position_max_order_by {
+  altitude_gps: order_by
+  heading: order_by
+  id: order_by
+  operationGufi: order_by
+  time_sent: order_by
+}
+
+# aggregate min on columns
+type position_min_fields {
+  altitude_gps: numeric
+  heading: Int
+  id: Int
+  operationGufi: uuid
+  time_sent: timestamp
+}
+
+# order by min() on columns of table "position"
+input position_min_order_by {
+  altitude_gps: order_by
+  heading: order_by
+  id: order_by
+  operationGufi: order_by
+  time_sent: order_by
+}
+
+# response of any mutation on the table "position"
+type position_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [position!]!
+}
+
+# input type for inserting object relation for remote table "position"
+input position_obj_rel_insert_input {
+  data: position_insert_input!
+  on_conflict: position_on_conflict
+}
+
+# on conflict condition type for table "position"
+input position_on_conflict {
+  constraint: position_constraint!
+  update_columns: [position_update_column!]!
+  where: position_bool_exp
+}
+
+# ordering options when selecting data from "position"
+input position_order_by {
+  altitude_gps: order_by
+  heading: order_by
+  id: order_by
+  location: order_by
+  operation: operation_order_by
+  operationGufi: order_by
+  time_sent: order_by
+}
+
+# primary key columns input for table: "position"
+input position_pk_columns_input {
+  id: Int!
+}
+
+# select columns of table "position"
+enum position_select_column {
+  # column name
+  altitude_gps
+
+  # column name
+  heading
+
+  # column name
+  id
+
+  # column name
+  location
+
+  # column name
+  operationGufi
+
+  # column name
+  time_sent
+}
+
+# input type for updating data in table "position"
+input position_set_input {
+  altitude_gps: numeric
+  heading: Int
+  id: Int
+  location: geography
+  operationGufi: uuid
+  time_sent: timestamp
+}
+
+# aggregate stddev on columns
+type position_stddev_fields {
+  altitude_gps: Float
+  heading: Float
+  id: Float
+}
+
+# order by stddev() on columns of table "position"
+input position_stddev_order_by {
+  altitude_gps: order_by
+  heading: order_by
+  id: order_by
+}
+
+# aggregate stddev_pop on columns
+type position_stddev_pop_fields {
+  altitude_gps: Float
+  heading: Float
+  id: Float
+}
+
+# order by stddev_pop() on columns of table "position"
+input position_stddev_pop_order_by {
+  altitude_gps: order_by
+  heading: order_by
+  id: order_by
+}
+
+# aggregate stddev_samp on columns
+type position_stddev_samp_fields {
+  altitude_gps: Float
+  heading: Float
+  id: Float
+}
+
+# order by stddev_samp() on columns of table "position"
+input position_stddev_samp_order_by {
+  altitude_gps: order_by
+  heading: order_by
+  id: order_by
+}
+
+# aggregate sum on columns
+type position_sum_fields {
+  altitude_gps: numeric
+  heading: Int
+  id: Int
+}
+
+# order by sum() on columns of table "position"
+input position_sum_order_by {
+  altitude_gps: order_by
+  heading: order_by
+  id: order_by
+}
+
+# update columns of table "position"
+enum position_update_column {
+  # column name
+  altitude_gps
+
+  # column name
+  heading
+
+  # column name
+  id
+
+  # column name
+  location
+
+  # column name
+  operationGufi
+
+  # column name
+  time_sent
+}
+
+# aggregate var_pop on columns
+type position_var_pop_fields {
+  altitude_gps: Float
+  heading: Float
+  id: Float
+}
+
+# order by var_pop() on columns of table "position"
+input position_var_pop_order_by {
+  altitude_gps: order_by
+  heading: order_by
+  id: order_by
+}
+
+# aggregate var_samp on columns
+type position_var_samp_fields {
+  altitude_gps: Float
+  heading: Float
+  id: Float
+}
+
+# order by var_samp() on columns of table "position"
+input position_var_samp_order_by {
+  altitude_gps: order_by
+  heading: order_by
+  id: order_by
+}
+
+# aggregate variance on columns
+type position_variance_fields {
+  altitude_gps: Float
+  heading: Float
+  id: Float
+}
+
+# order by variance() on columns of table "position"
+input position_variance_order_by {
+  altitude_gps: order_by
+  heading: order_by
+  id: order_by
+}
+
+# query root
+type query_root {
+  # fetch data from the table: "operation"
+  operation(
+    # distinct select on columns
+    distinct_on: [operation_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [operation_order_by!]
+
+    # filter the rows returned
+    where: operation_bool_exp
+  ): [operation!]!
+
+  # fetch aggregated fields from the table: "operation"
+  operation_aggregate(
+    # distinct select on columns
+    distinct_on: [operation_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [operation_order_by!]
+
+    # filter the rows returned
+    where: operation_bool_exp
+  ): operation_aggregate!
+
+  # fetch data from the table: "operation" using primary key columns
+  operation_by_pk(
+    # required
+    gufi: uuid!
+  ): operation
+
+  # fetch data from the table: "operation_volume"
+  operation_volume(
+    # distinct select on columns
+    distinct_on: [operation_volume_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [operation_volume_order_by!]
+
+    # filter the rows returned
+    where: operation_volume_bool_exp
+  ): [operation_volume!]!
+
+  # fetch aggregated fields from the table: "operation_volume"
+  operation_volume_aggregate(
+    # distinct select on columns
+    distinct_on: [operation_volume_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [operation_volume_order_by!]
+
+    # filter the rows returned
+    where: operation_volume_bool_exp
+  ): operation_volume_aggregate!
+
+  # fetch data from the table: "operation_volume" using primary key columns
+  operation_volume_by_pk(id: Int!): operation_volume
+
+  # fetch data from the table: "position"
+  position(
+    # distinct select on columns
+    distinct_on: [position_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [position_order_by!]
+
+    # filter the rows returned
+    where: position_bool_exp
+  ): [position!]!
+
+  # fetch aggregated fields from the table: "position"
+  position_aggregate(
+    # distinct select on columns
+    distinct_on: [position_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [position_order_by!]
+
+    # filter the rows returned
+    where: position_bool_exp
+  ): position_aggregate!
+
+  # fetch data from the table: "position" using primary key columns
+  position_by_pk(id: Int!): position
+
+  # fetch data from the table: "quickfly"
+  quickfly(
+    # distinct select on columns
+    distinct_on: [quickfly_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [quickfly_order_by!]
+
+    # filter the rows returned
+    where: quickfly_bool_exp
+  ): [quickfly!]!
+
+  # fetch aggregated fields from the table: "quickfly"
+  quickfly_aggregate(
+    # distinct select on columns
+    distinct_on: [quickfly_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [quickfly_order_by!]
+
+    # filter the rows returned
+    where: quickfly_bool_exp
+  ): quickfly_aggregate!
+
+  # fetch data from the table: "quickfly" using primary key columns
+  quickfly_by_pk(gufi: uuid!): quickfly
+
+  # fetch data from the table: "user"
+  user(
+    # distinct select on columns
+    distinct_on: [user_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [user_order_by!]
+
+    # filter the rows returned
+    where: user_bool_exp
+  ): [user!]!
+
+  # fetch aggregated fields from the table: "user"
+  user_aggregate(
+    # distinct select on columns
+    distinct_on: [user_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [user_order_by!]
+
+    # filter the rows returned
+    where: user_bool_exp
+  ): user_aggregate!
+
+  # fetch data from the table: "user" using primary key columns
+  user_by_pk(username: String!): user
+}
+
+# columns and relationships of "quickfly"
+type quickfly {
+  cornerNW: geography!
+  cornerSE: geography!
+  gufi: uuid!
+  name: String
+}
+
+# aggregated selection of "quickfly"
+type quickfly_aggregate {
+  aggregate: quickfly_aggregate_fields
+  nodes: [quickfly!]!
+}
+
+# aggregate fields of "quickfly"
+type quickfly_aggregate_fields {
+  count(columns: [quickfly_select_column!], distinct: Boolean): Int
+  max: quickfly_max_fields
+  min: quickfly_min_fields
+}
+
+# order by aggregate values of table "quickfly"
+input quickfly_aggregate_order_by {
+  count: order_by
+  max: quickfly_max_order_by
+  min: quickfly_min_order_by
+}
+
+# input type for inserting array relation for remote table "quickfly"
+input quickfly_arr_rel_insert_input {
+  data: [quickfly_insert_input!]!
+  on_conflict: quickfly_on_conflict
+}
+
+# Boolean expression to filter rows from the table "quickfly". All fields are combined with a logical 'AND'.
+input quickfly_bool_exp {
+  _and: [quickfly_bool_exp]
+  _not: quickfly_bool_exp
+  _or: [quickfly_bool_exp]
+  cornerNW: geography_comparison_exp
+  cornerSE: geography_comparison_exp
+  gufi: uuid_comparison_exp
+  name: String_comparison_exp
+}
+
+# unique or primary key constraints on table "quickfly"
+enum quickfly_constraint {
+  # unique or primary key constraint
+  PK_4a8007777f0b95141735dc72c7a
+}
+
+# input type for inserting data into table "quickfly"
+input quickfly_insert_input {
+  cornerNW: geography
+  cornerSE: geography
+  gufi: uuid
+  name: String
+}
+
+# aggregate max on columns
+type quickfly_max_fields {
+  gufi: uuid
+  name: String
+}
+
+# order by max() on columns of table "quickfly"
+input quickfly_max_order_by {
+  gufi: order_by
+  name: order_by
+}
+
+# aggregate min on columns
+type quickfly_min_fields {
+  gufi: uuid
+  name: String
+}
+
+# order by min() on columns of table "quickfly"
+input quickfly_min_order_by {
+  gufi: order_by
+  name: order_by
+}
+
+# response of any mutation on the table "quickfly"
+type quickfly_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [quickfly!]!
+}
+
+# input type for inserting object relation for remote table "quickfly"
+input quickfly_obj_rel_insert_input {
+  data: quickfly_insert_input!
+  on_conflict: quickfly_on_conflict
+}
+
+# on conflict condition type for table "quickfly"
+input quickfly_on_conflict {
+  constraint: quickfly_constraint!
+  update_columns: [quickfly_update_column!]!
+  where: quickfly_bool_exp
+}
+
+# ordering options when selecting data from "quickfly"
+input quickfly_order_by {
+  cornerNW: order_by
+  cornerSE: order_by
+  gufi: order_by
+  name: order_by
+}
+
+# primary key columns input for table: "quickfly"
+input quickfly_pk_columns_input {
+  gufi: uuid!
+}
+
+# select columns of table "quickfly"
+enum quickfly_select_column {
+  # column name
+  cornerNW
+
+  # column name
+  cornerSE
+
+  # column name
+  gufi
+
+  # column name
+  name
+}
+
+# input type for updating data in table "quickfly"
+input quickfly_set_input {
+  cornerNW: geography
+  cornerSE: geography
+  gufi: uuid
+  name: String
+}
+
+# update columns of table "quickfly"
+enum quickfly_update_column {
+  # column name
+  cornerNW
+
+  # column name
+  cornerSE
+
+  # column name
+  gufi
+
+  # column name
+  name
+}
+
+input st_d_within_geography_input {
+  distance: Float!
+  from: geography!
+  use_spheroid: Boolean = true
+}
+
+input st_d_within_input {
+  distance: Float!
+  from: geometry!
+}
+
+# expression to compare columns of type String. All fields are combined with logical 'AND'.
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+  _ilike: String
+  _in: [String!]
+  _is_null: Boolean
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+  _nilike: String
+  _nin: [String!]
+  _nlike: String
+  _nsimilar: String
+  _similar: String
+}
+
+# subscription root
+type subscription_root {
+  # fetch data from the table: "operation"
+  operation(
+    # distinct select on columns
+    distinct_on: [operation_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [operation_order_by!]
+
+    # filter the rows returned
+    where: operation_bool_exp
+  ): [operation!]!
+
+  # fetch aggregated fields from the table: "operation"
+  operation_aggregate(
+    # distinct select on columns
+    distinct_on: [operation_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [operation_order_by!]
+
+    # filter the rows returned
+    where: operation_bool_exp
+  ): operation_aggregate!
+
+  # fetch data from the table: "operation" using primary key columns
+  operation_by_pk(
+    # required
+    gufi: uuid!
+  ): operation
+
+  # fetch data from the table: "operation_volume"
+  operation_volume(
+    # distinct select on columns
+    distinct_on: [operation_volume_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [operation_volume_order_by!]
+
+    # filter the rows returned
+    where: operation_volume_bool_exp
+  ): [operation_volume!]!
+
+  # fetch aggregated fields from the table: "operation_volume"
+  operation_volume_aggregate(
+    # distinct select on columns
+    distinct_on: [operation_volume_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [operation_volume_order_by!]
+
+    # filter the rows returned
+    where: operation_volume_bool_exp
+  ): operation_volume_aggregate!
+
+  # fetch data from the table: "operation_volume" using primary key columns
+  operation_volume_by_pk(id: Int!): operation_volume
+
+  # fetch data from the table: "position"
+  position(
+    # distinct select on columns
+    distinct_on: [position_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [position_order_by!]
+
+    # filter the rows returned
+    where: position_bool_exp
+  ): [position!]!
+
+  # fetch aggregated fields from the table: "position"
+  position_aggregate(
+    # distinct select on columns
+    distinct_on: [position_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [position_order_by!]
+
+    # filter the rows returned
+    where: position_bool_exp
+  ): position_aggregate!
+
+  # fetch data from the table: "position" using primary key columns
+  position_by_pk(id: Int!): position
+
+  # fetch data from the table: "quickfly"
+  quickfly(
+    # distinct select on columns
+    distinct_on: [quickfly_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [quickfly_order_by!]
+
+    # filter the rows returned
+    where: quickfly_bool_exp
+  ): [quickfly!]!
+
+  # fetch aggregated fields from the table: "quickfly"
+  quickfly_aggregate(
+    # distinct select on columns
+    distinct_on: [quickfly_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [quickfly_order_by!]
+
+    # filter the rows returned
+    where: quickfly_bool_exp
+  ): quickfly_aggregate!
+
+  # fetch data from the table: "quickfly" using primary key columns
+  quickfly_by_pk(gufi: uuid!): quickfly
+
+  # fetch data from the table: "user"
+  user(
+    # distinct select on columns
+    distinct_on: [user_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [user_order_by!]
+
+    # filter the rows returned
+    where: user_bool_exp
+  ): [user!]!
+
+  # fetch aggregated fields from the table: "user"
+  user_aggregate(
+    # distinct select on columns
+    distinct_on: [user_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [user_order_by!]
+
+    # filter the rows returned
+    where: user_bool_exp
+  ): user_aggregate!
+
+  # fetch data from the table: "user" using primary key columns
+  user_by_pk(username: String!): user
+}
+
+scalar timestamp
+
+# expression to compare columns of type timestamp. All fields are combined with logical 'AND'.
+input timestamp_comparison_exp {
+  _eq: timestamp
+  _gt: timestamp
+  _gte: timestamp
+  _in: [timestamp!]
+  _is_null: Boolean
+  _lt: timestamp
+  _lte: timestamp
+  _neq: timestamp
+  _nin: [timestamp!]
+}
+
+# columns and relationships of "user"
+type user {
+  email: String!
+  firstName: String!
+  lastName: String!
+
+  # An array relationship
+  operations(
+    # distinct select on columns
+    distinct_on: [operation_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [operation_order_by!]
+
+    # filter the rows returned
+    where: operation_bool_exp
+  ): [operation!]!
+
+  # An array relationship
+  operationsByCreatorusername(
+    # distinct select on columns
+    distinct_on: [operation_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [operation_order_by!]
+
+    # filter the rows returned
+    where: operation_bool_exp
+  ): [operation!]!
+
+  # An aggregated array relationship
+  operationsByCreatorusername_aggregate(
+    # distinct select on columns
+    distinct_on: [operation_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [operation_order_by!]
+
+    # filter the rows returned
+    where: operation_bool_exp
+  ): operation_aggregate!
+
+  # An aggregated array relationship
+  operations_aggregate(
+    # distinct select on columns
+    distinct_on: [operation_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [operation_order_by!]
+
+    # filter the rows returned
+    where: operation_bool_exp
+  ): operation_aggregate!
+  password: String!
+  role: String!
+  statusId: Int
+  username: String!
+}
+
+# aggregated selection of "user"
+type user_aggregate {
+  aggregate: user_aggregate_fields
+  nodes: [user!]!
+}
+
+# aggregate fields of "user"
+type user_aggregate_fields {
+  avg: user_avg_fields
+  count(columns: [user_select_column!], distinct: Boolean): Int
+  max: user_max_fields
+  min: user_min_fields
+  stddev: user_stddev_fields
+  stddev_pop: user_stddev_pop_fields
+  stddev_samp: user_stddev_samp_fields
+  sum: user_sum_fields
+  var_pop: user_var_pop_fields
+  var_samp: user_var_samp_fields
+  variance: user_variance_fields
+}
+
+# order by aggregate values of table "user"
+input user_aggregate_order_by {
+  avg: user_avg_order_by
+  count: order_by
+  max: user_max_order_by
+  min: user_min_order_by
+  stddev: user_stddev_order_by
+  stddev_pop: user_stddev_pop_order_by
+  stddev_samp: user_stddev_samp_order_by
+  sum: user_sum_order_by
+  var_pop: user_var_pop_order_by
+  var_samp: user_var_samp_order_by
+  variance: user_variance_order_by
+}
+
+# input type for inserting array relation for remote table "user"
+input user_arr_rel_insert_input {
+  data: [user_insert_input!]!
+  on_conflict: user_on_conflict
+}
+
+# aggregate avg on columns
+type user_avg_fields {
+  statusId: Float
+}
+
+# order by avg() on columns of table "user"
+input user_avg_order_by {
+  statusId: order_by
+}
+
+# Boolean expression to filter rows from the table "user". All fields are combined with a logical 'AND'.
+input user_bool_exp {
+  _and: [user_bool_exp]
+  _not: user_bool_exp
+  _or: [user_bool_exp]
+  email: String_comparison_exp
+  firstName: String_comparison_exp
+  lastName: String_comparison_exp
+  operations: operation_bool_exp
+  operationsByCreatorusername: operation_bool_exp
+  password: String_comparison_exp
+  role: String_comparison_exp
+  statusId: Int_comparison_exp
+  username: String_comparison_exp
+}
+
+# unique or primary key constraints on table "user"
+enum user_constraint {
+  # unique or primary key constraint
+  PK_78a916df40e02a9deb1c4b75edb
+
+  # unique or primary key constraint
+  REL_dc18daa696860586ba4667a9d3
+
+  # unique or primary key constraint
+  UQ_e12875dfb3b1d92d7d7c5377e22
+}
+
+# input type for incrementing integer column in table "user"
+input user_inc_input {
+  statusId: Int
+}
+
+# input type for inserting data into table "user"
+input user_insert_input {
+  email: String
+  firstName: String
+  lastName: String
+  operations: operation_arr_rel_insert_input
+  operationsByCreatorusername: operation_arr_rel_insert_input
+  password: String
+  role: String
+  statusId: Int
+  username: String
+}
+
+# aggregate max on columns
+type user_max_fields {
+  email: String
+  firstName: String
+  lastName: String
+  password: String
+  role: String
+  statusId: Int
+  username: String
+}
+
+# order by max() on columns of table "user"
+input user_max_order_by {
+  email: order_by
+  firstName: order_by
+  lastName: order_by
+  password: order_by
+  role: order_by
+  statusId: order_by
+  username: order_by
+}
+
+# aggregate min on columns
+type user_min_fields {
+  email: String
+  firstName: String
+  lastName: String
+  password: String
+  role: String
+  statusId: Int
+  username: String
+}
+
+# order by min() on columns of table "user"
+input user_min_order_by {
+  email: order_by
+  firstName: order_by
+  lastName: order_by
+  password: order_by
+  role: order_by
+  statusId: order_by
+  username: order_by
+}
+
+# response of any mutation on the table "user"
+type user_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [user!]!
+}
+
+# input type for inserting object relation for remote table "user"
+input user_obj_rel_insert_input {
+  data: user_insert_input!
+  on_conflict: user_on_conflict
+}
+
+# on conflict condition type for table "user"
+input user_on_conflict {
+  constraint: user_constraint!
+  update_columns: [user_update_column!]!
+  where: user_bool_exp
+}
+
+# ordering options when selecting data from "user"
+input user_order_by {
+  email: order_by
+  firstName: order_by
+  lastName: order_by
+  operationsByCreatorusername_aggregate: operation_aggregate_order_by
+  operations_aggregate: operation_aggregate_order_by
+  password: order_by
+  role: order_by
+  statusId: order_by
+  username: order_by
+}
+
+# primary key columns input for table: "user"
+input user_pk_columns_input {
+  username: String!
+}
+
+# select columns of table "user"
+enum user_select_column {
+  # column name
+  email
+
+  # column name
+  firstName
+
+  # column name
+  lastName
+
+  # column name
+  password
+
+  # column name
+  role
+
+  # column name
+  statusId
+
+  # column name
+  username
+}
+
+# input type for updating data in table "user"
+input user_set_input {
+  email: String
+  firstName: String
+  lastName: String
+  password: String
+  role: String
+  statusId: Int
+  username: String
+}
+
+# aggregate stddev on columns
+type user_stddev_fields {
+  statusId: Float
+}
+
+# order by stddev() on columns of table "user"
+input user_stddev_order_by {
+  statusId: order_by
+}
+
+# aggregate stddev_pop on columns
+type user_stddev_pop_fields {
+  statusId: Float
+}
+
+# order by stddev_pop() on columns of table "user"
+input user_stddev_pop_order_by {
+  statusId: order_by
+}
+
+# aggregate stddev_samp on columns
+type user_stddev_samp_fields {
+  statusId: Float
+}
+
+# order by stddev_samp() on columns of table "user"
+input user_stddev_samp_order_by {
+  statusId: order_by
+}
+
+# aggregate sum on columns
+type user_sum_fields {
+  statusId: Int
+}
+
+# order by sum() on columns of table "user"
+input user_sum_order_by {
+  statusId: order_by
+}
+
+# update columns of table "user"
+enum user_update_column {
+  # column name
+  email
+
+  # column name
+  firstName
+
+  # column name
+  lastName
+
+  # column name
+  password
+
+  # column name
+  role
+
+  # column name
+  statusId
+
+  # column name
+  username
+}
+
+# aggregate var_pop on columns
+type user_var_pop_fields {
+  statusId: Float
+}
+
+# order by var_pop() on columns of table "user"
+input user_var_pop_order_by {
+  statusId: order_by
+}
+
+# aggregate var_samp on columns
+type user_var_samp_fields {
+  statusId: Float
+}
+
+# order by var_samp() on columns of table "user"
+input user_var_samp_order_by {
+  statusId: order_by
+}
+
+# aggregate variance on columns
+type user_variance_fields {
+  statusId: Float
+}
+
+# order by variance() on columns of table "user"
+input user_variance_order_by {
+  statusId: order_by
+}
+
+scalar uuid
+
+# expression to compare columns of type uuid. All fields are combined with logical 'AND'.
+input uuid_comparison_exp {
+  _eq: uuid
+  _gt: uuid
+  _gte: uuid
+  _in: [uuid!]
+  _is_null: Boolean
+  _lt: uuid
+  _lte: uuid
+  _neq: uuid
+  _nin: [uuid!]
+}
+
