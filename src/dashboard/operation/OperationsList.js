@@ -11,13 +11,13 @@ import styles from '../generic/GenericList.module.css';
 function Operation({expanded = false, children}) {
 	// Renders one Operation text properties for a list
 	const history = useHistory();
-	const { t,  } = useTranslation(['glossary','common']);
-	const [ state, actions ] = useAdesState();
+	const {t,} = useTranslation(['glossary', 'common']);
+	const [state, actions] = useAdesState();
 	const operationIsSelected = state.map.ids.indexOf(children.gufi) !== -1;
 	const onClick = operationIsSelected ?
 		() => actions.map.removeId(children.gufi)
 		:
-		() =>  {
+		() => {
 			actions.map.addId(children.gufi);
 			history.push('/operation/' + children.gufi);
 		};
@@ -28,7 +28,41 @@ function Operation({expanded = false, children}) {
 			className={styles.item}
 			title={
 				<div className={styles.title}>
-					<p style={{height: '100%', maxWidth: '50%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>{children.name}</p>
+					<p style={
+						{
+							height: '100%',
+							maxWidth: '50%',
+							overflow: 'hidden',
+							whiteSpace: 'nowrap',
+							textOverflow: 'ellipsis',
+							marginRight: 'auto'
+						}}
+					>{children.name}</p>
+					<Button
+						className={styles.button}
+						small
+						minimal
+						icon='menu-open'
+						intent={showProperties ? Intent.DANGER : Intent.SUCCESS}
+						onClick={() => setShowProperties(show => {
+							if (show === false) {
+								history.replace('/dashboard/operations/' + children.gufi);
+								return true;
+							} else {
+								history.replace('/dashboard/operations');
+								return false;
+							}
+						})}
+					>
+						<div className={styles.buttonHoveredTooltip}>
+							{ showProperties &&
+							t('common:click_to_collapse')
+							}
+							{ !showProperties &&
+							t('common:click_to_expand')
+							}
+						</div>
+					</Button>
 					<Button
 						className={styles.button}
 						small
@@ -38,27 +72,30 @@ function Operation({expanded = false, children}) {
 						onClick={onClick}
 					>
 						<div className={styles.buttonHoveredTooltip}>
-							{ operationIsSelected &&
+							{operationIsSelected &&
 							t('common:remove_from_map')
 							}
-							{ !operationIsSelected &&
+							{!operationIsSelected &&
 							t('common:show_on_map')
 							}
+						</div>
+					</Button>
+					<Button
+						className={styles.button}
+						small
+						minimal
+						icon='edit'
+						intent={Intent.WARNING}
+						onClick={() => history.push('/operation/edit/' + children.gufi)}
+					>
+						<div className={styles.buttonHoveredTooltip}>
+							{t('common:edit_on_map')}
 						</div>
 					</Button>
 				</div>
 			}
 			data-test-id={'op' + children.name}
 			icon="double-chevron-right"
-			onClick={() => setShowProperties(show => {
-				if (show === false) {
-					history.replace('/dashboard/operations/' + children.gufi);
-					return true;
-				} else {
-					history.replace('/dashboard/operations');
-					return false;
-				}
-			})}
 		>
 			{showProperties &&
 			<div className="animated fadeIn faster">
@@ -119,14 +156,15 @@ function Operation({expanded = false, children}) {
 }
 
 function OperationsList() {
-	const [state, ] = useAdesState(state => state.operations);
-	const { t,  } = useTranslation('glossary');
-	const { id } = useParams();
+	const [state,] = useAdesState(state => state.operations);
+	const {t,} = useTranslation('glossary');
+	const {id} = useParams();
 	const operations = S.values(state.list);
 	const isThereOperations = operations.length !== 0;
 	if (isThereOperations) {
 		return (
 			<>
+
 				<div className={styles.header}>
 					<h1>
 						{t('operations.plural_generic').toUpperCase()}

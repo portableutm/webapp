@@ -12,11 +12,11 @@ const timeNow2 = new Date();
 timeNow2.setUTCHours(timeNow.getUTCHours() + DEFAULT_OPERATION_VALIDITY);
 const swap = (array) => [array[1], array[0]];
 
-function UseEditorLogic(refMapOnClick, mapInitialized) {
+function UseEditorLogic(refMapOnClick, mapInitialized, defaultOperationInfo) {
 	const { t } = useTranslation('map');
 	const [operationInfo, setOperationInfo] = useState(S.Just({
 		name: 'Untitled',
-		owner: 'error error',
+		owner: 'admin',
 		contact: '',
 		contact_phone: '',
 		flight_comments: '',
@@ -79,6 +79,20 @@ function UseEditorLogic(refMapOnClick, mapInitialized) {
 	const [, actions] = useAdesState();
 	const history = useHistory();
 	const polygons = _(mbPolygons);
+
+	useEffect(() => {
+		if (defaultOperationInfo != void 0 && defaultOperationInfo != null) {
+			const operationInfo = { ... defaultOperationInfo, owner: defaultOperationInfo.owner.username};
+			setOperationInfo(S.Just(operationInfo));
+			const operationVolume = { ...defaultOperationInfo.operation_volumes[0],
+				effective_time_begin: new Date(defaultOperationInfo.operation_volumes[0].effective_time_begin),
+				effective_time_end: new Date(defaultOperationInfo.operation_volumes[0].effective_time_end)
+			};
+			// noinspection JSCheckFunctionSignatures
+			setVolumeInfo(operationVolume);
+			setPolygons(S.Just(defaultOperationInfo.operation_volumes[0].operation_geography.coordinates));
+		}
+	}, [defaultOperationInfo]);
 
 	useEffect(() => {
 		if (mapInitialized) {

@@ -15,6 +15,7 @@
     "optional": "(optional)"
   },
   "show_on_map": "View in map",
+  "edit_on_map": "Edit in map",
   "remove_from_map": "Remove from map",
   "cant_edit": "(non-editable)",
   "change_password": "Change the password of {{name}}",

@@ -17,6 +17,7 @@
 }
 
 .button {
+    user-select: none;
     transition: all 0.5s;
 }
 

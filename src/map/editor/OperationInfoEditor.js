@@ -9,9 +9,11 @@ import SidebarButton from '../SidebarButton';
 import OperationVolumeInfoEditor from './OperationVolumeInfoEditor';
 import styles from '../Map.module.css';
 import { useHistory } from 'react-router-dom';
+import {fM} from '../../libs/SaferSanctuary';
 
-function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOperation}) {
+function OperationInfoEditor({maybeInfo, setInfo, volumeInfo, setVolumeInfo, saveOperation}) {
 	const { t, } = useTranslation(['map', 'glossary', 'common']);
+	const info = fM(maybeInfo);
 	const [isSaving, setSaving] = useState(false);
 	const history = useHistory();
 	const editInfo = (property, newInfo) => setInfo((data) => {
@@ -19,6 +21,7 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 		newData[property] = newInfo;
 		return Just(newData);
 	});
+
 
 	const saveOperationAndSetSaving = () => {
 		setSaving(true);

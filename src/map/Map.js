@@ -25,6 +25,9 @@ import SelectedOperation from './viewer/SelectedOperation';
 import SimulatorPanel from './actions/SimulatorPanel';
 import EditorPanel from './actions/EditorPanel';
 import OperationEditMarker from './elements/OperationEditMarker';
+import SelectedDrone from './viewer/SelectedDrone';
+import {Button, Dialog, Intent} from '@blueprintjs/core';
+import ControllerLocationMarker from './elements/ControllerLocationMarker';
 
 /* Hooks */
 import useOperationFilter from './hooks/useOperationFilter';
@@ -40,12 +43,11 @@ import RightArea from '../layout/RightArea';
 
 import Polyline from './elements/Polyline';
 import {fM} from '../libs/SaferSanctuary';
-import SelectedDrone from './viewer/SelectedDrone';
-import {Button, Dialog, Intent} from '@blueprintjs/core';
-import ControllerLocationMarker from './elements/ControllerLocationMarker';
+import { useParams } from 'react-router-dom';
+
 
 /* Main function */
-function Map({ mode }) {
+function Map({mode}) {
 	const map = useRef(null);
 	/* 	It's important to hold a reference to map that survives through the application
 		and that is only used after correctly initializing Leaflet. 	*/
@@ -54,15 +56,23 @@ function Map({ mode }) {
 	const [state, actions] = useAdesState();
 	const [drones, setDrones] = useState([]);
 
+	/* Route params */
+	const { editId } = useParams();
+
 	/* Map */
 	const [mapInitialized, setMapInitialized] = useState(false);
 	const refMapOnClick = useRef(() => {
 	});
 
 	/* Editor state */
-	const isEditor = S.isJust(mode) && fM(mode) === 'new';
-
-	const [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation, ] = useEditorLogic(refMapOnClick, mapInitialized && isEditor);
+	const isEditor = S.isJust(mode) && (fM(mode) === 'new' || fM(mode) === 'edit');
+	const isEditing = isEditor && fM(mode) === 'edit';
+	let editingOperationInfo;
+	if (isEditing) {
+		editingOperationInfo = fM(S.value(editId)(state.operations.list));
+	}
+	const [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation,] =
+		useEditorLogic(refMapOnClick, mapInitialized && isEditor, editingOperationInfo);
 
 	/*const [stepsToDefineOperation, , stepsDisabled] =
 		useEditorStepText(setOperationInfo, setOperationInfoPopupOpen, saveOperation, setErrorOnSaveCallback);*/
@@ -75,17 +85,15 @@ function Map({ mode }) {
 	//		: ' statusOverMapNoNotifs';
 
 
-
 	/* Viewer state */
 	const [rfvs, setRfvs] = useRfvLogic();
-	const [ops, opsFiltered, id, filtersSelected, setFiltersSelected, , idsShowing, setIdsShowing] = useOperationFilter();
+	const [ops, opsFiltered, viewId, filtersSelected, setFiltersSelected, , idsShowing, setIdsShowing] = useOperationFilter();
 	const [currentSelectedOperation, setSelectedOperation] = useState(S.Nothing);
 	const [currentSelectedDrone, setSelectedDrone] = useState(S.Nothing);
 
 	/* Simulator state */
 	const [simPaths, setSimPath, simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic(refMapOnClick, map, fM(state.auth.token));
 	const isSimulator = (S.isJust(mode) && fM(mode) === 'simulator');
-
 
 
 	/* 	Drone related logic	 */
@@ -127,16 +135,16 @@ function Map({ mode }) {
 
 	useEffect(() => {
 		// Each time we visualize another Operation, we clear the feature group not to mix their volumes
-		if (id != null && opsFiltered.length > 0) {
+		if (viewId != null && opsFiltered.length > 0) {
 			opsFiltered.forEach((op) => {
-				if (op.gufi === id) {
+				if (op.gufi === viewId) {
 					const polygon = L.polygon(op.operation_volumes[0].operation_geography.coordinates);
 					actions.map.setCorners(polygon.getBounds().getNorthWest(), polygon.getBounds().getSouthEast());
 				}
 			});
 
 		}
-	}, [id, opsFiltered]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [viewId, opsFiltered]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		// Change map position if it has changed in the state
@@ -205,16 +213,20 @@ function Map({ mode }) {
 				)}
 				{opsFiltered.map((op) => {
 					return op.operation_volumes.map((volume) => {
-						return <OperationPolygon
-							map={map.current}
-							key={op.gufi + '#' + volume.id}
-							id={op.gufi + '#' + volume.id}
-							isSelected={op.gufi === fM(currentSelectedOperation)}
-							latlngs={volume.operation_geography.coordinates}
-							state={op.state}
-							info={op}
-							onClick={() => setSelectedOperation(S.Maybe.Just(op.gufi))}
-						/>;
+						if (op.gufi !== editId) {
+							return <OperationPolygon
+								map={map.current}
+								key={op.gufi + '#' + volume.id}
+								id={op.gufi + '#' + volume.id}
+								isSelected={op.gufi === fM(currentSelectedOperation)}
+								latlngs={volume.operation_geography.coordinates}
+								state={op.state}
+								info={op}
+								onClick={() => setSelectedOperation(S.Maybe.Just(op.gufi))}
+							/>;
+						} else {
+							return null;
+						}
 					});
 				})}
 				{
@@ -238,11 +250,6 @@ function Map({ mode }) {
 					})
 					(S.values(state.rfv.list))
 				}
-
-
-
-
-
 
 
 				{/* Operation creation */}
@@ -318,18 +325,18 @@ function Map({ mode }) {
 					setSelectedDrone(S.Nothing);
 				}}
 			>
-				{ S.isJust(currentSelectedOperation) &&
-				<SelectedOperation gufi={fM(currentSelectedOperation)} />
+				{S.isJust(currentSelectedOperation) &&
+				<SelectedOperation gufi={fM(currentSelectedOperation)}/>
 				}
-				{ S.isJust(currentSelectedDrone) &&
-				<SelectedDrone gufi={fM(currentSelectedDrone)} />
+				{S.isJust(currentSelectedDrone) &&
+				<SelectedDrone gufi={fM(currentSelectedDrone)}/>
 				}
-				{ 	showStandardRightAreaPanels &&
+				{showStandardRightAreaPanels &&
 				<QuickFly
 					onClick={quickFlyOnClick}
 				/>
 				}
-				{ 	showStandardRightAreaPanels &&
+				{showStandardRightAreaPanels &&
 				<Layers
 					filtersSelected={filtersSelected}
 					setFiltersSelected={setFiltersSelected}
@@ -338,24 +345,24 @@ function Map({ mode }) {
 					rfvs={rfvs}
 					setRfvsShowing={setRfvs}
 					operations={ops}
-					disabled={id != null}
+					disabled={viewId != null}
 				/>
 				}
 				{/* Editor Panels */}
 				{isEditor &&
-					<>
-						<EditorPanel />
-						<OperationInfoEditor
-							info={operationInfo}
-							setInfo={setOperationInfo}
-							volumeInfo={volume}
-							setVolumeInfo={setVolumeInfo}
-							saveOperation={saveOperation}
-						/>
-					</>
+				<>
+					<EditorPanel/>
+					<OperationInfoEditor
+						maybeInfo={operationInfo}
+						setInfo={setOperationInfo}
+						volumeInfo={volume}
+						setVolumeInfo={setVolumeInfo}
+						saveOperation={saveOperation}
+					/>
+				</>
 				}
 				{/* Simulator panels*/}
-				{ isSimulator &&
+				{isSimulator &&
 				<SimulatorPanel
 					paths={simPaths}
 					onClick={onSelectSimDrone}

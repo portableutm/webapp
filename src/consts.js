@@ -5,7 +5,6 @@ const USERS_DATA_TOO_OLD = 2 * 60000; // Only fetch user list if saved user list
 
 //const hostname = window && window.location && window.location.hostname;
 //console.log(`API::${process.env.ADES_API}`)
-console.log('ENV VARIABLES', process.env);
 API = process.env.REACT_APP_ADESAPI || 'http://68.183.22.43:3000/';
 DEBUG = process.env.REACT_APP_DEBUG || DEBUG;
 

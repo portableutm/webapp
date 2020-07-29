@@ -68,6 +68,18 @@ import Web from './dashboard/config/Web';
 	);
 }*/
 
+/* Redfire */
+import { createClient, Provider } from 'urql';
+
+const client = createClient({
+	url: 'https://bluewateruss.herokuapp.com/v1/graphql',
+	fetchOptions: () => {
+		return {
+			headers: { 'X-Hasura-Admin-Secret': 'changeMe' }
+		};
+	}
+});
+
 const MasterPage = ({leftIsExpanded = false, children}) => {
 	const [state, ] = useAdesState();
 	const [expDate, setExpDate] = useState(new Date(0));
@@ -91,7 +103,7 @@ const MasterPage = ({leftIsExpanded = false, children}) => {
 	}, [time]); */
 
 	return(
-		<>
+		<Provider value={client}>
 			{state.debug &&
 			<div className='timeLeftOverlay'>
 				Expires at {expDate.toLocaleTimeString()}
@@ -111,7 +123,7 @@ const MasterPage = ({leftIsExpanded = false, children}) => {
 					</div>
 				</Popover>
 			</ActionArea>
-		</>
+		</Provider>
 	);
 };
 
@@ -239,6 +251,11 @@ function Ades() {
 						<Route exact path='/operation/new'>
 							<MasterPage leftIsExpanded={true}>
 								<Map mode={S.Maybe.Just('new')}/>
+							</MasterPage>
+						</Route>
+						<Route exact path='/operation/edit/:editId'>
+							<MasterPage leftIsExpanded={true}>
+								<Map mode={S.Maybe.Just('edit')}/>
 							</MasterPage>
 						</Route>
 						<Route exact path='/operation/:id'>
