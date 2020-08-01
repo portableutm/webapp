@@ -164,6 +164,7 @@ function Ades() {
 				actions.auth.info(username, () => {
 					actions.operations.fetch();
 					actions.rfv.fetch();
+					actions.uvr.fetch();
 					actions.quickFly.fetch();
 				}, () => {
 					setRole('none');
@@ -250,17 +251,22 @@ function Ades() {
 						</Route>
 						<Route exact path='/operation/new'>
 							<MasterPage leftIsExpanded={true}>
-								<Map mode={S.Maybe.Just('new')}/>
+								<Map mode={S.Maybe.Just('new-op')}/>
 							</MasterPage>
 						</Route>
 						<Route exact path='/operation/edit/:editId'>
 							<MasterPage leftIsExpanded={true}>
-								<Map mode={S.Maybe.Just('edit')}/>
+								<Map mode={S.Maybe.Just('edit-op')}/>
 							</MasterPage>
 						</Route>
 						<Route exact path='/operation/:id'>
 							<MasterPage>
 								<Map mode={S.Maybe.Just('view')}/>
+							</MasterPage>
+						</Route>
+						<Route exact path='/uvr/new'>
+							<MasterPage leftIsExpanded={true}>
+								<Map mode={S.Maybe.Just('new-uvr')}/>
 							</MasterPage>
 						</Route>
 						<Route exact path='/dashboard/configuration'>
@@ -365,7 +371,7 @@ function Ades() {
 					<Switch>
 						<Route path='/operation/new'>
 							<MasterPage>
-								<Map mode={S.Maybe.Just('new')}/>
+								<Map mode={S.Maybe.Just('new-op')}/>
 							</MasterPage>
 						</Route>
 						{S.isJust(state.auth.user) && // It can happen... race condition

@@ -7,5 +7,6 @@ import * as rfv from './rfv';
 import * as quickFly from './quickfly';
 import * as warning from './warning';
 import * as notifications from './notifications';
+import * as uvr from './uvr';
 
-export {vehicles, operations, drones, map, map_dialog, rfv, quickFly, warning, notifications};
+export {vehicles, operations, drones, map, map_dialog, rfv, quickFly, warning, notifications, uvr};

@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 /* Logic */
 import S from 'sanctuary';
@@ -57,13 +57,12 @@ const hasToRemoveOldest = (path) => path.length > MAX_POINTS_HISTORY;
 /**
  * @return {null}
  */
-function DroneMarker({map, id, position, heading, altitude, risk, onClick}) {
+function DroneMarker({id, position, heading, altitude, risk, onClick}) {
 	const [marker, setMarker] = useState(S.Nothing);
 	const [state, ] = useAdesState();
 	const [polyline, setPolyline] = useState(S.Nothing);
 	const [path, setPath] = useState([]);
 	const [timer, setTimer] = useState(null);
-	const onClicksDisabled = useRef(state.map.onClicksDisabled);
 
 	useEffect(() => {
 		// Create marker, add it to map. Remove from map on unmount
@@ -71,6 +70,7 @@ function DroneMarker({map, id, position, heading, altitude, risk, onClick}) {
 			icon: risk === 'EXTREME' ? EXTREME_RISK_DRONE_ICON : risk === 'MEDIUM' ?  MEDIUM_RISK_DRONE_ICON :  LOW_RISK_DRONE_ICON,
 			rotationAngle: heading - 90.0
 		});
+
 		const polyline = L.hotline([], {
 			outlineWidth: 0,
 			palette: {
@@ -81,16 +81,12 @@ function DroneMarker({map, id, position, heading, altitude, risk, onClick}) {
 			max: MAX_POINTS_HISTORY - 1
 		});
 
-
-
-		onClick && marker.on('click', (evt) => {
-			if (!onClicksDisabled.current) {
-				onClick(evt.latlng);
-				L.DomEvent.stopPropagation(evt);
-			}
+		onClick && marker.on('dblclick', (evt) => {
+			onClick(evt.latlng);
+			L.DomEvent.stopPropagation(evt);
 		});
 
-
+		const map = state.map.mapRef.current;
 
 		marker.addTo(map);
 		hasToDrawTrail && polyline.addTo(map);
@@ -127,18 +123,10 @@ function DroneMarker({map, id, position, heading, altitude, risk, onClick}) {
 		}
 	}, [position.lat, position.lng, heading, altitude]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
-		onClicksDisabled.current = state.map.onClicksDisabled;
-	}, [state.map.onClicksDisabled]);
-
 	return null;
 }
 
 DroneMarker.propTypes = {
-	map: PropTypes.oneOfType([
-		PropTypes.func,
-		PropTypes.shape({ current: PropTypes.any })
-	]).isRequired,
 	id: PropTypes.string.isRequired,
 	position: PropTypes.shape({
 		lat: PropTypes.number.isRequired,

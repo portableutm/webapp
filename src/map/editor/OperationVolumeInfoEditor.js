@@ -6,13 +6,7 @@ import styles from '../Map.module.css';
 
 function OperationVolumeInfoEditor(props) {
 	const { t,  } = useTranslation('glossary');
-	const {info, setInfo} = props;
-	const editInfo = (property, newValue) =>
-		setInfo(volume => {
-			const newVolume = {...volume};
-			newVolume[property] = newValue;
-			return newVolume;
-		});
+	const {info, editInfo} = props;
 	return (
 		<div>
 			{/* title={t('editor.volume.editingvolume_count', {count: S.maybeToNullable(opVolumeIndex)})} */}

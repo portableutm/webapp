@@ -14,29 +14,28 @@ import useAdesState from '../../state/AdesState';
 /* Helpers */
 function getColorForOperationState(state) {
 	switch (state) {
-	case 'ACCEPTED':
-		return '#001aff';
-	case 'PENDING':
-		return '#fff300';
-	case 'ACTIVATED':
-		return '#2dff00';
-	case 'ROGUE':
-		return '#ff0000';
-	default:
-		return '#dedede';
+		case 'ACCEPTED':
+			return '#001aff';
+		case 'PENDING':
+			return '#fff300';
+		case 'ACTIVATED':
+			return '#2dff00';
+		case 'ROGUE':
+			return '#ff0000';
+		default:
+			return '#dedede';
 	}
 }
 
 /**
  * @return {null}
  */
-function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ onClick, onClickPopup, isSelected = false}) {
+function OperationPolygon({latlngs, /* Data */ state, info, /* Handlers */ onClick, onClickPopup, isSelected = false}) {
 	const {t,} = useTranslation();
-	const [adesState,] = useAdesState();
+	const [adesState,] = useAdesState(state => state.map, actions => actions.map);
 	const [polygon, setPolygon] = useState(S.Nothing);
-	const onClicksDisabled = useRef(adesState.map.onClicksDisabled);
 
-	useEffect(() => { // Mount and unmount
+	useEffect(() => { // Mount and unpmount
 		// Initialize Polygon, draw on Map
 		const polygon = L.polygon(
 			latlngs,
@@ -49,11 +48,11 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 			}
 		);
 
+		const map = adesState.mapRef.current;
+
 		onClick && polygon.on('click', (evt) => {
-			if (!onClicksDisabled.current) {
-				onClick(evt.latlng);
-				L.DomEvent.stopPropagation(evt);
-			}
+			alert('polygon');
+			onClick(evt.latlng);
 		});
 
 		!onClick && onClickPopup && polygon.bindPopup(onClickPopup);
@@ -76,10 +75,6 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 			polygon.remove();
 		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-	useEffect(() => {
-		onClicksDisabled.current = adesState.map.onClicksDisabled;
-	}, [adesState.map.onClicksDisabled]);
 
 	useEffect(() => {
 		if (S.isJust(polygon)) {

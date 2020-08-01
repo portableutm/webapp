@@ -39,10 +39,10 @@ const initialState = {
 		cornerNW: { lat: -34.781788, lng: -56.225623},
 		cornerSE: { lat: -34.927028, lng: -55.835540},
 		*/
+		isInitialized: false,
 		cornerNW: {lat: -90, lng: 180},
 		cornerSE: {lat: 90, lng: -180},
 		ids: [],
-		onClicksDisabled: false
 	},
 	map_dialog: {
 		open: false,
@@ -56,6 +56,10 @@ const initialState = {
 		updated: 0
 	},
 	rfv: {
+		list: {},
+		updated: 0
+	},
+	uvr: {
 		list: {},
 		updated: 0
 	},

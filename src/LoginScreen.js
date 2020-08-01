@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, Elevation, FormGroup, InputGroup, Intent, MenuItem} from '@blueprintjs/core';
+import {Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
 
 import S from 'sanctuary';
 import {useTranslation} from 'react-i18next';
@@ -8,7 +8,7 @@ import {useCookies} from 'react-cookie';
 /* External */
 import { useHistory } from 'react-router-dom';
 /* Internal */
-import {adesVersion, DEBUG} from './consts';
+import {DEBUG} from './consts';
 import useAdesState from './state/AdesState.js';
 import logo from './images/logo.png';
 import background from './images/bg.jpg';

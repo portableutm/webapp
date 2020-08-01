@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 /* Logic */
 import S from 'sanctuary';
@@ -23,10 +23,9 @@ const PILOT_ICON = L.icon({
 /**
  * @return {null}
  */
-function ControllerLocationMarker({map, position}) {
+function ControllerLocationMarker({position}) {
 	const [, setMarker] = useState(S.Nothing);
 	const [state, ] = useAdesState();
-	const onClicksDisabled = useRef(state.map.onClicksDisabled);
 
 	useEffect(() => {
 		// Create marker, add it to map. Remove from map on unmount
@@ -34,14 +33,7 @@ function ControllerLocationMarker({map, position}) {
 			icon: PILOT_ICON
 		});
 
-		/*onClick && marker.on('click', (evt) => {
-			if (!onClicksDisabled.current) {
-				onClick(evt.latlng);
-				L.DomEvent.stopPropagation(evt);
-			}
-		});*/
-
-		marker.addTo(map);
+		marker.addTo(state.map.mapRef.current);
 		// Save initialized values
 		setMarker(S.Just(marker));
 
@@ -50,10 +42,6 @@ function ControllerLocationMarker({map, position}) {
 			marker.remove();
 		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-	useEffect(() => {
-		onClicksDisabled.current = state.map.onClicksDisabled;
-	}, [state.map.onClicksDisabled]);
 
 	return null;
 }

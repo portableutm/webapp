@@ -6,12 +6,12 @@ import 'leaflet-geometryutil';
 import A from 'axios';
 import useAdesState from '../../state/AdesState';
 
-function UseSimulatorLogic(refMapOnClick, map, token) {
+function UseSimulatorLogic(token) {
 
 	const [droneCurrentlyAdding, setDroneCurrentlyAdding] = useState(-1);
 	const [paths, setPaths] = useState([[]]);
 	const [timer, setTimer] = useState(null);
-	const [state, ] = useAdesState();
+	const [state, actions] = useAdesState();
 
 	const setPath = (latlng, index = -1) => {
 		setPaths(paths => {
@@ -35,6 +35,7 @@ function UseSimulatorLogic(refMapOnClick, map, token) {
 
 	const fly = (ratio) => {
 		paths.forEach((path, index) => {
+			const map = state.map.mapRef.current;
 			const point = L.GeometryUtil.interpolateOnLine(map.current, path, ratio);
 			const nextPointIndex = point.predecessor < path.length - 1 ? point.predecessor + 1: 0;
 			const nextPoint = {lat: path[nextPointIndex][0], lng: path[nextPointIndex][1]};
@@ -85,12 +86,12 @@ function UseSimulatorLogic(refMapOnClick, map, token) {
 	useEffect(() => {
 		if (droneCurrentlyAdding < 0) {
 			// When Map click should do nothing
-			refMapOnClick.current = () => {};
+			actions.map.disableMapOnClick();
 		} else {
-			refMapOnClick.current = event => {
+			actions.map.setMapOnClick(event => {
 				const {latlng} = event;
 				setPath(latlng);
-			};
+			});
 		}
 	}, [droneCurrentlyAdding]); // eslint-disable-line react-hooks/exhaustive-deps
 

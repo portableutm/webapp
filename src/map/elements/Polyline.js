@@ -6,12 +6,15 @@ import L from 'leaflet';
 
 /* Global state */
 import {fM} from '../../libs/SaferSanctuary';
+import useAdesState from '../../state/AdesState';
 
 /**
  * @return {null}
  */
-function Polyline({map, latlngs}) {
+function Polyline({latlngs}) {
 	const [polyline, setPolyline] = useState(S.Nothing);
+	const [state,] = useAdesState();
+
 	useEffect(() => { // Mount and unmount
 		// Initialize Polygon, draw on Map
 		const poly = new L.Polyline(
@@ -23,6 +26,7 @@ function Polyline({map, latlngs}) {
 			}
 		);
 
+		const map = state.map.mapRef.current;
 		poly.addTo(map);
 		setPolyline(S.Just(poly));
 		return () => {

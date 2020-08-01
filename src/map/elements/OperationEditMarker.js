@@ -2,6 +2,7 @@ import {useEffect} from 'react';
 
 /* Logic */
 import L from 'leaflet';
+import useAdesState from '../../state/AdesState';
 
 /* Constants */
 const EDIT_POLYGON_ICON = L.icon({
@@ -14,8 +15,9 @@ const EDIT_POLYGON_ICON = L.icon({
 /**
  * @return {null}
  */
-function OperationEditMarker({map, latlng, onDrag, index }) {
+function OperationEditMarker({latlng, onDrag, index }) {
 	//const [marker, setMarker] = useState(S.Nothing);
+	const [state,] = useAdesState();
 
 	useEffect(() => { // Mount and unmount
 		// Initialize marker
@@ -27,6 +29,7 @@ function OperationEditMarker({map, latlng, onDrag, index }) {
 			}
 		);
 
+		const map = state.map.mapRef.current;
 		marker.addTo(map);
 		if (index) {
 			marker.bindTooltip('' + index, {

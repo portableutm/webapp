@@ -1,9 +1,11 @@
 import React from 'react';
+import useAdesState from '../state/AdesState';
 
-function MapMain({children, map, mapInitialized}) {
+function MapMain({children}) {
+	const [state,] = useAdesState();
 	return (
 		<>
-			{mapInitialized != null && mapInitialized && children}
+			{state.map.isInitialized && children}
 			<div data-test-id='map' id='adesMapLeaflet' className='map' style={{height: '100%'}}>
 			</div>
 		</>

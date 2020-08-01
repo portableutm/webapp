@@ -33,8 +33,8 @@ import ControllerLocationMarker from './elements/ControllerLocationMarker';
 import useOperationFilter from './hooks/useOperationFilter';
 import useRfvLogic from './hooks/useRfvLogic';
 import useAdesState from '../state/AdesState';
-import useEditorLogic from './hooks/useEditorLogic';
 import useSimulatorLogic from './hooks/useSimulatorLogic';
+import useEditorLogic, {editorMode} from './hooks/useEditorLogic';
 
 /* Auxiliaries */
 import {initializeLeaflet} from './MapAuxs';
@@ -44,45 +44,61 @@ import RightArea from '../layout/RightArea';
 import Polyline from './elements/Polyline';
 import {fM} from '../libs/SaferSanctuary';
 import { useParams } from 'react-router-dom';
+import UASVolumeReservation from './elements/UASVolumeReservation';
+
 
 
 /* Main function */
 function Map({mode}) {
-	const map = useRef(null);
+	const mapRef = useRef(null);
 	/* 	It's important to hold a reference to map that survives through the application
 		and that is only used after correctly initializing Leaflet. 	*/
 
-	/* 	State holders	 */
+	/* State holders and references */
 	const [state, actions] = useAdesState();
 	const [drones, setDrones] = useState([]);
 
 	/* Route params */
 	const { editId } = useParams();
 
-	/* Map */
-	const [mapInitialized, setMapInitialized] = useState(false);
-	const refMapOnClick = useRef(() => {
-	});
-
 	/* Editor state */
-	const isEditor = S.isJust(mode) && (fM(mode) === 'new' || fM(mode) === 'edit');
-	const isEditing = isEditor && fM(mode) === 'edit';
-	let editingOperationInfo;
-	if (isEditing) {
-		editingOperationInfo = fM(S.value(editId)(state.operations.list));
+	let isEditor = false;
+	let isEditingOperation = false;
+	let isEditingUvr = false;
+	let modeOfEditor = editorMode.UNKNOWN;
+	let existingInfo = null;
+	switch (fM(mode)) {
+		case 'new-op': {
+			isEditor = true;
+			isEditingOperation = true;
+			modeOfEditor = editorMode.OPERATION.NEW;
+			break;
+		}
+		case 'edit-op': {
+			isEditor = true;
+			isEditingOperation = true;
+			modeOfEditor = editorMode.OPERATION.EXISTING;
+			existingInfo = fM(S.value(editId)(state.operations.list));
+			break;
+		}
+		case 'new-uvr': {
+			isEditor = true;
+			isEditingUvr = true;
+			modeOfEditor = editorMode.UVR.NEW;
+			break;
+		}
+		case 'edit-uvr': {
+			isEditor = true;
+			isEditingUvr = true;
+			modeOfEditor = editorMode.UVR.EXISTING;
+			existingInfo = fM(S.value(editId)(state.uvr.list));
+			break;
+		}
 	}
-	const [operationInfo, setOperationInfo, volume, setVolumeInfo, polygons, setPolygons, saveOperation,] =
-		useEditorLogic(refMapOnClick, mapInitialized && isEditor, editingOperationInfo);
-
-	/*const [stepsToDefineOperation, , stepsDisabled] =
-		useEditorStepText(setOperationInfo, setOperationInfoPopupOpen, saveOperation, setErrorOnSaveCallback);*/
+	const [mbInfo, infoSetters, save] = useEditorLogic(modeOfEditor, existingInfo);
 
 	const [, setEditingOperationVolume] = useState(S.Maybe.Nothing);
-	//const notifications = useNotificationStore();
-	//const statusOverMapNotifs =
-	//	notifications.state.all.size > 0
-	//		? ' statusOverMapNotifs'
-	//		: ' statusOverMapNoNotifs';
+
 
 
 	/* Viewer state */
@@ -92,7 +108,7 @@ function Map({mode}) {
 	const [currentSelectedDrone, setSelectedDrone] = useState(S.Nothing);
 
 	/* Simulator state */
-	const [simPaths, setSimPath, simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic(refMapOnClick, map, fM(state.auth.token));
+	const [simPaths, setSimPath, simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic(fM(state.auth.token));
 	const isSimulator = (S.isJust(mode) && fM(mode) === 'simulator');
 
 
@@ -119,18 +135,8 @@ function Map({mode}) {
 	/*	 Effects 	*/
 	// Leaflet map initialization
 	useEffect(() => {
-		const mapClick = e => {
-			refMapOnClick.current(e);
-		};
-		initializeLeaflet(
-			map,
-			mapClick,
-			() => {
-				const cornerNW = map.current.getBounds().getNorthWest();
-				const cornerSE = map.current.getBounds().getSouthEast();
-				actions.map.setCorners(cornerNW, cornerSE);
-			},
-			setMapInitialized);
+		mapRef.current = initializeLeaflet();
+		actions.map.setMapRef(mapRef);
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
@@ -148,9 +154,9 @@ function Map({mode}) {
 
 	useEffect(() => {
 		// Change map position if it has changed in the state
-		if (map.current) {
+		if (state.map.mapRef && state.map.mapRef.current) {
 			const bounds = L.latLngBounds(state.map.cornerNW, state.map.cornerSE);
-			map.current.fitBounds(bounds);
+			state.map.mapRef.current.fitBounds(bounds);
 		}
 	}, [JSON.stringify(state.map.cornerNW), JSON.stringify(state.map.cornerSE)]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -165,7 +171,7 @@ function Map({mode}) {
 
 	return (
 		<>
-			<MapMain map={map.current} mapInitialized={mapInitialized}>
+			<MapMain>
 				<Dialog
 					className='bp3-dark'
 					title={state.map_dialog.title}
@@ -195,12 +201,10 @@ function Map({mode}) {
 				{drones.map((drone) =>
 					<>
 						<ControllerLocationMarker
-							map={map.current}
 							key={'CL' + drone.gufi}
 							position={drone.controller_location.coordinates}
 						/>
 						<DroneMarker
-							map={map.current}
 							key={drone.gufi}
 							id={drone.gufi}
 							heading={drone.heading}
@@ -215,7 +219,6 @@ function Map({mode}) {
 					return op.operation_volumes.map((volume) => {
 						if (op.gufi !== editId) {
 							return <OperationPolygon
-								map={map.current}
 								key={op.gufi + '#' + volume.id}
 								id={op.gufi + '#' + volume.id}
 								isSelected={op.gufi === fM(currentSelectedOperation)}
@@ -236,7 +239,6 @@ function Map({mode}) {
 							/* Rfv is selected to be shown */
 							return (
 								<RestrictedFlightVolume
-									map={map.current}
 									key={rfv.comments}
 									latlngs={rfv.geography.coordinates}
 									name={rfv.comments}
@@ -250,13 +252,25 @@ function Map({mode}) {
 					})
 					(S.values(state.rfv.list))
 				}
+				{
+					S.map
+					((uvr) => {
+						return (
+							<UASVolumeReservation
+								key={uvr.message_id}
+								latlngs={uvr.geography.coordinates}
+								uvrInfo={uvr}
+							/>
+						);
+					})
+					(S.values(state.uvr.list))
+				}
 
 
-				{/* Operation creation */}
-				{isEditor && polygons.map((polygon, index) => {
+				{/* Operation creation or edition */}
+				{isEditor && isEditingOperation && S.isJust(mbInfo) && fM(mbInfo).operation_volumes[0].operation_geography.coordinates.map((polygon, index) => {
 					return (
 						<OperationPolygon
-							map={map.current}
 							id={'polygon' + index}
 							key={'polygon' + index}
 							latlngs={Array.from(polygon)}
@@ -266,22 +280,22 @@ function Map({mode}) {
 						/>
 					);
 				})}
-				{isEditor && polygons.map((polygon, index) => {
+				{isEditor && isEditingOperation && S.isJust(mbInfo) && fM(mbInfo).operation_volumes[0].operation_geography.coordinates.map((polygon, index) => {
 					return polygon.map((latlng, index2) => {
 						return (
 							<OperationEditMarker
-								map={map.current}
 								id={'marker' + index2 + 'p' + index}
 								key={'marker' + index2 + 'p' + index}
 								onDrag={/* istanbul ignore next */ latlng => {
-									setPolygons(mbPolygons => {
+									infoSetters.setCoordinatesOfVolume(0, coords => {
 										/* Dragging a marker updates the saved polygon coordinates */
-										if (S.isJust(mbPolygons)) {
-											const clonedPolygons = fM(mbPolygons).slice();
-											clonedPolygons[index][index2] = [latlng.lat, latlng.lng];
-											return S.Just(clonedPolygons);
+										if (coords.length > 0) {
+											const newCoords = coords.slice();
+											newCoords[index][index2] = [latlng.lat, latlng.lng];
+											return newCoords;
 										}
 									});
+									
 								}}
 								latlng={latlng}
 							/>
@@ -294,7 +308,6 @@ function Map({mode}) {
 						return (
 							<OperationEditMarker
 								index={'D' + index + '->' + index2}
-								map={map.current}
 								id={'marker' + index2 + 'p' + index}
 								key={'marker' + index2 + 'p' + index}
 								onDrag={latlng => setSimPath(latlng, index2)}
@@ -306,7 +319,6 @@ function Map({mode}) {
 				{S.isJust(mode) && fM(mode) === 'simulator' && simPaths.map((path, index) => {
 					return (
 						<Polyline
-							map={map.current}
 							key={'polyline' + index}
 							latlngs={path}
 						/>
@@ -349,15 +361,14 @@ function Map({mode}) {
 				/>
 				}
 				{/* Editor Panels */}
-				{isEditor &&
+				{	isEditor &&
+					isEditingOperation &&
 				<>
 					<EditorPanel/>
 					<OperationInfoEditor
-						maybeInfo={operationInfo}
-						setInfo={setOperationInfo}
-						volumeInfo={volume}
-						setVolumeInfo={setVolumeInfo}
-						saveOperation={saveOperation}
+						maybeInfo={mbInfo}
+						setters={infoSetters}
+						saveOperation={save}
 					/>
 				</>
 				}

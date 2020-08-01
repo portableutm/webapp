@@ -17,21 +17,20 @@ function getLeafletLayer(useGeoServer, L) {
 	}
 }
 
-const initializeLeaflet = (map, mapClick, mapDragEnd, setMapInitialized) => {
+const initializeLeaflet = () => {
 	const leafletLayer = getLeafletLayer(false, L);
-	map.current = L.map('adesMapLeaflet', {
-		zoomControl: false,
-		worldCopyJump: true,
-		layers: [leafletLayer]
-	});
 	/*L.control
 		.zoom({
 			position: 'topright'
 		})
 		.addTo(map.current);*/
-	map.current.on('click', mapClick); // Map clicked outside any element
-	map.current.on('moveend', mapDragEnd);
-	setMapInitialized(true);
+	return L.map('adesMapLeaflet', {
+		center: [0, 0],
+		zoom: 13,
+		zoomControl: false,
+		worldCopyJump: true,
+		layers: [leafletLayer]
+	});
 };
 // TODO: Add copyright information about marker icon
 //  <a target="_blank" href="https://icons8.com/icons/set/fighter-jet">Fighter Jet icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
