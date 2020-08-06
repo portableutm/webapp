@@ -160,6 +160,10 @@ function Map({mode}) {
 		}
 	}, [JSON.stringify(state.map.cornerNW), JSON.stringify(state.map.cornerSE)]); // eslint-disable-line react-hooks/exhaustive-deps
 
+
+	useEffect(() => {
+		console.log('HasToChoose', state.map.chooseOnClick);
+	}, [state.map.chooseOnClick]);
 	/*	Helpers */
 
 
@@ -197,6 +201,28 @@ function Map({mode}) {
 						}
 					</Button>
 				</Dialog>
+				{	state.map.chooseOnClick.hasToChoose &&
+					<div
+						className="mapOnClickChooser animated fadeIn faster"
+						style={{left: state.map.chooseOnClick.x, top: state.map.chooseOnClick.y}}
+					>
+						Click on...
+						<Button
+							className="mapOnClickChooserButton"
+							intent={Intent.PRIMARY}
+							onClick={() => actions.map.hasChosenToClickMap()}
+						>
+							Map
+						</Button>
+						<Button
+							className="mapOnClickChooserButton"
+							intent={Intent.PRIMARY}
+							onClick={() => actions.map.hasChosenToClickObject()}
+						>
+							Object
+						</Button>
+					</div>
+				}
 				{/* Live map */}
 				{drones.map((drone) =>
 					<>

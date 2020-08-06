@@ -53,6 +53,7 @@ function OperationPolygon({latlngs, /* Data */ state, info, /* Handlers */ onCli
 		onClick && polygon.on('click', (evt) => {
 			alert('polygon');
 			onClick(evt.latlng);
+			L.DomEvent.stopPropagation(evt);
 		});
 
 		!onClick && onClickPopup && polygon.bindPopup(onClickPopup);

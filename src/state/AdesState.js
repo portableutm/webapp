@@ -40,6 +40,15 @@ const initialState = {
 		cornerSE: { lat: -34.927028, lng: -55.835540},
 		*/
 		isInitialized: false,
+		nextOnClick: { // State that gets set after asking the user if their intention is to click the map or a polygon
+			hasChoosen: false,
+			nextIsMap: false // False executes polygon's onClick, true executes map on click
+		},
+		chooseOnClick: {
+			hasToChoose: false,
+			x: 0,
+			y: 0
+		},
 		cornerNW: {lat: -90, lng: 180},
 		cornerSE: {lat: 90, lng: -180},
 		ids: [],

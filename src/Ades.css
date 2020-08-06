@@ -230,6 +230,36 @@ th, td {
     padding: 15px;
 }
 
+.mapOnClickChooser {
+    position: absolute;
+    background-color: #30404d;
+    color: white;
+    height: 125px;
+    width: 100px;
+    z-index: 9999;
+    border-radius: 5px;
+    -webkit-box-shadow: 5px 0px 14px -8px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 5px 0px 14px -8px rgba(0, 0, 0, 0.75);
+    box-shadow: 5px 0px 14px -8px rgba(0, 0, 0, 0.75);
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    transition: all 0.5s;
+}
+
+.mapOnClickChooserButton {
+    background-color: rgb(240, 101, 67) !important;
+    color: white !important;
+    border: 0 !important;
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    box-shadow: none;
+    background-image: none;
+}
+
 .fullW {
     display: flex;
     justify-content: space-between;
