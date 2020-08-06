@@ -31,8 +31,8 @@ function getColorForOperationState(state) {
  * @return {null}
  */
 function OperationPolygon({latlngs, /* Data */ state, info, /* Handlers */ onClick, onClickPopup, isSelected = false}) {
-	const {t,} = useTranslation();
-	const [adesState,] = useAdesState(state => state.map, actions => actions.map);
+	const {t,} = useTranslation('glossary');
+	const [adesState, actions] = useAdesState(state => state.map, actions => actions.map);
 	const [polygon, setPolygon] = useState(S.Nothing);
 
 	useEffect(() => { // Mount and unpmount
@@ -51,9 +51,7 @@ function OperationPolygon({latlngs, /* Data */ state, info, /* Handlers */ onCli
 		const map = adesState.mapRef.current;
 
 		onClick && polygon.on('click', (evt) => {
-			alert('polygon');
-			onClick(evt.latlng);
-			L.DomEvent.stopPropagation(evt);
+			actions.executeOrAddToClickSelection(t('operations.singular_generic'), () => onClick(evt.latlng));
 		});
 
 		!onClick && onClickPopup && polygon.bindPopup(onClickPopup);

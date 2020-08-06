@@ -160,10 +160,6 @@ function Map({mode}) {
 		}
 	}, [JSON.stringify(state.map.cornerNW), JSON.stringify(state.map.cornerSE)]); // eslint-disable-line react-hooks/exhaustive-deps
 
-
-	useEffect(() => {
-		console.log('HasToChoose', state.map.chooseOnClick);
-	}, [state.map.chooseOnClick]);
 	/*	Helpers */
 
 
@@ -201,26 +197,24 @@ function Map({mode}) {
 						}
 					</Button>
 				</Dialog>
-				{	state.map.chooseOnClick.hasToChoose &&
+				{	state.map.clickSelection.isSelecting &&
+					state.map.clickSelection.listIsComplete &&
 					<div
 						className="mapOnClickChooser animated fadeIn faster"
-						style={{left: state.map.chooseOnClick.x, top: state.map.chooseOnClick.y}}
+						style={{left: state.map.clickSelection.x, top: state.map.clickSelection.y}}
 					>
 						Click on...
-						<Button
-							className="mapOnClickChooserButton"
-							intent={Intent.PRIMARY}
-							onClick={() => actions.map.hasChosenToClickMap()}
-						>
-							Map
-						</Button>
-						<Button
-							className="mapOnClickChooserButton"
-							intent={Intent.PRIMARY}
-							onClick={() => actions.map.hasChosenToClickObject()}
-						>
-							Object
-						</Button>
+						{ state.map.clickSelection.listFns.map(labelFn => {
+							return (
+								<Button
+									key={labelFn.label}
+									className="mapOnClickChooserButton"
+									intent={Intent.PRIMARY}
+									onClick={() => labelFn.fn()}
+								>
+									{labelFn.label}
+								</Button>);
+						})}
 					</div>
 				}
 				{/* Live map */}

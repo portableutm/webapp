@@ -255,6 +255,7 @@ th, td {
     border: 0 !important;
     display: flex;
     justify-content: center;
+    text-align: center;
     width: 90%;
     box-shadow: none;
     background-image: none;
