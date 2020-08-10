@@ -51,6 +51,9 @@
       "finish": "Paso 3: Finalizar."
     },
     "finish": "Finalizar",
-    "cant_finish": "No se pudo crear la OPERACIÓN, ya que el polígono no estaba definido. Por favor, defina un polígono donde el vehículo pueda volar, haciendo clic en el mapa en las posiciones apropiadas"
+    "cant_finish": "No se pudo crear la OPERACIÓN, ya que el polígono no estaba definido. Por favor, defina un polígono donde el vehículo pueda volar, haciendo clic en el mapa en las posiciones apropiadas",
+    "uvr": {
+      "complete": "Editando información de la UVR"
+    }
   }
 }

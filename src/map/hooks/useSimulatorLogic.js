@@ -84,10 +84,6 @@ function UseSimulatorLogic(token) {
 	};
 
 	useEffect(() => {
-		console.log('PATHS', paths);
-	}, [paths]);
-
-	useEffect(() => {
 		if (droneCurrentlyAdding < 0) {
 			// When Map click should do nothing
 			actions.map.disableMapOnClick();

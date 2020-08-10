@@ -32,7 +32,6 @@ const initializeLeaflet = () => {
 		layers: [leafletLayer]
 	});
 	map.on('zoomend', function() {
-		console.log('MAPZOOM', map.getZoom());
 		if (map.getZoom() > 12) {
 			map.getPane('tooltipPane').style.visibility = 'visible';
 		} else {

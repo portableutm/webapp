@@ -30,7 +30,8 @@
     "latitude": "Latitud",
     "longitude": "Longitud",
     "altitude": "Altitud",
-    "heading": "Orientación (-180 | 180)"
+    "heading": "Orientación (-180 | 180)",
+    "comments": "Comentarios"
   },
   "vehicles": {
     "plural_generic": "Vehículos",
@@ -63,5 +64,16 @@
   "actions": "Acciones",
   "edit": "Editar",
   "page": "Página Nº {{number}}",
-  "layers": "Capas"
+  "layers": "Capas",
+  "uvr": {
+    "effective_time_begin": "Comienzo a las",
+    "effective_time_begin_description": "Tiempo desde la cual la reservación estará activa",
+    "effective_time_end": "Termina a las",
+    "effective_time_end_description": "Tiempo en la cual la reservación dejará de estar activa.",
+    "max_altitude": "Máxima altitud (en metros)",
+    "min_altitude": "Minima altitud",
+    "plural_generic": "Reservaciones de Volumenes para UAS (UVRs)",
+    "reason": "Motivo de la reservación (nombre)",
+    "singular_generic": "Reserva de volúmen para UAS (UVR)"
+  }
 }

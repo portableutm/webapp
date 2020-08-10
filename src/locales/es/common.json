@@ -2,7 +2,8 @@
   "hamburger": {
     "map": "Mapa en tiempo real",
     "dashboard": "Panel de control",
-    "createnewop": "Crear nueva operación"
+    "createnewop": "Crear nueva operación",
+    "createnewuvr": "Crear nueva UVR"
   },
   "notifications": {
     "operation_gone_rogue": {
@@ -20,5 +21,6 @@
   "change_password": "Cambiar la contraseña de {{name}}",
   "save_changes": "Guardar cambios",
   "click_to_expand": "Mostrar información",
-  "click_to_collapse": "Esconder información"
+  "click_to_collapse": "Esconder información",
+  "edit_on_map": "Editar en mapa"
 }
