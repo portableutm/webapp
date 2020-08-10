@@ -126,6 +126,7 @@ const internalActions = {
 					});
 
 					socket.on('operation-state-change', function (info) {
+						console.log('Operation-state-change', info);
 						store.actions.operations.updateOne(info.gufi, info.state);
 					});
 					socket.connect();

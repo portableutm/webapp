@@ -13,7 +13,7 @@ import useAdesState from '../../state/AdesState';
  */
 function Polyline({latlngs}) {
 	const [polyline, setPolyline] = useState(S.Nothing);
-	const [state,] = useAdesState();
+	const [state,] = useAdesState(state => state.map, actions => actions);
 
 	useEffect(() => { // Mount and unmount
 		// Initialize Polygon, draw on Map
@@ -26,14 +26,14 @@ function Polyline({latlngs}) {
 			}
 		);
 
-		const map = state.map.mapRef.current;
+		const map = state.mapRef.current;
 		poly.addTo(map);
 		setPolyline(S.Just(poly));
 		return () => {
 			// Clean-up when unloading component
 			poly.remove();
 		};
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [state.mapRef]); // eslint-disable-line react-hooks/exhaustive-deps
 	useEffect(() => {
 		// Redraw if the polyline moved or the state changed
 		if (S.isJust(polyline)) {

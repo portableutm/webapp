@@ -59,7 +59,7 @@ const hasToRemoveOldest = (path) => path.length > MAX_POINTS_HISTORY;
  */
 function DroneMarker({id, position, heading, altitude, risk, onClick}) {
 	const [marker, setMarker] = useState(S.Nothing);
-	const [state, ] = useAdesState();
+	const [state, ] = useAdesState(state => state.map, actions => actions);
 	const [polyline, setPolyline] = useState(S.Nothing);
 	const [path, setPath] = useState([]);
 	const [timer, setTimer] = useState(null);
@@ -86,7 +86,7 @@ function DroneMarker({id, position, heading, altitude, risk, onClick}) {
 			L.DomEvent.stopPropagation(evt);
 		});
 
-		const map = state.map.mapRef.current;
+		const map = state.mapRef.current;
 
 		marker.addTo(map);
 		hasToDrawTrail && polyline.addTo(map);
@@ -98,7 +98,7 @@ function DroneMarker({id, position, heading, altitude, risk, onClick}) {
 			// Clean when Component unloaded
 			marker.remove();
 		};
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [state.mapRef]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		if (!S.isNothing(marker)) {

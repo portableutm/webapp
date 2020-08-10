@@ -222,7 +222,45 @@ th, td {
     pointer-events: auto;
 }
 
+.tooltipAltitudeRFV {
+    opacity: 1 !important;
+    border: none !important;
+    font-size: 20px !important;
+    font-weight: bolder;
+    color: #ffffff !important;
+    text-shadow: 0 0 4px black;
+    box-shadow: none !important;
+    background-color: rgba(255,11,0,0.0) !important;
+    transition: all 0.5s;
+    overflow: visible;
+}
 
+.tooltipAltitudeRFV:hover {
+    color: rgb(26, 11, 9) !important;
+    text-shadow: 0 0 4px #ff0000;
+}
+
+.tooltipAltitudeUVR {
+    opacity: 1 !important;
+    border: none !important;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 16px !important;
+    font-weight: bold;
+    color: #ff8400 !important;
+    text-shadow:
+        1px 1px 0 #ffffff,
+        -1px -1px 0 #ffffff;
+
+    box-shadow: none !important;
+    background-color: rgba(255,11,0,0.0) !important;
+    transition: all 0.5s;
+    overflow: visible;
+}
+
+.tooltipAltitudeUVR:hover {
+    color: rgb(26, 11, 9) !important;
+    text-shadow: 0 0 4px #ff7700;
+}
 
 .dialogify {
     height: 100%;

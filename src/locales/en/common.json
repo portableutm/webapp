@@ -2,7 +2,8 @@
   "hamburger": {
     "map": "Realtime Map",
     "dashboard": "Dashboard",
-    "createnewop": "Create new operation"
+    "createnewop": "Create new operation",
+    "createnewuvr": "Create new UVR"
   },
   "notifications": {
     "operation_gone_rogue": {

@@ -24,13 +24,22 @@ const initializeLeaflet = () => {
 			position: 'topright'
 		})
 		.addTo(map.current);*/
-	return L.map('adesMapLeaflet', {
-		center: [0, 0],
-		zoom: 13,
+	const map = L.map('adesMapLeaflet', {
+		center: [-34.89719516961728, -56.1633110046386],
+		zoom: 11,
 		zoomControl: false,
 		worldCopyJump: true,
 		layers: [leafletLayer]
 	});
+	map.on('zoomend', function() {
+		console.log('MAPZOOM', map.getZoom());
+		if (map.getZoom() > 12) {
+			map.getPane('tooltipPane').style.visibility = 'visible';
+		} else {
+			map.getPane('tooltipPane').style.visibility = 'hidden';
+		}
+	});
+	return map;
 };
 // TODO: Add copyright information about marker icon
 //  <a target="_blank" href="https://icons8.com/icons/set/fighter-jet">Fighter Jet icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>

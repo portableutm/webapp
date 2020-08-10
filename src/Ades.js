@@ -68,17 +68,7 @@ import Web from './dashboard/config/Web';
 	);
 }*/
 
-/* Redfire */
-import { createClient, Provider } from 'urql';
 
-const client = createClient({
-	url: 'https://bluewateruss.herokuapp.com/v1/graphql',
-	fetchOptions: () => {
-		return {
-			headers: { 'X-Hasura-Admin-Secret': 'changeMe' }
-		};
-	}
-});
 
 const MasterPage = ({leftIsExpanded = false, children}) => {
 	const [state, ] = useAdesState();
@@ -103,7 +93,7 @@ const MasterPage = ({leftIsExpanded = false, children}) => {
 	}, [time]); */
 
 	return(
-		<Provider value={client}>
+		<>
 			{state.debug &&
 			<div className='timeLeftOverlay'>
 				Expires at {expDate.toLocaleTimeString()}
@@ -123,7 +113,7 @@ const MasterPage = ({leftIsExpanded = false, children}) => {
 					</div>
 				</Popover>
 			</ActionArea>
-		</Provider>
+		</>
 	);
 };
 

@@ -14,7 +14,7 @@ import useAdesState from '../../state/AdesState';
  * @return {null}
  */
 function UASVolumeReservation({latlngs, uvrInfo}) {
-	const [state, ] = useAdesState();
+	const [state, ] = useAdesState(state => state.map, actions => actions);
 	const [polygon, setPolygon] = useState(S.Nothing);
 
 	const startDate = (new Date(uvrInfo.effective_time_begin)).toLocaleString();
@@ -30,6 +30,7 @@ function UASVolumeReservation({latlngs, uvrInfo}) {
 			{
 				color: '#ffae11',
 				weight: 2,
+				dashArray: 4,
 				fillColor: '#ffc061',
 				fillOpacity: 0.3,
 				lineJoin: 'miter'
@@ -44,7 +45,7 @@ function UASVolumeReservation({latlngs, uvrInfo}) {
 		);
 
 		// Only use the popup if there's content for the Popup that happens when clicking the
-		const map = state.map.mapRef.current;
+		const map = state.mapRef.current;
 		polygon.addTo(map);
 
 		setPolygon(S.Just(polygon));
@@ -52,7 +53,7 @@ function UASVolumeReservation({latlngs, uvrInfo}) {
 			// Clean-up when unloading component
 			polygon.remove();
 		};
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [state.mapRef]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		// Redraw if the polygon moved or the state changed
@@ -62,7 +63,7 @@ function UASVolumeReservation({latlngs, uvrInfo}) {
 	}, [latlngs]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		const map = state.map.mapRef.current;
+		const map = state.mapRef.current;
 		if (map != null) {
 			if (S.isJust(polygon)) {
 				// Add svg pattern
@@ -90,7 +91,7 @@ function UASVolumeReservation({latlngs, uvrInfo}) {
 				textPath.setAttribute('href', '#'+name.replace(/\s/g, ''));
 				textPath.setAttribute('side', 'right');
 				const textContent = document.createTextNode(minAltitude + 'M/' + maxAltitude + 'M AGL - ' + name);
-				textPath.appendChild(textContent);
+				//textPath.appendChild(textContent);
 				text.appendChild(textPath);
 
 				const ovp = map.getPanes().overlayPane.firstChild;
@@ -102,12 +103,22 @@ function UASVolumeReservation({latlngs, uvrInfo}) {
 					ovp.insertBefore(defs, ovp.firstChild);
 				}
 
-
 				fM(polygon)._path.setAttribute('id', name.replace(/\s/g, ''));
-				fM(polygon)._path.setAttribute('fill', 'url(#uvr)');
+				//fM(polygon)._path.setAttribute('fill', 'url(#uvr)');
+
+				const minAltitudeText = minAltitude > 0 ? minAltitude : 'GND';
+				fM(polygon).bindTooltip(
+					minAltitudeText + '/' + maxAltitude + 'm',
+					{
+						direction: 'center',
+						permanent: true,
+						interactive: true,
+						className: 'tooltipAltitudeUVR'
+					}
+				).openTooltip();
 			}
 		}
-	}, [state.map.mapRef.current, polygon]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [state.mapRef, polygon]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return null;
 }

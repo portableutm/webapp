@@ -1,10 +1,12 @@
 import {useEffect, useState} from 'react';
 import S from 'sanctuary';
+import _ from 'lodash';
 
 /* Internal */
 import useAdesState from '../../state/AdesState';
 import {fM} from '../../libs/SaferSanctuary';
 import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom';
 
 const editorMode = {
 	OPERATION: {
@@ -20,6 +22,7 @@ const editorMode = {
 const DEFAULT_UVR_VALIDITY = 2; // 2 hours
 
 const defaultNewOperation = {
+	_type: 'OPERATION',
 	name: 'Untitled',
 	owner: 'admin',
 	contact: '',
@@ -85,6 +88,7 @@ const defaultNewOperation = {
 	negotiation_agreements: []
 };
 const defaultNewUVR = {
+	_type: 'UVR',
 	actual_time_end: null,
 	cause: 'SECURITY',
 	effective_time_begin: new Date(),
@@ -95,8 +99,8 @@ const defaultNewUVR = {
 	},
 	max_altitude: '50',
 	min_altitude: '0',
-	permitted_uas: ['PART_107'],
-	reason: 'uasVolumeReservation.REASON',
+	permitted_uas: [],
+	reason: 'Unknown',
 	required_support: ['ENHANCED_SAFE_LANDING'],
 	type: 'DYNAMIC_RESTRICTION',
 	uss_name: null
@@ -109,17 +113,25 @@ function useEditorLogic(mode = editorMode.UNKNOWN, currentInfo = null) {
 	const { t } = useTranslation('map');
 	const [state, actions] = useAdesState(state => state.map, actions => actions);
 	const [mbInfo, setMbInfo] = useState(S.Nothing);
+	const [clickListener, setClickListener] = useState(null);
+	const history = useHistory();
+
+	const isEditingOperation = S.isJust(mbInfo) && fM(mbInfo)._type === 'OPERATION';
+	const isEditingUvr = S.isJust(mbInfo) && fM(mbInfo)._type === 'UVR';
 
 	const setInfo = (partialOrCompleteInfo) =>
-		setMbInfo(oldInfo => S.Just({...fM(oldInfo), ...partialOrCompleteInfo}));
+		setMbInfo(mbOldInfo => {
+			const oldInfo = _.cloneDeep(fM(mbOldInfo));
+			return S.Just({...oldInfo, ...partialOrCompleteInfo});
+		});
 	const setVolumeInfo = (volumeId, partialOrCompleteInfo) =>
 		setMbInfo(mbOldInfo => {
-			const currentInfo = fM(mbOldInfo);
-			const volumes =  [...currentInfo.operation_volumes];
+			const oldInfo = _.cloneDeep(fM(mbOldInfo));
+			const volumes =  [...oldInfo.operation_volumes];
 			volumes[volumeId] = {...volumes[volumeId],
 				...partialOrCompleteInfo};
 			return S.Just({
-				...fM(mbOldInfo),
+				...oldInfo,
 				operation_volumes: volumes
 			});
 		});
@@ -135,6 +147,21 @@ function useEditorLogic(mode = editorMode.UNKNOWN, currentInfo = null) {
 		newInfo.geography.coordinates = fnPolygon(newInfo.geography.coordinates);
 		return S.Just(newInfo);
 	});
+	const removePointFromPolygon = (index) => {
+		if (mode === editorMode.OPERATION.NEW || mode === editorMode.OPERATION.EXISTING) {
+			setCoordinatesOfVolume(0, oldCoordinates => {
+				const newCoordinatesLeft = oldCoordinates[0].slice(0, index);
+				const newCoordinatesRight = oldCoordinates[0].slice(index+1);
+				return [newCoordinatesLeft.concat(newCoordinatesRight)];
+			});
+		} else if (mode === editorMode.UVR.NEW || mode === editorMode.UVR.EXISTING) {
+			setCoordinatesOfUVR(oldCoordinates => {
+				const newCoordinatesLeft = oldCoordinates[0].slice(0, index);
+				const newCoordinatesRight = oldCoordinates[0].slice(index+1);
+				return [newCoordinatesLeft.concat(newCoordinatesRight)];
+			});
+		}
+	};
 
 	const save = (savingFinishedCallback) => {
 		actions.map.disableMapOnClick();
@@ -161,58 +188,61 @@ function useEditorLogic(mode = editorMode.UNKNOWN, currentInfo = null) {
 					}
 				};
 			});
-		} else if (mode === editorMode.UVR.NEW || mode === editorMode.UVR.EXISTING) {
-			const uvrCoordsSwapped = info.geography.coordinates[0].map(coordLatLng => [coordLatLng[1], coordLatLng[0]]);
-			info.geography = {
-				...info.geography,
-				coordinates: [uvrCoordsSwapped]
+			const callback = () => {
+				savingFinishedCallback();
+				history.push('/dashboard/operations');
 			};
+			const errorCallback = () => {
+				savingFinishedCallback();
+			};
+			actions.operations.post(info, callback, errorCallback);
+		} else if (mode === editorMode.UVR.NEW || mode === editorMode.UVR.EXISTING) {
+			const callback = () => {
+				savingFinishedCallback();
+				history.push('/');
+			};
+			const errorCallback = () => {
+				savingFinishedCallback();
+			};
+			actions.uvr.post(info, callback, errorCallback);
 		}
-		const callback = () => {
-			savingFinishedCallback();
-			//history.push('/dashboard/operations');
-		};
-		const errorCallback = () => {
-			savingFinishedCallback();
-		};
-		console.log('NEWINFO', info);
-		//actions.operations.post(info, callback, errorCallback);
 	};
 
 	useEffect(() => {
 		/* Load appropiate information into the editor according to the mode being used */
-		if (mode !== editorMode.UNKNOWN) {
-			switch (mode) {
-				case editorMode.OPERATION.NEW: {
-					setInfo(defaultNewOperation);
-					break;
-				}
-				case editorMode.OPERATION.EXISTING: {
-					const operationVolume = {
-						...currentInfo.operation_volumes[0],
-						effective_time_begin: new Date(currentInfo.operation_volumes[0].effective_time_begin),
-						effective_time_end: new Date(currentInfo.operation_volumes[0].effective_time_end)
-					};
-					// This only works if there's only one opeseration volume... iterate over operation volumes
-					// if there is more than one
-					const info = {
-						...currentInfo,
-						owner: currentInfo.owner.username,
-						operation_volumes: [operationVolume]
-					};
-					setInfo(info);
-					break;
-				}
-				case editorMode.UVR.NEW: {
-					setInfo(defaultNewUVR);
-					break;
-				}
-				default: {
-					break;
-				}
+		switch (mode) {
+			case editorMode.OPERATION.NEW: {
+				setInfo(defaultNewOperation);
+				break;
+			}
+			case editorMode.OPERATION.EXISTING: {
+				const operationVolume = {
+					...currentInfo.operation_volumes[0],
+					effective_time_begin: new Date(currentInfo.operation_volumes[0].effective_time_begin),
+					effective_time_end: new Date(currentInfo.operation_volumes[0].effective_time_end)
+				};
+				// This only works if there's only one opeseration volume... iterate over operation volumes
+				// if there is more than one
+				const info = {
+					...currentInfo,
+					owner: currentInfo.owner.username,
+					operation_volumes: [operationVolume],
+					_type: 'OPERATION'
+				};
+				setInfo(info);
+				break;
+			}
+			case editorMode.UVR.NEW: {
+				console.log('defaultNewUvr', defaultNewUVR.geography);
+				setInfo(defaultNewUVR);
+				break;
+			}
+			default: {
+				setMbInfo(S.Nothing);
+				break;
 			}
 		}
-	}, [mode]);
+	}, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		/* Map initialized - clicking on map should draw a polygon for the Operation or UVR */
@@ -234,26 +264,26 @@ function useEditorLogic(mode = editorMode.UNKNOWN, currentInfo = null) {
 				}
 				actions.warning.close();
 			};
-			actions.map.setMapOnClick(drawPolygonPointOnClick);
-			setInfo(info => {
-				const newInfo = {...info};
+			setMbInfo(mbOldInfo => {
+				const newInfo = _.cloneDeep(fM(mbOldInfo));
 				if (mode === editorMode.OPERATION.NEW) {
 					newInfo.operation_volumes[0].effective_time_begin = new Date();
 					newInfo.operation_volumes[0].effective_time_end = new Date();
-					newInfo.operation_volumes[0].effective_time_end.setUTCHours(newInfo.effective_time_end.getUTCHours() + DEFAULT_UVR_VALIDITY);
+					newInfo.operation_volumes[0].effective_time_end.setUTCHours(newInfo.operation_volumes[0].effective_time_end.getUTCHours() + DEFAULT_UVR_VALIDITY);
 				} else if (mode === editorMode.UVR.NEW) {
 					newInfo.effective_time_begin = new Date();
 					newInfo.effective_time_end = new Date();
 					newInfo.effective_time_end.setUTCHours(newInfo.effective_time_end.getUTCHours() + DEFAULT_UVR_VALIDITY);
 				}
-				return newInfo;
+				return S.Just(newInfo);
 			});
-		} else if (!state.isInitialized) {
-			actions.map.disableMapOnClick();
+			setClickListener(actions.map.setMapOnClick(drawPolygonPointOnClick));
+		} else {
+			actions.map.disableMapOnClick(clickListener);
 		}
-	}, [state.isInitialized]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [state.isInitialized, mode]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	return [mbInfo, {setInfo, setVolumeInfo, setCoordinatesOfUVR, setCoordinatesOfVolume}, save];
+	return [mbInfo, {setInfo, setVolumeInfo, setCoordinatesOfUVR, setCoordinatesOfVolume, removePointFromPolygon}, save, {isEditingOperation, isEditingUvr}];
 }
 
 export {useEditorLogic as default, editorMode};

@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 
 import {Button, FormGroup, InputGroup} from '@blueprintjs/core';
 
-import PropTypes from 'prop-types';
-import S, {Maybe} from 'sanctuary';
+import S from 'sanctuary';
 import {useTranslation} from 'react-i18next';
 import SidebarButton from '../SidebarButton';
 import OperationVolumeInfoEditor from './OperationVolumeInfoEditor';
@@ -157,9 +156,5 @@ function OperationInfoEditor({maybeInfo, setters, saveOperation}) {
 		return null;
 	}
 }
-
-OperationInfoEditor.propTypes = {
-	maybeInfo: PropTypes.instanceOf(Maybe)
-};
 
 export default OperationInfoEditor;

@@ -1,5 +1,4 @@
 import {print} from '../state/AdesState';
-import L from 'leaflet';
 
 export const setCorners = (store, cornerNW, cornerSE) => {
 	//console.log('MapState: (BOUND) ', JSON.stringify(cornerNW), JSON.stringify(cornerSE));
@@ -26,30 +25,37 @@ export const setMapRef = (store, reference) => {
 
 export const setMapOnClick = (store, fn) => {
 	print(store.state, false, 'MapState onClick', fn);
+	let clickListener = null;
 	if (store.state.map.mapRef) {
-		store.state.map.mapRef.current.getContainer().addEventListener('click', (evt) => {
-			if (evt.currentTarget !== evt.target) {
-				if (store.state.map.mapRef.current.listens('contextmenu')) {
-					enableClickSelection(store, evt.clientX, evt.clientY);
+		clickListener = (evt) => {
+			if (evt != null) {
+				if (evt.currentTarget !== evt.target) {
+					if (store.state.map.mapRef.current.listens('contextmenu')) {
+						enableClickSelection(store, evt.clientX, evt.clientY);
+					}
 				}
 			}
-		}, {capture: true});
+		};
+		store.state.map.mapRef.current.getContainer().addEventListener('click', clickListener, {capture: true});
 		store.state.map.mapRef.current.on('click', (evt) => {
 			executeOrAddToClickSelection(store, 'MAP: add new point', () => fn(evt), true);
 		});
 		store.state.map.mapRef.current.on('contextmenu', (evt) => {
 			fn(evt);
 		});
-		store.state.map.mapRef.current.on('drag', (evt) => {
+		store.state.map.mapRef.current.on('drag', () => {
 			disableClickSelection(store);
 		});
 	}
+	return clickListener;
 };
 
-export const disableMapOnClick = (store) => {
+export const disableMapOnClick = (store, clickListener) => {
 	print(store.state, false, 'MapState disable onClick');
 	if (store.state.map.mapRef) {
+		if (clickListener !== null) store.state.map.mapRef.current.getContainer().removeEventListener('click', clickListener, {capture: true});
 		store.state.map.mapRef.current.off('click');
+		store.state.map.mapRef.current.off('drag');
 		store.state.map.mapRef.current.off('contextmenu');
 	}
 };
@@ -84,22 +90,40 @@ export const disableClickSelection = (store) => {
 
 export const executeOrAddToClickSelection = (store, label, fn, isListComplete = false) => {
 	if (store.state.map.clickSelection.isSelecting) {
-		const listFns = store.state.map.clickSelection.listFns;
-		const fnAndHide = () => {
-			fn();
-			disableClickSelection(store);
-		};
-		listFns.push({label, fn: fnAndHide});
-		store.setState({
-			map: {
-				...store.state.map, clickSelection: {
-					...store.state.map.clickSelection,
-					isSelecting: true,
-					listIsComplete: isListComplete, // true when click reaches parent - topmost of bubbling
-					listFns: listFns
-				},
+		if (!store.state.map.clickSelection.listIsComplete) {
+			const listFns = store.state.map.clickSelection.listFns;
+			if (!isListComplete || (isListComplete && listFns.length !== 0)) {
+				const fnAndHide = () => {
+					fn();
+					disableClickSelection(store);
+				};
+				listFns.push({label, fn: fnAndHide});
+				store.setState({
+					map: {
+						...store.state.map, clickSelection: {
+							...store.state.map.clickSelection,
+							isSelecting: true,
+							listIsComplete: isListComplete, // true when click reaches parent - topmost of bubbling
+							listFns: listFns
+						},
+					}
+				});
+			} else {
+				store.setState({
+					map: {
+						...store.state.map, clickSelection: {
+							...store.state.map.clickSelection,
+							isSelecting: false,
+							listIsComplete: false, // true when click reaches parent - topmost of bubbling
+							listFns: []
+						},
+					}
+				});
+				fn();
 			}
-		});
+		} else {
+			disableClickSelection(store);
+		}
 	} else {
 		fn();
 	}

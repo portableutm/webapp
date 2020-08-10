@@ -14,16 +14,21 @@ export const add = (store, data) => {
 				coordinates: {lat: data.location.coordinates[1], lng: data.location.coordinates[0]}
 			};
 
-			const pilotLocationLatLng = {
-				...data.controller_location,
-				coordinates: {lat: data.controller_location.coordinates[1], lng: data.controller_location.coordinates[0]}
-			};
+			const pilotLocationLatLng =
+				data.controller_location ?
+					S.Just({
+						...data.controller_location,
+						coordinates: {
+							lat: data.controller_location.coordinates[1],
+							lng: data.controller_location.coordinates[0]
+						}
+					}) : S.Nothing;
 
 			const dataLatLng = {...data, location: locationLatLng, controller_location: pilotLocationLatLng};
 			store.setState({
 				drones: {
 					updated: Date.now(),
-					list: S.insert (dataLatLng.gufi) (dataLatLng) (drones)
+					list: S.insert(dataLatLng.gufi)(dataLatLng)(drones)
 				}
 			}); // Creates a new StrMap if it doesn't exist, if not it inserts new position data into it.
 			release();

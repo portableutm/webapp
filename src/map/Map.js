@@ -23,7 +23,6 @@ import OperationInfoEditor from './editor/OperationInfoEditor';
 import RestrictedFlightVolume from './elements/RestrictedFlightVolume';
 import SelectedOperation from './viewer/SelectedOperation';
 import SimulatorPanel from './actions/SimulatorPanel';
-import EditorPanel from './actions/EditorPanel';
 import OperationEditMarker from './elements/OperationEditMarker';
 import SelectedDrone from './viewer/SelectedDrone';
 import {Button, Dialog, Intent} from '@blueprintjs/core';
@@ -43,10 +42,9 @@ import RightArea from '../layout/RightArea';
 
 import Polyline from './elements/Polyline';
 import {fM} from '../libs/SaferSanctuary';
-import { useParams } from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import UASVolumeReservation from './elements/UASVolumeReservation';
-
-
+import UvrInfoEditor from './editor/UvrInfoEditor';
 
 /* Main function */
 function Map({mode}) {
@@ -59,47 +57,40 @@ function Map({mode}) {
 	const [drones, setDrones] = useState([]);
 
 	/* Route params */
-	const { editId } = useParams();
+	const {editId} = useParams();
 
 	/* Editor state */
-	let isEditor = false;
-	let isEditingOperation = false;
-	let isEditingUvr = false;
-	let modeOfEditor = editorMode.UNKNOWN;
-	let existingInfo = null;
-	switch (fM(mode)) {
-		case 'new-op': {
-			isEditor = true;
-			isEditingOperation = true;
-			modeOfEditor = editorMode.OPERATION.NEW;
-			break;
-		}
-		case 'edit-op': {
-			isEditor = true;
-			isEditingOperation = true;
-			modeOfEditor = editorMode.OPERATION.EXISTING;
-			existingInfo = fM(S.value(editId)(state.operations.list));
-			break;
-		}
-		case 'new-uvr': {
-			isEditor = true;
-			isEditingUvr = true;
-			modeOfEditor = editorMode.UVR.NEW;
-			break;
-		}
-		case 'edit-uvr': {
-			isEditor = true;
-			isEditingUvr = true;
-			modeOfEditor = editorMode.UVR.EXISTING;
-			existingInfo = fM(S.value(editId)(state.uvr.list));
-			break;
-		}
-	}
-	const [mbInfo, infoSetters, save] = useEditorLogic(modeOfEditor, existingInfo);
-
+	const [modeOfEditor, setModeOfEditor] = useState(editorMode.UNKNOWN);
+	const [existingInfo, setExistingInfo] = useState(null);
+	const [mbInfo, infoSetters, save, {isEditingOperation, isEditingUvr}] = useEditorLogic(modeOfEditor, existingInfo);
 	const [, setEditingOperationVolume] = useState(S.Maybe.Nothing);
 
-
+	useEffect(() => {
+		switch (fM(mode)) {
+			case 'new-op': {
+				setModeOfEditor(editorMode.OPERATION.NEW);
+				break;
+			}
+			case 'edit-op': {
+				setModeOfEditor(editorMode.OPERATION.EXISTING);
+				setExistingInfo(fM(S.value(editId)(state.operations.list)));
+				break;
+			}
+			case 'new-uvr': {
+				setModeOfEditor(editorMode.UVR.NEW);
+				break;
+			}
+			case 'edit-uvr': {
+				setModeOfEditor(editorMode.UVR.EXISTING);
+				setExistingInfo(fM(S.value(editId)(state.uvr.list)));
+				break;
+			}
+			default: {
+				setModeOfEditor(editorMode.UNKNOWN);
+				break;
+			}
+		}
+	}, [fM(mode)]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/* Viewer state */
 	const [rfvs, setRfvs] = useRfvLogic();
@@ -110,7 +101,6 @@ function Map({mode}) {
 	/* Simulator state */
 	const [simPaths, setSimPath, simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic(fM(state.auth.token));
 	const isSimulator = (S.isJust(mode) && fM(mode) === 'simulator');
-
 
 	/* 	Drone related logic	 */
 	useEffect(() => {
@@ -167,7 +157,8 @@ function Map({mode}) {
 	const showStandardRightAreaPanels =
 		S.isNothing(currentSelectedOperation) &&
 		S.isNothing(currentSelectedDrone) &&
-		!isEditor;
+		!isEditingOperation &&
+		!isEditingUvr;
 
 	return (
 		<>
@@ -197,33 +188,37 @@ function Map({mode}) {
 						}
 					</Button>
 				</Dialog>
-				{	state.map.clickSelection.isSelecting &&
-					state.map.clickSelection.listIsComplete &&
-					<div
-						className="mapOnClickChooser animated fadeIn faster"
-						style={{left: state.map.clickSelection.x, top: state.map.clickSelection.y}}
-					>
-						Click on...
-						{ state.map.clickSelection.listFns.map(labelFn => {
-							return (
-								<Button
-									key={labelFn.label}
-									className="mapOnClickChooserButton"
-									intent={Intent.PRIMARY}
-									onClick={() => labelFn.fn()}
-								>
-									{labelFn.label}
-								</Button>);
-						})}
-					</div>
+				{state.map.clickSelection.isSelecting &&
+				state.map.clickSelection.listIsComplete &&
+				<div
+					className="mapOnClickChooser animated fadeIn faster"
+					style={{left: state.map.clickSelection.x, top: state.map.clickSelection.y}}
+				>
+					Click on...
+					{state.map.clickSelection.listFns.map(labelFn => {
+						return (
+							<Button
+								key={labelFn.label}
+								className="mapOnClickChooserButton"
+								intent={Intent.PRIMARY}
+								onClick={() => labelFn.fn()}
+							>
+								{labelFn.label}
+							</Button>);
+					})}
+				</div>
 				}
 				{/* Live map */}
 				{drones.map((drone) =>
-					<>
+					<React.Fragment
+						key={'fragm' + drone.gufi}
+					>
+						{S.isJust(drone.controller_location) &&
 						<ControllerLocationMarker
 							key={'CL' + drone.gufi}
-							position={drone.controller_location.coordinates}
+							position={fM(drone.controller_location).coordinates}
 						/>
+						}
 						<DroneMarker
 							key={drone.gufi}
 							id={drone.gufi}
@@ -233,7 +228,7 @@ function Map({mode}) {
 							risk={drone.risk}
 							onClick={() => setSelectedDrone(S.Just(drone.gufi))}
 						/>
-					</>
+					</React.Fragment>
 				)}
 				{opsFiltered.map((op) => {
 					return op.operation_volumes.map((volume) => {
@@ -267,7 +262,7 @@ function Map({mode}) {
 								/>
 							);
 						} else {
-							return <></>;
+							return null;
 						}
 					})
 					(S.values(state.rfv.list))
@@ -288,7 +283,7 @@ function Map({mode}) {
 
 
 				{/* Operation creation or edition */}
-				{isEditor && isEditingOperation && S.isJust(mbInfo) && fM(mbInfo).operation_volumes[0].operation_geography.coordinates.map((polygon, index) => {
+				{isEditingOperation && S.isJust(mbInfo) && fM(mbInfo).operation_volumes[0].operation_geography.coordinates.map((polygon, index) => {
 					return (
 						<OperationPolygon
 							id={'polygon' + index}
@@ -300,12 +295,12 @@ function Map({mode}) {
 						/>
 					);
 				})}
-				{isEditor && isEditingOperation && S.isJust(mbInfo) && fM(mbInfo).operation_volumes[0].operation_geography.coordinates.map((polygon, index) => {
+				{isEditingOperation && S.isJust(mbInfo) && fM(mbInfo).operation_volumes[0].operation_geography.coordinates.map((polygon, index) => {
 					return polygon.map((latlng, index2) => {
 						return (
 							<OperationEditMarker
 								id={'marker' + index2 + 'p' + index}
-								key={'marker' + index2 + 'p' + index}
+								key={'marker' + index2 + 'p' + index + 'l' + polygon.length}
 								onDrag={/* istanbul ignore next */ latlng => {
 									infoSetters.setCoordinatesOfVolume(0, coords => {
 										/* Dragging a marker updates the saved polygon coordinates */
@@ -315,7 +310,48 @@ function Map({mode}) {
 											return newCoords;
 										}
 									});
-									
+
+								}}
+								onClick={/* istanbul ignore next */ () => {
+									infoSetters.removePointFromPolygon(index2);
+								}}
+								latlng={latlng}
+							/>
+						);
+					});
+				})}
+				{/* UVR Edition or creation */}
+				{isEditingUvr && S.isJust(mbInfo) && fM(mbInfo).geography.coordinates.map((polygon, index) => {
+					return (
+						<OperationPolygon
+							id={'polygon' + index}
+							key={'polygon' + index}
+							latlngs={Array.from(polygon)}
+							popup={'Volume of operation in construction'}
+							operationInfo={{gufi: '', flight_comments: '** Editing **', state: '**EDITOR'}}
+							onClick={() => setEditingOperationVolume(S.Maybe.Just(index))}
+						/>
+					);
+				})}
+				{isEditingUvr && S.isJust(mbInfo) && fM(mbInfo).geography.coordinates.map((polygon, index) => {
+					return polygon.map((latlng, index2) => {
+						return (
+							<OperationEditMarker
+								id={'marker' + index2 + 'p' + index}
+								key={'marker' + index2 + 'p' + index + 'l' + polygon.length}
+								onDrag={/* istanbul ignore next */ latlng => {
+									infoSetters.setCoordinatesOfUVR(coords => {
+										/* Dragging a marker updates the saved polygon coordinates */
+										if (coords.length > 0) {
+											const newCoords = coords.slice();
+											newCoords[index][index2] = [latlng.lat, latlng.lng];
+											return newCoords;
+										}
+									});
+
+								}}
+								onClick={/* istanbul ignore next */ () => {
+									infoSetters.removePointFromPolygon(index2);
 								}}
 								latlng={latlng}
 							/>
@@ -350,7 +386,8 @@ function Map({mode}) {
 					S.isJust(currentSelectedOperation) ||
 					S.isJust(currentSelectedDrone) ||
 					isSimulator ||
-					isEditor
+					isEditingUvr ||
+					isEditingOperation
 				}
 				onClose={() => {
 					setSelectedOperation(S.Nothing);
@@ -380,17 +417,21 @@ function Map({mode}) {
 					disabled={viewId != null}
 				/>
 				}
-				{/* Editor Panels */}
-				{	isEditor &&
-					isEditingOperation &&
-				<>
-					<EditorPanel/>
+				{/* Operation Editor Panels */}
+				{	isEditingOperation &&
 					<OperationInfoEditor
 						maybeInfo={mbInfo}
 						setters={infoSetters}
 						saveOperation={save}
 					/>
-				</>
+				}
+				{/* UVR Editor Panels */}
+				{	isEditingUvr &&
+					<UvrInfoEditor
+						maybeInfo={mbInfo}
+						setters={infoSetters}
+						saveUvr={save}
+					/>
 				}
 				{/* Simulator panels*/}
 				{isSimulator &&

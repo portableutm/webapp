@@ -75,7 +75,7 @@ export const post = (store, operation, callback, errorCallback) => {
 		.then(result => {
 			//addOperations(store, result.data);
 			// TODO: Don't ask the server for the operations...
-			store.actions.operations.fetch(store);
+			fetch(store);
 			callback && callback();
 		})
 		.catch(error => {

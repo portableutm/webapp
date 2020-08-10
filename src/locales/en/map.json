@@ -40,6 +40,9 @@
     "operation": {
       "complete": "Editing information of operation"
     },
+    "uvr": {
+      "complete": "Editing information of UVR"
+    },
     "completesteps": "Complete the steps to define a new operation.",
     "definevolume": "Click on the map to define a polygon.",
     "defineoperationinfo": "Complete the data required.",

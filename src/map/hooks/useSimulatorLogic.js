@@ -36,7 +36,7 @@ function UseSimulatorLogic(token) {
 	const fly = (ratio) => {
 		paths.forEach((path, index) => {
 			const map = state.map.mapRef.current;
-			const point = L.GeometryUtil.interpolateOnLine(map.current, path, ratio);
+			const point = L.GeometryUtil.interpolateOnLine(map, path, ratio);
 			const nextPointIndex = point.predecessor < path.length - 1 ? point.predecessor + 1: 0;
 			const nextPoint = {lat: path[nextPointIndex][0], lng: path[nextPointIndex][1]};
 			const heading = L.GeometryUtil.bearing(point.latLng, nextPoint);
@@ -52,7 +52,7 @@ function UseSimulatorLogic(token) {
 				},
 				'heading': parseInt(''+ heading),
 				'time_sent': '2019-12-11T19:59:10.000Z',
-				'gufi': gufis[index]
+				'gufi': gufis[index%4]
 			};
 			console.log('POSITION', position);
 			A.post(state.api + 'position', position, {headers: { auth: token }})
@@ -84,10 +84,15 @@ function UseSimulatorLogic(token) {
 	};
 
 	useEffect(() => {
+		console.log('PATHS', paths);
+	}, [paths]);
+
+	useEffect(() => {
 		if (droneCurrentlyAdding < 0) {
 			// When Map click should do nothing
 			actions.map.disableMapOnClick();
 		} else {
+			actions.map.disableMapOnClick();
 			actions.map.setMapOnClick(event => {
 				const {latlng} = event;
 				setPath(latlng);

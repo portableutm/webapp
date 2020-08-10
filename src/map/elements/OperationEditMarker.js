@@ -15,7 +15,7 @@ const EDIT_POLYGON_ICON = L.icon({
 /**
  * @return {null}
  */
-function OperationEditMarker({latlng, onDrag, index }) {
+function OperationEditMarker({latlng, onDrag, index, onClick}) {
 	//const [marker, setMarker] = useState(S.Nothing);
 	const [state,] = useAdesState();
 
@@ -38,6 +38,10 @@ function OperationEditMarker({latlng, onDrag, index }) {
 			});
 		}
 		marker.on('drag', (evt) => onDrag(evt.latlng));
+		marker.on('click', (evt) => {
+			onClick();
+			L.DomEvent.stopPropagation(evt);
+		});
 		//marker.on('dragend', (evt) => onDragEnd(evt));
 		//setMarker(S.Just(marker));
 		return () => {

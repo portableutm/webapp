@@ -26,11 +26,23 @@
     "free_text": "Free text",
     "state": "State"
   },
+  "uvr": {
+    "plural_generic": "UAS Volume Reservations",
+    "singular_generic": "UAS Volume Reservation (UVR)",
+    "reason": "Reason for the reservation (name)",
+    "min_altitude": "Minimum altitude (in meters)",
+    "max_altitude": "Maximum altitude (in meters)",
+    "effective_time_begin": "Begins at",
+    "effective_time_begin_description": "Earliest time the UVR will be active.",
+    "effective_time_end": "Ends at",
+    "effective_time_end_description": "Latest time the UVR will be active."
+  },
   "positions": {
     "latitude": "Latitude",
     "longitude": "Longitude",
     "altitude": "Altitude",
-    "heading": "Heading (-180 | 180)"
+    "heading": "Heading (-180 | 180)",
+    "comments": "Comments"
   },
   "vehicles": {
     "plural_generic": "Vehicles",

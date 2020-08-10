@@ -18,6 +18,7 @@
     "leaflet-geometryutil": "^0.9.3",
     "leaflet-hotline": "^0.4.0",
     "leaflet-rotatedmarker": "^0.2.0",
+    "lodash": "^4.17.19",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-apexcharts": "^1.3.7",

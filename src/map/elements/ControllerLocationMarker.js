@@ -25,7 +25,7 @@ const PILOT_ICON = L.icon({
  */
 function ControllerLocationMarker({position}) {
 	const [, setMarker] = useState(S.Nothing);
-	const [state, ] = useAdesState();
+	const [state, ] = useAdesState(state => state.map, actions => actions);
 
 	useEffect(() => {
 		// Create marker, add it to map. Remove from map on unmount
@@ -33,7 +33,7 @@ function ControllerLocationMarker({position}) {
 			icon: PILOT_ICON
 		});
 
-		marker.addTo(state.map.mapRef.current);
+		marker.addTo(state.mapRef.current);
 		// Save initialized values
 		setMarker(S.Just(marker));
 
@@ -41,7 +41,7 @@ function ControllerLocationMarker({position}) {
 			// Clean when Component unloaded
 			marker.remove();
 		};
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [state.mapRef]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return null;
 }

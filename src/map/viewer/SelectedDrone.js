@@ -35,7 +35,8 @@ function SelectedDrone ({gufi}) {
 		[t('positions.latitude'), drone.location.coordinates.lat],
 		[t('positions.longitude'), drone.location.coordinates.lng],
 		[t('positions.altitude'), drone.altitude_gps],
-		[t('positions.heading'), drone.heading]
+		[t('positions.heading'), drone.heading],
+		[t('positions.comments'), drone.comments]
 	];
 
 	return(
