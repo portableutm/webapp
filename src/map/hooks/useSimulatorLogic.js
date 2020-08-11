@@ -31,7 +31,7 @@ function UseSimulatorLogic(token) {
 		return newPaths;
 	});
 
-	const gufis = ['903d458c-0a96-4b72-9626-d8000e70c640', 'ff4b6505-c282-42b1-b013-66f02137f5d5', 'a20ef8d5-506d-4f54-a981-874f6c8bd4de', 'b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63'];
+	const gufis = ['06124238-71c2-44a9-9f09-ca7652df37f3', '42a4516b-8a99-4aaf-9ebf-9aa086545c05', '7f982f0b-303b-4982-9487-1cb463b9dc9f', '1c2662dc-e1b5-4813-a060-66aa0781ae55'];
 
 	const fly = (ratio) => {
 		paths.forEach((path, index) => {
