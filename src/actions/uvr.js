@@ -9,7 +9,7 @@ function addUVR(store, data) {
 	}));
 	const uvrs = S.fromPairs(pairs);
 	print(store.state, false, 'UVRState', uvrs);
-	store.setState({uvr: {updated: Date.now(), list: uvrs}});
+	//store.setState({uvr: {updated: Date.now(), list: uvrs}});
 }
 
 const convertCoordinatesUVR = (uvr) => {

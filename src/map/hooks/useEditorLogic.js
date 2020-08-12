@@ -30,8 +30,6 @@ const defaultNewOperation = {
 	flight_comments: '',
 	volumes_description: 'v0.1',
 	flight_number: Date.now(),
-	submit_time: new Date().toISOString(), // TODO: Proper format for time 2019-12-11T19:59:10Z
-	update_time: new Date().toISOString(),
 	operation_volumes: [
 		{
 			near_structure: false,

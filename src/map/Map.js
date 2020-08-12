@@ -2,14 +2,15 @@ import React, {useState, useEffect, useRef} from 'react';
 
 import '../Ades.css';
 
-/* Leaflet */
+/* Libraries */
 //import L from 'leaflet';
 import L from '../libs/wise-leaflet-pip';
 import '../css/leaflet.css';
 
-/* Sanitization */
 //import PropTypes from 'prop-types';
 import S from 'sanctuary';
+import { observer } from 'mobx-react';
+import { useStore } from 'mobx-store-provider';
 
 /* UI */
 
@@ -45,6 +46,8 @@ import {fM} from '../libs/SaferSanctuary';
 import {useParams} from 'react-router-dom';
 import UASVolumeReservation from './elements/UASVolumeReservation';
 import UvrInfoEditor from './editor/UvrInfoEditor';
+
+
 
 /* Main function */
 function Map({mode}) {
@@ -97,6 +100,7 @@ function Map({mode}) {
 	const [ops, opsFiltered, viewId, filtersSelected, setFiltersSelected, , idsShowing, setIdsShowing] = useOperationFilter();
 	const [currentSelectedOperation, setSelectedOperation] = useState(S.Nothing);
 	const [currentSelectedDrone, setSelectedDrone] = useState(S.Nothing);
+	const opStore = useStore('OperationStore');
 
 	/* Simulator state */
 	const [simPaths, setSimPath, simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic(fM(state.auth.token));
@@ -230,14 +234,14 @@ function Map({mode}) {
 						/>
 					</React.Fragment>
 				)}
-				{opsFiltered.map((op) => {
+				{opStore.shownOperations.map((op) => {
 					return op.operation_volumes.map((volume) => {
 						if (op.gufi !== editId) {
 							return <OperationPolygon
 								key={op.gufi + '#' + volume.id}
 								id={op.gufi + '#' + volume.id}
 								isSelected={op.gufi === fM(currentSelectedOperation)}
-								latlngs={volume.operation_geography.coordinates}
+								latlngs={volume.operation_geography.coordinates[0]}
 								state={op.state}
 								info={op}
 								onClick={() => setSelectedOperation(S.Maybe.Just(op.gufi))}
@@ -453,7 +457,7 @@ function Map({mode}) {
 	mode: PropTypes.oneOf(S.Maybe.Just)
 };*/
 
-export default Map;
+export default observer(Map);
 // Might be useful later:
 // https://github.com/Igor-Vladyka/leaflet.motion
 // https://openmaptiles.com/downloads/europe/

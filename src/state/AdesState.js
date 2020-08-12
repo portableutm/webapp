@@ -94,49 +94,8 @@ const initializer = (store) => {
 const internalActions = {
 	auth: {
 		login: (store, username, password, callback, errorCallback) => {
-			Axios = A.create({
-				baseURL: store.state.api,
-				timeout: 15000,
-				headers: {
-					'Content-Type': 'application/json',
-				}
-			});
-			Axios.interceptors.response.use(function (response) {
-				if (response.headers.token) {
-					store.actions.auth.updateToken(response.headers.token);
-				}
-				return response;
-			}, function (error) {
-				return Promise.reject(error);
-			});
-			const authInfo = JSON.stringify({
-				username: username,
-				password: password
-			});
-			Axios.post('auth/login', authInfo)
-				.then(result => {
-					const token = result.data;
-					store.setState({auth: {...store.state.auth, token: S.Just(token), username: username}});
-					socket = io(store.state.api + '?token=' + token);
 
-					socket.on('new-position', function (info) {
-						const info2 = {...info};
-						//console.log('DroneState: new-position: ', info2);
-						store.actions.drones.add(info2);
-					});
 
-					socket.on('operation-state-change', function (info) {
-						console.log('Operation-state-change', info);
-						store.actions.operations.updateOne(info.gufi, info.state);
-					});
-					socket.connect();
-
-					callback && callback();
-				})
-				.catch(error => {
-					print(store.state, true, 'AuthState', error);
-					errorCallback && error.response && errorCallback(error.response.data);
-				});
 		},
 		info: (store, username, okCallback, errorCallback) => {
 			Axios.get('user/' + username, {headers: {auth: fM(store.state.auth.token)}})

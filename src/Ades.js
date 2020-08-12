@@ -13,6 +13,11 @@ import {
 import S from 'sanctuary';
 import { useTranslation } from 'react-i18next';
 import jwtDecode from 'jwt-decode';
+import { useProvider, useCreateStore } from 'mobx-store-provider';
+import { OperationStore } from './models/OperationStore';
+//import 'mobx-react-lite/batchingForReactDom';
+
+
 
 /*
  * CSS Styling
@@ -59,6 +64,7 @@ import VerificationScreen from './VerificationScreen';
 import BottomArea from './layout/BottomArea';
 import NotificationCenter from './NotificationCenter';
 import Web from './dashboard/config/Web';
+import {DEBUG} from './consts';
 
 /*function alertIsImportant(alertUtmMessage) {
 	return (
@@ -68,16 +74,15 @@ import Web from './dashboard/config/Web';
 	);
 }*/
 
-
-
 const MasterPage = ({leftIsExpanded = false, children}) => {
 	const [state, ] = useAdesState();
 	const [expDate, setExpDate] = useState(new Date(0));
+	const operationStore = useCreateStore(() => OperationStore.create());
+	if (DEBUG) window.opStore = operationStore;
+	const OperationsProvider = useProvider('OperationStore');
 
 	useEffect(() => {
-		const decoded = S.isJust(state.auth.token) ? jwtDecode(fM(state.auth.token)) : {exp: 0};
-		const newExpDate = new Date(0);
-		newExpDate.setUTCSeconds(decoded.exp);
+
 		setExpDate(newExpDate);
 	}, [state.auth.token]);
 
@@ -93,7 +98,7 @@ const MasterPage = ({leftIsExpanded = false, children}) => {
 	}, [time]); */
 
 	return(
-		<>
+		<OperationsProvider value={operationStore}>
 			{state.debug &&
 			<div className='timeLeftOverlay'>
 				Expires at {expDate.toLocaleTimeString()}
@@ -113,7 +118,7 @@ const MasterPage = ({leftIsExpanded = false, children}) => {
 					</div>
 				</Popover>
 			</ActionArea>
-		</>
+		</OperationsProvider>
 	);
 };
 

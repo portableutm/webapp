@@ -12,39 +12,77 @@ import {useTranslation} from 'react-i18next';
 import SidebarButton from '../SidebarButton';
 import {fM} from '../../libs/SaferSanctuary';
 import useAdesState from '../../state/AdesState';
+import {useStore} from 'mobx-store-provider';
+import {useObserver} from 'mobx-react';
 
 const StateFilters = ({selectedFilters, setSelectedFilters}) => {
-	const [, , , , , states] = useOperationFilter();
 	const { t, } = useTranslation('map');
-	return (
+	const store = useStore('OperationStore');
+	return useObserver(() => (
 		<>
 			<div className={styles.sidebarSeparator}>
 				{t('filter.bystate')}
 			</div>
-			{states.map((filter, index) => {
-				return (
-					<div
-						key={index + filter.text}
-						className={styles.sidebarButtonText}
-					>
-						<Checkbox
-							className='donotselect'
-							data-test-id={'layers' + filter.filter}
-							checked={S.maybeToNullable(S.value('' + index)(selectedFilters))}
-							onChange={(evt) => {
-								setSelectedFilters((current) =>
-									S.insert('' + index)(!fM(S.value('' + index)(current)))(current)
-								);
-							}}
-						>
-							{filter.text}
-						</Checkbox>
+			<div
+				className={styles.sidebarButtonText}
+			>
+				<Checkbox
+					className='donotselect'
+					data-test-id='layersACCEPTED'
+					checked={store.filterShowAccepted}
+					onChange={(evt) => {
+						store.setFilterAccepted(evt.target.checked);
+					}}
+				>
+					{t('filter.accepted')}
+				</Checkbox>
+			</div>
+			<div
+				className={styles.sidebarButtonText}
+			>
+				<Checkbox
+					className='donotselect'
+					data-test-id='layersPENDING'
+					checked={store.filterShowPending}
+					onChange={(evt) => {
+						store.setFilterPending(evt.target.checked);
+					}}
+				>
+					{t('filter.pending')}
+				</Checkbox>
+			</div>
 
-					</div>
-				);
-			})}
+			<div
+				className={styles.sidebarButtonText}
+			>
+
+				<Checkbox
+					className='donotselect'
+					data-test-id='layersACTIVATED'
+					checked={store.filterShowActivated}
+					onChange={(evt) => {
+						store.setFilterActivated(evt.target.checked);
+					}}
+				>
+					{t('filter.activated')}
+				</Checkbox>
+			</div>
+			<div
+				className={styles.sidebarButtonText}
+			>
+				<Checkbox
+					className='donotselect'
+					data-test-id='layersROGUE'
+					checked={store.filterShowRogue}
+					onChange={(evt) => {
+						store.setFilterRogue(evt.target.checked);
+					}}
+				>
+					{t('filter.rogue')}
+				</Checkbox>
+			</div>
 		</>
-	);
+	));
 };
 
 const OperationFilters = ({operations, ids, setIds}) => {
