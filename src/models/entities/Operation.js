@@ -1,5 +1,5 @@
 import { types } from 'mobx-state-tree';
-import {GeoJsonPoint} from './types/GeoJsonPoint';
+import {GeoJsonPoint} from '../types/GeoJsonPoint';
 import { OperationVolume } from './OperationVolume';
 
 export const Operation = types

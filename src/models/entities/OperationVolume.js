@@ -1,5 +1,5 @@
 import {types} from 'mobx-state-tree';
-import {GeoJsonPolygon} from './types/GeoJsonPolygon';
+import {GeoJsonPolygon} from '../types/GeoJsonPolygon';
 
 export const OperationVolume = types
 	.model({
@@ -10,8 +10,8 @@ export const OperationVolume = types
 		effective_time_begin: types.Date,
 		effective_time_end: types.Date,
 		actual_time_end: types.maybeNull(types.Date),
-		min_altitude: types.integer,
-		max_altitude: types.integer,
+		min_altitude: types.refinement(types.integer, value => value >= -100),
+		max_altitude: types.refinement(types.integer, value => value >= -100),
 		operation_geography: types.maybeNull(GeoJsonPolygon),
 		beyond_visual_line_of_sight: types.optional(types.boolean, true)
 	});
