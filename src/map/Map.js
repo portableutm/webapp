@@ -9,19 +9,16 @@ import '../css/leaflet.css';
 
 //import PropTypes from 'prop-types';
 import S from 'sanctuary';
-import { observer } from 'mobx-react';
 import { useStore } from 'mobx-store-provider';
 
 /* UI */
 
 /* Components */
-import MapMain from './MapElements';
 import Layers from './actions/Layers';
 import QuickFly from './actions/QuickFly';
 import DroneMarker from './elements/DroneMarker';
 import OperationPolygon from './elements/OperationPolygon';
 import OperationInfoEditor from './editor/OperationInfoEditor';
-import RestrictedFlightVolume from './elements/RestrictedFlightVolume';
 import SelectedOperation from './viewer/SelectedOperation';
 import SimulatorPanel from './actions/SimulatorPanel';
 import OperationEditMarker from './elements/OperationEditMarker';
@@ -32,7 +29,6 @@ import ControllerLocationMarker from './elements/ControllerLocationMarker';
 /* Hooks */
 import useOperationFilter from './hooks/useOperationFilter';
 import useRfvLogic from './hooks/useRfvLogic';
-import useAdesState from '../state/AdesState';
 import useSimulatorLogic from './hooks/useSimulatorLogic';
 import useEditorLogic, {editorMode} from './hooks/useEditorLogic';
 
@@ -44,19 +40,29 @@ import RightArea from '../layout/RightArea';
 import Polyline from './elements/Polyline';
 import {fM} from '../libs/SaferSanctuary';
 import {useParams} from 'react-router-dom';
-import UASVolumeReservation from './elements/UASVolumeReservation';
 import UvrInfoEditor from './editor/UvrInfoEditor';
+import { useObserver } from 'mobx-react';
+import {autorun, trace} from 'mobx';
+import {AllOperationsPolygons} from './elements/AllOperationsPolygons';
+import {AllRestrictedFlightVolumes} from './elements/AllRestrictedFlightVolumes';
+import {AllUASVolumeReservations} from './elements/AllUASVolumeReservations';
 
 
 
 /* Main function */
-function Map({mode}) {
-	const mapRef = useRef(null);
+const Map = ({mode}) => {
 	/* 	It's important to hold a reference to map that survives through the application
 		and that is only used after correctly initializing Leaflet. 	*/
 
 	/* State holders and references */
-	const [state, actions] = useAdesState();
+	const {operationStore, mapStore, uvrStore, rfvStore} = useStore(
+		'RootStore',
+		(store) => ({
+			operationStore: store.operationStore,
+			mapStore: store.mapStore,
+			uvrStore: store.uvrStore,
+			rfvStore: store.rfvStore
+		}));
 	const [drones, setDrones] = useState([]);
 
 	/* Route params */
@@ -76,7 +82,7 @@ function Map({mode}) {
 			}
 			case 'edit-op': {
 				setModeOfEditor(editorMode.OPERATION.EXISTING);
-				setExistingInfo(fM(S.value(editId)(state.operations.list)));
+				setExistingInfo(operationStore.operations.get(editId));
 				break;
 			}
 			case 'new-uvr': {
@@ -85,7 +91,7 @@ function Map({mode}) {
 			}
 			case 'edit-uvr': {
 				setModeOfEditor(editorMode.UVR.EXISTING);
-				setExistingInfo(fM(S.value(editId)(state.uvr.list)));
+				setExistingInfo(uvrStore.uvrs.get(editId));
 				break;
 			}
 			default: {
@@ -100,14 +106,13 @@ function Map({mode}) {
 	const [ops, opsFiltered, viewId, filtersSelected, setFiltersSelected, , idsShowing, setIdsShowing] = useOperationFilter();
 	const [currentSelectedOperation, setSelectedOperation] = useState(S.Nothing);
 	const [currentSelectedDrone, setSelectedDrone] = useState(S.Nothing);
-	const opStore = useStore('OperationStore');
 
 	/* Simulator state */
-	const [simPaths, setSimPath, simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic(fM(state.auth.token));
+	const [simPaths, setSimPath, simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic('broken');
 	const isSimulator = (S.isJust(mode) && fM(mode) === 'simulator');
 
 	/* 	Drone related logic	 */
-	useEffect(() => {
+	/* useEffect(() => {
 		const allDrones = state.drones.list;
 		setDrones(S.values(allDrones).map((drone) => {
 			// TODO: This should be done in the backend
@@ -123,17 +128,25 @@ function Map({mode}) {
 			}
 			return {...drone, risk};
 		}));
-	}, [state.drones.updated]); // eslint-disable-line react-hooks/exhaustive-deps
-
+	}, [state.drones.updated]); // eslint-disable-line react-hooks/exhaustive-deps */
 
 	/*	 Effects 	*/
 	// Leaflet map initialization
 	useEffect(() => {
-		mapRef.current = initializeLeaflet();
-		actions.map.setMapRef(mapRef);
+		autorun(() => {
+			console.log('Initializing map!');
+			console.count('Autorun #1 Init map');
+			if (!mapStore.isInitialized) {
+				const map = initializeLeaflet();
+				mapStore.setMapRef(map);
+			}
+		});
+		autorun(() => {
+			console.log('Shown operations...', operationStore.shownOperations);
+		});
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
+	/* useEffect(() => {
 		// Each time we visualize another Operation, we clear the feature group not to mix their volumes
 		if (viewId != null && opsFiltered.length > 0) {
 			opsFiltered.forEach((op) => {
@@ -144,320 +157,281 @@ function Map({mode}) {
 			});
 
 		}
-	}, [viewId, opsFiltered]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [viewId, opsFiltered]); // eslint-disable-line react-hooks/exhaustive-deps */
 
 	useEffect(() => {
-		// Change map position if it has changed in the state
-		if (state.map.mapRef && state.map.mapRef.current) {
-			const bounds = L.latLngBounds(state.map.cornerNW, state.map.cornerSE);
-			state.map.mapRef.current.fitBounds(bounds);
-		}
-	}, [JSON.stringify(state.map.cornerNW), JSON.stringify(state.map.cornerSE)]); // eslint-disable-line react-hooks/exhaustive-deps
+		autorun(() => {
+			// Change map position if it has changed in the state
+			console.count('Autorun #2 Set bounds');
+			if (mapStore.isInitialized) {
+				const bounds = L.latLngBounds(mapStore.cornerNW, mapStore.cornerSE);
+				mapStore.map.fitBounds(bounds);
+			}
+		});
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/*	Helpers */
 
 
-	const quickFlyOnClick = (location) => actions.map.setCorners(location.cornerNW, location.cornerSE);
+	const quickFlyOnClick = (location) => mapStore.setCorners(location.cornerNW, location.cornerSE);
 	const showStandardRightAreaPanels =
 		S.isNothing(currentSelectedOperation) &&
 		S.isNothing(currentSelectedDrone) &&
 		!isEditingOperation &&
 		!isEditingUvr;
 
-	return (
-		<>
-			<MapMain>
-				<Dialog
-					className='bp3-dark'
-					title={state.map_dialog.title}
-					isOpen={state.map_dialog.open}
-					onClose={() => actions.map_dialog.close()}
-				>
-					<div className='dialogify'>
-						{state.map_dialog.text}
-					</div>
-					<Button
-						style={{margin: '10px'}}
-						onClick={() => {
-							if (S.isJust(state.map_dialog.rightButtonOnClick)) {
-								fM(state.map_dialog.rightButtonOnClick)();
-							} else {
-								actions.map_dialog.close();
+	console.count('Rendering map');
+
+	return useObserver(() => {
+		if (mapStore.isInitialized) {
+			return (
+				<>
+					{/* <Dialog
+						className='bp3-dark'
+						title={state.map_dialog.title}
+						isOpen={state.map_dialog.open}
+						onClose={() => actions.map_dialog.close()}
+					>
+						<div className='dialogify'>
+							{state.map_dialog.text}
+						</div>
+						<Button
+							style={{margin: '10px'}}
+							onClick={() => {
+								if (S.isJust(state.map_dialog.rightButtonOnClick)) {
+									fM(state.map_dialog.rightButtonOnClick)();
+								} else {
+									actions.map_dialog.close();
+								}
+							}}
+							intent={Intent.PRIMARY}
+						>
+							{S.isJust(state.map_dialog.rightButtonText) ?
+								fM(state.map_dialog.rightButtonText) : 'OK'
 							}
-						}}
-						intent={Intent.PRIMARY}
+						</Button>
+					</Dialog>
+					{state.map.clickSelection.isSelecting &&
+					state.map.clickSelection.listIsComplete &&
+					<div
+						className="mapOnClickChooser animated fadeIn faster"
+						style={{left: state.map.clickSelection.x, top: state.map.clickSelection.y}}
 					>
-						{S.isJust(state.map_dialog.rightButtonText) ?
-							fM(state.map_dialog.rightButtonText) : 'OK'
-						}
-					</Button>
-				</Dialog>
-				{state.map.clickSelection.isSelecting &&
-				state.map.clickSelection.listIsComplete &&
-				<div
-					className="mapOnClickChooser animated fadeIn faster"
-					style={{left: state.map.clickSelection.x, top: state.map.clickSelection.y}}
-				>
-					Click on...
-					{state.map.clickSelection.listFns.map(labelFn => {
-						return (
-							<Button
-								key={labelFn.label}
-								className="mapOnClickChooserButton"
-								intent={Intent.PRIMARY}
-								onClick={() => labelFn.fn()}
-							>
-								{labelFn.label}
-							</Button>);
-					})}
-				</div>
-				}
-				{/* Live map */}
-				{drones.map((drone) =>
-					<React.Fragment
-						key={'fragm' + drone.gufi}
-					>
-						{S.isJust(drone.controller_location) &&
-						<ControllerLocationMarker
-							key={'CL' + drone.gufi}
-							position={fM(drone.controller_location).coordinates}
-						/>
-						}
-						<DroneMarker
-							key={drone.gufi}
-							id={drone.gufi}
-							heading={drone.heading}
-							altitude={drone.altitude_gps}
-							position={drone.location.coordinates}
-							risk={drone.risk}
-							onClick={() => setSelectedDrone(S.Just(drone.gufi))}
-						/>
-					</React.Fragment>
-				)}
-				{opStore.shownOperations.map((op) => {
-					return op.operation_volumes.map((volume) => {
-						if (op.gufi !== editId) {
-							return <OperationPolygon
-								key={op.gufi + '#' + volume.id}
-								id={op.gufi + '#' + volume.id}
-								isSelected={op.gufi === fM(currentSelectedOperation)}
-								latlngs={volume.operation_geography.coordinates[0]}
-								state={op.state}
-								info={op}
-								onClick={() => setSelectedOperation(S.Maybe.Just(op.gufi))}
-							/>;
-						} else {
-							return null;
-						}
-					});
-				})}
-				{
-					S.map
-					((rfv) => {
-						if (rfvs.indexOf(rfv.id) !== -1) {
-							/* Rfv is selected to be shown */
+						Click on...
+						{state.map.clickSelection.listFns.map(labelFn => {
 							return (
-								<RestrictedFlightVolume
-									key={rfv.comments}
-									latlngs={rfv.geography.coordinates}
-									name={rfv.comments}
-									minAltitude={rfv.min_altitude}
-									maxAltitude={rfv.max_altitude}
+								<Button
+									key={labelFn.label}
+									className="mapOnClickChooserButton"
+									intent={Intent.PRIMARY}
+									onClick={() => labelFn.fn()}
+								>
+									{labelFn.label}
+								</Button>);
+						})}
+					</div>
+					}
+					{/* Live map */}
+					{drones.map((drone) =>
+						<React.Fragment
+							key={'fragm' + drone.gufi}
+						>
+							{S.isJust(drone.controller_location) &&
+							<ControllerLocationMarker
+								key={'CL' + drone.gufi}
+								position={fM(drone.controller_location).coordinates}
+							/>
+							}
+							<DroneMarker
+								key={drone.gufi}
+								id={drone.gufi}
+								heading={drone.heading}
+								altitude={drone.altitude_gps}
+								position={drone.location.coordinates}
+								risk={drone.risk}
+								onClick={() => setSelectedDrone(S.Just(drone.gufi))}
+							/>
+						</React.Fragment>
+					)}
+					<AllOperationsPolygons/>
+					<AllRestrictedFlightVolumes/>
+					<AllUASVolumeReservations/>
+
+					{/* Operation creation or edition */}
+					{isEditingOperation && S.isJust(mbInfo) && fM(mbInfo).operation_volumes[0].operation_geography.coordinates.map((polygon, index) => {
+						return (
+							<OperationPolygon
+								id={'polygon' + index}
+								key={'polygon' + index}
+								latlngs={Array.from(polygon)}
+								popup={'Volume of operation in construction'}
+								operationInfo={{gufi: '', flight_comments: '** Editing **', state: '**EDITOR'}}
+								onClick={() => setEditingOperationVolume(S.Maybe.Just(index))}
+							/>
+						);
+					})}
+					{isEditingOperation && S.isJust(mbInfo) && fM(mbInfo).operation_volumes[0].operation_geography.coordinates.map((polygon, index) => {
+						return polygon.map((latlng, index2) => {
+							return (
+								<OperationEditMarker
+									id={'marker' + index2 + 'p' + index}
+									key={'marker' + index2 + 'p' + index + 'l' + polygon.length}
+									onDrag={/* istanbul ignore next */ latlng => {
+										infoSetters.setCoordinatesOfVolume(0, coords => {
+											/* Dragging a marker updates the saved polygon coordinates */
+											if (coords.length > 0) {
+												const newCoords = coords.slice();
+												newCoords[index][index2] = [latlng.lat, latlng.lng];
+												return newCoords;
+											}
+										});
+
+									}}
+									onClick={/* istanbul ignore next */ () => {
+										infoSetters.removePointFromPolygon(index2);
+									}}
+									latlng={latlng}
 								/>
 							);
-						} else {
-							return null;
+						});
+					})}
+					{/* UVR Edition or creation */}
+					{isEditingUvr && S.isJust(mbInfo) && fM(mbInfo).geography.coordinates.map((polygon, index) => {
+						return (
+							<OperationPolygon
+								id={'polygon' + index}
+								key={'polygon' + index}
+								latlngs={Array.from(polygon)}
+								popup={'Volume of operation in construction'}
+								operationInfo={{gufi: '', flight_comments: '** Editing **', state: '**EDITOR'}}
+								onClick={() => setEditingOperationVolume(S.Maybe.Just(index))}
+							/>
+						);
+					})}
+					{isEditingUvr && S.isJust(mbInfo) && fM(mbInfo).geography.coordinates.map((polygon, index) => {
+						return polygon.map((latlng, index2) => {
+							return (
+								<OperationEditMarker
+									id={'marker' + index2 + 'p' + index}
+									key={'marker' + index2 + 'p' + index + 'l' + polygon.length}
+									onDrag={/* istanbul ignore next */ latlng => {
+										infoSetters.setCoordinatesOfUVR(coords => {
+											/* Dragging a marker updates the saved polygon coordinates */
+											if (coords.length > 0) {
+												const newCoords = coords.slice();
+												newCoords[index][index2] = [latlng.lat, latlng.lng];
+												return newCoords;
+											}
+										});
+
+									}}
+									onClick={/* istanbul ignore next */ () => {
+										infoSetters.removePointFromPolygon(index2);
+									}}
+									latlng={latlng}
+								/>
+							);
+						});
+					})}
+					{/* Simulator */}
+					{S.isJust(mode) && fM(mode) === 'simulator' && simPaths.map((path, index) => {
+						return /* istanbul ignore next */ path.map((latlng, index2) => {
+							return (
+								<OperationEditMarker
+									index={'D' + index + '->' + index2}
+									id={'marker' + index2 + 'p' + index}
+									key={'marker' + index2 + 'p' + index}
+									onDrag={latlng => setSimPath(latlng, index2)}
+									latlng={latlng}
+								/>
+							);
+						});
+					})}
+					{S.isJust(mode) && fM(mode) === 'simulator' && simPaths.map((path, index) => {
+						return (
+							<Polyline
+								key={'polyline' + index}
+								latlngs={path}
+							/>
+						);
+					})}
+					<RightArea
+						forceOpen={
+							S.isJust(currentSelectedOperation) ||
+							S.isJust(currentSelectedDrone) ||
+							isSimulator ||
+							isEditingUvr ||
+							isEditingOperation
 						}
-					})
-					(S.values(state.rfv.list))
-				}
-				{
-					S.map
-					((uvr) => {
-						return (
-							<UASVolumeReservation
-								key={uvr.message_id}
-								latlngs={uvr.geography.coordinates}
-								uvrInfo={uvr}
-							/>
-						);
-					})
-					(S.values(state.uvr.list))
-				}
-
-
-				{/* Operation creation or edition */}
-				{isEditingOperation && S.isJust(mbInfo) && fM(mbInfo).operation_volumes[0].operation_geography.coordinates.map((polygon, index) => {
-					return (
-						<OperationPolygon
-							id={'polygon' + index}
-							key={'polygon' + index}
-							latlngs={Array.from(polygon)}
-							popup={'Volume of operation in construction'}
-							operationInfo={{gufi: '', flight_comments: '** Editing **', state: '**EDITOR'}}
-							onClick={() => setEditingOperationVolume(S.Maybe.Just(index))}
+						onClose={() => {
+							setSelectedOperation(S.Nothing);
+							setSelectedDrone(S.Nothing);
+						}}
+					>
+						{S.isJust(currentSelectedOperation) &&
+						<SelectedOperation gufi={fM(currentSelectedOperation)}/>
+						}
+						{S.isJust(currentSelectedDrone) &&
+						<SelectedDrone gufi={fM(currentSelectedDrone)}/>
+						}
+						{showStandardRightAreaPanels &&
+						<QuickFly
+							onClick={quickFlyOnClick}
 						/>
-					);
-				})}
-				{isEditingOperation && S.isJust(mbInfo) && fM(mbInfo).operation_volumes[0].operation_geography.coordinates.map((polygon, index) => {
-					return polygon.map((latlng, index2) => {
-						return (
-							<OperationEditMarker
-								id={'marker' + index2 + 'p' + index}
-								key={'marker' + index2 + 'p' + index + 'l' + polygon.length}
-								onDrag={/* istanbul ignore next */ latlng => {
-									infoSetters.setCoordinatesOfVolume(0, coords => {
-										/* Dragging a marker updates the saved polygon coordinates */
-										if (coords.length > 0) {
-											const newCoords = coords.slice();
-											newCoords[index][index2] = [latlng.lat, latlng.lng];
-											return newCoords;
-										}
-									});
-
-								}}
-								onClick={/* istanbul ignore next */ () => {
-									infoSetters.removePointFromPolygon(index2);
-								}}
-								latlng={latlng}
-							/>
-						);
-					});
-				})}
-				{/* UVR Edition or creation */}
-				{isEditingUvr && S.isJust(mbInfo) && fM(mbInfo).geography.coordinates.map((polygon, index) => {
-					return (
-						<OperationPolygon
-							id={'polygon' + index}
-							key={'polygon' + index}
-							latlngs={Array.from(polygon)}
-							popup={'Volume of operation in construction'}
-							operationInfo={{gufi: '', flight_comments: '** Editing **', state: '**EDITOR'}}
-							onClick={() => setEditingOperationVolume(S.Maybe.Just(index))}
+						}
+						{showStandardRightAreaPanels &&
+						<Layers
+							filtersSelected={filtersSelected}
+							setFiltersSelected={setFiltersSelected}
+							idsSelected={idsShowing}
+							setIdsSelected={setIdsShowing}
+							rfvs={rfvs}
+							setRfvsShowing={setRfvs}
+							operations={ops}
+							disabled={viewId != null}
 						/>
-					);
-				})}
-				{isEditingUvr && S.isJust(mbInfo) && fM(mbInfo).geography.coordinates.map((polygon, index) => {
-					return polygon.map((latlng, index2) => {
-						return (
-							<OperationEditMarker
-								id={'marker' + index2 + 'p' + index}
-								key={'marker' + index2 + 'p' + index + 'l' + polygon.length}
-								onDrag={/* istanbul ignore next */ latlng => {
-									infoSetters.setCoordinatesOfUVR(coords => {
-										/* Dragging a marker updates the saved polygon coordinates */
-										if (coords.length > 0) {
-											const newCoords = coords.slice();
-											newCoords[index][index2] = [latlng.lat, latlng.lng];
-											return newCoords;
-										}
-									});
-
-								}}
-								onClick={/* istanbul ignore next */ () => {
-									infoSetters.removePointFromPolygon(index2);
-								}}
-								latlng={latlng}
-							/>
-						);
-					});
-				})}
-				{/* Simulator */}
-				{S.isJust(mode) && fM(mode) === 'simulator' && simPaths.map((path, index) => {
-					return /* istanbul ignore next */ path.map((latlng, index2) => {
-						return (
-							<OperationEditMarker
-								index={'D' + index + '->' + index2}
-								id={'marker' + index2 + 'p' + index}
-								key={'marker' + index2 + 'p' + index}
-								onDrag={latlng => setSimPath(latlng, index2)}
-								latlng={latlng}
-							/>
-						);
-					});
-				})}
-				{S.isJust(mode) && fM(mode) === 'simulator' && simPaths.map((path, index) => {
-					return (
-						<Polyline
-							key={'polyline' + index}
-							latlngs={path}
+						}
+						{/* Operation Editor Panels */}
+						{isEditingOperation &&
+						<OperationInfoEditor
+							maybeInfo={mbInfo}
+							setters={infoSetters}
+							saveOperation={save}
 						/>
-					);
-				})}
-			</MapMain>
-			<RightArea
-				forceOpen={
-					S.isJust(currentSelectedOperation) ||
-					S.isJust(currentSelectedDrone) ||
-					isSimulator ||
-					isEditingUvr ||
-					isEditingOperation
-				}
-				onClose={() => {
-					setSelectedOperation(S.Nothing);
-					setSelectedDrone(S.Nothing);
-				}}
-			>
-				{S.isJust(currentSelectedOperation) &&
-				<SelectedOperation gufi={fM(currentSelectedOperation)}/>
-				}
-				{S.isJust(currentSelectedDrone) &&
-				<SelectedDrone gufi={fM(currentSelectedDrone)}/>
-				}
-				{showStandardRightAreaPanels &&
-				<QuickFly
-					onClick={quickFlyOnClick}
-				/>
-				}
-				{showStandardRightAreaPanels &&
-				<Layers
-					filtersSelected={filtersSelected}
-					setFiltersSelected={setFiltersSelected}
-					idsSelected={idsShowing}
-					setIdsSelected={setIdsShowing}
-					rfvs={rfvs}
-					setRfvsShowing={setRfvs}
-					operations={ops}
-					disabled={viewId != null}
-				/>
-				}
-				{/* Operation Editor Panels */}
-				{	isEditingOperation &&
-					<OperationInfoEditor
-						maybeInfo={mbInfo}
-						setters={infoSetters}
-						saveOperation={save}
-					/>
-				}
-				{/* UVR Editor Panels */}
-				{	isEditingUvr &&
-					<UvrInfoEditor
-						maybeInfo={mbInfo}
-						setters={infoSetters}
-						saveUvr={save}
-					/>
-				}
-				{/* Simulator panels*/}
-				{isSimulator &&
-				<SimulatorPanel
-					paths={simPaths}
-					onClick={onSelectSimDrone}
-					selected={simDroneIndex}
-					newDrone={addNewDrone}
-					startFlying={startFlying}
-					stopFlying={stopFlying}
-				/>
-				}
-			</RightArea>
-		</>
-	);
-}
+						}
+						{/* UVR Editor Panels */}
+						{isEditingUvr &&
+						<UvrInfoEditor
+							maybeInfo={mbInfo}
+							setters={infoSetters}
+							saveUvr={save}
+						/>
+						}
+						{/* Simulator panels*/}
+						{isSimulator &&
+						<SimulatorPanel
+							paths={simPaths}
+							onClick={onSelectSimDrone}
+							selected={simDroneIndex}
+							newDrone={addNewDrone}
+							startFlying={startFlying}
+							stopFlying={stopFlying}
+						/>
+						}
+					</RightArea>
+				</>
+			);
+		} else {
+			return null;
+		}
+	});
+};
 
 /*Map.propTypes = {
 	mode: PropTypes.oneOf(S.Maybe.Just)
 };*/
 
-export default observer(Map);
+export default Map;
 // Might be useful later:
 // https://github.com/Igor-Vladyka/leaflet.motion
 // https://openmaptiles.com/downloads/europe/

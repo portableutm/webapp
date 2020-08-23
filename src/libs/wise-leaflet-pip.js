@@ -30,7 +30,7 @@
 /**
  * The L Polygon class.
  * L.GeodesicPolygon and L.GeodesicCircle extend L.Polygon.
- * @name Polygon
+ * @name LeafletPolygon
  * @member external:L.Polygon
  * @see {@link http://leafletjs.com/ L} documentation for further information.
  */

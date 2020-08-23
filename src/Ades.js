@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 
 /**
  *  Libraries
  */
 //import PropTypes from 'prop-types';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import {
 	Popover,
 	Position,
@@ -12,11 +12,8 @@ import {
 } from '@blueprintjs/core';
 import S from 'sanctuary';
 import { useTranslation } from 'react-i18next';
-import jwtDecode from 'jwt-decode';
-import { useProvider, useCreateStore } from 'mobx-store-provider';
-import { OperationStore } from './models/OperationStore';
+import {useProvider, useCreateStore, useStore} from 'mobx-store-provider';
 //import 'mobx-react-lite/batchingForReactDom';
-
 
 
 /*
@@ -53,9 +50,8 @@ import UsersList from './dashboard/user/UsersList';
 /**
  * State Providers
  */
-import useAdesState from './state/AdesState.js';
+import { RootStore } from './models/RootStore.js';
 import { useCookies } from 'react-cookie';
-import { fM } from './libs/SaferSanctuary';
 import Pilot from './dashboard/user/Pilot';
 import VehiclesList from './dashboard/vehicle/VehiclesList';
 import NewVehicle from './dashboard/vehicle/NewVehicle';
@@ -64,7 +60,10 @@ import VerificationScreen from './VerificationScreen';
 import BottomArea from './layout/BottomArea';
 import NotificationCenter from './NotificationCenter';
 import Web from './dashboard/config/Web';
-import {DEBUG} from './consts';
+import {addMiddleware, unprotect} from 'mobx-state-tree';
+import {useObserver} from 'mobx-react';
+import {autorun} from 'mobx';
+
 
 /*function alertIsImportant(alertUtmMessage) {
 	return (
@@ -74,56 +73,85 @@ import {DEBUG} from './consts';
 	);
 }*/
 
-const MasterPage = ({leftIsExpanded = false, children}) => {
-	const [state, ] = useAdesState();
-	const [expDate, setExpDate] = useState(new Date(0));
-	const operationStore = useCreateStore(() => OperationStore.create());
-	if (DEBUG) window.opStore = operationStore;
-	const OperationsProvider = useProvider('OperationStore');
-
-	useEffect(() => {
-
-		setExpDate(newExpDate);
-	}, [state.auth.token]);
-
-	/*
-	const [time, setTime] = useState(decoded.exp - (Math.round(Date.now() / 1000)));
-	const [timeoutSeconds, setTimeoutSeconds] = useState(0);
-
-	useEffect(() => {
-		setTimeoutSeconds(setTimeout(() => {setTime(curr => curr - 1);}, 1000));
-		return () => {
-			clearTimeout(timeoutSeconds);
-		};
-	}, [time]); */
-
-	return(
-		<OperationsProvider value={operationStore}>
-			{state.debug &&
-			<div className='timeLeftOverlay'>
-				Expires at {expDate.toLocaleTimeString()}
-			</div>
-			}
-			<LeftArea>
-				<NotificationCenter/>
-			</LeftArea>
-			<MainArea leftIsExpanded={leftIsExpanded}>
-				{children}
-			</MainArea>
-			<BottomArea />
-			<ActionArea>
-				<Popover content={<ContextualMenu/>} position={Position.BOTTOM_LEFT}>
-					<div data-test-id="mapButtonMenu" className='contextualMenu'>
-						<Icon icon='menu' iconSize={30}/>
-					</div>
-				</Popover>
-			</ActionArea>
-		</OperationsProvider>
-	);
+const LayoutRoute = ({path, exact = true, admin = false, pilot = false, isMapVisible = false, leftIsExpanded = false, children}) => {
+	const store = useStore('RootStore');
+	if (
+		(store.authStore.isAdmin && admin) ||
+		(store.authStore.isPilot && pilot)
+	) {
+		/* Show only to user if they have the correct role */
+		return (
+			<Route exact={exact} path={path}>
+				{store.debugIsDebug &&
+				<div className='timeLeftOverlay'>
+					Expires at {store.authStore.expireDate.toLocaleTimeString()}
+				</div>
+				}
+				<LeftArea>
+					<NotificationCenter/>
+				</LeftArea>
+				<MainArea leftIsExpanded={leftIsExpanded}>
+					<>
+						<div data-test-id='map' id='adesMapLeaflet' className='map' style={{height: isMapVisible ? '100%' : '0'}}>
+						</div>
+						{children}
+					</>
+				</MainArea>
+				<BottomArea />
+				<ActionArea>
+					<Popover content={<ContextualMenu/>} position={Position.BOTTOM_LEFT}>
+						<div data-test-id="mapButtonMenu" className='contextualMenu'>
+							<Icon icon='menu' iconSize={30}/>
+						</div>
+					</Popover>
+				</ActionArea>
+			</Route>
+		);
+	} else {
+		return (
+			<Redirect to='/notfound' />
+		);
+	}
 };
 
 function Ades() {
-	const [state, actions] = useAdesState();
+
+	/* Global state creation */
+	let rootStore = useCreateStore(() => RootStore.create());
+	if (rootStore.debugIsDebug) {
+		window.store = rootStore;
+		window.autorun = autorun;
+		window.log = value => ('window.autorun(() => {\n' +
+			'\t\t\t\tconsole.log(\'%c\' + JSON.stringify(window.store.'+value+'), \'color: white; background: darkgreen; font-size: 18px; font-family: serif\');\n' +
+			'\t\t\t});');
+		window.unprotect = unprotect;
+	} // Inspect state from console when debugging
+	const StateProvider = useProvider('RootStore');
+
+	useEffect(() => {
+		let disposer = null;
+		if (rootStore.debugIsDebug) {
+			/*onAction(rootStore, call => {
+				console.group(call.path + ' ' + call.name);
+				console.dir(call);
+				console.groupEnd();
+			});*/
+			disposer = addMiddleware(rootStore, (call, next) => {
+				if (call.type === 'action') {
+					console.group('Action');
+					console.log('%c' + call.name, 'color: white; background: darkblue; font-size: 20px; font-family: serif');
+					console.dir(call.args);
+					console.groupEnd();
+				}
+				next(call, value => value);
+			});
+		}
+		return (() => {
+			if (disposer !== null) disposer();
+		});
+	}, [rootStore]); // We don't want to re-suscribe to onAction
+
+
 	const { t, i18n } = useTranslation();
 
 	/* Alert System */
@@ -141,91 +169,42 @@ function Ades() {
 	bc.onmessage = (event) => setAlertUtmMessage(event.data);*/
 
 	/* Auth */
-	const [cookies, setCookie,] = useCookies(['lang', 'sneaky', 'hummingbird']);
-	const [isLoggedIn, setLoggedIn] = useState(true);
-	const [role, setRole] = useState('none');
-	const [timeoutUnlogin, setTimeoutUnlogin] = useState(0);
+	const [cookies, ,] = useCookies(['lang', 'sneaky', 'hummingbird']);
 
-	useEffect(() => {
-		if (S.isJust(state.auth.token)) {
-			/* User has logged in */
-			setLoggedIn(true);
-			/* Find out role to show appropiate use cases */
-			const decoded = jwtDecode(fM(state.auth.token));
-			setRole(decoded.role);
-			/* Get user full information if not yet fetched */
-			const username = decoded.username;
-			if (S.isNothing(state.auth.user)) {
-				actions.auth.info(username, () => {
-					actions.operations.fetch();
-					actions.rfv.fetch();
-					actions.uvr.fetch();
-					actions.quickFly.fetch();
-				}, () => {
-					setRole('none');
-					setLoggedIn(false);
-					actions.auth.logout();
-				});
-			}
+	// let timer;
 
-			setTimeoutUnlogin(setTimeout(() => {
-				actions.auth.logout();
-				setRole('none');
-				setLoggedIn(false);
-			}, (decoded.exp * 1000) - new Date().getTime()));
-			//}, 20000));
-		} else {
-			actions.auth.logout();
-			setRole('none');
-			setLoggedIn(false);
+	/* autorun(() => {
+		// Automatically log out user if token expiration date passes
+		if (rootStore.authStore.expireDate.getTime() > 0) {
+			// If expire date is set
+			alert('Time is ' + (rootStore.authStore.expireDate.getTime() * 1000) - new Date().getTime());
+			if (timer) clearTimeout(timer);
+			timer = setTimeout(() => {
+				alert('Log out now!');
+				rootStore.reset();
+				if (rootStore.debugIsDebug) window.store = rootStore;
+			}, (rootStore.authStore.expireDate.getTime() * 1000) - new Date().getTime());
 		}
-		return () => {
-			clearTimeout(timeoutUnlogin);
-		};
-	}, [state.auth.token]); // eslint-disable-line react-hooks/exhaustive-deps
+	}); */
 
 
 	useEffect(() => {
-		if (cookies.lang === null || cookies.lang === void 0) {
-			setCookie('lang', i18n.language, {path: '/'});
-		} else {
-			if (state.debug) {
-				i18n.changeLanguage('none');
-			} else {
-				i18n.changeLanguage(cookies.lang);
-			}
+		if (rootStore.debugIsDebug) {
+			i18n.changeLanguage('none');
 		}
 		if (cookies.sneaky !== null &&
 			cookies.sneaky !== void 0 &&
 			cookies.hummingbird !== null &&
 			cookies.hummingbird !== void 0) {
-			actions.auth.login(cookies.sneaky, cookies.hummingbird, () => {}, () => {alert('Sneaky Hummingbird failed');});
+			rootStore.authStore.login(cookies.sneaky, cookies.hummingbird, () => {}, () => {alert('Sneaky Hummingbird failed');});
 		}
 	}, [cookies]); // eslint-disable-line react-hooks/exhaustive-deps
 
+	console.count('Render Ades');
 
-	if (isLoggedIn && role === 'admin') {
-		/* Operator pages */
-		return (
+	return useObserver(() => (
+		<StateProvider value={rootStore}>
 			<div className='App animated fadeIn faster'>
-				{/* Alert System (UseCase01A: UTMMessage E,A,C received)
-				<Alert
-					confirmButtonText={'OK'}
-					canEscapeKeyCancel={false}
-					canOutsideClickCancel={false}
-					onConfirm={() => setAlertOpen(false)}
-					isOpen={alertOpen}
-				>
-					{alertUtmMessage != null && (
-						<p>
-							(Message id: {alertUtmMessage.message_id})<br/>
-							<b>{alertUtmMessage.severity}</b>
-							<br/>
-							{alertUtmMessage.free_text}
-						</p>
-					)}
-				</Alert>
-				*/}
 				<Router>
 					<Switch>
 						<Route exact path='/registration'>
@@ -234,219 +213,112 @@ function Ades() {
 						<Route exact path='/registro'>
 							<NewUser/>
 						</Route>
-						<Route exact path='/debug'>
-							<MasterPage>
-								<Simulator/>
-							</MasterPage>
-						</Route>
-						<Route exact path='/simulator'>
-							<MasterPage>
-								<Map mode={S.Maybe.Just('simulator')}/>
-							</MasterPage>
-						</Route>
-						<Route exact path='/operation/new'>
-							<MasterPage leftIsExpanded={true}>
-								<Map mode={S.Maybe.Just('new-op')}/>
-							</MasterPage>
-						</Route>
-						<Route exact path='/operation/edit/:editId'>
-							<MasterPage leftIsExpanded={true}>
-								<Map mode={S.Maybe.Just('edit-op')}/>
-							</MasterPage>
-						</Route>
-						<Route exact path='/operation/:id'>
-							<MasterPage>
-								<Map mode={S.Maybe.Just('view')}/>
-							</MasterPage>
-						</Route>
-						<Route exact path='/uvr/new'>
-							<MasterPage leftIsExpanded={true}>
-								<Map mode={S.Maybe.Just('new-uvr')}/>
-							</MasterPage>
-						</Route>
-						<Route exact path='/dashboard/configuration'>
-							<MasterPage>
-								<>
-									<Dashboard>
-										<Web/>
-									</Dashboard>
-								</>
-							</MasterPage>
-						</Route>
-						<Route exact path='/dashboard/operations/:id'>
-							<MasterPage>
-								<>
-									<Dashboard>
-										<OperationList/>
-									</Dashboard>
-								</>
-							</MasterPage>
-						</Route>
-						<Route exact path='/dashboard/operations'>
-							<MasterPage>
-								<>
-									<Dashboard>
-										<OperationList/>
-									</Dashboard>
-								</>
-							</MasterPage>
-						</Route>
-						<Route path='/dashboard/users/new'>
-							<MasterPage>
-								<>
-									<Dashboard>
-										<NewUser isSelfRegistering={false}/>
-									</Dashboard>
-								</>
-							</MasterPage>
-						</Route>
-						<Route path='/dashboard/users/:username?'>
+						{/* Unlogged screens */}
+						{ !rootStore.authStore.isLoggedIn &&
+							<>
+								<Route path='/verify/:username'>
+									<VerificationScreen/>
+								</Route>
+								<Route path='/de'>
+									<LoginScreen/>
+								</Route>
+								<Route path='/es'>
+									<LoginScreen/>
+								</Route>
+								<Route path='/'>
+									<LoginScreen/>
+								</Route>
+							</>
+						}
+						{/* For developers */}
+						<LayoutRoute admin path='/debug'>
+							<Simulator/>
+						</LayoutRoute>
+						<LayoutRoute admin path='/simulator' isMapVisible>
+							<Map mode={S.Maybe.Just('simulator')}/>
+						</LayoutRoute>
+						{/* Map */}
+						<LayoutRoute admin leftIsExpanded={true} path='/operation/new' isMapVisible>
+							<Map mode={S.Maybe.Just('new-op')}/>
+						</LayoutRoute>
+						<LayoutRoute admin leftIsExpanded={true} exact path='/operation/edit/:editId' isMapVisible>
+							<Map mode={S.Maybe.Just('edit-op')}/>
+						</LayoutRoute>
+						<LayoutRoute admin path='/operation/:id' isMapVisible>
+							<Map mode={S.Maybe.Just('view')}/>
+						</LayoutRoute>
+						<LayoutRoute admin leftIsExpanded={true} path='/uvr/new' isMapVisible>
+							<Map mode={S.Maybe.Just('new-uvr')}/>
+						</LayoutRoute>
+						{ /* Dashboard */}
+						<LayoutRoute pilot path={'/dashboard/users/' + rootStore.authStore.username}>
+							<Dashboard>
+								<Pilot user={{empty: 'object'}}/>
+							</Dashboard>
+						</LayoutRoute>
+						<LayoutRoute pilot exact path={'/dashboard/vehicles/new'}>
+							<Dashboard>
+								<NewVehicle userId={rootStore.authStore.username}/>
+							</Dashboard>
+						</LayoutRoute>
+						<LayoutRoute pilot admin path='/dashboard/vehicles'>
+							<Dashboard>
+								<VehiclesList />
+							</Dashboard>
+						</LayoutRoute>
+						{rootStore.authStore.isPilot &&
+						<LayoutRoute pilot path='/'>
+							<Dashboard/>
+						</LayoutRoute>
+						}
+						<LayoutRoute admin path='/dashboard/configuration'>
+							<Dashboard>
+								<Web/>
+							</Dashboard>
+						</LayoutRoute>
+						<LayoutRoute admin path='/dashboard/operations/:id'>
+							<Dashboard>
+								<OperationList/>
+							</Dashboard>
+						</LayoutRoute>
+						<LayoutRoute admin path='/dashboard/operations'>
+							<Dashboard>
+								<OperationList/>
+							</Dashboard>
+						</LayoutRoute>
+						<LayoutRoute admin path='/dashboard/users/new'>
+							<Dashboard>
+								<NewUser isSelfRegistering={false}/>
+							</Dashboard>
+						</LayoutRoute>
+						<LayoutRoute admin path='/dashboard/users/:username?'>
 							{/* Username is an optional parameter, we don't re-fetch from the API when changing */}
 							{/* from the users list to one particular user */}
-							<MasterPage>
-								<>
-									<Dashboard>
-										<UsersList />
-									</Dashboard>
-								</>
-							</MasterPage>
-						</Route>
-						{/*<Route exact path='/dashboard/users'>
-							<MasterPage>
-								<>
-									<Dashboard>
-										<UsersList />
-									</Dashboard>
-								</>
-							</MasterPage>
-						</Route>*/}
-						<Route exact path={'/dashboard/vehicles/:username/new'}>
-							<MasterPage>
-								<>
-									<Dashboard>
-										<NewVehicle />
-									</Dashboard>
-								</>
-							</MasterPage>
-						</Route>
-						<Route exact path='/dashboard/vehicles'>
-							<MasterPage>
-								<>
-									<Dashboard>
-										<VehiclesList />
-									</Dashboard>
-								</>
-							</MasterPage>
-						</Route>
-						<Route exact path='/dashboard'>
-							<MasterPage>
-								<>
-									<Dashboard>
-										<HomeScreen />
-									</Dashboard>
-								</>
-							</MasterPage>
-						</Route>
-						<Route path='/'>
-							<MasterPage>
-								<>
-									<Map mode={S.Maybe.Nothing}/>
-								</>
-							</MasterPage>
-						</Route>
+							<Dashboard>
+								<UsersList />
+							</Dashboard>
+						</LayoutRoute>
+						<LayoutRoute admin path={'/dashboard/vehicles/:username/new'}>
+							<Dashboard>
+								<NewVehicle />
+							</Dashboard>
+						</LayoutRoute>
+						<LayoutRoute admin path='/dashboard'>
+							<Dashboard>
+								<HomeScreen />
+							</Dashboard>
+						</LayoutRoute>
+						{rootStore.authStore.isAdmin &&
+						<LayoutRoute admin path='/' isMapVisible>
+							<Map mode={S.Maybe.Nothing}/>
+						</LayoutRoute>
+						}
 						<Route path='/notfound'>{t('not_found')}</Route>
 					</Switch>
 				</Router>
 			</div>
-		);
-	} else if (isLoggedIn && role === 'pilot') {
-		return (
-			<div className="App animated fadeIn faster">
-				<Router>
-					<Switch>
-						<Route path='/operation/new'>
-							<MasterPage>
-								<Map mode={S.Maybe.Just('new-op')}/>
-							</MasterPage>
-						</Route>
-						{S.isJust(state.auth.user) && // It can happen... race condition
-						<Route path={'/dashboard/users/' + fM(state.auth.user).username}>
-							<MasterPage>
-								<>
-									<Dashboard>
-										<Pilot user={fM(state.auth.user)}/>
-									</Dashboard>
-								</>
-							</MasterPage>
-						</Route>
-						}
-						{S.isJust(state.auth.user) && // It can happen... race condition
-						<Route exact path={'/dashboard/vehicles/new'}>
-							<MasterPage>
-								<>
-									<Dashboard>
-										<NewVehicle userId={fM(state.auth.user).username}/>
-									</Dashboard>
-								</>
-							</MasterPage>
-						</Route>
-						}
-						<Route exact path='/dashboard/vehicles'>
-							<MasterPage>
-								<>
-									<Dashboard>
-										<VehiclesList />
-									</Dashboard>
-								</>
-							</MasterPage>
-						</Route>
-						<Route path='/'>
-							<MasterPage>
-								<>
-									<Dashboard/>
-								</>
-							</MasterPage>
-						</Route>
-						<Route path='/notfound'>{t('not_found')}</Route>
-					</Switch>
-				</Router>
-			</div>
-		);
-	} else if (isLoggedIn) {
-		/* Unknown role or yet not fetched - show loading */
-		return (
-			<div className='App bp3-dark'>
-
-			</div>
-		);
-	} else {
-		/* Not logged in */
-		return (
-			<div className='App bp3-dark'>
-				<Router>
-					<Switch>
-						<Route exact path='/registration'>
-							<NewUser/>
-						</Route>
-						<Route exact path='/registro'>
-							<NewUser/>
-						</Route>
-						<Route path='/verify/:username'>
-							<VerificationScreen/>
-						</Route>
-						<Route path='/es'>
-							<LoginScreen/>
-						</Route>
-						<Route path='/'>
-							<LoginScreen/>
-						</Route>
-					</Switch>
-				</Router>
-			</div>
-		);
-	}
-
-
+		</StateProvider>
+	));
 }
 
 export default Ades;

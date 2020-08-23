@@ -1,11 +1,9 @@
 /* Libraries */
-import {flow, types} from 'mobx-state-tree';
+import {flow, getRoot, types} from 'mobx-state-tree';
 import { values } from 'mobx';
-import A from 'axios';
 import _ from 'lodash';
 
-import {Operation} from './Operation';
-import {API} from '../consts';
+import {Operation} from './entities/Operation';
 
 export const OperationStore = types
 	.model('OperationStore', {
@@ -14,7 +12,9 @@ export const OperationStore = types
 		filterShowPending: true,
 		filterShowActivated: true,
 		filterShowRogue: true,
-		filterShowOthers: false
+		filterShowOthers: false,
+		filterShownIds: types.array(types.string),
+		layersShowLabelsOnlyMatchingText: ''
 	})
 	.actions(self => {
 		const cleanOperation = (operation) => {
@@ -40,40 +40,30 @@ export const OperationStore = types
 		};
 
 		return {
-			afterCreate() {
-				Axios = A.create({
-					baseURL: CurrentAPI,
-					timeout: 15000,
-					headers: {
-						'Content-Type': 'application/json',
-					}
-				});
-				/*Axios.interceptors.response.use(function (response) {
-					if (response.headers.token) {
-						setToken(response.headers.token);
-					}
-					return response;
-				}, function (error) {
-					return Promise.reject(error);
-				});*/
-				//self.operations.observe((value) => console.log('OperationState', value));
-				self.fetchOperations();
-			},
-			setToken(newToken) {
-				token = newToken;
-			},
 			fetchOperations: flow(function* fetchOperations() {
 				try {
-					const response = yield Axios.get('operation', {headers: {auth: token}});
+					const response = yield getRoot(self).axiosInstance.get('operation', {headers: {auth: getRoot(self).authStore.token}});
 					const operations = response.data.ops;
 					self.operations.merge(
 						operations.reduce((prior, operation) => {
 							const correctedOperation = cleanOperation(operation);
-							return [...prior, [correctedOperation.gufi, correctedOperation]];
+							const qtyOperationVolumes = correctedOperation.operation_volumes.length;
+							if (correctedOperation
+								.operation_volumes[qtyOperationVolumes-1]
+								.effective_time_end >= new Date()
+							) {
+								// Only operations that are yet to happen or in progress are considered
+								return [...prior, [correctedOperation.gufi, correctedOperation]];
+							} else {
+								return [...prior];
+							}
 						}, [])
 					);
 				} catch (error) {
-					console.error('AdesStore::Operations', error);
+					console.group('/rootStore fetchOperations *error*');
+					console.log('%cAn error has ocurred', 'color:red; font-size: 36px');
+					console.error(error);
+					console.groupEnd();
 				}
 			}),
 			setFilterAccepted(flag) {
@@ -90,6 +80,16 @@ export const OperationStore = types
 			},
 			setFilterOthers(flag) {
 				self.filterShowOthers = flag;
+			},
+			toggleVisibility(op) {
+				if (_.includes(self.filterShownIds, op.gufi)) {
+					self.filterShownIds.remove(op.gufi);
+				} else {
+					self.filterShownIds.push(op.gufi);
+				}
+			},
+			setTextToMatchToDisplayInLayersList(text) {
+				self.layersShowLabelsOnlyMatchingText = text;
 			}
 		};
 	})
@@ -104,9 +104,22 @@ export const OperationStore = types
 					return true;
 				} else if (self.filterShowRogue && operation.state === 'ROGUE') {
 					return true;
+				} else if (_.includes(self.filterShownIds, operation)) {
+					return true;
 				} else {
 					return self.filterShowOthers;
 				}
+			});
+		},
+		get operationsWithVisibility() {
+			return _.map(values(self.operations), (op) => {
+				const opWithVisibility = _.cloneDeep(op);
+				opWithVisibility._visibility = _.includes(self.filterShownIds, op.gufi);
+				opWithVisibility._showInLayers = _.includes(
+					op.name.toLowerCase(),
+					self.layersShowLabelsOnlyMatchingText.toLowerCase()
+				);
+				return opWithVisibility;
 			});
 		}
 	}));

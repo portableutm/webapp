@@ -1,14 +1,11 @@
 import React from 'react';
 import globalHook from '../libs/useGlobalHook';
 import S from 'sanctuary';
-import A from 'axios';
 import {API, DEBUG} from '../consts';
 import {fM, } from '../libs/SaferSanctuary';
 import * as importedActions from '../actions';
-import io from 'socket.io-client';
 
 let Axios;
-let socket;
 
 const initialState = {
 	auth: {

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
 
-import S from 'sanctuary';
+import {useStore} from 'mobx-store-provider';
 import {useTranslation} from 'react-i18next';
 import {useCookies} from 'react-cookie';
 
@@ -9,14 +9,15 @@ import {useCookies} from 'react-cookie';
 import { useHistory } from 'react-router-dom';
 /* Internal */
 import {DEBUG} from './consts';
-import useAdesState from './state/AdesState.js';
 import logo from './images/logo.png';
 import background from './images/bg.jpg';
 import styles from './LoginScreen.module.css';
 import * as classnames from 'classnames';
 
+
 function LoginScreen() {
-	const [adesState, adesActions] = useAdesState();
+	const store = useStore('RootStore');
+
 	const [user, setUser] = useState('');
 	const [password, setPassword] = useState('');
 	const [isError, setError] = useState(false);
@@ -33,10 +34,10 @@ function LoginScreen() {
 		setError(false);
 	}, [user, password]);
 
-	const login = (evt) => {
+	const login = async (evt) => {
 		evt.preventDefault();
 		setLogging(true);
-		adesActions.auth.login(user, password, okCallback, badCallback);
+		await store.authStore.login(user, password, okCallback, badCallback);
 	};
 
 	useEffect(() => {
@@ -54,7 +55,7 @@ function LoginScreen() {
 			alert('DEBUG MODE ACTIVATED - In this mode, you will see secret functions, and the texts will not be translated');
 			setCookie('lang', 'none', {path: '/'});
 			i18n.changeLanguage('none');
-			adesActions.debug(true);
+			store.debugSetDebugging(true);
 			history.push('/');
 		} else if (window.location.pathname === '/en') {
 			setCookie('lang', 'en', {path: '/'});
@@ -126,7 +127,7 @@ function LoginScreen() {
 					{t('login.login_pleasewait')}
 				</Card>
 				}
-				{ S.isJust(adesState.auth.token) &&
+				{ store.authStore.isLoggedIn &&
 				<Card className={classnames('bp3-dark',styles.successful,'animated fadeIn')} elevation={Elevation.TWO}>
 					{t('login.login_successful')}
 				</Card>

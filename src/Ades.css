@@ -7,6 +7,10 @@ th, td {
     text-align: left;
 }
 
+.bp3-control-indicator {
+    outline: none !important;
+}
+
 .donotselect {
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */

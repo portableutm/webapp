@@ -33,12 +33,29 @@
 
 .sidebarButtonText {
     color: white;
+    height: 30px;
+    max-height: 50px;
     display: flex;
     justify-content: flex-start;
     padding: 5px 10px 5px 10px;
     margin: 1px 0 0 !important;
     background-color: rgba(132, 130, 143, 0.25) !important;
+    text-overflow: ellipsis;
     user-select: none;
+    transition: all 0.5s;
+    overflow: hidden;
+}
+
+.sidebarButtonTextCollapsed {
+    max-height: 0;
+    padding: 0;
+}
+
+.sidebarButtonTextContent {
+    text-overflow: ellipsis;
+    height: 20px;
+    white-space: nowrap;
+    overflow: visible
 }
 
 .sidebarButtonTextRight {

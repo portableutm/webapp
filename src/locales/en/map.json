@@ -22,8 +22,8 @@
     "pending": "Pending",
     "nonconforming": "Non-conforming",
     "rogue": "Rogue",
-    "bystate": "FILTER BY STATE",
-    "byid": "FILTER BY OPERATION",
+    "bystate": "OPERATIONS BY STATE",
+    "byid": "OPERATIONS BY ID",
     "rfvs": "RESTRICTED FLIGHT ZONES"
   },
   "flyto": "Fly in map to",

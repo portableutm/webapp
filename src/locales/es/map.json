@@ -22,8 +22,8 @@
     "pending": "Pendientes",
     "nonconforming": "Desconformes",
     "rogue": "Rogue (Furtivas)",
-    "bystate": "FILTRAR POR ESTADO",
-    "byid": "FILTRAR OPERACIONES ESPECÍFICAS",
+    "bystate": "OPERACIONES POR ESTADO",
+    "byid": "OPERACIONES POR ID.",
     "rfvs": "ZONAS DE VUELO RESTRINGIDO"
   },
   "flyto": "Volar en mapa a",
