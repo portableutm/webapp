@@ -226,6 +226,24 @@ th, td {
     pointer-events: auto;
 }
 
+.leaflet-marker-icon {
+    transition: all 0.1s;
+}
+
+.tooltipAltitudeDrone {
+    position: absolute;
+    right: 0;
+    opacity: 1 !important;
+    border: none !important;
+    font-size: 16px !important;
+    font-weight: bolder;
+    color: black !important;
+    box-shadow: none !important;
+    background-color: rgba(255,11,0,0.0) !important;
+    transition: all 0.1s;
+    overflow: visible;
+}
+
 .tooltipAltitudeRFV {
     opacity: 1 !important;
     border: none !important;

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
 /**
  *  Libraries
@@ -12,7 +12,7 @@ import {
 } from '@blueprintjs/core';
 import S from 'sanctuary';
 import { useTranslation } from 'react-i18next';
-import {useProvider, useCreateStore, useStore} from 'mobx-store-provider';
+import { useProvider, useCreateStore, useStore } from 'mobx-store-provider';
 //import 'mobx-react-lite/batchingForReactDom';
 
 
@@ -45,7 +45,6 @@ import ContextualMenu from './layout/ContextualMenu';
  */
 import Dashboard from './dashboard/Dashboard';
 import OperationList from './dashboard/operation/OperationsList.js';
-import UsersList from './dashboard/user/UsersList';
 
 /**
  * State Providers
@@ -60,9 +59,10 @@ import VerificationScreen from './VerificationScreen';
 import BottomArea from './layout/BottomArea';
 import NotificationCenter from './NotificationCenter';
 import Web from './dashboard/config/Web';
-import {addMiddleware, unprotect} from 'mobx-state-tree';
-import {useObserver} from 'mobx-react';
-import {autorun} from 'mobx';
+import { addMiddleware, unprotect } from 'mobx-state-tree';
+import { useObserver } from 'mobx-react';
+import { autorun } from 'mobx';
+import UsersList from './dashboard/user/UsersList';
 
 
 /*function alertIsImportant(alertUtmMessage) {
@@ -73,7 +73,7 @@ import {autorun} from 'mobx';
 	);
 }*/
 
-const LayoutRoute = ({path, exact = true, admin = false, pilot = false, isMapVisible = false, leftIsExpanded = false, children}) => {
+const LayoutRoute = ({ path, exact = true, admin = false, pilot = false, isMapVisible = false, leftIsExpanded = false, children }) => {
 	const store = useStore('RootStore');
 	if (
 		(store.authStore.isAdmin && admin) ||
@@ -92,7 +92,7 @@ const LayoutRoute = ({path, exact = true, admin = false, pilot = false, isMapVis
 				</LeftArea>
 				<MainArea leftIsExpanded={leftIsExpanded}>
 					<>
-						<div data-test-id='map' id='adesMapLeaflet' className='map' style={{height: isMapVisible ? '100%' : '0'}}>
+						<div data-test-id='map' id='adesMapLeaflet' className='map' style={{ height: isMapVisible ? '100%' : '0' }}>
 						</div>
 						{children}
 					</>
@@ -138,10 +138,12 @@ function Ades() {
 			});*/
 			disposer = addMiddleware(rootStore, (call, next) => {
 				if (call.type === 'action') {
-					console.group('Action');
-					console.log('%c' + call.name, 'color: white; background: darkblue; font-size: 20px; font-family: serif');
-					console.dir(call.args);
-					console.groupEnd();
+					if (call.name !== 'addPosition') {
+						console.group('Action');
+						console.log('%c' + call.name, 'color: white; background: darkblue; font-size: 20px; font-family: serif');
+						console.dir(call.args);
+						console.groupEnd();
+					}
 				}
 				next(call, value => value);
 			});
@@ -253,7 +255,7 @@ function Ades() {
 						{ /* Dashboard */}
 						<LayoutRoute pilot path={'/dashboard/users/' + rootStore.authStore.username}>
 							<Dashboard>
-								<Pilot user={{empty: 'object'}}/>
+								<Pilot user={{ empty: 'object' }}/>
 							</Dashboard>
 						</LayoutRoute>
 						<LayoutRoute pilot exact path={'/dashboard/vehicles/new'}>

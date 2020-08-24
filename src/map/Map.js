@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect } from 'react';
 
 import '../Ades.css';
 
@@ -15,47 +15,45 @@ import { useStore } from 'mobx-store-provider';
 
 /* Components */
 import Layers from './actions/Layers';
-import QuickFly from './actions/QuickFly';
-import DroneMarker from './elements/DroneMarker';
+import QuickFly from './actions/QuickFlyControl';
 import OperationPolygon from './elements/OperationPolygon';
 import OperationInfoEditor from './editor/OperationInfoEditor';
 import SelectedOperation from './viewer/SelectedOperation';
 import SimulatorPanel from './actions/SimulatorPanel';
 import OperationEditMarker from './elements/OperationEditMarker';
 import SelectedDrone from './viewer/SelectedDrone';
-import {Button, Dialog, Intent} from '@blueprintjs/core';
-import ControllerLocationMarker from './elements/ControllerLocationMarker';
 
 /* Hooks */
 import useOperationFilter from './hooks/useOperationFilter';
 import useRfvLogic from './hooks/useRfvLogic';
 import useSimulatorLogic from './hooks/useSimulatorLogic';
-import useEditorLogic, {editorMode} from './hooks/useEditorLogic';
+import useEditorLogic, { editorMode } from './hooks/useEditorLogic';
 
 /* Auxiliaries */
-import {initializeLeaflet} from './MapAuxs';
+import { initializeLeaflet } from './MapAuxs';
 
 import RightArea from '../layout/RightArea';
 
 import Polyline from './elements/Polyline';
-import {fM} from '../libs/SaferSanctuary';
-import {useParams} from 'react-router-dom';
+import { fM } from '../libs/SaferSanctuary';
+import { useParams } from 'react-router-dom';
 import UvrInfoEditor from './editor/UvrInfoEditor';
 import { useObserver } from 'mobx-react';
-import {autorun, trace} from 'mobx';
-import {AllOperationsPolygons} from './elements/AllOperationsPolygons';
-import {AllRestrictedFlightVolumes} from './elements/AllRestrictedFlightVolumes';
-import {AllUASVolumeReservations} from './elements/AllUASVolumeReservations';
+import { autorun, trace } from 'mobx';
+import { AllOperationsPolygons } from './elements/AllOperationsPolygons';
+import { AllRestrictedFlightVolumes } from './elements/AllRestrictedFlightVolumes';
+import { AllUASVolumeReservations } from './elements/AllUASVolumeReservations';
+import { AllDronePositions } from './elements/AllDronePositions';
 
 
 
 /* Main function */
-const Map = ({mode}) => {
+const Map = ({ mode }) => {
 	/* 	It's important to hold a reference to map that survives through the application
 		and that is only used after correctly initializing Leaflet. 	*/
 
 	/* State holders and references */
-	const {operationStore, mapStore, uvrStore, rfvStore} = useStore(
+	const { operationStore, mapStore, uvrStore, rfvStore } = useStore(
 		'RootStore',
 		(store) => ({
 			operationStore: store.operationStore,
@@ -66,12 +64,12 @@ const Map = ({mode}) => {
 	const [drones, setDrones] = useState([]);
 
 	/* Route params */
-	const {editId} = useParams();
+	const { editId } = useParams();
 
 	/* Editor state */
 	const [modeOfEditor, setModeOfEditor] = useState(editorMode.UNKNOWN);
 	const [existingInfo, setExistingInfo] = useState(null);
-	const [mbInfo, infoSetters, save, {isEditingOperation, isEditingUvr}] = useEditorLogic(modeOfEditor, existingInfo);
+	const [mbInfo, infoSetters, save, { isEditingOperation, isEditingUvr }] = useEditorLogic(modeOfEditor, existingInfo);
 	const [, setEditingOperationVolume] = useState(S.Maybe.Nothing);
 
 	useEffect(() => {
@@ -105,7 +103,6 @@ const Map = ({mode}) => {
 	const [rfvs, setRfvs] = useRfvLogic();
 	const [ops, opsFiltered, viewId, filtersSelected, setFiltersSelected, , idsShowing, setIdsShowing] = useOperationFilter();
 	const [currentSelectedOperation, setSelectedOperation] = useState(S.Nothing);
-	const [currentSelectedDrone, setSelectedDrone] = useState(S.Nothing);
 
 	/* Simulator state */
 	const [simPaths, setSimPath, simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic('broken');
@@ -172,11 +169,9 @@ const Map = ({mode}) => {
 
 	/*	Helpers */
 
-
-	const quickFlyOnClick = (location) => mapStore.setCorners(location.cornerNW, location.cornerSE);
 	const showStandardRightAreaPanels =
 		S.isNothing(currentSelectedOperation) &&
-		S.isNothing(currentSelectedDrone) &&
+		!mapStore.isDroneSelected &&
 		!isEditingOperation &&
 		!isEditingUvr;
 
@@ -232,27 +227,7 @@ const Map = ({mode}) => {
 					</div>
 					}
 					{/* Live map */}
-					{drones.map((drone) =>
-						<React.Fragment
-							key={'fragm' + drone.gufi}
-						>
-							{S.isJust(drone.controller_location) &&
-							<ControllerLocationMarker
-								key={'CL' + drone.gufi}
-								position={fM(drone.controller_location).coordinates}
-							/>
-							}
-							<DroneMarker
-								key={drone.gufi}
-								id={drone.gufi}
-								heading={drone.heading}
-								altitude={drone.altitude_gps}
-								position={drone.location.coordinates}
-								risk={drone.risk}
-								onClick={() => setSelectedDrone(S.Just(drone.gufi))}
-							/>
-						</React.Fragment>
-					)}
+					<AllDronePositions />
 					<AllOperationsPolygons/>
 					<AllRestrictedFlightVolumes/>
 					<AllUASVolumeReservations/>
@@ -265,7 +240,7 @@ const Map = ({mode}) => {
 								key={'polygon' + index}
 								latlngs={Array.from(polygon)}
 								popup={'Volume of operation in construction'}
-								operationInfo={{gufi: '', flight_comments: '** Editing **', state: '**EDITOR'}}
+								operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
 								onClick={() => setEditingOperationVolume(S.Maybe.Just(index))}
 							/>
 						);
@@ -303,7 +278,7 @@ const Map = ({mode}) => {
 								key={'polygon' + index}
 								latlngs={Array.from(polygon)}
 								popup={'Volume of operation in construction'}
-								operationInfo={{gufi: '', flight_comments: '** Editing **', state: '**EDITOR'}}
+								operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
 								onClick={() => setEditingOperationVolume(S.Maybe.Just(index))}
 							/>
 						);
@@ -358,26 +333,24 @@ const Map = ({mode}) => {
 					<RightArea
 						forceOpen={
 							S.isJust(currentSelectedOperation) ||
-							S.isJust(currentSelectedDrone) ||
+							mapStore.isDroneSelected ||
 							isSimulator ||
 							isEditingUvr ||
 							isEditingOperation
 						}
 						onClose={() => {
 							setSelectedOperation(S.Nothing);
-							setSelectedDrone(S.Nothing);
+							if (mapStore.isDroneSelected) mapStore.unsetSelectedDrone();
 						}}
 					>
 						{S.isJust(currentSelectedOperation) &&
 						<SelectedOperation gufi={fM(currentSelectedOperation)}/>
 						}
-						{S.isJust(currentSelectedDrone) &&
-						<SelectedDrone gufi={fM(currentSelectedDrone)}/>
+						{	mapStore.isDroneSelected &&
+						<SelectedDrone gufi={mapStore.selectedDrone}/>
 						}
 						{showStandardRightAreaPanels &&
-						<QuickFly
-							onClick={quickFlyOnClick}
-						/>
+						<QuickFly />
 						}
 						{showStandardRightAreaPanels &&
 						<Layers

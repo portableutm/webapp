@@ -1,11 +1,13 @@
 import React from 'react';
 import globalHook from '../libs/useGlobalHook';
 import S from 'sanctuary';
-import {API, DEBUG} from '../consts';
-import {fM, } from '../libs/SaferSanctuary';
+import { API, DEBUG } from '../consts';
+import { fM, } from '../libs/SaferSanctuary';
 import * as importedActions from '../actions';
 
 let Axios;
+
+
 
 const initialState = {
 	auth: {
@@ -42,8 +44,8 @@ const initialState = {
 			listIsComplete: false, // true when click reaches parent - topmost of bubbling
 			listFns: [] // [{label: 'map', fn: () => {}}]
 		},
-		cornerNW: {lat: -90, lng: 180},
-		cornerSE: {lat: 90, lng: -180},
+		cornerNW: { lat: -90, lng: 180 },
+		cornerSE: { lat: 90, lng: -180 },
 		ids: [],
 	},
 	map_dialog: {
@@ -80,8 +82,8 @@ const initializer = (store) => {
 		/// TODO: Force default even if geolocation is acquired (parameter)
 		navigator.geolocation.getCurrentPosition((position) => {
 			//store.actions.setPosition(position.coords.latitude, position.coords.longitude);
-			const cornerNW = {lat: position.coords.latitude - 0.05, lng: position.coords.longitude + 0.05};
-			const cornerSE = {lat: position.coords.latitude + 0.05, lng: position.coords.longitude - 0.05};
+			const cornerNW = { lat: position.coords.latitude - 0.05, lng: position.coords.longitude + 0.05 };
+			const cornerSE = { lat: position.coords.latitude + 0.05, lng: position.coords.longitude - 0.05 };
 			store.actions.map.setCorners(cornerNW, cornerSE);
 		});
 	}
@@ -95,10 +97,10 @@ const internalActions = {
 
 		},
 		info: (store, username, okCallback, errorCallback) => {
-			Axios.get('user/' + username, {headers: {auth: fM(store.state.auth.token)}})
+			Axios.get('user/' + username, { headers: { auth: fM(store.state.auth.token) } })
 				.then(result => {
 					print(store.state, false, 'InfoState', result.data);
-					store.setState({auth: {...store.state.auth, user: S.Just(result.data)}});
+					store.setState({ auth: { ...store.state.auth, user: S.Just(result.data) } });
 					okCallback && okCallback(result.data);
 				})
 				.catch(error => {
@@ -110,7 +112,7 @@ const internalActions = {
 		updateToken: (store, newToken) => {
 			if (fM(store.state.auth.token) !== newToken) {
 				print(store.state, false, 'Token', newToken);
-				store.setState({auth: {...store.state.auth, token: S.Just(newToken)}});
+				store.setState({ auth: { ...store.state.auth, token: S.Just(newToken) } });
 			}
 		},
 		logout: (store) => {
@@ -118,15 +120,15 @@ const internalActions = {
 		}
 	},
 	debug: (store, toggle) => {
-		store.setState({debug: toggle});
+		store.setState({ debug: toggle });
 	},
 	api: (store, newApi) => {
-		store.setState({api: newApi});
+		store.setState({ api: newApi });
 		store.actions.auth.logout();
 	}
 };
 
-const actions = {...importedActions, ...internalActions};
+const actions = { ...importedActions, ...internalActions };
 
 
 /* OPERATIONS */

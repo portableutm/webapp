@@ -24,10 +24,15 @@
     "react-hooks"
   ],
   "rules": {
+    "react/prop-types": 0,
     "indent": [
       "error",
       "tab",
       {"SwitchCase": 1}
+    ],
+    "object-curly-spacing": [
+      "error",
+      "always"
     ],
     "linebreak-style": [
       "error",

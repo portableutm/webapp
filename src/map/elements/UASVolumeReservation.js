@@ -27,8 +27,6 @@ const UASVolumeReservation = observer(({latlngs, uvrInfo})  => {
 		{map: mapStore.map}
 	);
 
-	console.log('MAP STORE MAP', mapStore.map);
-
 	const startDate = (new Date(uvrInfo.effective_time_begin)).toLocaleString();
 	const endDate = (new Date(uvrInfo.effective_time_end)).toLocaleString();
 	const minAltitude = uvrInfo.min_altitude;

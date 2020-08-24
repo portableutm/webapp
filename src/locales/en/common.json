@@ -21,6 +21,7 @@
   "cant_edit": "(non-editable)",
   "change_password": "Change the password of {{name}}",
   "save_changes": "Save changes",
+  "cancel": "Cancel",
   "click_to_expand": "Show properties",
   "click_to_collapse": "Hide properties"
 }

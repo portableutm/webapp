@@ -2,13 +2,14 @@
 
 import React from 'react';
 import SidebarButton from '../SidebarButton';
-import useAdesState from '../../state/AdesState';
 import S from 'sanctuary';
-import {fM} from '../../libs/SaferSanctuary';
-import {useTranslation} from 'react-i18next';
+import { fM } from '../../libs/SaferSanctuary';
+import { useTranslation } from 'react-i18next';
 import styles from '../Map.module.css';
+import { useStore } from 'mobx-store-provider';
+import { observer, useAsObservableSource } from 'mobx-react';
 
-function Property({property, value}) {
+function Property({ property, value }) {
 	return (
 		<>
 			<div
@@ -26,17 +27,23 @@ function Property({property, value}) {
 	);
 }
 
-function SelectedDrone ({gufi}) {
+function SelectedDrone ({ gufi }) {
 	const { t } = useTranslation('glossary');
-	const [state, ] = useAdesState(state => state.drones);
-	const drone = fM(S.value(gufi)(state.list));
+	const obs = useAsObservableSource({ gufi });
+	const { selectedDrone } = useStore(
+		'RootStore',
+		(store) => ({
+			selectedDrone: store.positionStore.positions.get(obs.gufi).slice(-1)[0] // Newest position report of sel. drone
+		})
+	);
+
 	const info = [
-		['ID', drone.gufi],
-		[t('positions.latitude'), drone.location.coordinates.lat],
-		[t('positions.longitude'), drone.location.coordinates.lng],
-		[t('positions.altitude'), drone.altitude_gps],
-		[t('positions.heading'), drone.heading],
-		[t('positions.comments'), drone.comments]
+		['ID', selectedDrone.gufi],
+		[t('positions.latitude'), selectedDrone.location.lat],
+		[t('positions.longitude'), selectedDrone.location.lng],
+		[t('positions.altitude'), selectedDrone.altitude_gps],
+		[t('positions.heading'), selectedDrone.heading],
+		[t('positions.comments'), selectedDrone.comments]
 	];
 
 	return(
@@ -56,4 +63,4 @@ function SelectedDrone ({gufi}) {
 	);
 }
 
-export default SelectedDrone;
+export default observer(SelectedDrone);

@@ -46,6 +46,10 @@
     overflow: hidden;
 }
 
+.sidebarButtonText:hover {
+    color: rgb(255, 111, 0);
+}
+
 .sidebarButtonTextCollapsed {
     max-height: 0;
     padding: 0;

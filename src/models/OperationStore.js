@@ -1,9 +1,9 @@
 /* Libraries */
-import {flow, getRoot, types} from 'mobx-state-tree';
-import { values } from 'mobx';
+import { flow, getRoot, types } from 'mobx-state-tree';
+import { values  } from 'mobx';
 import _ from 'lodash';
 
-import {Operation} from './entities/Operation';
+import { Operation } from './entities/Operation';
 
 export const OperationStore = types
 	.model('OperationStore', {
@@ -16,10 +16,12 @@ export const OperationStore = types
 		filterShownIds: types.array(types.string),
 		layersShowLabelsOnlyMatchingText: ''
 	})
+	.volatile(() => ({
+		hasFetched: false
+	}))
 	.actions(self => {
 		const cleanOperation = (operation) => {
 			const correctedOperation = _.cloneDeep(operation);
-			correctedOperation.owner = operation.owner ? operation.owner.username : null;
 			correctedOperation.submit_time = new Date(operation.submit_time);
 			correctedOperation.update_time = new Date(operation.update_time);
 			correctedOperation.operation_volumes = operation.operation_volumes.map(
@@ -27,13 +29,13 @@ export const OperationStore = types
 					const coordinates = volume.operation_geography.coordinates.map((coords) =>
 						coords.map((pos) => [pos[1], pos[0]])
 					);
-					const operationGeography = {...volume.operation_geography, coordinates: [coordinates]};
-					return {...volume,
+					const operationGeography = { ...volume.operation_geography, coordinates: [coordinates] };
+					return { ...volume,
 						min_altitude: parseInt(volume.min_altitude),
 						max_altitude: parseInt(volume.max_altitude),
 						effective_time_begin: new Date(volume.effective_time_begin),
 						effective_time_end: new Date(volume.effective_time_end),
-						operation_geography: operationGeography};
+						operation_geography: operationGeography };
 				}
 			);
 			return correctedOperation;
@@ -42,7 +44,8 @@ export const OperationStore = types
 		return {
 			fetchOperations: flow(function* fetchOperations() {
 				try {
-					const response = yield getRoot(self).axiosInstance.get('operation', {headers: {auth: getRoot(self).authStore.token}});
+					const response = yield getRoot(self).axiosInstance.get('operation', { headers: { auth: getRoot(self).authStore.token } });
+					self.hasFetched = true;
 					const operations = response.data.ops;
 					self.operations.merge(
 						operations.reduce((prior, operation) => {
@@ -90,10 +93,17 @@ export const OperationStore = types
 			},
 			setTextToMatchToDisplayInLayersList(text) {
 				self.layersShowLabelsOnlyMatchingText = text;
+			},
+			reset() {
+				// Cleans volatile state. The model itself is resetted by the RootStore
+				self.hasFetched = false;
 			}
 		};
 	})
 	.views(self => ({
+		get allOperations() {
+			return values(self.operations);
+		},
 		get shownOperations() {
 			return _.filter(values(self.operations), (operation) => {
 				if (self.filterShowAccepted && operation.state === 'ACCEPTED') {

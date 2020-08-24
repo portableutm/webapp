@@ -1,30 +1,27 @@
 import React, {useState} from 'react';
-import S from 'sanctuary';
 import GenericList, {GenericListLine} from '../generic/GenericList';
 import {Callout, Spinner, Intent, Button} from '@blueprintjs/core';
 import {useHistory} from 'react-router-dom';
-import useAdesState from '../../state/AdesState';
 import {useTranslation} from 'react-i18next';
 import {useParams} from 'react-router-dom';
 import styles from '../generic/GenericList.module.css';
+import {useStore} from 'mobx-store-provider';
+import {observer} from 'mobx-react';
 
-function Operation({expanded = false, children}) {
+function Operation({expanded = false, selected = false, toggleSelected, children}) {
 	// Renders one Operation text properties for a list
 	const history = useHistory();
 	const {t,} = useTranslation(['glossary', 'common']);
-	const [state, actions] = useAdesState();
-	const operationIsSelected = state.map.ids.indexOf(children.gufi) !== -1;
-	const onClick = operationIsSelected ?
-		() => actions.map.removeId(children.gufi)
-		:
+	const onClick = selected ?
+		() => toggleSelected(children)  :
 		() => {
-			actions.map.addId(children.gufi);
+			toggleSelected(children);
 			history.push('/operation/' + children.gufi);
 		};
 	const [showProperties, setShowProperties] = useState(expanded);
 	return (
 		<Callout
-			key={children.name}
+			key={children.gufi}
 			className={styles.item}
 			title={
 				<div className={styles.title}>
@@ -68,14 +65,14 @@ function Operation({expanded = false, children}) {
 						small
 						minimal
 						icon='pin'
-						intent={operationIsSelected ? Intent.DANGER : Intent.SUCCESS}
+						intent={selected ? Intent.DANGER : Intent.SUCCESS}
 						onClick={onClick}
 					>
 						<div className={styles.buttonHoveredTooltip}>
-							{operationIsSelected &&
+							{selected &&
 							t('common:remove_from_map')
 							}
-							{!operationIsSelected &&
+							{!selected &&
 							t('common:show_on_map')
 							}
 						</div>
@@ -156,26 +153,41 @@ function Operation({expanded = false, children}) {
 }
 
 function OperationsList() {
-	const [state,] = useAdesState(state => state.operations);
 	const {t,} = useTranslation('glossary');
+	const { store, toggleSelected } = useStore(
+		'RootStore',
+		(store) => ({
+			store: store.operationStore,
+			toggleSelected: store.operationStore.toggleVisibility
+		}));
 	const {id} = useParams();
-	const operations = S.values(state.list);
-	const isThereOperations = operations.length !== 0;
-	if (isThereOperations) {
+	if (store.hasFetched) {
 		return (
 			<>
-
 				<div className={styles.header}>
 					<h1>
 						{t('operations.plural_generic').toUpperCase()}
 					</h1>
 				</div>
+				{	store.allOperations.length > 0 &&
 				<GenericList>
-					{S.map
-					((op) => <Operation key={op.gufi} expanded={op.gufi === id}>{op}</Operation>)
-					(operations)
-					}
+					{store.operationsWithVisibility.map((op) => {
+						return <Operation
+							key={op.gufi}
+							expanded={op.gufi === id}
+							selected={op._visibility}
+							toggleSelected={toggleSelected}
+						>
+							{op}
+						</Operation>;
+					})}
 				</GenericList>
+				}
+				{	store.allOperations.length === 0 &&
+				<h2>
+					{t('operations.zero_operations')}
+				</h2>
+				}
 			</>
 		);
 	} else {
@@ -187,4 +199,4 @@ function OperationsList() {
 	}
 }
 
-export default OperationsList;
+export default observer(OperationsList);

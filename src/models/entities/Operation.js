@@ -1,12 +1,13 @@
 import { types } from 'mobx-state-tree';
 import {GeoJsonPoint} from '../types/GeoJsonPoint';
 import { OperationVolume } from './OperationVolume';
+import {User} from './User';
 
 export const Operation = types
 	.model({
 		gufi: types.identifier, // Automated
 		name: types.string,
-		owner: types.maybeNull(types.string),
+		owner: types.maybeNull(User),
 		contact: types.maybeNull(types.string),
 		contact_phone: types.maybeNull(types.string),
 		uss_name: types.maybeNull(types.string),
@@ -31,7 +32,12 @@ export const Operation = types
 		//'contingency_plans': ContingencyPlan[];
 		// 'negotiation_agreements'?: NegotiationAgreement[];
 		// 'priority_elements'?: PriorityElements;
-	});
+	})
+	.views(self => ({
+		get isOwnerSet() {
+			return self.owner !== null;
+		}
+	}));
 
 /* {
 	_type: 'OPERATION',

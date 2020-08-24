@@ -1,5 +1,3 @@
-import {fM} from '../../libs/SaferSanctuary';
-
 export function createLeafletPolygonStore(source) {
 	return {
 		leafletPolygon: null,

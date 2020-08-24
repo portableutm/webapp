@@ -1,6 +1,6 @@
-import {types} from 'mobx-state-tree';
+import { types } from 'mobx-state-tree';
 
-export class Point {
+export class Point  {
 	constructor(lat, lng) {
 		this.lat = lat;
 		this.lng = lng;

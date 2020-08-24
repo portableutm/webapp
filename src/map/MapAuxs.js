@@ -12,7 +12,8 @@ function getLeafletLayer(useGeoServer, L) {
 		});
 	} else {
 		return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors. ' +
+				'All icons by <a href="icons8.com">Icons8</a>'
 		});
 	}
 }

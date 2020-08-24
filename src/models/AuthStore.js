@@ -1,4 +1,4 @@
-import {flow, getRoot, types} from 'mobx-state-tree';
+import { flow, getRoot, types } from 'mobx-state-tree';
 import io from 'socket.io-client';
 import jwtDecode from 'jwt-decode';
 
@@ -10,32 +10,47 @@ export const AuthStore = types
 		expireDate: types.optional(types.Date, new Date(0))
 	})
 	.actions(self => {
-		let socket;
+		let socket = null;
+		let tokenLimitedTimeout = null;
 
 		return {
+			setTokenLimited(newToken) {
+				/* 	This action sets the token after a small delay has happened, 
+					to avoid changing the token too frequently 
+				*/
+				if (tokenLimitedTimeout !== null) {
+					clearTimeout(tokenLimitedTimeout);
+					tokenLimitedTimeout = null;
+				}
+				tokenLimitedTimeout = setTimeout(() => self.setToken(newToken), 5000);
+			},
 			setToken(newToken) {
 				try {
 					self.token = newToken;
 					/* Reconnect to socket.io as this new token is longer lasting */
-					if (socket) socket.disconnect();
-					socket = io(getRoot(self).API + '?token=' + newToken);
-					const decoded = jwtDecode(newToken);
-					/* Save users data parsed from token */
-					self.role = decoded.role;
-					self.username = decoded.username;
-					self.expireDate.setUTCSeconds(decoded.exp);
+					//if (socket) socket.disconnect();
+					if (socket !== null) socket.disconnect();
+
+					socket = io(
+						getRoot(self).API + '?token=' + newToken
+					);
 
 					socket.on('new-position', function (info) {
-						// const info2 = {...info};
-						//console.log('DroneState: new-position: ', info2);
-						//store.actions.drones.add(info2);
+						getRoot(self).positionStore.addPosition(info);
 					});
 
 					socket.on('operation-state-change', function (info) {
 						//console.log('Operation-state-change', info);
 						//store.actions.operations.updateOne(info.gufi, info.state);
 					});
+
 					socket.connect();
+
+					const decoded = jwtDecode(newToken);
+					/* Save users data parsed from token */
+					self.role = decoded.role;
+					self.username = decoded.username;
+					self.expireDate.setUTCSeconds(decoded.exp);
 				} catch (error) {
 					console.error('Error setting token', error);
 				}
@@ -54,7 +69,15 @@ export const AuthStore = types
 				} catch (error) {
 					if (errorCallback && error.response) errorCallback(error.response.data);
 				}
-			})
+			}),
+			reset() {
+				// Cleans volatile state. The model itself is resetted by the RootStore
+				socket = null;
+				if (tokenLimitedTimeout !== null) {
+					clearTimeout(tokenLimitedTimeout);
+					tokenLimitedTimeout = null;
+				}
+			}
 		};
 	})
 	.views(self => ({

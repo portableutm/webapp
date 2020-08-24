@@ -51,6 +51,9 @@ export const RfvStore = types
 			},
 			setTextToMatchToDisplayInLayersList(text) {
 				self.layersShowLabelsOnlyMatchingText = text;
+			},
+			reset() {
+				// Cleans volatile state. The model itself is resetted by the RootStore
 			}
 		};
 	})
