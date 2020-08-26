@@ -1,27 +1,28 @@
-import React, {useState} from 'react';
-import GenericList, {GenericListLine} from '../generic/GenericList';
-import {Callout, Spinner, Intent, Button} from '@blueprintjs/core';
-import {useHistory} from 'react-router-dom';
-import {useTranslation} from 'react-i18next';
-import {useParams} from 'react-router-dom';
+import React, { useState } from 'react';
+import GenericList, { GenericListLine } from '../generic/GenericList';
+import { Callout, Spinner, Intent, Button } from '@blueprintjs/core';
+import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import styles from '../generic/GenericList.module.css';
-import {useStore} from 'mobx-store-provider';
-import {observer} from 'mobx-react';
+import { useStore } from 'mobx-store-provider';
+import { observer } from 'mobx-react';
 
-function Operation({expanded = false, selected = false, toggleSelected, children}) {
+function Operation({ expanded = false, selected = false, toggleSelected, operation }) {
 	// Renders one Operation text properties for a list
 	const history = useHistory();
-	const {t,} = useTranslation(['glossary', 'common']);
+	const { t, } = useTranslation(['glossary', 'common']);
 	const onClick = selected ?
-		() => toggleSelected(children)  :
+		() => toggleSelected(operation)  :
 		() => {
-			toggleSelected(children);
-			history.push('/operation/' + children.gufi);
+			toggleSelected(operation);
+			history.push('/operation/' + operation.gufi);
 		};
 	const [showProperties, setShowProperties] = useState(expanded);
+
 	return (
 		<Callout
-			key={children.gufi}
+			key={operation.gufi}
 			className={styles.item}
 			title={
 				<div className={styles.title}>
@@ -34,7 +35,7 @@ function Operation({expanded = false, selected = false, toggleSelected, children
 							textOverflow: 'ellipsis',
 							marginRight: 'auto'
 						}}
-					>{children.name}</p>
+					>{operation.name}</p>
 					<Button
 						className={styles.button}
 						small
@@ -43,7 +44,7 @@ function Operation({expanded = false, selected = false, toggleSelected, children
 						intent={showProperties ? Intent.DANGER : Intent.SUCCESS}
 						onClick={() => setShowProperties(show => {
 							if (show === false) {
-								history.replace('/dashboard/operations/' + children.gufi);
+								history.replace('/dashboard/operations/' + operation.gufi);
 								return true;
 							} else {
 								history.replace('/dashboard/operations');
@@ -83,7 +84,7 @@ function Operation({expanded = false, selected = false, toggleSelected, children
 						minimal
 						icon='edit'
 						intent={Intent.WARNING}
-						onClick={() => history.push('/operation/edit/' + children.gufi)}
+						onClick={() => history.push('/operation/edit/' + operation.gufi)}
 					>
 						<div className={styles.buttonHoveredTooltip}>
 							{t('common:edit_on_map')}
@@ -91,7 +92,7 @@ function Operation({expanded = false, selected = false, toggleSelected, children
 					</Button>
 				</div>
 			}
-			data-test-id={'op' + children.name}
+			data-test-id={'op' + operation.name}
 			icon="double-chevron-right"
 		>
 			{showProperties &&
@@ -99,20 +100,20 @@ function Operation({expanded = false, selected = false, toggleSelected, children
 				<GenericListLine>
 					ID
 					<div data-test-id='dash#selected#gufi'>
-						{children.gufi}
+						{operation.gufi}
 					</div>
 				</GenericListLine>
 				<GenericListLine>
 					{t('operations.owner')}
-					{children.owner.firstName + ' ' + children.owner.lastName + ' (' + children.owner.username + ')'}
+					{operation.owner.asDisplayString}
 				</GenericListLine>
 				<GenericListLine>
 					{t('volumes.effective_time_begin')}
-					{new Date(children.operation_volumes[0].effective_time_begin).toLocaleString()}
+					{new Date(operation.operation_volumes[0].effective_time_begin).toLocaleString()}
 				</GenericListLine>
 				<GenericListLine>
 					{t('volumes.effective_time_end')}
-					{new Date(children.operation_volumes[0].effective_time_end).toLocaleString()}
+					{new Date(operation.operation_volumes[0].effective_time_end).toLocaleString()}
 				</GenericListLine>
 				{/*<GenericListLine>
 					{t('volumes.min_altitude')}
@@ -120,11 +121,11 @@ function Operation({expanded = false, selected = false, toggleSelected, children
 				</GenericListLine> */}
 				<GenericListLine>
 					{t('volumes.max_altitude')}
-					{children.operation_volumes[0].max_altitude}
+					{operation.operation_volumes[0].max_altitude}
 				</GenericListLine>
 				<GenericListLine>
 					{t('operations.aircraft_comments')}
-					{children.aircraft_comments}
+					{operation.aircraft_comments}
 				</GenericListLine>
 				{/* <GenericListLine>
 					{t('operations.volumes_description')}
@@ -132,19 +133,19 @@ function Operation({expanded = false, selected = false, toggleSelected, children
 				</GenericListLine> */}
 				<GenericListLine>
 					{t('operations.flight_number')}
-					{children.flight_number}
+					{operation.flight_number}
 				</GenericListLine>
 				<GenericListLine>
 					{t('operations.state')}
-					{children.state}
+					{operation.state}
 				</GenericListLine>
 				<GenericListLine>
 					{t('operations.flight_comments')}
-					{children.flight_comments}
+					{operation.flight_comments}
 				</GenericListLine>
 				<GenericListLine>
 					{t('operations.free_text')}
-					{children.free_text}
+					{operation.free_text}
 				</GenericListLine>
 			</div>
 			}
@@ -153,14 +154,14 @@ function Operation({expanded = false, selected = false, toggleSelected, children
 }
 
 function OperationsList() {
-	const {t,} = useTranslation('glossary');
+	const { t, } = useTranslation('glossary');
 	const { store, toggleSelected } = useStore(
 		'RootStore',
 		(store) => ({
 			store: store.operationStore,
 			toggleSelected: store.operationStore.toggleVisibility
 		}));
-	const {id} = useParams();
+	const { id } = useParams();
 	if (store.hasFetched) {
 		return (
 			<>
@@ -177,9 +178,8 @@ function OperationsList() {
 							expanded={op.gufi === id}
 							selected={op._visibility}
 							toggleSelected={toggleSelected}
-						>
-							{op}
-						</Operation>;
+							operation={op}
+						/>;
 					})}
 				</GenericList>
 				}
@@ -192,7 +192,7 @@ function OperationsList() {
 		);
 	} else {
 		return (
-			<div className="fullHW" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+			<div className="fullHW" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 				<Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>
 			</div>
 		);

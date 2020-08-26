@@ -75,5 +75,7 @@
   "layers": "Layers",
   "actions": "Actions",
   "edit": "Edit",
-  "page": "Page {{number}}"
+  "page": "Page {{number}}",
+  "go_back": "Back",
+  "add_vehicle": "Create new vehicle"
 }

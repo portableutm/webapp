@@ -1,40 +1,59 @@
-import React, {useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Button, FormGroup, InputGroup, Radio, RadioGroup} from '@blueprintjs/core';
-import useAdesState from '../../state/AdesState';
-import { useHistory, useParams } from 'react-router-dom';
-import {fM} from '../../libs/SaferSanctuary';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button, FormGroup, InputGroup, Radio, RadioGroup, Intent } from '@blueprintjs/core';
 import styles from '../generic/GenericList.module.css';
+import { useStore } from 'mobx-store-provider';
+import { BaseVehicle } from '../../models/entities/Vehicle';
+import { useLocalStore, useAsObservableSource, observer, useObserver } from 'mobx-react';
 
-const Text = ({name, label, description, placeholder = '', ...props}) => (
-	<FormGroup
-		helperText={description}dsh
-		label={label}
-		labelFor={'text-' + name}
-	>
-		<InputGroup
-			id={'text-' + name}
-			key={'text-' + name}
-			placeholder={placeholder}
-			disabled={props.disabled}
-			intent={props.intent}
-		/>
-	</FormGroup>
-);
-
-function NewVehicle({userId}) {
-	const { username } = useParams();
+const Form = ({ localStore, properties }) => {
 	const { t, } = useTranslation('glossary');
-	const history = useHistory();
-	const [state, actions] = useAdesState();
-	const [isSubmitting, setSubmitting] = useState(false);
-	const [tclass, setTClass] = useState('MULTIROTOR');
 
-	useEffect(() => {
-		// Only run in mount
-		/* Fetch vehicle data if too old, when loading component */
-		actions.vehicles.fetchIfOld();
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+	return useObserver(() => {
+		return properties.map(property => {
+			return (
+				<FormGroup
+					key={property}
+					helperText={t(`vehicles.${property}_desc`)}
+					label={t(`vehicles.${property}`)}
+					labelFor={'text-' + property}
+				>
+					<InputGroup
+						id={'text-' + property}
+						key={'text-' + property}
+						value={localStore.vehicle[property]}
+						onChange={(evt) => localStore.vehicle.setProperty(property, evt.target.value)}
+					/>
+				</FormGroup>
+			);
+		});
+	});
+};
+
+function NewVehicle({ userId, finish /* Callback when the new vehicle is created, or the go back button is pressed */ }) {
+	const { authStore, vehicleStore } = useStore(
+		'RootStore',
+		(store) => ({ authStore: store.authStore, vehicleStore: store.vehicleStore }));
+	const obs = useAsObservableSource({ userId });
+
+	const localStore = useLocalStore(() => ({
+		vehicle: BaseVehicle.create({
+			nNumber: '',
+			faaNumber: '',
+			vehicleName: '',
+			manufacturer: '',
+			model: '',
+			'class': 'MULTIROTOR',
+			accessType: '',
+			vehicleTypeId: '',
+			'org-uuid': '',
+			registeredBy: authStore.username,
+			owner: obs.userId
+		})
+	}));
+
+	const { t, } = useTranslation('glossary');
+	const [isSubmitting, setSubmitting] = useState(false);
 
 	return (
 		<>
@@ -43,102 +62,43 @@ function NewVehicle({userId}) {
 					{t('vehicles.new_vehicle').toUpperCase()}
 				</h1>
 			</div>
-			<Text
-				name="nNumber"
-				label={t('vehicles.nNumber')}
-				description="Vehicle number"
-			/>
-			<Text
-				name="faaNumber"
-				label={t('vehicles.faaNumber')}
-				placeholder="N707JT"
-				description={t('vehicles.faaNumber_desc')}
-			/>
-			<Text
-				name="vehicleName"
-				label={t('vehicles.vehicleName')}
-				placeholder="Air Force One"
-				description="Short descriptive name of the vehicle"
-			/>
-			<Text
-				name="manufacturer"
-				label={t('vehicles.manufacturer')}
-				placeholder="DJI"
-				description="Brand or company that fabricated the vehicle"
-			/>
-			<Text
-				name="model"
-				label={t('vehicles.model')}
-				placeholder="Phantom 6 Mini"
-				description="Model of the vehicle"
+			<Form
+				localStore={localStore}
+				properties={['nNumber', 'faaNumber', 'vehicleName', 'manufacturer', 'model', 'owner']}
 			/>
 			<RadioGroup
 				label={t('vehicles.class')}
-				onChange={(evt) => setTClass(evt.currentTarget.value)}
-				selectedValue={tclass}
+				onChange={(evt) => localStore.vehicle.setProperty('class',evt.currentTarget.value)}
+				selectedValue={localStore.vehicle.class}
 			>
 				<Radio label="Multirotor" value="MULTIROTOR" />
 				<Radio label="Fixed-wing" value="FIXEDWING" />
 			</RadioGroup>
-			{/*<Text
-				name="accessType"
-				label={t('vehicles.accessType')}
-				placeholder=""
-				disabled={true}
-			/>
-
-			<Text
-				name="vehicleTypeId"
-				label={t('vehicles.vehicleTypeId')}
-				placeholder=""
-				disabled={true}
-			/>
-			<Text
-				name="org-uuid"
-				label={t('vehicles.org-uuid')}
-				placeholder=""
-				disabled={true}
-			/>*/}
-
-			<Text
-				name="owner_id"
-				label={t('vehicles.owner')}
-				placeholder={userId || username}
-				disabled={true}
-			/>{/*
-			<Text
-				name="registeredBy"
-				label={t('vehicles.registeredBy')}
-				placeholder={fM(state.auth.user).username}
-				disabled={true}
-			/>*/}
-			<Button
-				fill
-				disabled={isSubmitting}
-				onClick={() => {
-					const vehicle = {
-						owner_id: userId || username,
-						nNumber: document.getElementById('text-nNumber').value,
-						faaNumber: document.getElementById('text-faaNumber').value,
-						vehicleName: document.getElementById('text-vehicleName').value,
-						manufacturer: document.getElementById('text-manufacturer').value,
-						model: document.getElementById('text-model').value,
-						'class': tclass,
-						accessType: '',
-						vehicleTypeId: '',
-						'org-uuid': '',
-						registeredBy: fM(state.auth.user).username,
-					};
-					setSubmitting(true);
-					actions.vehicles.post(
-						vehicle, 
-						() => history.push('/dashboard/vehicles'),
-						(err) => {actions.warning.setWarning(err); setSubmitting(false);}
-					);
-				}}
-			>
-				{t('submit')}
-			</Button>
+			<div className={styles.actionArea}>
+				<Button
+					disabled={isSubmitting}
+					style={{ marginRight: '2px' }}
+					intent={Intent.PRIMARY}
+					onClick={() => {
+						finish();
+					}}
+				>
+					{t('go_back')}
+				</Button>
+				<Button
+					disabled={isSubmitting}
+					intent={Intent.SUCCESS}
+					style={{ marginLeft: '2px' }}
+					onClick={async () => {
+						setSubmitting(true);
+						await vehicleStore.post(localStore.vehicle);
+						setSubmitting(false);
+						finish();
+					}}
+				>
+					{t('submit')}
+				</Button>
+			</div>
 		</>
 	);
 }
@@ -160,4 +120,4 @@ function NewVehicle({userId}) {
 }
  */
 
-export default NewVehicle;
+export default observer(NewVehicle);

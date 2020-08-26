@@ -11,4 +11,11 @@ export const User = types
 		role: types.enumeration('UserRoles', ['admin', 'pilot']),
 		// volumesOfInterest:
 		// settings:
+	})
+	.views(self => {
+		return {
+			get asDisplayString() {
+				return `${self.firstName} ${self.lastName} (${self.username})`;
+			}
+		};
 	});

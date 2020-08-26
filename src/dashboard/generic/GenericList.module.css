@@ -21,6 +21,19 @@
     transition: all 0.5s;
 }
 
+.actionArea {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttonAction {
+    border-radius: 25px;
+    width: fit-content;
+    margin-bottom: 5px;
+}
+
 .button .buttonHoveredTooltip {
     display: flex;
     height: 20px;
@@ -61,4 +74,7 @@
     text-align: center;
     top: -15px;
     z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useStore } from 'mobx-store-provider';
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
-import S from 'sanctuary';
 import { Button, FormGroup, InputGroup, Intent } from '@blueprintjs/core';
 import SidebarButton from '../SidebarButton';
 import styles from '../Map.module.css';
@@ -151,10 +149,6 @@ const QuickFlyControl = () => {
 			}
 		</>
 	);
-};
-
-QuickFlyControl.propTypes = {
-	onClick: PropTypes.func.isRequired // Function to be called after clicking in a location
 };
 
 export default observer(QuickFlyControl);

@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import SidebarButton from '../SidebarButton';
 import useAdesState from '../../state/AdesState';
 import S from 'sanctuary';
-import {fM} from '../../libs/SaferSanctuary';
-import {useTranslation} from 'react-i18next';
-import {Button, Dialog, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
+import { fM } from '../../libs/SaferSanctuary';
+import { useTranslation } from 'react-i18next';
+import { Button, Dialog, FormGroup, InputGroup, Intent } from '@blueprintjs/core';
 import styles from '../Map.module.css';
 
-function Property({property, value}) {
+function Property({ property, value }) {
 	return (
 		<>
 			<div
@@ -25,7 +25,7 @@ function Property({property, value}) {
 	);
 }
 
-function SelectedOperation ({gufi}) {
+function SelectedOperation ({ gufi }) {
 	const { t } = useTranslation(['glossary','map']);
 	const [state, actions] = useAdesState();
 	const [isDialogShown, showDialog] = useState(false);
@@ -35,7 +35,7 @@ function SelectedOperation ({gufi}) {
 		[t('operations.name'), operation.name],
 		['ID',operation.gufi],
 		[t('operations.state'), operation.state],
-		[t('operations.owner'), operation.owner.firstName + ' ' + operation.owner.lastName + ' (' + operation.owner.username + ')'],
+		[t('operations.owner'), operation.owner.asDisplayString],
 		[t('operations.contact'), operation.contact],
 		[t('operations.phone'), '097431725'],
 		[t('volumes.effective_time_begin'), new Date(operation.operation_volumes[0].effective_time_begin).toLocaleString()],

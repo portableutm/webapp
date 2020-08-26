@@ -47,7 +47,7 @@ export const OperationStore = types
 					const response = yield getRoot(self).axiosInstance.get('operation', { headers: { auth: getRoot(self).authStore.token } });
 					self.hasFetched = true;
 					const operations = response.data.ops;
-					self.operations.merge(
+					self.operations.replace(
 						operations.reduce((prior, operation) => {
 							const correctedOperation = cleanOperation(operation);
 							const qtyOperationVolumes = correctedOperation.operation_volumes.length;
@@ -124,6 +124,7 @@ export const OperationStore = types
 		get operationsWithVisibility() {
 			return _.map(values(self.operations), (op) => {
 				const opWithVisibility = _.cloneDeep(op);
+				opWithVisibility.owner.asDisplayString = op.owner.asDisplayString;
 				opWithVisibility._visibility = _.includes(self.filterShownIds, op.gufi);
 				opWithVisibility._showInLayers = _.includes(
 					op.name.toLowerCase(),

@@ -1,7 +1,7 @@
-import {flow, getRoot, types} from 'mobx-state-tree';
+import { flow, getRoot, types } from 'mobx-state-tree';
 import Rfv from './entities/Rfv';
 import _ from 'lodash';
-import {values} from 'mobx';
+import { values } from 'mobx';
 
 export const RfvStore = types
 	.model('RfvStore', {
@@ -16,19 +16,19 @@ export const RfvStore = types
 				coords.map((pos) => [pos[1], pos[0]])
 			);
 			// TODO: For creation! coordinates[0].push(coordinates[0][0]); // Last coordinate should be the same than the first
-			return {...rfv,
+			return { ...rfv,
 				min_altitude: parseInt(rfv.min_altitude),
 				max_altitude: parseInt(rfv.max_altitude),
-				geography: {...rfv.geography, coordinates: [coordinates]}
+				geography: { ...rfv.geography, coordinates: [coordinates] }
 			};
 		};
 
 		return {
 			fetchRfvs: flow(function* fetchUvrs() {
 				try {
-					const response = yield getRoot(self).axiosInstance.get('restrictedflightvolume', {headers: {auth: getRoot(self).authStore.token}});
+					const response = yield getRoot(self).axiosInstance.get('restrictedflightvolume', { headers: { auth: getRoot(self).authStore.token } });
 					const rfvs = response.data;
-					self.rfvs.merge(
+					self.rfvs.replace(
 						rfvs.reduce((prior, rfv) => {
 							const correctedRfv = cleanRfv(rfv);
 							return [...prior, [correctedRfv.id, correctedRfv]];

@@ -30,6 +30,9 @@ export const PositionStore = types
 				} else {
 					self.positions.set(position.gufi, [correctedPosition]);
 				}
+			},
+			reset() {
+				self.hasFetched = false;
 			}
 		};
 	})

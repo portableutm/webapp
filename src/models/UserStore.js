@@ -19,7 +19,7 @@ export const UserStore = types
 					);
 					self.hasFetched = true;
 					const users = response.data;
-					self.users.merge(
+					self.users.replace(
 						users.reduce((prior, user) => {
 							return [...prior, [user.username, user]];
 						}, [])
@@ -30,7 +30,10 @@ export const UserStore = types
 					console.error(error);
 					console.groupEnd();
 				}
-			})
+			}),
+			reset() {
+
+			}
 		};
 	})
 	.views(self => {

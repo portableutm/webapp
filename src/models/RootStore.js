@@ -10,6 +10,7 @@ import { RfvStore } from './RfvStore';
 import { UserStore } from './UserStore';
 import { PositionStore } from './PositionStore';
 import { QuickFlyStore } from './QuickFlyStore';
+import { VehicleStore } from './VehicleStore';
 
 export const RootStore = types
 	.model('RootStore', {
@@ -35,6 +36,7 @@ export const RootStore = types
 		userStore: types.optional(UserStore, { users: {} }),
 		positionStore: types.optional(PositionStore, { positions: {} }),
 		quickFlyStore: types.optional(QuickFlyStore, { quickflies: {} }),
+		vehicleStore: types.optional(VehicleStore, { vehicles: {} }),
 		API: API,
 		debugIsDebug: DEBUG
 	})
@@ -68,7 +70,8 @@ export const RootStore = types
 					self.quickFlyStore.fetch(),
 					self.operationStore.fetchOperations(),
 					self.uvrStore.fetchUvrs(),
-					self.rfvStore.fetchRfvs()
+					self.rfvStore.fetchRfvs(),
+					self.vehicleStore.fetch()
 				];
 			}),
 			reset: () => {
@@ -82,7 +85,31 @@ export const RootStore = types
 				self.uvrStore.reset();
 				self.rfvStore.reset();
 				self.mapStore.reset();
+				self.userStore.reset();
+				self.positionStore.reset();
+				self.quickFlyStore.reset();
+				self.vehicleStore.reset();
 				applySnapshot(self, initialState);
+			},
+			/* Instance */
+			setAPI(newApi) {
+				// TODO: change socket API url too...
+				self.API = newApi;
+				self.axiosInstance = A.create({
+					baseURL: newApi,
+					timeout: 15000,
+					headers: {
+						'Content-Type': 'application/json',
+					}
+				});
+				self.axiosInstance.interceptors.response.use(function (response) {
+					if (response.headers.token) {
+						self.authStore.setTokenLimited(response.headers.token);
+					}
+					return response;
+				}, function (error) {
+					return Promise.reject(error);
+				});
 			},
 			/* Floating Text */
 			setFloatingText(text) {

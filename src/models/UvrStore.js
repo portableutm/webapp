@@ -1,7 +1,7 @@
-import {flow, getRoot, types} from 'mobx-state-tree';
+import { flow, getRoot, types } from 'mobx-state-tree';
 import Uvr from './entities/Uvr';
 import _ from 'lodash';
-import {values} from 'mobx';
+import { values } from 'mobx';
 
 export const UvrStore = types
 	.model('UvrStore', {
@@ -16,21 +16,21 @@ export const UvrStore = types
 				coords.map((pos) => [pos[1], pos[0]])
 			);
 			// TODO: For creation! coordinates[0].push(coordinates[0][0]); // Last coordinate should be the same than the first
-			return {...uvr,
+			return { ...uvr,
 				min_altitude: parseInt(uvr.min_altitude),
 				max_altitude: parseInt(uvr.max_altitude),
 				effective_time_begin: new Date(uvr.effective_time_begin),
 				effective_time_end: new Date(uvr.effective_time_end),
-				geography: {...uvr.geography, coordinates: [coordinates]}
+				geography: { ...uvr.geography, coordinates: [coordinates] }
 			};
 		};
 
 		return {
 			fetchUvrs: flow(function* fetchUvrs() {
 				try {
-					const response = yield getRoot(self).axiosInstance.get('uasvolume', {headers: {auth: getRoot(self).authStore.token}});
+					const response = yield getRoot(self).axiosInstance.get('uasvolume', { headers: { auth: getRoot(self).authStore.token } });
 					const uvrs = response.data;
-					self.uvrs.merge(
+					self.uvrs.replace(
 						uvrs.reduce((prior, uvr) => {
 							const correctedUvr = cleanUvr(uvr);
 							if (correctedUvr.effective_time_end >= new Date()) {

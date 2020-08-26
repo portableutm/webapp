@@ -263,11 +263,6 @@ function Ades() {
 								<NewVehicle userId={rootStore.authStore.username}/>
 							</Dashboard>
 						</LayoutRoute>
-						<LayoutRoute pilot admin path='/dashboard/vehicles'>
-							<Dashboard>
-								<VehiclesList />
-							</Dashboard>
-						</LayoutRoute>
 						{rootStore.authStore.isPilot &&
 						<LayoutRoute pilot path='/'>
 							<Dashboard/>
@@ -300,9 +295,9 @@ function Ades() {
 								<UsersList />
 							</Dashboard>
 						</LayoutRoute>
-						<LayoutRoute admin path={'/dashboard/vehicles/:username/new'}>
+						<LayoutRoute admin path='/dashboard/vehicles/:username?'>
 							<Dashboard>
-								<NewVehicle />
+								<VehiclesList />
 							</Dashboard>
 						</LayoutRoute>
 						<LayoutRoute admin path='/dashboard'>

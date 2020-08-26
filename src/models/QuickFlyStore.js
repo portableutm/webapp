@@ -1,8 +1,6 @@
 import { flow, getRoot, types } from 'mobx-state-tree';
 import { values } from 'mobx';
 import { QuickFly } from './entities/QuickFly';
-import { Axios } from '../state/AdesState';
-import { fM } from '../libs/SaferSanctuary';
 import _ from 'lodash';
 
 export const QuickFlyStore = types
@@ -19,7 +17,6 @@ export const QuickFlyStore = types
 			const cornerSEswap = { ...qf.cornerSE, coordinates: [qf.cornerSE.coordinates[1], qf.cornerSE.coordinates[0]]  };
 			newQf.cornerNW = cornerNWswap;
 			newQf.cornerSE = cornerSEswap;
-			console.log('NEWQF', newQf);
 			return newQf;
 		}
 		return {
@@ -28,7 +25,7 @@ export const QuickFlyStore = types
 					const response = yield getRoot(self).axiosInstance.get('quickfly', { headers: { auth: getRoot(self).authStore.token } });
 					self.hasFetched = true;
 					const quickflies = response.data;
-					self.quickflies.merge(
+					self.quickflies.replace(
 						quickflies.reduce((prior, qf) => {
 							const correctedQf = cleanQf(qf);
 							return [...prior, [correctedQf.id, correctedQf]];
@@ -63,7 +60,10 @@ export const QuickFlyStore = types
 				} catch (error) {
 					getRoot(self).setFloatingText('Error while removing QuickFly: ' + error);
 				}
-			})
+			}),
+			reset() {
+				self.hasFetched = false;
+			}
 		};
 	})
 	.views(self => {

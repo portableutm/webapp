@@ -75,10 +75,10 @@ function User({ expanded = false,  children }) {
 						minimal
 						icon='known-vehicle'
 						intent={Intent.SUCCESS}
-						onClick={() => history.push('/dashboard/vehicles/' + children.username + '/new/')}
+						onClick={() => history.push('/dashboard/vehicles/' + children.username)}
 					>
 						<div className={styles.buttonHoveredTooltip}>
-							{t('vehicles.add')}
+							{t('vehicles.plural_generic')}
 						</div>
 					</Button>
 				</div>
