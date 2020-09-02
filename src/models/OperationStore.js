@@ -1,6 +1,6 @@
 /* Libraries */
 import { flow, getRoot, types } from 'mobx-state-tree';
-import { values  } from 'mobx';
+import { values } from 'mobx';
 import _ from 'lodash';
 
 import { Operation } from './entities/Operation';
@@ -42,9 +42,10 @@ export const OperationStore = types
 		};
 
 		return {
-			fetchOperations: flow(function* fetchOperations() {
+			/* Requests */
+			fetch: flow(function* fetch(allOperations = true /* fetch only the operations to which the current logged in user is the owner*/) {
 				try {
-					const response = yield getRoot(self).axiosInstance.get('operation', { headers: { auth: getRoot(self).authStore.token } });
+					const response = yield getRoot(self).axiosInstance.get(allOperations ? 'operation' : 'operation/owner', { headers: { auth: getRoot(self).authStore.token } });
 					self.hasFetched = true;
 					const operations = response.data.ops;
 					self.operations.replace(
@@ -69,6 +70,64 @@ export const OperationStore = types
 					console.groupEnd();
 				}
 			}),
+			fetchOne: flow(function* fetchOne(gufi) {
+				try {
+					const response = yield getRoot(self).axiosInstance.get(`operation/${gufi}`, { headers: { auth: getRoot(self).authStore.token } });
+					const operation = response.data;
+					const correctedOperation = cleanOperation(operation);
+					const qtyOperationVolumes = correctedOperation.operation_volumes.length;
+					if (correctedOperation
+						.operation_volumes[qtyOperationVolumes-1]
+						.effective_time_end >= new Date()
+					) {
+						// Only operations that are yet to happen or in progress are considered
+						self.operations.set(correctedOperation.gufi, correctedOperation);
+					}
+				} catch (error) {
+					console.group('operationStore fetchOne *error*');
+					console.log('%cAn error has ocurred', 'color:red; font-size: 36px');
+					console.error(error);
+					console.groupEnd();
+				}
+			}),
+			post: flow(function* post(newOperation /* : <BaseOperation> */) {
+				try {
+					//const operationSnapshot = getSnapshot(newOperation);
+					const response =
+						yield getRoot(self).axiosInstance.post('operation', newOperation, { headers: { auth: getRoot(self).authStore.token } });
+					yield self.fetch();
+					getRoot(self).setFloatingText('Operation saved successfully');
+					return response;
+				} catch (error) {
+					getRoot(self).setFloatingText('Error while saving Operation: ' + error);
+				}
+			}),
+			updatePending: flow(function* updatePending(gufi, comments, isApproved) {
+				try {
+					const data = { comments: comments, approved: isApproved };
+					const response = yield getRoot(self).axiosInstance.post(
+						`operation/${gufi}/pendingtoaccept`
+						, data,
+						{ headers: { auth: getRoot(self).authStore.token } });
+					getRoot(self).setFloatingText(`The operation has been ${isApproved ? 'approved' : 'rejected'} successfully`);
+					return response;
+				} catch (error) {
+					getRoot(self).setFloatingText('Error while updating Operation: ' + error);
+				}
+			}),
+			/* Update internal state */
+			updateOne(gufi, property, value) {
+				const current = self.operations.get(gufi);
+				if (current) {
+					current[property] = value;
+					if (property === 'state' && value === 'ROGUE') {
+						// Send ROGUE notification
+						getRoot(self).notificationStore.addOperationGoneRogue(gufi);
+					}
+					self.operations.set(gufi, current);
+				}
+			},
+			/* Filtering operations by state */
 			setFilterAccepted(flag) {
 				self.filterShowAccepted = flag;
 			},
@@ -114,7 +173,7 @@ export const OperationStore = types
 					return true;
 				} else if (self.filterShowRogue && operation.state === 'ROGUE') {
 					return true;
-				} else if (_.includes(self.filterShownIds, operation)) {
+				} else if (_.includes(self.filterShownIds, operation.gufi)) {
 					return true;
 				} else {
 					return self.filterShowOthers;
@@ -132,5 +191,21 @@ export const OperationStore = types
 				);
 				return opWithVisibility;
 			});
+		},
+		get counts() {
+			const operations = values(self.operations);
+			let operationCount = 0;
+			let activeCount = 0;
+			let acceptedCount = 0;
+			let pendingCount = 0;
+			let rogueCount = 0;
+			_.forEach(operations, (operation) => {
+				operationCount++;
+				if (operation.state === 'ROGUE') rogueCount++;
+				if (operation.state === 'ACTIVATED') activeCount++;
+				if (operation.state === 'ACCEPTED') acceptedCount++;
+				if (operation.state === 'PENDING') pendingCount++;
+			});
+			return { operationCount, activeCount, acceptedCount, pendingCount, rogueCount };
 		}
 	}));

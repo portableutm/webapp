@@ -1,17 +1,18 @@
 /* istanbul ignore file */
 
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet-geometryutil';
 import A from 'axios';
-import useAdesState from '../../state/AdesState';
+import { useStore } from 'mobx-store-provider';
 
-function UseSimulatorLogic(token) {
+function UseSimulatorLogic() {
 
 	const [droneCurrentlyAdding, setDroneCurrentlyAdding] = useState(-1);
 	const [paths, setPaths] = useState([[]]);
 	const [timer, setTimer] = useState(null);
-	const [state, actions] = useAdesState();
+
+	const { API, authStore, mapStore } = useStore('RootStore', store => ({ API: store.API, authStore: store.authStore, mapStore: store.mapStore }));
 
 	const setPath = (latlng, index = -1) => {
 		setPaths(paths => {
@@ -35,10 +36,9 @@ function UseSimulatorLogic(token) {
 
 	const fly = (ratio) => {
 		paths.forEach((path, index) => {
-			const map = state.map.mapRef.current;
-			const point = L.GeometryUtil.interpolateOnLine(map, path, ratio);
+			const point = L.GeometryUtil.interpolateOnLine(mapStore.map, path, ratio);
 			const nextPointIndex = point.predecessor < path.length - 1 ? point.predecessor + 1: 0;
-			const nextPoint = {lat: path[nextPointIndex][0], lng: path[nextPointIndex][1]};
+			const nextPoint = { lat: path[nextPointIndex][0], lng: path[nextPointIndex][1] };
 			const heading = L.GeometryUtil.bearing(point.latLng, nextPoint);
 			console.log('POINT', point);
 			const position = {
@@ -55,7 +55,7 @@ function UseSimulatorLogic(token) {
 				'gufi': gufis[index%4]
 			};
 			console.log('POSITION', position);
-			A.post(state.api + 'position', position, {headers: { auth: token }})
+			A.post(API + 'position', position, { headers: { auth: authStore.token } })
 				.then(result => {
 					console.log('POSITION', result.data);
 				})
@@ -86,11 +86,12 @@ function UseSimulatorLogic(token) {
 	useEffect(() => {
 		if (droneCurrentlyAdding < 0) {
 			// When Map click should do nothing
-			actions.map.disableMapOnClick();
+			mapStore.removeMapOnClick();
+
 		} else {
-			actions.map.disableMapOnClick();
-			actions.map.setMapOnClick(event => {
-				const {latlng} = event;
+			mapStore.removeMapOnClick();
+			mapStore.setMapOnClick(event => {
+				const { latlng } = event;
 				setPath(latlng);
 			});
 		}

@@ -1,16 +1,16 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-import {Button, FormGroup, InputGroup} from '@blueprintjs/core';
+import { Button, FormGroup, InputGroup } from '@blueprintjs/core';
 
 import S from 'sanctuary';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import SidebarButton from '../SidebarButton';
 import OperationVolumeInfoEditor from './OperationVolumeInfoEditor';
 import styles from '../Map.module.css';
 import { useHistory } from 'react-router-dom';
-import {fM} from '../../libs/SaferSanctuary';
+import { fM } from '../../libs/SaferSanctuary';
 
-function OperationInfoEditor({maybeInfo, setters, saveOperation}) {
+function OperationInfoEditor({ maybeInfo, setters, saveOperation }) {
 	const { t, } = useTranslation(['map', 'glossary', 'common']);
 	const [isSaving, setSaving] = useState(false);
 	const history = useHistory();
@@ -51,6 +51,7 @@ function OperationInfoEditor({maybeInfo, setters, saveOperation}) {
 					labelFor="name"
 				>
 					<InputGroup
+						className={styles.sidebarButtonTextContent}
 						id="name"
 						data-test-id="map#editor#operation#info#name"
 						value={info.name}
@@ -64,6 +65,7 @@ function OperationInfoEditor({maybeInfo, setters, saveOperation}) {
 					labelFor="name"
 				>
 					<InputGroup
+						className={styles.sidebarButtonTextContent}
 						id="pilot"
 						data-test-id="map#editor#operation#info#pilot"
 						value={info.owner}
@@ -91,6 +93,7 @@ function OperationInfoEditor({maybeInfo, setters, saveOperation}) {
 					labelFor="contact"
 				>
 					<InputGroup
+						className={styles.sidebarButtonTextContent}
 						id="contact"
 						data-test-id="map#editor#operation#info#contact"
 						value={info.contact}
@@ -105,6 +108,7 @@ function OperationInfoEditor({maybeInfo, setters, saveOperation}) {
 					labelFor="contact_phone"
 				>
 					<InputGroup
+						className={styles.sidebarButtonTextContent}
 						id="contact_phone"
 						data-test-id="map#editor#operation#info#contact_phone"
 						value={info.contact_phone}
@@ -119,6 +123,7 @@ function OperationInfoEditor({maybeInfo, setters, saveOperation}) {
 					labelFor="flight_comments"
 				>
 					<InputGroup
+						className={styles.sidebarButtonTextContent}
 						id="flight_comments"
 						data-test-id="map#editor#operation#info#flight_comments"
 						value={info.flight_comments}
@@ -135,7 +140,7 @@ function OperationInfoEditor({maybeInfo, setters, saveOperation}) {
 					<Button
 						fill
 						icon="undo"
-						style={{marginRight: '2.5px'}}
+						style={{ marginRight: '2.5px' }}
 						onClick={() => history.push('/')}
 					>
 						{t('editor.return')}
@@ -143,7 +148,7 @@ function OperationInfoEditor({maybeInfo, setters, saveOperation}) {
 					<Button
 						fill
 						icon="floppy-disk"
-						style={{marginLeft: '2.5px'}}
+						style={{ marginLeft: '2.5px' }}
 						loading={isSaving}
 						onClick={() => saveOperationAndSetSaving()}
 					>

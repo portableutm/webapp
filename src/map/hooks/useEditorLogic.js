@@ -1,12 +1,12 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import S from 'sanctuary';
 import _ from 'lodash';
 
 /* Internal */
-import useAdesState from '../../state/AdesState';
-import {fM} from '../../libs/SaferSanctuary';
-import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import { fM } from '../../libs/SaferSanctuary';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+import { useStore } from 'mobx-store-provider';
 
 const editorMode = {
 	OPERATION: {
@@ -107,11 +107,16 @@ const defaultNewUVR = {
 // setUTCHours(volumeInfo.effective_time_end.getUTCHours() + DEFAULT_OPERATION_VALIDITY)
 
 function useEditorLogic(mode = editorMode.UNKNOWN, currentInfo = null) {
-
+	const { mapStore, setFloatingText, hideFloatingText, opStore } = useStore('RootStore',
+		(store) => ({
+			mapStore: store.mapStore,
+			setFloatingText: store.setFloatingText,
+			hideFloatingText: store.hideFloatingText,
+			opStore: store.operationStore,
+			uvrStore: store.uvrStore
+		}));
 	const { t } = useTranslation('map');
-	const [state, actions] = useAdesState(state => state.map, actions => actions);
 	const [mbInfo, setMbInfo] = useState(S.Nothing);
-	const [clickListener, setClickListener] = useState(null);
 	const history = useHistory();
 
 	const isEditingOperation = S.isJust(mbInfo) && fM(mbInfo)._type === 'OPERATION';
@@ -120,14 +125,14 @@ function useEditorLogic(mode = editorMode.UNKNOWN, currentInfo = null) {
 	const setInfo = (partialOrCompleteInfo) =>
 		setMbInfo(mbOldInfo => {
 			const oldInfo = _.cloneDeep(fM(mbOldInfo));
-			return S.Just({...oldInfo, ...partialOrCompleteInfo});
+			return S.Just({ ...oldInfo, ...partialOrCompleteInfo });
 		});
 	const setVolumeInfo = (volumeId, partialOrCompleteInfo) =>
 		setMbInfo(mbOldInfo => {
 			const oldInfo = _.cloneDeep(fM(mbOldInfo));
 			const volumes =  [...oldInfo.operation_volumes];
-			volumes[volumeId] = {...volumes[volumeId],
-				...partialOrCompleteInfo};
+			volumes[volumeId] = { ...volumes[volumeId],
+				...partialOrCompleteInfo };
 			return S.Just({
 				...oldInfo,
 				operation_volumes: volumes
@@ -135,13 +140,13 @@ function useEditorLogic(mode = editorMode.UNKNOWN, currentInfo = null) {
 		});
 	/* fnPolygon - fn that receives the current polygon of an operation volume and transforms it, returning it */
 	const setCoordinatesOfVolume = (volumeId, fnPolygon) => setMbInfo(oldInfo => {
-		const newInfo = {...fM(oldInfo)};
+		const newInfo = { ...fM(oldInfo) };
 		newInfo.operation_volumes[volumeId].operation_geography.coordinates =
 			fnPolygon(newInfo.operation_volumes[volumeId].operation_geography.coordinates);
 		return S.Just(newInfo);
 	});
 	const setCoordinatesOfUVR = (fnPolygon) => setMbInfo(oldInfo => {
-		const newInfo = {...fM(oldInfo)};
+		const newInfo = { ...fM(oldInfo) };
 		newInfo.geography.coordinates = fnPolygon(newInfo.geography.coordinates);
 		return S.Just(newInfo);
 	});
@@ -161,15 +166,15 @@ function useEditorLogic(mode = editorMode.UNKNOWN, currentInfo = null) {
 		}
 	};
 
-	const save = (savingFinishedCallback) => {
-		actions.map.disableMapOnClick();
+	const save = async (savingFinishedCallback) => {
+		mapStore.removeMapOnClick();
 		/* Check polygon has been created */
 		if (mode === editorMode.OPERATION.NEW || mode === editorMode.OPERATION.EXISTING) {
 			if (fM(mbInfo).operation_volumes[0].operation_geography.coordinates.length === 0)
-				actions.warning.setWarning(t('editor.cant_finish'));
+				setFloatingText(t('editor.cant_finish'));
 		} else if (mode === editorMode.UVR.NEW || mode === editorMode.UVR.EXISTING) {
 			if (fM(mbInfo).geography.coordinates.length === 0)
-				actions.warning.setWarning(t('editor.cant_finish'));
+				setFloatingText(t('editor.cant_finish'));
 		}
 
 		const info = fM(mbInfo);
@@ -182,27 +187,23 @@ function useEditorLogic(mode = editorMode.UNKNOWN, currentInfo = null) {
 					...opVolume,
 					operation_geography: {
 						...opVolume.operation_geography,
-						coordinates: [newCoordinates]
+						coordinates: [[...newCoordinates, newCoordinates[0]]] // First and last point should be the same
 					}
 				};
 			});
-			const callback = () => {
-				savingFinishedCallback();
-				history.push('/dashboard/operations');
-			};
-			const errorCallback = () => {
-				savingFinishedCallback();
-			};
-			actions.operations.post(info, callback, errorCallback);
+
+			await opStore.post(info); // If there is an error, it is managed by the OperationStore directly
+			history.push('/dashboard/operations');
+			savingFinishedCallback();
 		} else if (mode === editorMode.UVR.NEW || mode === editorMode.UVR.EXISTING) {
-			const callback = () => {
+			/*const callback = () => {
 				savingFinishedCallback();
 				history.push('/');
 			};
 			const errorCallback = () => {
 				savingFinishedCallback();
-			};
-			actions.uvr.post(info, callback, errorCallback);
+			};*/
+			//actions.uvr.post(info, callback, errorCallback);
 		}
 	};
 
@@ -244,9 +245,9 @@ function useEditorLogic(mode = editorMode.UNKNOWN, currentInfo = null) {
 
 	useEffect(() => {
 		/* Map initialized - clicking on map should draw a polygon for the Operation or UVR */
-		if (state.isInitialized && mode !== editorMode.UNKNOWN) {
+		if (mapStore.isInitialized && mode !== editorMode.UNKNOWN) {
 			const drawPolygonPointOnClick = (event) => {
-				const {latlng} = event;
+				const { latlng } = event;
 				if (mode === editorMode.OPERATION.NEW || mode === editorMode.OPERATION.EXISTING) {
 					setCoordinatesOfVolume(0, oldCoordinates => {
 						const newCoordinates = oldCoordinates.length === 0 ? [] : oldCoordinates[0].slice();
@@ -260,7 +261,7 @@ function useEditorLogic(mode = editorMode.UNKNOWN, currentInfo = null) {
 						return [newCoordinates];
 					});
 				}
-				actions.warning.close();
+				hideFloatingText();
 			};
 			setMbInfo(mbOldInfo => {
 				const newInfo = _.cloneDeep(fM(mbOldInfo));
@@ -275,13 +276,13 @@ function useEditorLogic(mode = editorMode.UNKNOWN, currentInfo = null) {
 				}
 				return S.Just(newInfo);
 			});
-			setClickListener(actions.map.setMapOnClick(drawPolygonPointOnClick));
+			mapStore.setMapOnClick(drawPolygonPointOnClick);
 		} else {
-			actions.map.disableMapOnClick(clickListener);
+			mapStore.removeMapOnClick();
 		}
-	}, [state.isInitialized, mode]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	return [mbInfo, {setInfo, setVolumeInfo, setCoordinatesOfUVR, setCoordinatesOfVolume, removePointFromPolygon}, save, {isEditingOperation, isEditingUvr}];
+	return [mbInfo, { setInfo, setVolumeInfo, setCoordinatesOfUVR, setCoordinatesOfVolume, removePointFromPolygon }, save, { isEditingOperation, isEditingUvr }];
 }
 
-export {useEditorLogic as default, editorMode};
+export { useEditorLogic as default, editorMode };

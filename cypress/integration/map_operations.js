@@ -1,4 +1,8 @@
-import {API} from '../../src/consts';
+import { API } from '../../src/consts';
+
+const date1 = new Date();
+const date2 = new Date();
+date2.setUTCHours(date2.getUTCHours() + 4);
 
 const operations = {
 	count: 5,
@@ -9,11 +13,11 @@ const operations = {
 			discovery_reference: null,
 			submit_time: '2020-04-13T09:10:21.654Z',
 			update_time: '2020-04-13T10:07:31.180Z',
-			owner: {firstName: 'test', lastName: 'test', username: 'test'},
 			aircraft_comments: null,
 			name: 'PROPOSED',
 			volumes_description: 'v0.1 - Restricted to one volume.',
 			airspace_authorization: null,
+			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
 			flight_number: '12345678',
 			state: 'PROPOSED',
 			controller_location: null,
@@ -30,8 +34,8 @@ const operations = {
 					ordinal: 0,
 					volume_type: null,
 					near_structure: false,
-					effective_time_begin: '2020-04-13T11:07:24.364Z',
-					effective_time_end: '2020-04-13T12:07:24.364Z',
+					effective_time_begin: date1.toISOString(),
+					effective_time_end: date2.toISOString(),
 					actual_time_end: null,
 					min_altitude: '0',
 					max_altitude: '393',
@@ -132,7 +136,7 @@ const operations = {
 			gufi: 'a20ef8d5-506d-4f54-a981-874f6c8bd4de',
 			uss_name: null,
 			discovery_reference: null,
-			owner: {firstName: 'test', lastName: 'test', username: 'test'},
+			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
 			submit_time: '2020-04-13T08:59:46.146Z',
 			update_time: '2020-04-13T09:00:31.552Z',
 			aircraft_comments: null,
@@ -155,8 +159,8 @@ const operations = {
 					ordinal: 0,
 					volume_type: null,
 					near_structure: null,
-					effective_time_begin: '2019-12-11T19:59:10.000Z',
-					effective_time_end: '2019-12-11T20:59:10.000Z',
+					effective_time_begin: date1.toISOString(),
+					effective_time_end: date2.toISOString(),
 					actual_time_end: null,
 					min_altitude: '10',
 					max_altitude: '70',
@@ -265,10 +269,10 @@ const operations = {
 			gufi: 'b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63',
 			uss_name: null,
 			discovery_reference: null,
+			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
 			submit_time: '2020-04-13T08:59:49.740Z',
 			update_time: '2020-04-13T09:00:01.482Z',
 			aircraft_comments: null,
-			owner: {firstName: 'test', lastName: 'test', username: 'test'},
 			name: 'ACTIVATED',
 			volumes_description: 'Simple polygon',
 			airspace_authorization: null,
@@ -288,8 +292,8 @@ const operations = {
 					ordinal: 0,
 					volume_type: null,
 					near_structure: null,
-					effective_time_begin: '2019-12-11T19:59:10.000Z',
-					effective_time_end: '2019-12-11T20:59:10.000Z',
+					effective_time_begin: date1.toISOString(),
+					effective_time_end: date2.toISOString(),
 					actual_time_end: null,
 					min_altitude: '10',
 					max_altitude: '70',
@@ -398,15 +402,15 @@ const operations = {
 			gufi: 'f7891e78-9bb4-431d-94d3-1a506910c254',
 			uss_name: null,
 			discovery_reference: null,
+			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
 			submit_time: '2020-04-13T08:59:47.892Z',
 			update_time: '2020-04-13T09:00:00.885Z',
 			aircraft_comments: null,
-			name: 'CLOSED',
+			name: 'PENDING',
 			volumes_description: 'Simple polygon',
-			owner: {firstName: 'test', lastName: 'test', username: 'test'},
 			airspace_authorization: null,
 			flight_number: '12345678',
-			state: 'CLOSED',
+			state: 'PENDING',
 			controller_location: null,
 			gcs_location: null,
 			faa_rule: 'PART_107',
@@ -421,8 +425,8 @@ const operations = {
 					ordinal: 0,
 					volume_type: null,
 					near_structure: null,
-					effective_time_begin: '2019-12-11T19:59:10.000Z',
-					effective_time_end: '2019-12-11T20:59:10.000Z',
+					effective_time_begin: date1.toISOString(),
+					effective_time_end: date2.toISOString(),
 					actual_time_end: null,
 					min_altitude: '10',
 					max_altitude: '70',
@@ -535,13 +539,13 @@ const operations = {
 			gufi: 'ff4b6505-c282-42b1-b013-66f02137f5d5',
 			uss_name: null,
 			discovery_reference: null,
+			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
 			submit_time: '2020-04-13T08:59:44.339Z',
 			update_time: '2020-04-13T09:00:31.161Z',
 			aircraft_comments: null,
 			name: 'ROGUE',
 			volumes_description: 'Simple polygon',
 			airspace_authorization: null,
-			owner: {firstName: 'test', lastName: 'test', username: 'test'},
 			flight_number: '12345678',
 			state: 'ROGUE',
 			controller_location: null,
@@ -559,7 +563,7 @@ const operations = {
 					volume_type: null,
 					near_structure: null,
 					effective_time_begin: '2019-12-11T19:59:10.000Z',
-					effective_time_end: '2019-12-11T20:59:10.000Z',
+					effective_time_end: date2.toISOString(),
 					actual_time_end: null,
 					min_altitude: '10',
 					max_altitude: '70',
@@ -666,7 +670,6 @@ const operations = {
 		}
 	]
 };
-
 describe('SP2: (Dashboard)', function () {
 	beforeEach('Auth', function () {
 		cy.setCookie('sneaky', 'admin');
@@ -688,7 +691,8 @@ describe('SP2: (Dashboard)', function () {
 		cy.contains('sidemenu.operations_list').click();
 	});
 	it('Find operation named ACTIVATED and check it id matches', function () {
-		cy.get('[data-test-id="opACTIVATED"]').click().then(($el) => {
+		cy.get('[data-test-id="showHidePropertiesACTIVATED"]').click();
+		cy.get('[data-test-id="opACTIVATED"] > .animated > :nth-child(1)').then(($el) => {
 			expect($el).to.contain('b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63');
 		});
 		cy.contains('show_on_map').click();

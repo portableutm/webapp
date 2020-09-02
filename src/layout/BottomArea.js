@@ -16,7 +16,7 @@ const BottomArea = () => {
 	if ( isFloatingTextEnabled ) {
 		return (
 			<div className={styles.bottomArea}>
-				<div className={styles.bottomAreaInside}>
+				<div data-test-id="floating-text" className={styles.bottomAreaInside}>
 					<div className={styles.bottomAreaCloser}>
 						<Icon
 							data-test-id="warning#closer"

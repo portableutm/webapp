@@ -6,6 +6,9 @@
     "createnewuvr": "Create new UVR"
   },
   "notifications": {
+    "utmmessage": {
+      "header": "({{severity}}) received at {{time_sent}}"
+    },
     "operation_gone_rogue": {
       "header": "ROGUE OPERATION",
       "body": "The operation \"{{operation}}\" is now in the ROGUE state: the vehicles may be out of their reserved Volume. Advise all nearby vehicles"

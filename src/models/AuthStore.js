@@ -7,6 +7,7 @@ export const AuthStore = types
 		token: types.maybeNull(types.string),
 		role: types.optional(types.enumeration('AuthRoles', ['admin', 'pilot', 'NOTLOGGED']), 'NOTLOGGED'),
 		username: types.maybeNull(types.string),
+		email: types.maybeNull(types.string),
 		expireDate: types.optional(types.Date, new Date(0))
 	})
 	.actions(self => {
@@ -39,9 +40,12 @@ export const AuthStore = types
 						getRoot(self).positionStore.addPosition(info);
 					});
 
+					socket.on('new-operation', function (info) {
+						getRoot(self).operationStore.fetchOne(info.gufi);
+					});
+
 					socket.on('operation-state-change', function (info) {
-						//console.log('Operation-state-change', info);
-						//store.actions.operations.updateOne(info.gufi, info.state);
+						getRoot(self).operationStore.updateOne(info.gufi, 'state', info.state);
 					});
 
 					socket.connect();
@@ -50,6 +54,7 @@ export const AuthStore = types
 					/* Save users data parsed from token */
 					self.role = decoded.role;
 					self.username = decoded.username;
+					self.email = decoded.email;
 					self.expireDate.setUTCSeconds(decoded.exp);
 				} catch (error) {
 					console.error('Error setting token', error);

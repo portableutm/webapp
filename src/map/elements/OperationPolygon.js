@@ -1,16 +1,15 @@
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 
 /* Logic */
-import S from 'sanctuary';
 import L from 'leaflet';
 
 /* Global state */
-import {useTranslation} from 'react-i18next';
-import {useStore} from 'mobx-store-provider';
-import {autorun, when} from 'mobx';
-import {observer, useLocalStore} from 'mobx-react';
-import {createLeafletPolygonStore} from '../../models/locals/createLeafletPolygonStore';
-import {useAsObservableSource} from 'mobx-react';
+//import { useTranslation } from 'react-i18next';
+import { useStore } from 'mobx-store-provider';
+import { autorun, when } from 'mobx';
+import { observer, useLocalStore } from 'mobx-react';
+import { createLeafletPolygonStore } from '../../models/locals/createLeafletPolygonStore';
+import { useAsObservableSource } from 'mobx-react';
 
 /* Internal */
 
@@ -33,12 +32,12 @@ function getColorForOperationState(state) {
 const OperationPolygon = observer(({
 	latlngs, /* Data */
 	state,
-	info, /* Handlers */
+	name,
+	gufi, /* Handlers */
 	onClick,
-	onClickPopup,
 	isSelected = false
 }) => {
-	const {t,} = useTranslation('glossary');
+	//const { t, } = useTranslation('glossary');
 	const { mapStore } = useStore(
 		'RootStore',
 		(store) => ({
@@ -46,9 +45,9 @@ const OperationPolygon = observer(({
 		}));
 	const polygonStore = useLocalStore(
 		source => createLeafletPolygonStore(source),
-		{map: mapStore.map}
+		{ map: mapStore.map }
 	);
-	const obs = useAsObservableSource({state});
+	const obs = useAsObservableSource({ state, latlngs });
 
 	useEffect(() => { // Mount and unmount
 		// Initialize Polygon,
@@ -69,6 +68,15 @@ const OperationPolygon = observer(({
 					}
 				);
 
+				const polygonOnClick = onClick ?
+					onClick :
+					() => mapStore.setSelectedOperation(gufi);
+				// By default, clicking an OperationPolygon selects the operation and shows it in the sidebar
+
+				polygon.on('click',
+					(evt) =>
+						mapStore.executeFunctionInMap(polygonOnClick, name, evt));
+
 				polygon.addTo(mapStore.map);
 				polygonStore.setPolygon(polygon);
 			}
@@ -76,6 +84,7 @@ const OperationPolygon = observer(({
 		const dispose2 = autorun(() => {
 			// Runs whenever state is changed
 			if (polygonStore.isPolygonInstanced) {
+				polygonStore.leafletPolygon.setLatLngs(obs.latlngs);
 				polygonStore.leafletPolygon.setStyle({
 					fillColor: getColorForOperationState(obs.state)
 				});

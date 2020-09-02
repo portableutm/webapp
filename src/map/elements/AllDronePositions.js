@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
-import _ from 'lodash';
 import { autorun } from 'mobx';
 import { observer, useAsObservableSource } from 'mobx-react';
 import { useStore } from 'mobx-store-provider';
 import ControllerLocationMarker from './ControllerLocationMarker';
 import DroneMarker from './DroneMarker';
+import Polyline from './Polyline';
 
 const DronePosition = observer(({ positions, isDroneSelected, setDroneSelected }) => {
 	const obs = useAsObservableSource({
+		allPositions: positions,
 		newestPosition: positions[positions.length - 1],
 		isDroneSelected: isDroneSelected,
 		isControllerPositionShown: positions[0].isControllerLocationSet && isDroneSelected
@@ -19,6 +20,11 @@ const DronePosition = observer(({ positions, isDroneSelected, setDroneSelected }
 			<ControllerLocationMarker
 				key={'CL' + positions[0].gufi}
 				position={positions[0].controller_location.coordinates}
+			/>
+			}
+			{ obs.isDroneSelected &&
+			<Polyline
+				latlngs={[obs.allPositions.map(position => position.location)]}
 			/>
 			}
 			<DroneMarker
@@ -56,14 +62,14 @@ export const AllDronePositions = observer(() => {
 		return () => {
 			dispose();
 		};
-	}, []);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return posStore.allPositions.map((dronePositions) =>
 		// Array of array of positions. Each subarray must at least have one element.
 		<DronePosition
 			key={'dronepos' + dronePositions[0].gufi}
 			positions={dronePositions}
-			isDroneSelected={dronePositions[0].gufi === mapStore.selectedDroneGufi}
+			isDroneSelected={dronePositions[0].gufi === mapStore.selectedDrone}
 			setDroneSelected={() => mapStore.setSelectedDrone(dronePositions[0].gufi)}
 		/>
 	);

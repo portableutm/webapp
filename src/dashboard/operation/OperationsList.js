@@ -38,6 +38,7 @@ function Operation({ expanded = false, selected = false, toggleSelected, operati
 					>{operation.name}</p>
 					<Button
 						className={styles.button}
+						data-test-id={`showHideProperties${operation.name}`}
 						small
 						minimal
 						icon='menu-open'

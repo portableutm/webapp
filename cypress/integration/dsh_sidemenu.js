@@ -1,7 +1,7 @@
 /*
 UseCase 01A: Create new Operation
  */
-import {API} from '../../src/consts';
+import { API } from '../../src/consts';
 describe('SP: Dashboard', function () {
 	it('All buttons of the sidemenu - admin', function() {
 		cy.setCookie('sneaky', 'admin');
@@ -22,7 +22,7 @@ describe('SP: Dashboard', function () {
 	it('All buttons of the sidemenu - pilot', function() {
 		cy.setCookie('sneaky', 'RenatePenvarden');
 		cy.setCookie('hummingbird', 'xD6lJ9ATuA');
-		cy.visit('http://localhost:2000/dashboard/');
+		cy.visit('http://localhost:2000/');
 		cy.contains('sidemenu.edit_your_info').click();
 		cy.contains('sidemenu.operations_list_pilot').click();
 		cy.contains('sidemenu.vehicles_new').click();

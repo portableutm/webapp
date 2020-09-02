@@ -32,6 +32,7 @@ const initializeLeaflet = () => {
 		worldCopyJump: true,
 		layers: [leafletLayer]
 	});
+	map.getPane('tooltipPane').style.visibility = 'hidden';
 	map.on('zoomend', function() {
 		if (map.getZoom() > 12) {
 			map.getPane('tooltipPane').style.visibility = 'visible';
@@ -41,9 +42,7 @@ const initializeLeaflet = () => {
 	});
 	return map;
 };
-// TODO: Add copyright information about marker icon
-//  <a target="_blank" href="https://icons8.com/icons/set/fighter-jet">Fighter Jet icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
-//  <a target="_blank" href="https://icons8.com/icons/set/unchecked-radio-button--v1">Unchecked Radio Button icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+
 /* END LEAFLET INITIALIZATION CODE  */
 
 

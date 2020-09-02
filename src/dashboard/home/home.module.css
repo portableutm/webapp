@@ -29,6 +29,21 @@
     font-weight: bold;
 }
 
+.rogueValueInactive {
+    background-color: darkred;
+}
+
+.rogueValueWarning {
+    background-color: darkred;
+    animation: warningRed 0.5s alternate linear infinite;
+}
+
+@keyframes warningRed {
+    from{background-color: darkred}
+    to{background-color: #f80000
+    }
+}
+
 .div-active-ops{
     background-color: #76CA9E;
     height: 120px;

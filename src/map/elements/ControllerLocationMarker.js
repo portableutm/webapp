@@ -1,11 +1,13 @@
-import {useEffect, useState} from 'react';
+import { useEffect } from 'react';
 
 /* Logic */
-import S from 'sanctuary';
 import L from 'leaflet';
 import 'leaflet-rotatedmarker';
 import 'leaflet-hotline';
-import useAdesState from '../../state/AdesState';
+import { useStore } from 'mobx-store-provider';
+import { useLocalStore } from 'mobx-react';
+import { createLeafletMarkerStore } from '../../models/locals/createLeafletMarkerStore';
+import { when } from 'mobx';
 
 
 /* Constants */
@@ -23,25 +25,35 @@ const PILOT_ICON = L.icon({
 /**
  * @return {null}
  */
-function ControllerLocationMarker({position}) {
-	const [, setMarker] = useState(S.Nothing);
-	const [state, ] = useAdesState(state => state.map, actions => actions);
+function ControllerLocationMarker({ position }) {
+	const markerStore = useLocalStore(createLeafletMarkerStore);
+	const { mapStore } = useStore(
+		'RootStore',
+		(store) => ({
+			mapStore: store.mapStore
+		}));
 
 	useEffect(() => {
 		// Create marker, add it to map. Remove from map on unmount
-		const marker = L.marker(position, {
-			icon: PILOT_ICON
-		});
+		const dispose1 = when(
+			// Runs when the map is initialized
+			() => mapStore.isInitialized,
+			() => {
+				const marker = L.marker(position, {
+					icon: PILOT_ICON
+				});
 
-		marker.addTo(state.mapRef.current);
-		// Save initialized values
-		setMarker(S.Just(marker));
+				marker.addTo(mapStore.map);
+				markerStore.setMarker(marker);
+			});
+
 
 		return () => {
 			// Clean when Component unloaded
-			marker.remove();
+			dispose1();
+			markerStore.leafletMarker.remove();
 		};
-	}, [state.mapRef]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return null;
 }

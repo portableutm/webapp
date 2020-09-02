@@ -11,6 +11,7 @@ import { UserStore } from './UserStore';
 import { PositionStore } from './PositionStore';
 import { QuickFlyStore } from './QuickFlyStore';
 import { VehicleStore } from './VehicleStore';
+import { NotificationStore } from './NotificationStore';
 
 export const RootStore = types
 	.model('RootStore', {
@@ -37,6 +38,7 @@ export const RootStore = types
 		positionStore: types.optional(PositionStore, { positions: {} }),
 		quickFlyStore: types.optional(QuickFlyStore, { quickflies: {} }),
 		vehicleStore: types.optional(VehicleStore, { vehicles: {} }),
+		notificationStore: types.optional(NotificationStore, { notifications: {} }),
 		API: API,
 		debugIsDebug: DEBUG
 	})
@@ -66,13 +68,24 @@ export const RootStore = types
 				initialState = getSnapshot(self);
 			},
 			fetchAll: flow(function* fetchAll() {
-				yield [
-					self.quickFlyStore.fetch(),
-					self.operationStore.fetchOperations(),
-					self.uvrStore.fetchUvrs(),
-					self.rfvStore.fetchRfvs(),
-					self.vehicleStore.fetch()
-				];
+				if (self.authStore.role === 'admin') {
+					yield [
+						self.quickFlyStore.fetch(),
+						self.operationStore.fetch(),
+						self.uvrStore.fetchUvrs(),
+						self.rfvStore.fetchRfvs(),
+						self.vehicleStore.fetch()
+					];
+				} else {
+					yield [
+						self.quickFlyStore.fetch(),
+						self.operationStore.fetch(false),
+						self.uvrStore.fetchUvrs(),
+						self.userStore.fetchOne(self.authStore.username),
+						self.rfvStore.fetchRfvs(),
+						self.vehicleStore.fetch()
+					];
+				}
 			}),
 			reset: () => {
 				// Reset to initial state

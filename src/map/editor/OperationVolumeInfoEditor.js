@@ -1,12 +1,12 @@
 import React from 'react';
-import {FormGroup, InputGroup} from '@blueprintjs/core';
-import {DateInput, TimePrecision} from '@blueprintjs/datetime';
-import {useTranslation} from 'react-i18next';
+import { FormGroup, InputGroup } from '@blueprintjs/core';
+import { DateInput, TimePrecision } from '@blueprintjs/datetime';
+import { useTranslation } from 'react-i18next';
 import styles from '../Map.module.css';
 
 function OperationVolumeInfoEditor(props) {
 	const { t,  } = useTranslation('glossary');
-	const {info, editInfo} = props;
+	const { info, editInfo } = props;
 	return (
 		<div>
 			{/* title={t('editor.volume.editingvolume_count', {count: S.maybeToNullable(opVolumeIndex)})} */}
@@ -53,14 +53,14 @@ function OperationVolumeInfoEditor(props) {
 				effective_time_begin < effective_time_end MUST be true.
 				*/}
 			<div className={styles.sidebarButtonText}>
-				<p className="centerHorizontally">
+				<p className={styles.sidebarButtonTextContentLeft}>
 					{t('volumes.effective_time_begin')}
 				</p>
-				<div data-test-id="map#editor#volume#info#effective_time_begin">
+				<div data-test-id="map#editor#volume#info#effective_time_begin" className={styles.sidebarButtonTextContent}>
 					<DateInput
 						canClearSelection={false}
 						minDate={info.effective_time_begin}
-						formatDate={date => date.toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit'})}
+						formatDate={date => date.toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit' })}
 						parseDate={str => new Date(str)}
 						placeholder="DD/MM/YYYY"
 						value={info.effective_time_begin}
@@ -76,14 +76,14 @@ function OperationVolumeInfoEditor(props) {
 			effective_time_begin < effective_time_end MUST be true.
 			*/}
 			<div className={styles.sidebarButtonText}>
-				<p className="centerHorizontally">
+				<p className={styles.sidebarButtonTextContentLeft}>
 					{t('volumes.effective_time_end')}
 				</p>
-				<div data-test-id="map#editor#volume#info#effective_time_end">
+				<div data-test-id="map#editor#volume#info#effective_time_end" className={styles.sidebarButtonTextContent}>
 					<DateInput
 						canClearSelection={false}
 						minDate={info.effective_time_begin}
-						formatDate={date => date.toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit'})}
+						formatDate={date => date.toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit' })}
 						parseDate={str => new Date(str)}
 						placeholder="DD/MM/YYYY"
 						value={info.effective_time_end}
@@ -106,6 +106,7 @@ function OperationVolumeInfoEditor(props) {
 			</FormGroup> */}
 			<FormGroup className={styles.sidebarButtonText} label={t('volumes.max_altitude')} labelFor="max_altitude">
 				<InputGroup
+					className={styles.sidebarButtonTextContent}
 					id="max_altitude"
 					data-test-id="map#editor#volume#info#max_altitude"
 					value={info.max_altitude}

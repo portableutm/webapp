@@ -2,20 +2,18 @@ import React from 'react';
 
 /* Visuals */
 import styles from '../Map.module.css';
-import {Checkbox, InputGroup} from '@blueprintjs/core';
+import { Checkbox, InputGroup } from '@blueprintjs/core';
 
 /* Logic */
-import S from 'sanctuary';
-import PropTypes from 'prop-types';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import SidebarButton from '../SidebarButton';
-import {useStore} from 'mobx-store-provider';
-import {useObserver, useLocalStore} from 'mobx-react';
+import { useStore } from 'mobx-store-provider';
+import { useObserver, useLocalStore } from 'mobx-react';
 import * as classnames from 'classnames';
 
 const StateFilters = () => {
 	const { t, } = useTranslation('map');
-	const {operationStore: store} = useStore('RootStore');
+	const { operationStore: store } = useStore('RootStore');
 	return useObserver(() => (
 		<>
 			<div className={styles.sidebarSeparator}>
@@ -25,7 +23,7 @@ const StateFilters = () => {
 				className={styles.sidebarButtonText}
 			>
 				<Checkbox
-					className='donotselect'
+					className={styles.sidebarButtonTextContent}
 					data-test-id='layersACCEPTED'
 					checked={store.filterShowAccepted}
 					onChange={(evt) => {
@@ -39,7 +37,7 @@ const StateFilters = () => {
 				className={styles.sidebarButtonText}
 			>
 				<Checkbox
-					className='donotselect'
+					className={styles.sidebarButtonTextContent}
 					data-test-id='layersPENDING'
 					checked={store.filterShowPending}
 					onChange={(evt) => {
@@ -55,7 +53,7 @@ const StateFilters = () => {
 			>
 
 				<Checkbox
-					className='donotselect'
+					className={styles.sidebarButtonTextContent}
 					data-test-id='layersACTIVATED'
 					checked={store.filterShowActivated}
 					onChange={(evt) => {
@@ -69,7 +67,7 @@ const StateFilters = () => {
 				className={styles.sidebarButtonText}
 			>
 				<Checkbox
-					className='donotselect'
+					className={styles.sidebarButtonTextContent}
 					data-test-id='layersROGUE'
 					checked={store.filterShowRogue}
 					onChange={(evt) => {
@@ -87,7 +85,7 @@ const UvrsFilters = () => {
 	const { t, } = useTranslation('map');
 	const { store } = useStore(
 		'RootStore',
-		(store) => ({store: store.uvrStore})
+		(store) => ({ store: store.uvrStore })
 	);
 	return useObserver(() => (
 		<>
@@ -104,7 +102,7 @@ const UvrsFilters = () => {
 						)}
 					>
 						<Checkbox
-							className='donotselect'
+							className={styles.sidebarButtonTextContent}
 							disabled={!uvr._showInLayers}
 							data-test-id={'uvr' + index}
 							checked={uvr._visibility}
@@ -123,7 +121,7 @@ const OperationFilters = () => {
 	const { t,  } = useTranslation('map');
 	const { store } = useStore(
 		'RootStore',
-		(store) => ({store: store.operationStore})
+		(store) => ({ store: store.operationStore })
 	);
 	const doesOperationStateMatchOneOfTheStateFilters = (operation) => {
 		// Do not let user uncheck an operation that is being shown because it matches by state
@@ -173,7 +171,7 @@ const RfvsFilters = () => {
 	const { t, } = useTranslation('map');
 	const { store } = useStore(
 		'RootStore',
-		(store => ({store: store.rfvStore})));
+		(store => ({ store: store.rfvStore })));
 	return useObserver(() => (
 		<>
 			<div className={styles.sidebarSeparator}>
@@ -206,7 +204,7 @@ const RfvsFilters = () => {
 
 const TextFilter = () => {
 	const { t, } = useTranslation('map');
-	const {rfvStore, uvrStore, operationStore} = useStore(
+	const { rfvStore, uvrStore, operationStore } = useStore(
 		'RootStore',
 		(store => ({
 			rfvStore: store.rfvStore,
@@ -229,10 +227,11 @@ const TextFilter = () => {
 				{t('filter.bytext')}
 			</div>
 			<div
-				style={{height: '40px'}}
+				style={{ height: '40px' }}
 				className={styles.sidebarButtonText}
 			>
 				<InputGroup
+					className={styles.sidebarButtonTextContent}
 					leftIcon="search"
 					onChange={(evt) => filterStore.setText(evt.target.value)}
 					placeholder={t('filter.bytext.description')}
@@ -245,7 +244,7 @@ const TextFilter = () => {
 };
 
 /* Button that opens a Menu that permits users selects what layers to show */
-const Layers = ({filtersSelected, setFiltersSelected, operations, disabled, idsSelected, setIdsSelected, rfvs, setRfvsShowing}) => {
+const Layers = () => {
 	const { t } = useTranslation('glossary');
 	return (
 		<>
@@ -271,7 +270,7 @@ const Layers = ({filtersSelected, setFiltersSelected, operations, disabled, idsS
 				label={t('filter.bystate').toUpperCase()}
 				simpleChildren={false}
 			>
-				<StateFilters selectedFilters={filtersSelected} setSelectedFilters={setFiltersSelected}/>
+				<StateFilters  />
 			</SidebarButton>
 			<SidebarButton
 				forceOpen={true}
@@ -289,12 +288,4 @@ const Layers = ({filtersSelected, setFiltersSelected, operations, disabled, idsS
 	);
 };
 
-Layers.propTypes = {
-	filtersSelected: PropTypes.object.isRequired,
-	setFiltersSelected: PropTypes.func.isRequired,
-	operations: PropTypes.array.isRequired,
-	idsSelected: PropTypes.array.isRequired,
-	setIdsSelected: PropTypes.func.isRequired,
-	disabled: PropTypes.bool.isRequired
-};
 export default Layers;

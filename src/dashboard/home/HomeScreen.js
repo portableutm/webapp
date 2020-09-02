@@ -1,13 +1,17 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useStore } from 'mobx-store-provider';
 import styles from './home.module.css';
 import genericListStyle from '../generic/GenericList.module.css';
-import useAdesState from '../../state/AdesState';
-import S from 'sanctuary';
-import {useTranslation} from 'react-i18next';
+import { observer } from 'mobx-react';
+import * as classnames from 'classnames';
 
-const SimpleValue = ({title, value, color}) => {
+const SimpleValue = ({ title, value, color, addtlClass = null }) => {
 	return (
-		<div className={styles.simpleValue} style={{backgroundColor: color}}>
+		<div
+			className={classnames(styles.simpleValue, { [addtlClass]: addtlClass !== null })}
+			style={{ backgroundColor: color }}
+		>
 			<p className={styles.simpleValueText}>{title}</p>
 			<p className={styles.simpleValueValue}>{value}</p>
 		</div>
@@ -15,14 +19,11 @@ const SimpleValue = ({title, value, color}) => {
 };
 
 const HomeScreen = () => {
-	const [state, ] = useAdesState();
+	const { opStore, vehStore } = useStore('RootStore', (store) => ({
+		opStore: store.operationStore,
+		vehStore: store.vehicleStore
+	}));
 	const { t } = useTranslation('dashboard');
-	const operations = S.values(state.operations.list);
-	const operationCount = operations.length;
-	const activeCount = (S.filter ((op) => op.state === 'ACTIVE') (operations)).length;
-	const acceptedCount = (S.filter ((op) => op.state === 'ACCEPTED') (operations)).length;
-	const pendingCount = (S.filter ((op) => op.state === 'PENDING') (operations)).length;
-	const dronesCount = S.values(state.drones.list).length;
 
 	return (
 		<>
@@ -34,26 +35,32 @@ const HomeScreen = () => {
 			<div className={styles.homeScreen}>
 				<SimpleValue
 					title={t('home.total')}
-					value={operationCount}
+					value={opStore.counts.operationCount}
+				/>
+				<SimpleValue
+					title={t('home.rogue')}
+					value={opStore.counts.rogueCount}
+					color="darkred"
+					addtlClass={opStore.counts.rogueCount > 0 ? styles.rogueValueWarning : styles.rogueValueInactive}
 				/>
 				<SimpleValue
 					title={t('home.active')}
-					value={activeCount}
+					value={opStore.counts.activeCount}
 					color="chocolate"
 				/>
 				<SimpleValue
 					title={t('home.accepted')}
-					value={acceptedCount}
+					value={opStore.counts.acceptedCount}
 					color="rgb(0,100,0)"
 				/>
 				<SimpleValue
 					title={t('home.pending')}
-					value={pendingCount}
+					value={opStore.counts.pendingCount}
 					color="orangered"
 				/>
 				<SimpleValue
 					title={t('home.vehicles')}
-					value={dronesCount}
+					value={vehStore.count}
 					color="darkmagenta"
 				/>
 				{/*
@@ -106,4 +113,4 @@ const HomeScreen = () => {
 	);
 };
  
-export default HomeScreen;
+export default observer(HomeScreen);

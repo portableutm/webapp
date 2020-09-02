@@ -8,9 +8,6 @@ import './i18n';
 import * as serviceWorker from './serviceWorker';
 import { CookiesProvider } from 'react-cookie';
 import 'mobx-react-lite/batchingForReactDom';
-import {RootStore} from './models/RootStore';
-import {getSnapshot} from 'mobx-state-tree';
-
 
 function renderApp() {
 	ReactDOM.render(

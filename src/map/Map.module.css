@@ -33,19 +33,19 @@
 
 .sidebarButtonText {
     color: white;
-    height: 30px;
-    max-height: 50px;
+    height: fit-content;
     display: flex;
     justify-content: flex-start;
-    padding: 5px 10px 5px 10px;
     margin: 1px 0 0 !important;
     background-color: rgba(132, 130, 143, 0.25) !important;
     text-overflow: ellipsis;
     user-select: none;
+    padding-top: 1px;
+    padding-left: 10px;
+    padding-right: 10px;
     transition: all 0.5s;
     overflow: hidden;
 }
-
 .sidebarButtonText:hover {
     color: rgb(255, 111, 0);
 }
@@ -57,9 +57,18 @@
 
 .sidebarButtonTextContent {
     text-overflow: ellipsis;
-    height: 20px;
+    margin: 5px 0 !important;
     white-space: nowrap;
-    overflow: visible
+    overflow: hidden;
+}
+
+.sidebarButtonTextContentLeft {
+    display: flex;
+    align-items: center;
+    text-overflow: ellipsis;
+    margin-right: auto;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .sidebarButtonTextRight {

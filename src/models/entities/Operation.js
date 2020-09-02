@@ -1,7 +1,8 @@
 import { types } from 'mobx-state-tree';
-import {GeoJsonPoint} from '../types/GeoJsonPoint';
+import { GeoJsonPoint } from '../types/GeoJsonPoint';
 import { OperationVolume } from './OperationVolume';
-import {User} from './User';
+import {
+	User } from './User';
 
 export const Operation = types
 	.model({

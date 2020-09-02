@@ -1,11 +1,11 @@
 import React from 'react';
 import genericListStyle from '../generic/GenericList.module.css';
-import useAdesState from '../../state/AdesState';
-import {useTranslation} from 'react-i18next';
-import {Button, FormGroup, InputGroup} from '@blueprintjs/core';
+import { useTranslation } from 'react-i18next';
+import { Button, FormGroup, InputGroup } from '@blueprintjs/core';
+import { useStore } from 'mobx-store-provider';
 
 const Web = () => {
-	const [state, actions] = useAdesState();
+	const { API, setAPI } = useStore('RootStore', (store) => ({ API: store.API, setAPI: store.setAPI }));
 	const { t } = useTranslation('dashboard');
 
 	return (
@@ -23,12 +23,12 @@ const Web = () => {
 				<InputGroup
 					id='endpoint'
 					key={'endpoint'}
-					defaultValue={state.api}
+					defaultValue={API}
 				/>
 			</FormGroup>
 			<Button
 				fill
-				onClick={() => actions.api(document.getElementById('endpoint').value)}
+				onClick={() => setAPI(document.getElementById('endpoint').value)}
 			>
 				Save
 			</Button>

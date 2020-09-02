@@ -1,21 +1,21 @@
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 
 /* Logic */
 import L from 'leaflet';
 
 /* Global state */
-import {useStore} from 'mobx-store-provider';
-import {useLocalStore} from 'mobx-react';
-import {createLeafletPolygonStore} from '../../models/locals/createLeafletPolygonStore';
-import {autorun} from 'mobx';
-import {useAsObservableSource} from 'mobx-react';
+import { useStore } from 'mobx-store-provider';
+import { useLocalStore } from 'mobx-react';
+import { createLeafletPolygonStore } from '../../models/locals/createLeafletPolygonStore';
+import { autorun } from 'mobx';
+import { useAsObservableSource } from 'mobx-react';
 
 /* Helpers */
 
 /**
  * @return {null}
  */
-function RestrictedFlightVolume({latlngs, name, minAltitude, maxAltitude}) {
+function RestrictedFlightVolume({ latlngs, name, minAltitude, maxAltitude }) {
 	const { mapStore } = useStore(
 		'RootStore',
 		(store) => ({
@@ -23,10 +23,10 @@ function RestrictedFlightVolume({latlngs, name, minAltitude, maxAltitude}) {
 		}));
 	const polygonStore = useLocalStore(
 		source => createLeafletPolygonStore(source),
-		{map: mapStore.map}
+		{ map: mapStore.map }
 	);
 	
-	const obs = useAsObservableSource({latlngs});
+	const obs = useAsObservableSource({ latlngs });
 
 	useEffect(() => { // Mount and unmount
 		// Initialize Polygon, draw on Map
@@ -68,7 +68,7 @@ function RestrictedFlightVolume({latlngs, name, minAltitude, maxAltitude}) {
 			dispose2();
 		};
 
-	}, [polygonStore]);
+	}, [polygonStore]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return null;
 }

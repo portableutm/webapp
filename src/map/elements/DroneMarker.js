@@ -1,12 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 /* Logic */
-import S from 'sanctuary';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
 import 'leaflet-rotatedmarker';
 import 'leaflet-hotline';
-import { fM } from '../../libs/SaferSanctuary';
 import { useStore } from 'mobx-store-provider';
 import { when, autorun } from 'mobx';
 import { useAsObservableSource, useLocalStore } from 'mobx-react';
@@ -15,7 +13,7 @@ import { createLeafletMarkerStore } from '../../models/locals/createLeafletMarke
 
 /* Constants */
 
-const MAX_POINTS_HISTORY = 50;
+//const MAX_POINTS_HISTORY = 50;
 const MEDIUM_RISK_DRONE_ICON = L.icon({
 	iconUrl: require('../../images/marker-icon-red.png'),
 	iconSize: [30, 30],
@@ -41,6 +39,7 @@ const LOW_RISK_DRONE_ICON = L.icon({
 	shadowAnchor: [0, 0],
 	popupAnchor: [0, -24]
 });
+/*
 const INACTIVE_DRONE_ICON = L.icon({
 	iconUrl: require('../../images/marker-icon.png'),
 	shadowUrl: require('../../images/marker-shadow.png'), // TODO: Design a shadow for the final icon
@@ -52,9 +51,7 @@ const INACTIVE_DRONE_ICON = L.icon({
 });
 const INACTIVE_TIMEOUT = 60000; // milliseconds
 const hasToDrawTrail = false; // TODO: Add this to Options
-
-/* Helpers */
-const hasToRemoveOldest = (path) => path.length > MAX_POINTS_HISTORY;
+*/
 
 
 /**
@@ -66,9 +63,6 @@ function DroneMarker({ id, position, heading, altitude, risk = 'EXTREME', onClic
 		(store) => ({
 			mapStore: store.mapStore
 		}));
-	const [polyline, setPolyline] = useState(S.Nothing);
-	const [path, setPath] = useState([]);
-	const [timer, setTimer] = useState(null);
 
 	const obs = useAsObservableSource({ position, heading, altitude });
 	const markerStore = useLocalStore(createLeafletMarkerStore);

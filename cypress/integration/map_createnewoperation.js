@@ -2,7 +2,7 @@
 UseCase 01A: Create new Operation
  */
 
-import {API} from '../../src/consts';
+import { API } from '../../src/consts';
 
 describe('Use Case 01A: Create New Operation (valid)', function () {
 	beforeEach('Auth', function () {
@@ -50,19 +50,6 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 		cy.get('[data-test-id="map#editor#volume#info#max_altitude"]').clear().type('50');
 		//cy.get('[data-test-id="map#editor#volume#info#near_structure"]').check({force: true});
 		//cy.get('[data-test-id="map#editor#volume#info#bvlos"]').check({force: true});
-		cy.get('[data-test-id="map#editor#volume#info#effective_time_begin"]').click();
-		cy.get('.DayPicker-Day')
-			.not('.DayPicker-Day--disabled')
-			.not('.DayPicker-Day--selected')
-			.not('.DayPicker-Day--today')
-			.first().click();
-		cy.get('[data-test-id="map#editor#volume#info#effective_time_end"]').click();
-		cy.get('.DayPicker-Day')
-			.not('.DayPicker-Day--disabled')
-			.not('.DayPicker-Day--outside')
-			.not('.DayPicker-Day--selected')
-			.not('.DayPicker-Day--today')
-			.last().click();
 	});
 	it('Complete Volume information', function () {
 		//cy.get('[data-test-id="mapInputEditorVolumeDescr"]').

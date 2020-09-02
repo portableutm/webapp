@@ -1,8 +1,8 @@
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 
 /* Logic */
 import L from 'leaflet';
-import useAdesState from '../../state/AdesState';
+import { useStore } from 'mobx-store-provider';
 
 /* Constants */
 const EDIT_POLYGON_ICON = L.icon({
@@ -15,9 +15,12 @@ const EDIT_POLYGON_ICON = L.icon({
 /**
  * @return {null}
  */
-function OperationEditMarker({latlng, onDrag, index, onClick}) {
+function OperationEditMarker({ latlng, onDrag, index, onClick }) {
 	//const [marker, setMarker] = useState(S.Nothing);
-	const [state,] = useAdesState();
+	const { mapStore } = useStore('RootStore',
+		(store) => ({
+			mapStore: store.mapStore,
+		}));
 
 	useEffect(() => { // Mount and unmount
 		// Initialize marker
@@ -29,15 +32,17 @@ function OperationEditMarker({latlng, onDrag, index, onClick}) {
 			}
 		);
 
-		const map = state.map.mapRef.current;
-		marker.addTo(map);
+		marker.addTo(mapStore.map);
 		if (index) {
 			marker.bindTooltip('' + index, {
 				permanent: true,
 				direction: 'right'
 			});
 		}
-		marker.on('drag', (evt) => onDrag(evt.latlng));
+		marker.on('drag', (evt) => {
+			onDrag(evt.latlng);
+			L.DomEvent.stopPropagation(evt);
+		});
 		marker.on('click', (evt) => {
 			onClick();
 			L.DomEvent.stopPropagation(evt);

@@ -33,6 +33,7 @@ const QuickFlyControl = () => {
 			<Button
 				small={true}
 				intent={Intent.PRIMARY}
+				style={{ textAlign: 'center', marginRight: '5px' }}
 				onClick={() => showCreate(true)}
 			>
 				{t('quickfly.add_new')}
@@ -41,6 +42,7 @@ const QuickFlyControl = () => {
 			<Button
 				small={true}
 				intent={Intent.DANGER}
+				style={{ textAlign: 'center', marginLeft: '5px' }}
 				onClick={() => localStore.setDeleteMode(true)}
 			>
 				{t('quickfly.activate_delete_mode')}
@@ -50,6 +52,7 @@ const QuickFlyControl = () => {
 			<Button
 				small={true}
 				intent={Intent.WARNING}
+				style={{ textAlign: 'center', marginLeft: '5px' }}
 				onClick={() => localStore.setDeleteMode(false)}
 			>
 				{t('quickfly.deactivate_delete_mode')}
@@ -109,15 +112,15 @@ const QuickFlyControl = () => {
 						className={styles.sidebarSeparator}
 					>
 						<Button
-							small={true}
 							intent={Intent.DANGER}
+							style={{ textAlign: 'center', marginRight: '5px' }}
 							onClick={() => showCreate(false)}
 						>
 							{t('common:cancel')}
 						</Button>
 						<Button
-							small={true}
 							intent={Intent.PRIMARY}
+							style={{ textAlign: 'center', marginLeft: '5px' }}
 							onClick={() => {
 								/*actions.quickFly.post(
 									{

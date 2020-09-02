@@ -61,6 +61,9 @@ export const VehicleStore = types
 			},
 			get isEmpty() {
 				return self.vehicles.size === 0;
+			},
+			get count() {
+				return self.vehicles.size;
 			}
 		};
 	});

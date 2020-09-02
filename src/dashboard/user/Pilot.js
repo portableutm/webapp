@@ -4,6 +4,7 @@ import { useStore } from 'mobx-store-provider';
 import { useTranslation } from 'react-i18next';
 import { Button, Intent, FormGroup, InputGroup } from '@blueprintjs/core';
 import * as classnames from 'classnames';
+import gStyles from '../generic/GenericList.module.css';
 import styles from './Pilot.module.css';
 
 function Pilot({ user }) {
@@ -86,6 +87,11 @@ function Pilot({ user }) {
 	return (
 		<>
 			<div className={styles.pilot}>
+				<div className={gStyles.header}>
+					<h1>
+						{t('users.your_user').toUpperCase()}
+					</h1>
+				</div>
 				<div className={styles.pilotBottom}>
 					<FormGroup
 						label={t('users.username')}

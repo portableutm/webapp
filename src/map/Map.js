@@ -24,8 +24,6 @@ import OperationEditMarker from './elements/OperationEditMarker';
 import SelectedDrone from './viewer/SelectedDrone';
 
 /* Hooks */
-import useOperationFilter from './hooks/useOperationFilter';
-import useRfvLogic from './hooks/useRfvLogic';
 import useSimulatorLogic from './hooks/useSimulatorLogic';
 import useEditorLogic, { editorMode } from './hooks/useEditorLogic';
 
@@ -39,11 +37,12 @@ import { fM } from '../libs/SaferSanctuary';
 import { useParams } from 'react-router-dom';
 import UvrInfoEditor from './editor/UvrInfoEditor';
 import { useObserver } from 'mobx-react';
-import { autorun, trace } from 'mobx';
+import { autorun } from 'mobx';
 import { AllOperationsPolygons } from './elements/AllOperationsPolygons';
 import { AllRestrictedFlightVolumes } from './elements/AllRestrictedFlightVolumes';
 import { AllUASVolumeReservations } from './elements/AllUASVolumeReservations';
 import { AllDronePositions } from './elements/AllDronePositions';
+import { Button, Intent } from '@blueprintjs/core';
 
 
 
@@ -53,7 +52,7 @@ const Map = ({ mode }) => {
 		and that is only used after correctly initializing Leaflet. 	*/
 
 	/* State holders and references */
-	const { operationStore, mapStore, uvrStore, rfvStore } = useStore(
+	const { operationStore, mapStore, uvrStore } = useStore(
 		'RootStore',
 		(store) => ({
 			operationStore: store.operationStore,
@@ -61,7 +60,6 @@ const Map = ({ mode }) => {
 			uvrStore: store.uvrStore,
 			rfvStore: store.rfvStore
 		}));
-	const [drones, setDrones] = useState([]);
 
 	/* Route params */
 	const { editId } = useParams();
@@ -99,47 +97,19 @@ const Map = ({ mode }) => {
 		}
 	}, [fM(mode)]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	/* Viewer state */
-	const [rfvs, setRfvs] = useRfvLogic();
-	const [ops, opsFiltered, viewId, filtersSelected, setFiltersSelected, , idsShowing, setIdsShowing] = useOperationFilter();
-	const [currentSelectedOperation, setSelectedOperation] = useState(S.Nothing);
 
 	/* Simulator state */
 	const [simPaths, setSimPath, simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic('broken');
 	const isSimulator = (S.isJust(mode) && fM(mode) === 'simulator');
 
-	/* 	Drone related logic	 */
-	/* useEffect(() => {
-		const allDrones = state.drones.list;
-		setDrones(S.values(allDrones).map((drone) => {
-			// TODO: This should be done in the backend
-			const operationDrone = ops.find((op) => op.gufi === drone.gufi);
-			let risk = 'EXTREME';
-			if (operationDrone) {
-				// Drone has an associated Operation
-				risk = 'MEDIUM';
-				const polygon = L.polygon(operationDrone.operation_volumes[0].operation_geography.coordinates);
-				if (polygon.contains(drone.location.coordinates)) {
-					risk = 'LOW';
-				}
-			}
-			return {...drone, risk};
-		}));
-	}, [state.drones.updated]); // eslint-disable-line react-hooks/exhaustive-deps */
-
 	/*	 Effects 	*/
 	// Leaflet map initialization
 	useEffect(() => {
 		autorun(() => {
-			console.log('Initializing map!');
-			console.count('Autorun #1 Init map');
 			if (!mapStore.isInitialized) {
 				const map = initializeLeaflet();
 				mapStore.setMapRef(map);
 			}
-		});
-		autorun(() => {
-			console.log('Shown operations...', operationStore.shownOperations);
 		});
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -170,7 +140,7 @@ const Map = ({ mode }) => {
 	/*	Helpers */
 
 	const showStandardRightAreaPanels =
-		S.isNothing(currentSelectedOperation) &&
+		!mapStore.isOperationSelected &&
 		!mapStore.isDroneSelected &&
 		!isEditingOperation &&
 		!isEditingUvr;
@@ -206,14 +176,16 @@ const Map = ({ mode }) => {
 							}
 						</Button>
 					</Dialog>
-					{state.map.clickSelection.isSelecting &&
-					state.map.clickSelection.listIsComplete &&
+					*/}
+					{ 	mapStore.csIsMapOnClickActivated &&
+						mapStore.csIsMapOnClickSelectionActivated &&
+						mapStore.csIsMapOnClickSelectionFinished &&
 					<div
 						className="mapOnClickChooser animated fadeIn faster"
-						style={{left: state.map.clickSelection.x, top: state.map.clickSelection.y}}
+						style={{ left: mapStore.csX, top: mapStore.csY }}
 					>
 						Click on...
-						{state.map.clickSelection.listFns.map(labelFn => {
+						{mapStore.csCapturedFns.map(labelFn => {
 							return (
 								<Button
 									key={labelFn.label}
@@ -332,19 +304,19 @@ const Map = ({ mode }) => {
 					})}
 					<RightArea
 						forceOpen={
-							S.isJust(currentSelectedOperation) ||
+							mapStore.isOperationSelected ||
 							mapStore.isDroneSelected ||
 							isSimulator ||
 							isEditingUvr ||
 							isEditingOperation
 						}
 						onClose={() => {
-							setSelectedOperation(S.Nothing);
+							if (mapStore.isOperationSelected) mapStore.unsetSelectedOperation();
 							if (mapStore.isDroneSelected) mapStore.unsetSelectedDrone();
 						}}
 					>
-						{S.isJust(currentSelectedOperation) &&
-						<SelectedOperation gufi={fM(currentSelectedOperation)}/>
+						{ 	mapStore.isOperationSelected &&
+						<SelectedOperation />
 						}
 						{	mapStore.isDroneSelected &&
 						<SelectedDrone gufi={mapStore.selectedDrone}/>
@@ -353,16 +325,7 @@ const Map = ({ mode }) => {
 						<QuickFly />
 						}
 						{showStandardRightAreaPanels &&
-						<Layers
-							filtersSelected={filtersSelected}
-							setFiltersSelected={setFiltersSelected}
-							idsSelected={idsShowing}
-							setIdsSelected={setIdsShowing}
-							rfvs={rfvs}
-							setRfvsShowing={setRfvs}
-							operations={ops}
-							disabled={viewId != null}
-						/>
+						<Layers />
 						}
 						{/* Operation Editor Panels */}
 						{isEditingOperation &&

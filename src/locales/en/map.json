@@ -2,6 +2,7 @@
   "quickfly": {
     "title": "Quick Fly",
     "add_new": "Add new QuickFly",
+    "activate_delete_mode": "Delete a Quickfly",
     "name": "Name",
     "required": "Required",
     "new_location": "New location",

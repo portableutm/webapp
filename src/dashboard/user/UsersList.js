@@ -9,7 +9,6 @@ import { useHistory } from 'react-router-dom';
 
 import styles from '../generic/GenericList.module.css';
 import GenericList, { GenericListLine } from '../generic/GenericList';
-import { fM } from '../../libs/SaferSanctuary';
 import Pilot from './Pilot';
 
 function User({ expanded = false,  children }) {

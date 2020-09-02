@@ -2,8 +2,6 @@
 
 import React from 'react';
 import SidebarButton from '../SidebarButton';
-import S from 'sanctuary';
-import { fM } from '../../libs/SaferSanctuary';
 import { useTranslation } from 'react-i18next';
 import styles from '../Map.module.css';
 import { useStore } from 'mobx-store-provider';
