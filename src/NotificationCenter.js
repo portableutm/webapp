@@ -112,6 +112,7 @@ function NotificationCenter() {
 							>
 								<div
 									className={styles.notificationButtonTop}
+									data-test-id="acknowledgeNotification"
 									onClick={() => {
 										notification.toggleAck();
 									}}
@@ -130,6 +131,7 @@ function NotificationCenter() {
 									}
 								</div>
 								<div
+									data-test-id="deleteNotification"
 									className={styles.notificationButtonBottom}
 									onClick={() => {
 										setEnlarged(-1);

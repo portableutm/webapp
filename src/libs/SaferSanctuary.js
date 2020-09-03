@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import S from 'sanctuary';
 
 /**
@@ -70,4 +72,4 @@ function fSM /* istanbul ignore next */ (maybe) {
 	return maybe != null && S.isJust(maybe) ? S.maybeToNullable(maybe) : {};
 }
 
-export {_ as default, mapValues, maybeShow, maybeValues, maybeKeys, u, fM, fSM};
+export { _ as default, mapValues, maybeShow, maybeValues, maybeKeys, u, fM, fSM };
