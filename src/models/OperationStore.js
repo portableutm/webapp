@@ -8,7 +8,7 @@ import { Operation } from './entities/Operation';
 export const OperationStore = types
 	.model('OperationStore', {
 		operations: types.map(Operation),
-		filterShowAccepted: false,
+		filterShowAccepted: true,
 		filterShowPending: true,
 		filterShowActivated: true,
 		filterShowRogue: true,
@@ -219,6 +219,11 @@ export const OperationStore = types
 				.map((op) => {
 					const opWithVisibility = _.cloneDeep(op);
 					opWithVisibility.owner.asDisplayString = op.owner.asDisplayString;
+					opWithVisibility._matchesFiltersByStates =
+						(self.filterShowAccepted && op.state === 'ACCEPTED') ||
+						(self.filterShowPending && op.state === 'PENDING') ||
+						(self.filterShowActivated && op.state === 'ACTIVATED') ||
+						(self.filterShowRogue && op.state === 'ROGUE');
 					opWithVisibility._visibility = _.includes(self.filterShownIds, op.gufi);
 					opWithVisibility._matchesFiltersByNames = _.includes(
 						op.name.toLowerCase(),
@@ -242,7 +247,7 @@ export const OperationStore = types
 			let acceptedCount = 0;
 			let pendingCount = 0;
 			let rogueCount = 0;
-			let textMatchingCount = 0;
+			let matchingTextAndStateCount = 0;
 			_.forEach(operations, (operation) => {
 				operationCount++;
 				if (operation.state === 'ROGUE') rogueCount++;
@@ -252,8 +257,11 @@ export const OperationStore = types
 				if (_.includes(
 					operation.name.toLowerCase(),
 					self.filtersMatchingText.toLowerCase()
-				)) textMatchingCount++;
+				) && ((self.filterShowAccepted && operation.state === 'ACCEPTED') ||
+					(self.filterShowPending && operation.state === 'PENDING') ||
+					(self.filterShowActivated && operation.state === 'ACTIVATED') ||
+					(self.filterShowRogue && operation.state === 'ROGUE'))) matchingTextAndStateCount++;
 			});
-			return { operationCount, activeCount, acceptedCount, pendingCount, rogueCount, textMatchingCount };
+			return { operationCount, activeCount, acceptedCount, pendingCount, rogueCount, matchingTextAndStateCount };
 		}
 	}));

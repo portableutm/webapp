@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import GenericList, { GenericListLine } from '../generic/GenericList';
-import { Callout, Spinner, Intent, Button, HTMLSelect, InputGroup } from '@blueprintjs/core';
+import { Callout, Spinner, Intent, Button, HTMLSelect, InputGroup, Checkbox } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -234,12 +234,52 @@ function OperationsList() {
 							<p
 								className={styles.filterTextInfo}
 							>
-								{`Showing ${store.counts.textMatchingCount} out of ${store.counts.operationCount} operations`}
+								{`Showing ${store.counts.matchingTextAndStateCount} out of ${store.counts.operationCount} operations`}
 							</p>
+						</div>
+						<div
+							className={styles.filters2}
+						>
+							<Checkbox
+								data-test-id='layersACCEPTED'
+								checked={store.filterShowAccepted}
+								onChange={(evt) => {
+									store.setFilterAccepted(evt.target.checked);
+								}}
+							>
+								{t('filter.accepted')}
+							</Checkbox>
+							<Checkbox
+								data-test-id='layersPENDING'
+								checked={store.filterShowPending}
+								onChange={(evt) => {
+									store.setFilterPending(evt.target.checked);
+								}}
+							>
+								{t('filter.pending')}
+							</Checkbox>
+							<Checkbox
+								data-test-id='layersACTIVATED'
+								checked={store.filterShowActivated}
+								onChange={(evt) => {
+									store.setFilterActivated(evt.target.checked);
+								}}
+							>
+								{t('filter.activated')}
+							</Checkbox>
+							<Checkbox
+								data-test-id='layersROGUE'
+								checked={store.filterShowRogue}
+								onChange={(evt) => {
+									store.setFilterRogue(evt.target.checked);
+								}}
+							>
+								{t('filter.rogue')}
+							</Checkbox>
 						</div>
 						<GenericList>
 							{store.operationsWithVisibility.map((op) => {
-								if (op._matchesFiltersByNames) {
+								if (op._matchesFiltersByNames && op._matchesFiltersByStates) {
 									return <Operation
 										key={op.gufi}
 										expanded={op.gufi === id}
