@@ -60,7 +60,7 @@ export const AuthStore = types
 					self.role = decoded.role;
 					self.username = decoded.username;
 					self.email = decoded.email;
-					self.expireDate = new Date((decoded.exp - 3500) * 1000);
+					self.expireDate = new Date(decoded.exp * 1000);
 					tokenLogoutTimeout = setTimeout(() => getRoot(self).reset(), self.expireDate - Date.now());
 				} catch (error) {
 					console.error('Error setting token', error);

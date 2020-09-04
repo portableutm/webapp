@@ -50,7 +50,38 @@
     max-width: fit-content;
 }
 
+.filters {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    margin: 1%;
+    padding: 10px 12px 9px;
+    width: 100%;
+    height: 50px;
+    border-radius: 3px;
+    background-color: #2a333e;
+}
 
+.filters * {
+    flex-shrink: 0;
+}
+
+.filters :nth-child(n+2) {
+    margin-left: 5px;
+}
+
+.filterTextInput {
+    width: auto;
+    flex-shrink: 1;
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.filterTextInfo {
+    text-align: right;
+    margin-top: auto;
+    margin-bottom: 0;
+}
 
 .line {
     display: flex;

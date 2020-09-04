@@ -14,7 +14,9 @@ export const OperationStore = types
 		filterShowRogue: true,
 		filterShowOthers: false,
 		filterShownIds: types.array(types.string),
-		layersShowLabelsOnlyMatchingText: ''
+		filtersMatchingText: '',
+		sortingProperty: 'name',
+		sortingOrder: 'asc'
 	})
 	.volatile(() => ({
 		hasFetched: false
@@ -147,7 +149,7 @@ export const OperationStore = types
 					self.operations.set(gufi, current);
 				}
 			},
-			/* Filtering operations by state */
+			/* Filtering operations by state or text */
 			setFilterAccepted(flag) {
 				self.filterShowAccepted = flag;
 			},
@@ -163,15 +165,23 @@ export const OperationStore = types
 			setFilterOthers(flag) {
 				self.filterShowOthers = flag;
 			},
+			setFilterByText(text) {
+				self.filtersMatchingText = text;
+			},
+			/* Sorting */
+			setSortingProperty(prop) {
+				self.sortingProperty = prop;
+			},
+			setSortingOrder(order) {
+				self.sortingOrder = order;
+			},
+			/* Operations on One Operation */
 			toggleVisibility(op) {
 				if (_.includes(self.filterShownIds, op.gufi)) {
 					self.filterShownIds.remove(op.gufi);
 				} else {
 					self.filterShownIds.push(op.gufi);
 				}
-			},
-			setTextToMatchToDisplayInLayersList(text) {
-				self.layersShowLabelsOnlyMatchingText = text;
 			},
 			reset() {
 				// Cleans volatile state. The model itself is resetted by the RootStore
@@ -201,16 +211,29 @@ export const OperationStore = types
 			});
 		},
 		get operationsWithVisibility() {
-			return _.map(values(self.operations), (op) => {
-				const opWithVisibility = _.cloneDeep(op);
-				opWithVisibility.owner.asDisplayString = op.owner.asDisplayString;
-				opWithVisibility._visibility = _.includes(self.filterShownIds, op.gufi);
-				opWithVisibility._showInLayers = _.includes(
-					op.name.toLowerCase(),
-					self.layersShowLabelsOnlyMatchingText.toLowerCase()
-				);
-				return opWithVisibility;
-			});
+
+
+
+			return _
+				.chain(values(self.operations))
+				.map((op) => {
+					const opWithVisibility = _.cloneDeep(op);
+					opWithVisibility.owner.asDisplayString = op.owner.asDisplayString;
+					opWithVisibility._visibility = _.includes(self.filterShownIds, op.gufi);
+					opWithVisibility._matchesFiltersByNames = _.includes(
+						op.name.toLowerCase(),
+						self.filtersMatchingText.toLowerCase()
+					);
+					return opWithVisibility;})
+				.orderBy(op => {
+					if (self.sortingProperty === 'start') return op.operation_volumes[0].effective_time_begin.getTime();
+					if (self.sortingProperty === 'end') return op.operation_volumes[op.operation_volumes.length-1].effective_time_end.getTime();
+					if (self.sortingProperty === 'owner_name') return op.owner.firstName;
+					if (self.sortingProperty === 'owner_lastname') return op.owner.lastName;
+					if (self.sortingProperty === 'owner_username') return op.owner.username;
+					return op[self.sortingProperty];
+				}, self.sortingOrder)
+				.value();
 		},
 		get counts() {
 			const operations = values(self.operations);
@@ -219,13 +242,18 @@ export const OperationStore = types
 			let acceptedCount = 0;
 			let pendingCount = 0;
 			let rogueCount = 0;
+			let textMatchingCount = 0;
 			_.forEach(operations, (operation) => {
 				operationCount++;
 				if (operation.state === 'ROGUE') rogueCount++;
 				if (operation.state === 'ACTIVATED') activeCount++;
 				if (operation.state === 'ACCEPTED') acceptedCount++;
 				if (operation.state === 'PENDING') pendingCount++;
+				if (_.includes(
+					operation.name.toLowerCase(),
+					self.filtersMatchingText.toLowerCase()
+				)) textMatchingCount++;
 			});
-			return { operationCount, activeCount, acceptedCount, pendingCount, rogueCount };
+			return { operationCount, activeCount, acceptedCount, pendingCount, rogueCount, textMatchingCount };
 		}
 	}));

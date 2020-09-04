@@ -98,12 +98,12 @@ const UvrsFilters = () => {
 						key={uvr.message_id}
 						className={classnames(
 							styles.sidebarButtonText,
-							{ [styles.sidebarButtonTextCollapsed]: !uvr._showInLayers }
+							{ [styles.sidebarButtonTextCollapsed]: !uvr._matchesFiltersByNames }
 						)}
 					>
 						<Checkbox
 							className={styles.sidebarButtonTextContent}
-							disabled={!uvr._showInLayers}
+							disabled={!uvr._matchesFiltersByNames}
 							data-test-id={'uvr' + index}
 							checked={uvr._visibility}
 							onChange={() => store.toggleVisibility(uvr)}
@@ -146,14 +146,14 @@ const OperationFilters = () => {
 				return (<div
 					className={classnames(
 						styles.sidebarButtonText,
-						{ [styles.sidebarButtonTextCollapsed]: !op._showInLayers }
+						{ [styles.sidebarButtonTextCollapsed]: !op._matchesFiltersByNames }
 					)}
 					key={op.gufi}
 				>
 					<Checkbox
 						className={styles.sidebarButtonTextContent}
 						checked={op._visibility || doesOperationStateMatchOneOfTheStateFilters(op)}
-						disabled={!op._showInLayers  || doesOperationStateMatchOneOfTheStateFilters(op)}
+						disabled={!op._matchesFiltersByNames  || doesOperationStateMatchOneOfTheStateFilters(op)}
 						onChange={() => store.toggleVisibility(op)}
 						data-test-id={'op' + op.gufi}
 					>
@@ -183,13 +183,13 @@ const RfvsFilters = () => {
 						key={rfv.id}
 						className={classnames(
 							styles.sidebarButtonText,
-							{ [styles.sidebarButtonTextCollapsed]: !rfv._showInLayers }
+							{ [styles.sidebarButtonTextCollapsed]: !rfv._matchesFiltersByNames }
 						)}
 					>
 						<Checkbox
 							className={styles.sidebarButtonTextContent}
 							data-test-id={'rfv' + index}
-							disabled={!rfv._showInLayers}
+							disabled={!rfv._matchesFiltersByNames}
 							checked={rfv._visibility}
 							onChange={() => store.toggleVisibility(rfv)}
 						>
@@ -214,9 +214,9 @@ const TextFilter = () => {
 	const filterStore = useLocalStore(() => ({
 		text: '',
 		setText(newText) {
-			uvrStore.setTextToMatchToDisplayInLayersList(newText);
-			rfvStore.setTextToMatchToDisplayInLayersList(newText);
-			operationStore.setTextToMatchToDisplayInLayersList(newText);
+			uvrStore.setFilterByText(newText);
+			rfvStore.setFilterByText(newText);
+			operationStore.setFilterByText(newText);
 			this.text = newText;
 		}
 	}));

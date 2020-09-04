@@ -7,7 +7,7 @@ export const RfvStore = types
 	.model('RfvStore', {
 		rfvs: types.map(Rfv),
 		filterShownIds: types.array(types.string),
-		layersShowLabelsOnlyMatchingText: '' // Those that match this string are displayed in the layers list (search)
+		filtersMatchingText: '' // Those that match this string are displayed in the layers list (search)
 	})
 	.actions(self => {
 		const cleanRfv = (rfv) => {
@@ -49,8 +49,8 @@ export const RfvStore = types
 					self.filterShownIds.push(rfv.id);
 				}
 			},
-			setTextToMatchToDisplayInLayersList(text) {
-				self.layersShowLabelsOnlyMatchingText = text;
+			setFilterByText(text) {
+				self.filtersMatchingText = text;
 			},
 			reset() {
 				// Cleans volatile state. The model itself is resetted by the RootStore
@@ -65,9 +65,9 @@ export const RfvStore = types
 			return _.map(values(self.rfvs), (rfv) => {
 				const rfvWithVisibility = _.cloneDeep(rfv);
 				rfvWithVisibility._visibility = _.includes(self.filterShownIds, rfv.id);
-				rfvWithVisibility._showInLayers = _.includes(
+				rfvWithVisibility._matchesFiltersByNames = _.includes(
 					rfv.comments.toLowerCase(),
-					self.layersShowLabelsOnlyMatchingText.toLowerCase());
+					self.filtersMatchingText.toLowerCase());
 				return rfvWithVisibility;
 			});
 		}

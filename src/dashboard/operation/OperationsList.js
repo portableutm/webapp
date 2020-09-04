@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import GenericList, { GenericListLine } from '../generic/GenericList';
-import { Callout, Spinner, Intent, Button, HTMLSelect } from '@blueprintjs/core';
+import { Callout, Spinner, Intent, Button, HTMLSelect, InputGroup } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styles from '../generic/GenericList.module.css';
 import { useStore } from 'mobx-store-provider';
-import { observer } from 'mobx-react';
+import { observer, useLocalStore } from 'mobx-react';
 
 function Operation({ expanded = false, selected = false, toggleSelected, operation, changeState, isPilot }) {
 	// Renders one Operation text properties for a list
@@ -170,6 +170,7 @@ function Operation({ expanded = false, selected = false, toggleSelected, operati
 	);
 }
 
+
 function OperationsList() {
 	const { t, } = useTranslation('glossary');
 	const { store, authStore, toggleSelected } = useStore(
@@ -180,6 +181,13 @@ function OperationsList() {
 			toggleSelected: store.operationStore.toggleVisibility
 		}));
 	const { id } = useParams();
+	const filterStore = useLocalStore(() => ({
+		text: '',
+		setText(newText) {
+			store.setFilterByText(newText);
+			this.text = newText;
+		}
+	}));
 	if (store.hasFetched) {
 		return (
 			<>
@@ -189,19 +197,64 @@ function OperationsList() {
 					</h1>
 				</div>
 				{	store.allOperations.length > 0 &&
-				<GenericList>
-					{store.operationsWithVisibility.map((op) => {
-						return <Operation
-							key={op.gufi}
-							expanded={op.gufi === id}
-							selected={op._visibility}
-							toggleSelected={toggleSelected}
-							operation={op}
-							changeState={store.updateState}
-							isPilot={authStore.role === 'pilot'}
-						/>;
-					})}
-				</GenericList>
+					<>
+						<div
+							className={styles.filters}
+						>
+							<HTMLSelect
+								id='sorter'
+								name="OperationSorter"
+								value={store.sortingProperty}
+								onChange={(event) => store.setSortingProperty(event.currentTarget.value)}
+							>
+								<option value="name">Name</option>
+								<option value="flight_number">Flight No.</option>
+								<option value="owner_name">Own. First Name</option>
+								<option value="owner_lastname">Own. Last Name</option>
+								<option value="owner_username">Own. Username</option>
+								<option value="start">Start</option>
+								<option value="end">End</option>
+							</HTMLSelect>
+							<HTMLSelect
+								id='sorter'
+								name="OperationSortingOrder"
+								value={store.sortingOrder}
+								onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
+							>
+								<option value='asc'>Asc.</option>
+								<option value='desc'>Desc.</option>
+							</HTMLSelect>
+							<InputGroup
+								className={styles.filterTextInput}
+								leftIcon="search"
+								onChange={(evt) => filterStore.setText(evt.target.value)}
+								placeholder={t('filter.bytext.description')}
+								value={filterStore.text}
+							/>
+							<p
+								className={styles.filterTextInfo}
+							>
+								{`Showing ${store.counts.textMatchingCount} out of ${store.counts.operationCount} operations`}
+							</p>
+						</div>
+						<GenericList>
+							{store.operationsWithVisibility.map((op) => {
+								if (op._matchesFiltersByNames) {
+									return <Operation
+										key={op.gufi}
+										expanded={op.gufi === id}
+										selected={op._visibility}
+										toggleSelected={toggleSelected}
+										operation={op}
+										changeState={store.updateState}
+										isPilot={authStore.role === 'pilot'}
+									/>;
+								} else {
+									return null;
+								}
+							})}
+						</GenericList>
+					</>
 				}
 				{	store.allOperations.length === 0 &&
 				<h2>

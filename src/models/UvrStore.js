@@ -7,7 +7,7 @@ export const UvrStore = types
 	.model('UvrStore', {
 		uvrs: types.map(Uvr),
 		filterShownIds: types.array(types.string),
-		layersShowLabelsOnlyMatchingText: '' // Those that match this string are displayed in the layers list (search)
+		filtersMatchingText: '' // Those that match this string are displayed in the layers list (search)
 	})
 	.actions(self => {
 		const cleanUvr = (uvr) => {
@@ -55,8 +55,8 @@ export const UvrStore = types
 					self.filterShownIds.push(uvr.message_id);
 				}
 			},
-			setTextToMatchToDisplayInLayersList(text) {
-				self.layersShowLabelsOnlyMatchingText = text;
+			setFilterByText(text) {
+				self.filtersMatchingText = text;
 			},
 			reset() {
 				// Cleans volatile state. The model itself is resetted by the RootStore
@@ -71,9 +71,9 @@ export const UvrStore = types
 			return _.map(values(self.uvrs), (uvr) => {
 				const uvrWithVisibility = _.cloneDeep(uvr);
 				uvrWithVisibility._visibility = _.includes(self.filterShownIds, uvr.message_id);
-				uvrWithVisibility._showInLayers = _.includes(
+				uvrWithVisibility._matchesFiltersByNames = _.includes(
 					uvr.reason.toLowerCase(),
-					self.layersShowLabelsOnlyMatchingText.toLowerCase());
+					self.filtersMatchingText.toLowerCase());
 				return uvrWithVisibility;
 			});
 		}
