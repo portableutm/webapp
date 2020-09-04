@@ -401,6 +401,19 @@ th, td {
 
 
 
+.pilotHomeScreen {
+    padding: 5px;
+}
+
+.pilotHomeScreen h1 {
+    text-align: center;
+    background-color: #2D2C59;
+}
+
+.pilotHomeScreen h2 {
+    text-align: center;
+    background-color: #2D2C59;
+}
 
 
 

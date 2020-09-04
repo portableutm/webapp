@@ -26,5 +26,7 @@
   "save_changes": "Save changes",
   "cancel": "Cancel",
   "click_to_expand": "Show properties",
-  "click_to_collapse": "Hide properties"
+  "click_to_collapse": "Hide properties",
+  "pilot_homescreen_title": "Welcome to PortableUTM",
+  "pilot_homescreen": "# PortableUTM v0.5.0\nNow you are able to see your own registered operations! Check it out.\n# Quick start guide\nOn the left hand side of the screen you can see all the possible things you can do as a Pilot.\n## Edit your info\nHere you can change your user information, including your password\n## Operations\nAll your previously registered Operations are listed in here. You can check whether they have been ACCEPTED or not.\n## Add new vehicle\nYou can register your own vehicle."
 }

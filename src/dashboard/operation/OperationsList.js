@@ -8,7 +8,7 @@ import styles from '../generic/GenericList.module.css';
 import { useStore } from 'mobx-store-provider';
 import { observer } from 'mobx-react';
 
-function Operation({ expanded = false, selected = false, toggleSelected, operation, changeState }) {
+function Operation({ expanded = false, selected = false, toggleSelected, operation, changeState, isPilot }) {
 	// Renders one Operation text properties for a list
 	const history = useHistory();
 	const { t, } = useTranslation(['glossary', 'common']);
@@ -143,6 +143,7 @@ function Operation({ expanded = false, selected = false, toggleSelected, operati
 						name="OperationState"
 						value={operation.state}
 						minimal
+						disabled={isPilot}
 						onChange={(event) => changeState(operation.gufi, event.currentTarget.value)}
 					>
 						<option value="PROPOSED">PROPOSED</option>
@@ -171,10 +172,11 @@ function Operation({ expanded = false, selected = false, toggleSelected, operati
 
 function OperationsList() {
 	const { t, } = useTranslation('glossary');
-	const { store, toggleSelected } = useStore(
+	const { store, authStore, toggleSelected } = useStore(
 		'RootStore',
 		(store) => ({
 			store: store.operationStore,
+			authStore: store.authStore,
 			toggleSelected: store.operationStore.toggleVisibility
 		}));
 	const { id } = useParams();
@@ -196,6 +198,7 @@ function OperationsList() {
 							toggleSelected={toggleSelected}
 							operation={op}
 							changeState={store.updateState}
+							isPilot={authStore.role === 'pilot'}
 						/>;
 					})}
 				</GenericList>

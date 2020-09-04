@@ -13,6 +13,7 @@ export const AuthStore = types
 	.actions(self => {
 		let socket = null;
 		let tokenLimitedTimeout = null;
+		let tokenLogoutTimeout = null;
 
 		return {
 			setTokenLimited(newToken) {
@@ -27,6 +28,10 @@ export const AuthStore = types
 			},
 			setToken(newToken) {
 				try {
+					if (tokenLogoutTimeout !== null) {
+						clearTimeout(tokenLogoutTimeout);
+						tokenLogoutTimeout = null;
+					}
 					self.token = newToken;
 					/* Reconnect to socket.io as this new token is longer lasting */
 					//if (socket) socket.disconnect();
@@ -55,7 +60,8 @@ export const AuthStore = types
 					self.role = decoded.role;
 					self.username = decoded.username;
 					self.email = decoded.email;
-					self.expireDate.setUTCSeconds(decoded.exp);
+					self.expireDate = new Date((decoded.exp - 3500) * 1000);
+					tokenLogoutTimeout = setTimeout(() => getRoot(self).reset(), self.expireDate - Date.now());
 				} catch (error) {
 					console.error('Error setting token', error);
 				}

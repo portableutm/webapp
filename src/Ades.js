@@ -63,6 +63,7 @@ import { addMiddleware, unprotect } from 'mobx-state-tree';
 import { observer } from 'mobx-react';
 import { autorun } from 'mobx';
 import UsersList from './dashboard/user/UsersList';
+import PilotHomeScreen from './dashboard/home/PilotHomeScreen';
 
 
 /*function alertIsImportant(alertUtmMessage) {
@@ -305,7 +306,9 @@ function Ades() {
 					<Router>
 						<Switch>
 							<LayoutRoute exact path='/dashboard'>
-								<Dashboard/>
+								<Dashboard>
+									<PilotHomeScreen />
+								</Dashboard>
 							</LayoutRoute>
 							<LayoutRoute exact path={'/dashboard/users/' + rootStore.authStore.username}>
 								<Dashboard>
