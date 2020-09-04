@@ -115,14 +115,34 @@ export const OperationStore = types
 					getRoot(self).setFloatingText('Error while updating Operation: ' + error);
 				}
 			}),
+			updateState: flow(function* updateState(gufi, newState) {
+				try {
+					const data = { id: gufi, state: newState };
+					const response = yield getRoot(self).axiosInstance.post(
+						`operation/${gufi}/updatestate`
+						, data,
+						{ headers: { auth: getRoot(self).authStore.token } });
+					getRoot(self).setFloatingText(`The state of operation ${gufi} has been updated successfully`);
+					return response;
+				} catch (error) {
+					getRoot(self).setFloatingText('Error while updating operation state: ' + error);
+				}
+			}),
 			/* Update internal state */
 			updateOne(gufi, property, value) {
 				const current = self.operations.get(gufi);
 				if (current) {
 					current[property] = value;
-					if (property === 'state' && value === 'ROGUE') {
-						// Send ROGUE notification
-						getRoot(self).notificationStore.addOperationGoneRogue(gufi);
+					if (property === 'state') {
+						if (value === 'ROGUE') {
+							// Send ROGUE notification
+							getRoot(self).notificationStore.addOperationGoneRogue(gufi);
+						} else if (value === 'ACTIVATED') {
+							getRoot(self).notificationStore.addInformation({
+								header: 'OPERATION ACTIVATED',
+								body: `The operation with id ${gufi} is now ACTIVATED: its Pilot is now allowed to use the reserved Volume`
+							});
+						}
 					}
 					self.operations.set(gufi, current);
 				}

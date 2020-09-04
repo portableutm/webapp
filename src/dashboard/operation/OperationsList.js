@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import GenericList, { GenericListLine } from '../generic/GenericList';
-import { Callout, Spinner, Intent, Button } from '@blueprintjs/core';
+import { Callout, Spinner, Intent, Button, HTMLSelect } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -8,7 +8,7 @@ import styles from '../generic/GenericList.module.css';
 import { useStore } from 'mobx-store-provider';
 import { observer } from 'mobx-react';
 
-function Operation({ expanded = false, selected = false, toggleSelected, operation }) {
+function Operation({ expanded = false, selected = false, toggleSelected, operation, changeState }) {
 	// Renders one Operation text properties for a list
 	const history = useHistory();
 	const { t, } = useTranslation(['glossary', 'common']);
@@ -138,7 +138,22 @@ function Operation({ expanded = false, selected = false, toggleSelected, operati
 				</GenericListLine>
 				<GenericListLine>
 					{t('operations.state')}
-					{operation.state}
+					<HTMLSelect
+						id={`${operation.gufi}state`}
+						name="OperationState"
+						value={operation.state}
+						minimal
+						onChange={(event) => changeState(operation.gufi, event.currentTarget.value)}
+					>
+						<option value="PROPOSED">PROPOSED</option>
+						<option value="PENDING">PENDING</option>
+						<option value="ACCEPTED">ACCEPTED</option>
+						<option value="NOT_ACCEPTED">NOT_ACCEPTED</option>
+						<option value="ACTIVATED">ACTIVATED</option>
+						<option value="CLOSED">CLOSED</option>
+						<option value="NONCONFORMING">NONCONFORMING</option>
+						<option value="ROGUE">ROGUE</option>
+					</HTMLSelect>
 				</GenericListLine>
 				<GenericListLine>
 					{t('operations.flight_comments')}
@@ -180,6 +195,7 @@ function OperationsList() {
 							selected={op._visibility}
 							toggleSelected={toggleSelected}
 							operation={op}
+							changeState={store.updateState}
 						/>;
 					})}
 				</GenericList>
