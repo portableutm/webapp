@@ -101,8 +101,13 @@ const Map = ({ mode }) => {
 				const map = initializeLeaflet();
 				mapStore.setMapRef(map);
 			} else {
-				if (obs.mode === 'new-op') mapStore.startOperationEditor();
-				if (obs.mode === 'edit-op') mapStore.startOperationEditor(operationStore.operations.get(editId));
+				if (obs.mode === 'new-op') {
+					mapStore.startOperationEditor();
+				} else if (obs.mode === 'edit-op') {
+					mapStore.startOperationEditor(operationStore.operations.get(editId));
+				} else {
+					mapStore.stopEditor();
+				}
 			}
 		});
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
