@@ -205,10 +205,12 @@ const Map = ({ mode }) => {
 					{	mapStore.isEditingOperation &&
 						mapStore.editorOperation.operation_volumes[0]
 							.operation_geography.coordinates.map((latlng, index) => {
+								const length = mapStore.editorOperation.operation_volumes[0]
+									.operation_geography.coordinates.length;
 								return (
 									<OperationEditMarker
-										id={'marker' + index}
-										key={'marker' + index}
+										id={'marker' + index + 'l' + length}
+										key={'marker' + index + 'l' + length}
 										onDrag={/* istanbul ignore next */ latlng => {
 											mapStore.editOperationVolumePoint(0, index, latlng.lat, latlng.lng);
 										}}
