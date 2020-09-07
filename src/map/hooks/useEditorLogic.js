@@ -21,70 +21,6 @@ const editorMode = {
 };
 const DEFAULT_UVR_VALIDITY = 2; // 2 hours
 
-const defaultNewOperation = {
-	_type: 'OPERATION',
-	name: 'Untitled',
-	owner: 'admin',
-	contact: '',
-	contact_phone: '',
-	flight_comments: '',
-	volumes_description: 'v0.1',
-	flight_number: Date.now(),
-	operation_volumes: [
-		{
-			near_structure: false,
-			effective_time_begin: new Date(),
-			effective_time_end: new Date(),
-			min_altitude: 0,
-			max_altitude: 120,
-			beyond_visual_line_of_sight: false,
-			operation_geography: {
-				type: 'Polygon',
-				coordinates: [[]]
-			},
-		}
-	],
-	faa_rule: 0,
-	state: 0,
-	controller_location: {
-		'type': 'Point',
-		'coordinates': [
-			-56.15970075130463,
-			-34.9119507320875
-		]
-	},
-	priority_elements: {
-		priority_level: 1,
-		priority_status: 'EMERGENCY_AIR_AND_GROUND_IMPACT'
-	},
-	uas_registrations: [],
-	contingency_plans: [
-		{
-			contingency_cause: ['ENVIRONMENTAL', 'LOST_NAV'],
-			contingency_location_description: 'OPERATOR_UPDATED',
-			contingency_polygon: {
-				type: 'Polygon',
-				coordinates: [
-					[
-						[-56.15438461303711, -34.905501548851106],
-						[-56.15138053894043, -34.90873940129964],
-						[-56.14889144897461, -34.907437236859494],
-						[-56.15112304687499, -34.9059942737644],
-						[-56.15438461303711, -34.905501548851106]
-					]
-				]
-			},
-			contingency_response: 'LANDING',
-			free_text: 'Texto libre DE prueba',
-			loiter_altitude: 30,
-			relative_preference: 30,
-			relevant_operation_volumes: [1, 0],
-			valid_time_begin: '2019-12-11T19:59:10Z',
-			valid_time_end: '2019-12-11T20:59:10Z'
-		}
-	],
-	negotiation_agreements: []
-};
 const defaultNewUVR = {
 	_type: 'UVR',
 	actual_time_end: null,
@@ -116,7 +52,6 @@ function useEditorLogic(mode = editorMode.UNKNOWN, currentInfo = null) {
 			uvrStore: store.uvrStore
 		}));
 	const { t } = useTranslation('map');
-	const [mbInfo, setMbInfo] = useState(S.Nothing);
 	const history = useHistory();
 
 	const isEditingOperation = S.isJust(mbInfo) && fM(mbInfo)._type === 'OPERATION';

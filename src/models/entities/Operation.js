@@ -1,38 +1,43 @@
 import { types } from 'mobx-state-tree';
 import { GeoJsonPoint } from '../types/GeoJsonPoint';
-import { OperationVolume } from './OperationVolume';
+import { BaseOperationVolume, OperationVolume } from './OperationVolume';
 import {
 	User } from './User';
 
-export const Operation = types
+export const BaseOperation = types
 	.model({
-		gufi: types.identifier, // Automated
 		name: types.string,
-		owner: types.maybeNull(User),
+		owner: types.maybeNull(types.string),
 		contact: types.maybeNull(types.string),
 		contact_phone: types.maybeNull(types.string),
-		uss_name: types.maybeNull(types.string),
-		discovery_reference: types.maybeNull(types.string),
-		submit_time: types.Date, // Automated
-		update_time: types.Date,  // Automated
 		aircraft_comments: types.maybeNull(types.string),
 		flight_comments: types.maybeNull(types.string),
 		volumes_description: types.maybeNull(types.string),
 		airspace_authorization: types.maybeNull(types.string),
-		flight_number: types.maybeNull(types.string),
-		state: types.enumeration('OperationState', ['PROPOSED' , 'PENDING', 'ACCEPTED', 'NOT_ACCEPTED', 'ACTIVATED' , 'CLOSED' , 'NONCONFORMING', 'ROGUE']),
 		controller_location: types.maybeNull(GeoJsonPoint),
 		gcs_location:  types.maybeNull(GeoJsonPoint),
 		// TODO: This should be the case
 		//  faa_rule: types.maybeNull(types.enumeration('FAARule', ['PART_107', 'PART_107X', 'PART_101E', 'OTHER'])),
 		faa_rule: types.maybeNull(types.string),
-		operation_volumes: types.array(OperationVolume),
+		operation_volumes: types.array(BaseOperationVolume),
 		// 'uas_registrations': Array<UasRegistration>;
-		// TODO: Creator should not be null, but backend is incorrect
-		creator: types.maybeNull(types.string) // Automated
 		//'contingency_plans': ContingencyPlan[];
 		// 'negotiation_agreements'?: NegotiationAgreement[];
 		// 'priority_elements'?: PriorityElements;
+	});
+
+export const Operation = BaseOperation
+	.named('Operation')
+	.props({
+		owner: types.maybeNull(User),
+		creator: types.maybeNull(types.string),
+		uss_name: types.maybeNull(types.string),
+		discovery_reference: types.maybeNull(types.string),
+		submit_time: types.Date,
+		update_time: types.Date,
+		operation_volumes: types.array(OperationVolume),
+		flight_number: types.maybeNull(types.string),
+		state: types.enumeration('OperationState', ['PROPOSED' , 'PENDING', 'ACCEPTED', 'NOT_ACCEPTED', 'ACTIVATED' , 'CLOSED' , 'NONCONFORMING', 'ROGUE']),
 	})
 	.views(self => ({
 		get isOwnerSet() {

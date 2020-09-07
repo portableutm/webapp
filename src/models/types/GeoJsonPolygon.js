@@ -1,9 +1,10 @@
 import { types } from 'mobx-state-tree';
+import { extendObservable } from 'mobx';
 
 class Polygon {
 	constructor(coordinates) {
-		this.coordinates = coordinates;
-		// extendObservable(this, {coordinates});
+		//this.coordinates = coordinates;
+		extendObservable(this, { coordinates });
 	}
 
 	toString() {

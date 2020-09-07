@@ -9,33 +9,22 @@ import OperationVolumeInfoEditor from './OperationVolumeInfoEditor';
 import styles from '../Map.module.css';
 import { useHistory } from 'react-router-dom';
 import { fM } from '../../libs/SaferSanctuary';
+import { useStore } from 'mobx-store-provider';
+import { observer } from 'mobx-react';
 
-function OperationInfoEditor({ maybeInfo, setters, saveOperation }) {
+function OperationInfoEditor() {
+	const { mapStore, authStore } = useStore('RootStore', store => ({ mapStore: store.mapStore, authStore: store.authStore }));
 	const { t, } = useTranslation(['map', 'glossary', 'common']);
 	const [isSaving, setSaving] = useState(false);
 	const history = useHistory();
 
-	/* Projections */
-	const info = fM(maybeInfo);
-	const volumeInfo = S.isJust(maybeInfo) ? info.operation_volumes[0] : null;
-
-	/* Helpers that make the form onChange easier to write */
-	const editInfo = (property, newValue) => {
-		let partial = {};
-		partial[property] = newValue;
-		setters.setInfo(partial);
-	};
-	const editVolumeInfo = (property, newValue) => {
-		let partial = {};
-		partial[property] = newValue;
-		setters.setVolumeInfo(0, partial);
-	};
-
-	const saveOperationAndSetSaving = () => {
+	const saveOperationAndSetSaving = async () => {
 		setSaving(true);
-		saveOperation(() => setSaving(false));
+		await mapStore.saveOperation();
+		setSaving(false);
 	};
-	if (S.isJust(maybeInfo)) {
+
+	if (mapStore.isEditingOperation) {
 		return (
 			<SidebarButton
 				useCase='editorSteps'
@@ -54,8 +43,8 @@ function OperationInfoEditor({ maybeInfo, setters, saveOperation }) {
 						className={styles.sidebarButtonTextContent}
 						id="name"
 						data-test-id="map#editor#operation#info#name"
-						value={info.name}
-						onChange={(evt) => editInfo('name', evt.target.value)}
+						value={mapStore.editorOperation.name}
+						onChange={(evt) => mapStore.setOperationInfo('name', evt.target.value)}
 					/>
 				</FormGroup>
 				<FormGroup
@@ -68,8 +57,9 @@ function OperationInfoEditor({ maybeInfo, setters, saveOperation }) {
 						className={styles.sidebarButtonTextContent}
 						id="pilot"
 						data-test-id="map#editor#operation#info#pilot"
-						value={info.owner}
-						onChange={(evt) => editInfo('owner', evt.target.value)}
+						disabled={authStore.role === 'pilot'}
+						value={mapStore.editorOperation.owner}
+						onChange={(evt) => mapStore.setOperationInfo('owner', evt.target.value)}
 					/>
 				</FormGroup>
 				{/* "flight_number": "12345678"
@@ -96,8 +86,8 @@ function OperationInfoEditor({ maybeInfo, setters, saveOperation }) {
 						className={styles.sidebarButtonTextContent}
 						id="contact"
 						data-test-id="map#editor#operation#info#contact"
-						value={info.contact}
-						onChange={(evt) => editInfo('contact', evt.target.value)}
+						value={mapStore.editorOperation.contact}
+						onChange={(evt) => mapStore.setOperationInfo('contact', evt.target.value)}
 					/>
 				</FormGroup>
 				{/* "Contact Phone"*/}
@@ -111,8 +101,8 @@ function OperationInfoEditor({ maybeInfo, setters, saveOperation }) {
 						className={styles.sidebarButtonTextContent}
 						id="contact_phone"
 						data-test-id="map#editor#operation#info#contact_phone"
-						value={info.contact_phone}
-						onChange={(evt) => editInfo('contact_phone', evt.target.value)}
+						value={mapStore.editorOperation.contact_phone}
+						onChange={(evt) => mapStore.setOperationInfo('contact_phone', evt.target.value)}
 					/>
 				</FormGroup>
 				{/* "flight_comments": "Untitled" */}
@@ -126,14 +116,11 @@ function OperationInfoEditor({ maybeInfo, setters, saveOperation }) {
 						className={styles.sidebarButtonTextContent}
 						id="flight_comments"
 						data-test-id="map#editor#operation#info#flight_comments"
-						value={info.flight_comments}
-						onChange={(evt) => editInfo('flight_comments', evt.target.value)}
+						value={mapStore.editorOperation.flight_comments}
+						onChange={(evt) => mapStore.setOperationInfo('flight_comments', evt.target.value)}
 					/>
 				</FormGroup>
-				<OperationVolumeInfoEditor
-					info={volumeInfo}
-					editInfo={editVolumeInfo}
-				/>
+				<OperationVolumeInfoEditor />
 				<div
 					className={styles.sidebarButtonTextRight}
 				>
@@ -162,4 +149,4 @@ function OperationInfoEditor({ maybeInfo, setters, saveOperation }) {
 	}
 }
 
-export default OperationInfoEditor;
+export default observer(OperationInfoEditor);

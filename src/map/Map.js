@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import '../Ades.css';
 
@@ -8,7 +8,6 @@ import L from '../libs/wise-leaflet-pip';
 import '../css/leaflet.css';
 
 //import PropTypes from 'prop-types';
-import S from 'sanctuary';
 import { useStore } from 'mobx-store-provider';
 
 /* UI */
@@ -25,7 +24,6 @@ import SelectedDrone from './viewer/SelectedDrone';
 
 /* Hooks */
 import useSimulatorLogic from './hooks/useSimulatorLogic';
-import useEditorLogic, { editorMode } from './hooks/useEditorLogic';
 
 /* Auxiliaries */
 import { initializeLeaflet } from './MapAuxs';
@@ -33,10 +31,9 @@ import { initializeLeaflet } from './MapAuxs';
 import RightArea from '../layout/RightArea';
 
 import Polyline from './elements/Polyline';
-import { fM } from '../libs/SaferSanctuary';
 import { useParams } from 'react-router-dom';
 import UvrInfoEditor from './editor/UvrInfoEditor';
-import { useObserver } from 'mobx-react';
+import { useObserver, useAsObservableSource } from 'mobx-react';
 import { autorun } from 'mobx';
 import { AllOperationsPolygons } from './elements/AllOperationsPolygons';
 import { AllRestrictedFlightVolumes } from './elements/AllRestrictedFlightVolumes';
@@ -48,8 +45,7 @@ import { Button, Intent } from '@blueprintjs/core';
 
 /* Main function */
 const Map = ({ mode }) => {
-	/* 	It's important to hold a reference to map that survives through the application
-		and that is only used after correctly initializing Leaflet. 	*/
+	const obs = useAsObservableSource({ mode });
 
 	/* State holders and references */
 	const { operationStore, mapStore, uvrStore } = useStore(
@@ -65,42 +61,37 @@ const Map = ({ mode }) => {
 	const { editId } = useParams();
 
 	/* Editor state */
-	const [modeOfEditor, setModeOfEditor] = useState(editorMode.UNKNOWN);
-	const [existingInfo, setExistingInfo] = useState(null);
-	const [mbInfo, infoSetters, save, { isEditingOperation, isEditingUvr }] = useEditorLogic(modeOfEditor, existingInfo);
-	const [, setEditingOperationVolume] = useState(S.Maybe.Nothing);
+	//const [mbInfo, infoSetters, save, { isEditingOperation, isEditingUvr }] = useEditorLogic(modeOfEditor, existingInfo);
 
-	useEffect(() => {
+	/* useEffect(() => {
 		switch (fM(mode)) {
 			case 'new-op': {
-				setModeOfEditor(editorMode.OPERATION.NEW);
+				mapStore.startOperationEditor();
 				break;
 			}
 			case 'edit-op': {
-				setModeOfEditor(editorMode.OPERATION.EXISTING);
-				setExistingInfo(operationStore.operations.get(editId));
+				mapStore.startOperationEditor(operationStore.operations.get(editId));
 				break;
 			}
 			case 'new-uvr': {
-				setModeOfEditor(editorMode.UVR.NEW);
+				// mapStore.startUvrEditor();
 				break;
 			}
 			case 'edit-uvr': {
-				setModeOfEditor(editorMode.UVR.EXISTING);
-				setExistingInfo(uvrStore.uvrs.get(editId));
+				// mapStore.startUvrEditor(uvrStore.uvrs.get(editId));
 				break;
 			}
 			default: {
-				setModeOfEditor(editorMode.UNKNOWN);
+				mapStore.stopEditor();
 				break;
 			}
 		}
-	}, [fM(mode)]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [fM(mode)]); // eslint-disable-line react-hooks/exhaustive-deps */
 
 
 	/* Simulator state */
 	const [simPaths, setSimPath, simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic('broken');
-	const isSimulator = (S.isJust(mode) && fM(mode) === 'simulator');
+	const isSimulator = false;
 
 	/*	 Effects 	*/
 	// Leaflet map initialization
@@ -109,6 +100,9 @@ const Map = ({ mode }) => {
 			if (!mapStore.isInitialized) {
 				const map = initializeLeaflet();
 				mapStore.setMapRef(map);
+			} else {
+				if (obs.mode === 'new-op') mapStore.startOperationEditor();
+				if (obs.mode === 'edit-op') mapStore.startOperationEditor(operationStore.operations.get(editId));
 			}
 		});
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -138,12 +132,6 @@ const Map = ({ mode }) => {
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/*	Helpers */
-
-	const showStandardRightAreaPanels =
-		!mapStore.isOperationSelected &&
-		!mapStore.isDroneSelected &&
-		!isEditingOperation &&
-		!isEditingUvr;
 
 	console.count('Rendering map');
 
@@ -205,45 +193,34 @@ const Map = ({ mode }) => {
 					<AllUASVolumeReservations/>
 
 					{/* Operation creation or edition */}
-					{isEditingOperation && S.isJust(mbInfo) && fM(mbInfo).operation_volumes[0].operation_geography.coordinates.map((polygon, index) => {
-						return (
+					{	mapStore.isEditingOperation &&
 							<OperationPolygon
-								id={'polygon' + index}
-								key={'polygon' + index}
-								latlngs={Array.from(polygon)}
+								id={'polygoncreation'}
+								key={'polygoncreation'}
+								latlngs={Array.from(mapStore.editorOperation.operation_volumes[0].operation_geography.coordinates)}
 								popup={'Volume of operation in construction'}
 								operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
-								onClick={() => setEditingOperationVolume(S.Maybe.Just(index))}
 							/>
-						);
-					})}
-					{isEditingOperation && S.isJust(mbInfo) && fM(mbInfo).operation_volumes[0].operation_geography.coordinates.map((polygon, index) => {
-						return polygon.map((latlng, index2) => {
-							return (
-								<OperationEditMarker
-									id={'marker' + index2 + 'p' + index}
-									key={'marker' + index2 + 'p' + index + 'l' + polygon.length}
-									onDrag={/* istanbul ignore next */ latlng => {
-										infoSetters.setCoordinatesOfVolume(0, coords => {
-											/* Dragging a marker updates the saved polygon coordinates */
-											if (coords.length > 0) {
-												const newCoords = coords.slice();
-												newCoords[index][index2] = [latlng.lat, latlng.lng];
-												return newCoords;
-											}
-										});
-
-									}}
-									onClick={/* istanbul ignore next */ () => {
-										infoSetters.removePointFromPolygon(index2);
-									}}
-									latlng={latlng}
-								/>
-							);
-						});
-					})}
+					}
+					{	mapStore.isEditingOperation &&
+						mapStore.editorOperation.operation_volumes[0]
+							.operation_geography.coordinates.map((latlng, index) => {
+								return (
+									<OperationEditMarker
+										id={'marker' + index}
+										key={'marker' + index}
+										onDrag={/* istanbul ignore next */ latlng => {
+											mapStore.editOperationVolumePoint(0, index, latlng.lat, latlng.lng);
+										}}
+										onClick={/* istanbul ignore next */ () => {
+											mapStore.removeOperationVolumePoint(0, index);
+										}}
+										latlng={latlng}
+									/>
+								);
+							})}
 					{/* UVR Edition or creation */}
-					{isEditingUvr && S.isJust(mbInfo) && fM(mbInfo).geography.coordinates.map((polygon, index) => {
+					{ 	mapStore.isEditingUvr && mapStore.editorUvr.geography.coordinates.map((polygon, index) => {
 						return (
 							<OperationPolygon
 								id={'polygon' + index}
@@ -251,18 +228,17 @@ const Map = ({ mode }) => {
 								latlngs={Array.from(polygon)}
 								popup={'Volume of operation in construction'}
 								operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
-								onClick={() => setEditingOperationVolume(S.Maybe.Just(index))}
 							/>
 						);
 					})}
-					{isEditingUvr && S.isJust(mbInfo) && fM(mbInfo).geography.coordinates.map((polygon, index) => {
+					{ 	mapStore.isEditingUvr && mapStore.editorUvr.geography.coordinates.map((polygon, index) => {
 						return polygon.map((latlng, index2) => {
 							return (
 								<OperationEditMarker
 									id={'marker' + index2 + 'p' + index}
 									key={'marker' + index2 + 'p' + index + 'l' + polygon.length}
 									onDrag={/* istanbul ignore next */ latlng => {
-										infoSetters.setCoordinatesOfUVR(coords => {
+										mapStore.setCoordinatesOfUVR(coords => {
 											/* Dragging a marker updates the saved polygon coordinates */
 											if (coords.length > 0) {
 												const newCoords = coords.slice();
@@ -273,7 +249,7 @@ const Map = ({ mode }) => {
 
 									}}
 									onClick={/* istanbul ignore next */ () => {
-										infoSetters.removePointFromPolygon(index2);
+										mapStore.removePointFromPolygon(index2);
 									}}
 									latlng={latlng}
 								/>
@@ -281,7 +257,7 @@ const Map = ({ mode }) => {
 						});
 					})}
 					{/* Simulator */}
-					{S.isJust(mode) && fM(mode) === 'simulator' && simPaths.map((path, index) => {
+					{ false && simPaths.map((path, index) => {
 						return /* istanbul ignore next */ path.map((latlng, index2) => {
 							return (
 								<OperationEditMarker
@@ -294,7 +270,7 @@ const Map = ({ mode }) => {
 							);
 						});
 					})}
-					{S.isJust(mode) && fM(mode) === 'simulator' && simPaths.map((path, index) => {
+					{ false && simPaths.map((path, index) => {
 						return (
 							<Polyline
 								key={'polyline' + index}
@@ -304,11 +280,8 @@ const Map = ({ mode }) => {
 					})}
 					<RightArea
 						forceOpen={
-							mapStore.isOperationSelected ||
-							mapStore.isDroneSelected ||
 							isSimulator ||
-							isEditingUvr ||
-							isEditingOperation
+							!mapStore.hasToShowDefaultMapPanels
 						}
 						onClose={() => {
 							if (mapStore.isOperationSelected) mapStore.unsetSelectedOperation();
@@ -321,27 +294,19 @@ const Map = ({ mode }) => {
 						{	mapStore.isDroneSelected &&
 						<SelectedDrone gufi={mapStore.selectedDrone}/>
 						}
-						{showStandardRightAreaPanels &&
+						{	mapStore.hasToShowDefaultMapPanels &&
 						<QuickFly />
 						}
-						{showStandardRightAreaPanels &&
+						{	mapStore.hasToShowDefaultMapPanels &&
 						<Layers />
 						}
 						{/* Operation Editor Panels */}
-						{isEditingOperation &&
-						<OperationInfoEditor
-							maybeInfo={mbInfo}
-							setters={infoSetters}
-							saveOperation={save}
-						/>
+						{	mapStore.isEditingOperation &&
+						<OperationInfoEditor />
 						}
 						{/* UVR Editor Panels */}
-						{isEditingUvr &&
-						<UvrInfoEditor
-							maybeInfo={mbInfo}
-							setters={infoSetters}
-							saveUvr={save}
-						/>
+						{  	mapStore.isEditingUvr &&
+						<UvrInfoEditor/>
 						}
 						{/* Simulator panels*/}
 						{isSimulator &&

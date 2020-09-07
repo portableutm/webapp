@@ -238,20 +238,20 @@ function Ades() {
 								<Simulator/>
 							</LayoutRoute>
 							<LayoutRoute exact path='/simulator' isMapVisible>
-								<Map mode={S.Maybe.Just('simulator')}/>
+								<Map mode='simulator'/>
 							</LayoutRoute>
 							{/* Map */}
 							<LayoutRoute exact leftIsExpanded path='/operation/new' isMapVisible>
-								<Map mode={S.Maybe.Just('new-op')}/>
+								<Map mode='new-op'/>
 							</LayoutRoute>
 							<LayoutRoute exact leftIsExpanded path='/operation/edit/:editId' isMapVisible>
-								<Map mode={S.Maybe.Just('edit-op')}/>
+								<Map mode='edit-op'/>
 							</LayoutRoute>
 							<LayoutRoute exact path='/operation/:id' isMapVisible>
-								<Map mode={S.Maybe.Just('view')}/>
+								<Map mode='view-op'/>
 							</LayoutRoute>
 							<LayoutRoute exact leftIsExpanded path='/uvr/new' isMapVisible>
-								<Map mode={S.Maybe.Just('new-uvr')}/>
+								<Map mode='new-uvr'/>
 							</LayoutRoute>
 							{/* Dashboard */}
 							<LayoutRoute exact path='/dashboard/configuration'>
@@ -332,8 +332,13 @@ function Ades() {
 									<OperationList/>
 								</Dashboard>
 							</LayoutRoute>
+							<LayoutRoute exact leftIsExpanded path='/operation/new' isMapVisible>
+								<Map mode='new-op'/>
+							</LayoutRoute>
 							<LayoutRoute path='/'>
-								<Dashboard/>
+								<Dashboard>
+									<PilotHomeScreen />
+								</Dashboard>
 							</LayoutRoute>
 						</Switch>
 					</Router>

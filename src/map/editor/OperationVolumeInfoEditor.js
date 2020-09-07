@@ -3,10 +3,12 @@ import { FormGroup, InputGroup } from '@blueprintjs/core';
 import { DateInput, TimePrecision } from '@blueprintjs/datetime';
 import { useTranslation } from 'react-i18next';
 import styles from '../Map.module.css';
+import { useStore } from 'mobx-store-provider';
+import { observer } from 'mobx-react';
 
-function OperationVolumeInfoEditor(props) {
+function OperationVolumeInfoEditor() {
+	const { mapStore } = useStore('RootStore', store => ({ mapStore: store.mapStore }));
 	const { t,  } = useTranslation('glossary');
-	const { info, editInfo } = props;
 	return (
 		<div>
 			{/* title={t('editor.volume.editingvolume_count', {count: S.maybeToNullable(opVolumeIndex)})} */}
@@ -59,13 +61,13 @@ function OperationVolumeInfoEditor(props) {
 				<div data-test-id="map#editor#volume#info#effective_time_begin" className={styles.sidebarButtonTextContent}>
 					<DateInput
 						canClearSelection={false}
-						minDate={info.effective_time_begin}
+						minDate={mapStore.editorOperation.operation_volumes[0].effective_time_begin}
 						formatDate={date => date.toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit' })}
 						parseDate={str => new Date(str)}
 						placeholder="DD/MM/YYYY"
-						value={info.effective_time_begin}
+						value={mapStore.editorOperation.operation_volumes[0].effective_time_begin}
 						timePrecision={TimePrecision.MINUTE}
-						onChange={value => editInfo('effective_time_begin', value)}
+						onChange={value => mapStore.setOperationVolumeInfo(0, 'effective_time_begin', value)}
 					/>
 				</div>
 			</div>
@@ -82,13 +84,13 @@ function OperationVolumeInfoEditor(props) {
 				<div data-test-id="map#editor#volume#info#effective_time_end" className={styles.sidebarButtonTextContent}>
 					<DateInput
 						canClearSelection={false}
-						minDate={info.effective_time_begin}
+						minDate={mapStore.editorOperation.operation_volumes[0].effective_time_begin}
 						formatDate={date => date.toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit' })}
 						parseDate={str => new Date(str)}
 						placeholder="DD/MM/YYYY"
-						value={info.effective_time_end}
+						value={mapStore.editorOperation.operation_volumes[0].effective_time_end}
 						timePrecision={TimePrecision.MINUTE}
-						onChange={value => editInfo('effective_time_end', value)}
+						onChange={value => mapStore.setOperationVolumeInfo(0,'effective_time_end', value)}
 					/>
 				</div>
 			</div>
@@ -109,12 +111,12 @@ function OperationVolumeInfoEditor(props) {
 					className={styles.sidebarButtonTextContent}
 					id="max_altitude"
 					data-test-id="map#editor#volume#info#max_altitude"
-					value={info.max_altitude}
-					onChange={evt => editInfo('max_altitude', evt.target.value)}
+					value={mapStore.editorOperation.operation_volumes[0].max_altitude}
+					onChange={evt => mapStore.setOperationVolumeInfo(0,'max_altitude', evt.target.value)}
 				/>
 			</FormGroup>
 		</div>
 	);
 }
 
-export default OperationVolumeInfoEditor;
+export default observer(OperationVolumeInfoEditor);
