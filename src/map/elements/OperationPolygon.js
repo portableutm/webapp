@@ -47,7 +47,7 @@ const OperationPolygon = observer(({
 		source => createLeafletPolygonStore(source),
 		{ map: mapStore.map }
 	);
-	const obs = useAsObservableSource({ state, latlngs });
+	const obs = useAsObservableSource({ state, latlngs, gufi });
 
 	useEffect(() => { // Mount and unmount
 		// Initialize Polygon,
@@ -70,7 +70,7 @@ const OperationPolygon = observer(({
 
 				const polygonOnClick = onClick ?
 					onClick :
-					() => mapStore.setSelectedOperation(gufi);
+					() => mapStore.setSelectedOperation(obs.gufi);
 				// By default, clicking an OperationPolygon selects the operation and shows it in the sidebar
 
 				polygon.on('click',

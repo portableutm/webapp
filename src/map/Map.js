@@ -128,7 +128,6 @@ const Map = ({ mode }) => {
 	useEffect(() => {
 		autorun(() => {
 			// Change map position if it has changed in the state
-			console.count('Autorun #2 Set bounds');
 			if (mapStore.isInitialized) {
 				const bounds = L.latLngBounds(mapStore.cornerNW, mapStore.cornerSE);
 				mapStore.map.fitBounds(bounds);

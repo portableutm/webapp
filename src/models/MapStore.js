@@ -118,18 +118,22 @@ export const MapStore = types
 					}
 				};
 				const mapOnClickBubbling = (leafletEvent) => {
-					if (self.csIsMapOnClickActivated &&
-						self.csIsMapOnClickSelectionActivated) {
-						// Executes captured click functions
-						if (self.csCapturedFns.length > 0) {
-							// Executes for actual clicks, not events like a drag.
-							self.internalSetMapOnClickSelectionFinished();
-						} else {
-							self.internalResetMapOnClickSelection();
+					if (!self.csIsMapOnClickSelectionFinished) {
+						if (self.csIsMapOnClickActivated &&
+							self.csIsMapOnClickSelectionActivated) {
+							// Executes captured click functions
+							if (self.csCapturedFns.length > 0) {
+								// Executes for actual clicks, not events like a drag.
+								self.internalSetMapOnClickSelectionFinished();
+							} else {
+								self.internalResetMapOnClickSelection();
+								self.csMapOnClickFn(leafletEvent);
+							}
+						} else if (self.csIsMapOnClickActivated) {
 							self.csMapOnClickFn(leafletEvent);
 						}
-					} else if (self.csIsMapOnClickActivated) {
-						self.csMapOnClickFn(leafletEvent);
+					} else {
+						self.internalResetMapOnClickSelection();
 					}
 				};
 
@@ -281,6 +285,7 @@ export const MapStore = types
 		}),
 		stopEditor() {
 			self.editorOperation = null;
+			self.removeMapOnClick();
 		},
 		reset() {
 			// Cleans volatile state. The model itself is resetted by the RootStore

@@ -29,6 +29,7 @@ export const BaseOperation = types
 export const Operation = BaseOperation
 	.named('Operation')
 	.props({
+		gufi: types.identifier,
 		owner: types.maybeNull(User),
 		creator: types.maybeNull(types.string),
 		uss_name: types.maybeNull(types.string),
