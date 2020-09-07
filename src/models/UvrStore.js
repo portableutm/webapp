@@ -48,6 +48,17 @@ export const UvrStore = types
 					console.groupEnd();
 				}
 			}),
+			post: flow(function* post(newUvr /* : <BaseUvr> */) {
+				try {
+					const response =
+						yield getRoot(self).axiosInstance.post('uvr', newUvr, { headers: { auth: getRoot(self).authStore.token } });
+					yield self.fetchUvrs();
+					getRoot(self).setFloatingText('UVR saved successfully');
+					return response;
+				} catch (error) {
+					getRoot(self).setFloatingText('Error while saving UVR: ' + error);
+				}
+			}),
 			toggleVisibility(uvr) {
 				if (_.includes(self.filterShownIds, uvr.message_id)) {
 					self.filterShownIds.remove(uvr.message_id);

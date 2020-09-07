@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
-
+import { useHistory } from 'react-router-dom';
+import { useStore } from 'mobx-store-provider';
+import { observer } from 'mobx-react';
 import { Button, FormGroup, InputGroup } from '@blueprintjs/core';
-
-import S from 'sanctuary';
 import { useTranslation } from 'react-i18next';
 import SidebarButton from '../SidebarButton';
 import OperationVolumeInfoEditor from './OperationVolumeInfoEditor';
 import styles from '../Map.module.css';
-import { useHistory } from 'react-router-dom';
-import { fM } from '../../libs/SaferSanctuary';
-import { useStore } from 'mobx-store-provider';
-import { observer } from 'mobx-react';
+
 
 function OperationInfoEditor() {
 	const { mapStore, authStore } = useStore('RootStore', store => ({ mapStore: store.mapStore, authStore: store.authStore }));
@@ -22,6 +19,7 @@ function OperationInfoEditor() {
 		setSaving(true);
 		await mapStore.saveOperation();
 		setSaving(false);
+		history.push('/');
 	};
 
 	if (mapStore.isEditingOperation) {

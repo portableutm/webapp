@@ -105,6 +105,10 @@ const Map = ({ mode }) => {
 					mapStore.startOperationEditor();
 				} else if (obs.mode === 'edit-op') {
 					mapStore.startOperationEditor(operationStore.operations.get(editId));
+				} else if (obs.mode === 'new-uvr') {
+					mapStore.startUvrEditor();
+				} else if (obs.mode === 'edit-uvr') {
+					mapStore.startUvrEditor(uvrStore.uvrs.get(editId));
 				} else {
 					mapStore.stopEditor();
 				}
@@ -226,42 +230,32 @@ const Map = ({ mode }) => {
 								);
 							})}
 					{/* UVR Edition or creation */}
-					{ 	mapStore.isEditingUvr && mapStore.editorUvr.geography.coordinates.map((polygon, index) => {
+					{ 	mapStore.isEditingUvr &&
+						<OperationPolygon
+							id={'polygonconstr'}
+							key={'polygonconstr'}
+							latlngs={Array.from(mapStore.editorUvr.geography.coordinates)}
+							popup={'Volume of operation in construction'}
+							operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
+						/>
+					}
+					{ 	mapStore.isEditingUvr && mapStore.editorUvr.geography.coordinates.map((latlng, index) => {
+						const length = mapStore.editorUvr.geography.coordinates.length;
 						return (
-							<OperationPolygon
-								id={'polygon' + index}
-								key={'polygon' + index}
-								latlngs={Array.from(polygon)}
-								popup={'Volume of operation in construction'}
-								operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
+							<OperationEditMarker
+								id={'marker' + index + 'l' + length}
+								key={'marker' + index + 'l' + length}
+								onDrag={/* istanbul ignore next */ latlng => {
+									mapStore.editUvrVolumePoint(index, latlng.lat, latlng.lng);
+								}}
+								onClick={/* istanbul ignore next */ () => {
+									mapStore.removeUvrVolumePoint(index);
+								}}
+								latlng={latlng}
 							/>
 						);
-					})}
-					{ 	mapStore.isEditingUvr && mapStore.editorUvr.geography.coordinates.map((polygon, index) => {
-						return polygon.map((latlng, index2) => {
-							return (
-								<OperationEditMarker
-									id={'marker' + index2 + 'p' + index}
-									key={'marker' + index2 + 'p' + index + 'l' + polygon.length}
-									onDrag={/* istanbul ignore next */ latlng => {
-										mapStore.setCoordinatesOfUVR(coords => {
-											/* Dragging a marker updates the saved polygon coordinates */
-											if (coords.length > 0) {
-												const newCoords = coords.slice();
-												newCoords[index][index2] = [latlng.lat, latlng.lng];
-												return newCoords;
-											}
-										});
-
-									}}
-									onClick={/* istanbul ignore next */ () => {
-										mapStore.removePointFromPolygon(index2);
-									}}
-									latlng={latlng}
-								/>
-							);
-						});
-					})}
+					})
+					}
 					{/* Simulator */}
 					{ false && simPaths.map((path, index) => {
 						return /* istanbul ignore next */ path.map((latlng, index2) => {

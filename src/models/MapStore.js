@@ -65,6 +65,24 @@ const defaultNewOperation = {
 	],
 	negotiation_agreements: []
 };
+const defaultNewUvr = {
+	message_id: 'itdoesntmatter',
+	actual_time_end: null,
+	cause: 'SECURITY',
+	effective_time_begin: new Date(),
+	effective_time_end: new Date(),
+	geography: {
+		type: 'Polygon',
+		coordinates: [[]]
+	},
+	max_altitude: 50,
+	min_altitude: 0,
+	permitted_uas: [],
+	reason: 'Unknown',
+	required_support: ['ENHANCED_SAFE_LANDING'],
+	type: 'DYNAMIC_RESTRICTION',
+	uss_name: null
+};
 
 export const MapStore = types
 	.model('MapStore', {
@@ -283,6 +301,52 @@ export const MapStore = types
 			});
 			yield getRoot(self).operationStore.post(self.editorOperation); // If there is an error, it is managed by the OperationStore directly
 		}),
+		startUvrEditor(existing) {
+			const uvr = _.cloneDeep(existing ? existing : defaultNewUvr);
+			uvr.effective_time_begin = new Date();
+			uvr.effective_time_end = new Date();
+			uvr.effective_time_end.setUTCHours(uvr.effective_time_end.getUTCHours() + 2);
+			self.editorUvr = uvr;
+			const drawPolygonPointOnClick = (event) => {
+				const { latlng } = event;
+				self.addUvrVolumePoint(latlng.lat, latlng.lng);
+				getRoot(self).hideFloatingText();
+			};
+			self.setMapOnClick(drawPolygonPointOnClick);
+		},
+		setUvrInfo(property, value) {
+			self.editorUvr[property] = value;
+		},
+		addUvrVolumePoint(lat, lng) {
+			self.editorUvr
+				.geography
+				.coordinates
+				.push([lat, lng]);
+		},
+		editUvrVolumePoint(pointIndex, lat, lng) {
+			self.editorUvr
+				.geography
+				.coordinates[pointIndex] = [lat, lng];
+		},
+		removeUvrVolumePoint(pointIndex) {
+			_.pullAt(self.editorUvr
+				.geography
+				.coordinates, pointIndex);
+		},
+		saveUvr: (function* saveUvr() {
+			self.removeMapOnClick();
+			/* Check polygon has been created */
+			if (self.editorUvr
+				.geography
+				.coordinates.length === 0)
+				getRoot(self).setFloatingText(i18n.t('editor.cant_finish'));
+
+			self.editorUvr.submit_time = new Date().toISOString();
+			self.editorUvr.geography.coordinates = [self.editorUvr.geography.coordinates[0].map((coords) => {
+				return [coords[1], [coords[0]]];
+			})];
+			yield getRoot(self).uvrStore.post(self.editorUvr); // If there is an error, it is managed by the UvrStore directly
+		}),
 		stopEditor() {
 			self.editorOperation = null;
 			self.removeMapOnClick();
@@ -332,14 +396,14 @@ export const MapStore = types
 			return { cornerNW: cornerNW, cornerSE: cornerSE };
 		},
 		get hasToShowDefaultMapPanels() {
-			return !self.isEditingOperation	&& !self.isOperationSelected && !self.isDroneSelected;
+			return !self.isEditingOperation && !self.isEditingUvr && !self.isOperationSelected && !self.isDroneSelected;
 		},
 		/* Map editor */
 		get isEditingOperation() {
 			return self.editorOperation !== null;
 		},
 		get isEditingUvr() {
-			return false;
+			return self.editorUvr !== null;
 		}
 	}))
 ;
