@@ -1,6 +1,6 @@
 import { getRoot, types } from 'mobx-state-tree';
 import { GeoJsonPoint, Point } from './types/GeoJsonPoint';
-import { BaseOperation, Operation } from './entities/Operation';
+import { BaseOperation } from './entities/Operation';
 import _ from 'lodash';
 import i18n from 'i18next';
 import Uvr from './entities/Uvr';
