@@ -1,5 +1,6 @@
-import { types } from 'mobx-state-tree';
+import { getSnapshot, types } from 'mobx-state-tree';
 import { GeoJsonPolygon } from '../types/GeoJsonPolygon';
+import _ from 'lodash';
 
 const Uvr = types
 	.model({
@@ -14,7 +15,21 @@ const Uvr = types
 		min_altitude: types.refinement(types.integer, value => value >= 0),
 		max_altitude: types.refinement(types.integer, value => value >= 0),
 		permitted_uas: types.optional(types.array(types.enumeration('UvrPermittedUAS', ['NOT_SET', 'PUBLIC_SAFETY', 'SECURITY', 'NEWS_GATHERING', 'VLOS', 'SUPPORT_LEVEL', 'PART_107', 'PART_101E', 'PART_107X', 'RADIO_LINE_OF_SIGHT'])), ['NOT_SET'])
-	});
+	})
+	.views(self => ({
+		get asBackendFormat() {
+			const snapshot = _.cloneDeep(getSnapshot(self));
+			snapshot.message_id = void 0;
+			snapshot.submit_time = new Date().toISOString();
+			snapshot.effective_time_begin = self.effective_time_begin.toISOString();
+			snapshot.effective_time_end = self.effective_time_end.toISOString();
+			snapshot.geography.coordinates = [self.geography.coordinates.map((coords) => {
+				return [coords[1], coords[0]];
+			})];
+			snapshot.geography.coordinates[0].push(snapshot.geography.coordinates[0][0]);
+			return snapshot;
+		}
+	}));
 
 export default Uvr;
 /*

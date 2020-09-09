@@ -303,7 +303,10 @@ export const MapStore = types
 			self.setMapOnClick(drawPolygonPointOnClick);
 		},
 		setUvrInfo(property, value) {
-			self.editorUvr[property] = value;
+			let valueParsed = value;
+			if (property === 'min_altitude' || property === 'max_altitude')
+				valueParsed = value !== '' ? parseInt(value) : 0;
+			self.editorUvr[property] = valueParsed;
 		},
 		addUvrVolumePoint(lat, lng) {
 			self.editorUvr
@@ -329,14 +332,11 @@ export const MapStore = types
 				.coordinates.length === 0)
 				getRoot(self).setFloatingText(i18n.t('editor.cant_finish'));
 
-			self.editorUvr.submit_time = new Date().toISOString();
-			self.editorUvr.geography.coordinates = [self.editorUvr.geography.coordinates[0].map((coords) => {
-				return [coords[1], [coords[0]]];
-			})];
-			yield getRoot(self).uvrStore.post(self.editorUvr); // If there is an error, it is managed by the UvrStore directly
+			yield getRoot(self).uvrStore.post(self.editorUvr.asBackendFormat); // If there is an error, it is managed by the UvrStore directly
 		}),
 		stopEditor() {
 			self.editorOperation = null;
+			self.editorUvr = null;
 			self.removeMapOnClick();
 		},
 		reset() {

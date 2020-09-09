@@ -51,12 +51,14 @@ export const UvrStore = types
 			post: flow(function* post(newUvr /* : <BaseUvr> */) {
 				try {
 					const response =
-						yield getRoot(self).axiosInstance.post('uvr', newUvr, { headers: { auth: getRoot(self).authStore.token } });
+						yield getRoot(self).axiosInstance.post('uasvolume', newUvr, { headers: { auth: getRoot(self).authStore.token } });
 					yield self.fetchUvrs();
 					getRoot(self).setFloatingText('UVR saved successfully');
 					return response;
 				} catch (error) {
-					getRoot(self).setFloatingText('Error while saving UVR: ' + error);
+					let errorString = error;
+					if (error.response && error.response.data && error.response.data.message) errorString = error.response.data.message;
+					getRoot(self).setFloatingText(`An error (${errorString}) has ocurred while saving the UAS Volume Reservation.`);
 				}
 			}),
 			toggleVisibility(uvr) {

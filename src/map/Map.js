@@ -33,7 +33,7 @@ import RightArea from '../layout/RightArea';
 import Polyline from './elements/Polyline';
 import { useParams } from 'react-router-dom';
 import UvrInfoEditor from './editor/UvrInfoEditor';
-import { useObserver, useAsObservableSource, observer } from 'mobx-react';
+import { useAsObservableSource, observer } from 'mobx-react';
 import { autorun } from 'mobx';
 import { AllOperationsPolygons } from './elements/AllOperationsPolygons';
 import { AllRestrictedFlightVolumes } from './elements/AllRestrictedFlightVolumes';

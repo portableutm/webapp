@@ -7,9 +7,11 @@ import { DateInput, TimePrecision } from '@blueprintjs/datetime';
 
 import SidebarButton from '../SidebarButton';
 import styles from '../Map.module.css';
+import { observer, useObserver, useAsObservableSource } from 'mobx-react';
 
 const Property = ({ propName, required, info, editInfo, t, helperText = '' }) => {
-	return (<FormGroup
+	const obs = useAsObservableSource({ info });
+	return useObserver(() => (<FormGroup
 		className={styles.sidebarButtonText}
 		helperText={helperText}
 		label={t('glossary:uvr.' + propName)}
@@ -18,11 +20,12 @@ const Property = ({ propName, required, info, editInfo, t, helperText = '' }) =>
 	>
 		<InputGroup
 			id={propName}
+			className={styles.sidebarButtonTextContentOverflows}
 			data-test-id={'map#editor#uvr#info#' + propName}
-			value={info[propName]}
+			value={obs.info[propName]}
 			onChange={(evt) => editInfo(propName, evt.target.value)}
 		/>
-	</FormGroup>);
+	</FormGroup>));
 };
 
 function UvrInfoEditor() {
@@ -129,4 +132,4 @@ function UvrInfoEditor() {
 	}
 }
 
-export default UvrInfoEditor;
+export default observer(UvrInfoEditor);
