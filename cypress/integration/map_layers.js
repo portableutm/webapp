@@ -707,8 +707,8 @@ describe('SP1: (Map) Layers', function () {
 	});
 
 	it('Deselects all', function () {
-		/*cy.get('[data-test-id="layersPROPOSED"]').uncheck({force: true});
-		cy.get('[data-test-id="layersACCEPTED"]').uncheck({force: true});*/
+		/*cy.get('[data-test-id="layersPROPOSED"]').uncheck({force: true});*/
+		cy.get('[data-test-id="layersACCEPTED"]').uncheck({ force: true });
 		cy.get('[data-test-id="layersACTIVATED"]').uncheck({ force: true });
 		cy.get('[data-test-id="layersPENDING"]').uncheck({ force: true });
 		cy.get('[data-test-id="layersROGUE"]').uncheck({ force: true });
