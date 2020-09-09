@@ -33,7 +33,7 @@ import RightArea from '../layout/RightArea';
 import Polyline from './elements/Polyline';
 import { useParams } from 'react-router-dom';
 import UvrInfoEditor from './editor/UvrInfoEditor';
-import { useObserver, useAsObservableSource } from 'mobx-react';
+import { useObserver, useAsObservableSource, observer } from 'mobx-react';
 import { autorun } from 'mobx';
 import { AllOperationsPolygons } from './elements/AllOperationsPolygons';
 import { AllRestrictedFlightVolumes } from './elements/AllRestrictedFlightVolumes';
@@ -143,11 +143,10 @@ const Map = ({ mode }) => {
 
 	console.count('Rendering map');
 
-	return useObserver(() => {
-		if (mapStore.isInitialized) {
-			return (
-				<>
-					{/* <Dialog
+	if (mapStore.isInitialized) {
+		return (
+			<>
+				{/* <Dialog
 						className='bp3-dark'
 						title={state.map_dialog.title}
 						isOpen={state.map_dialog.open}
@@ -173,7 +172,7 @@ const Map = ({ mode }) => {
 						</Button>
 					</Dialog>
 					*/}
-					{ 	mapStore.csIsMapOnClickActivated &&
+				{ 	mapStore.csIsMapOnClickActivated &&
 						mapStore.csIsMapOnClickSelectionActivated &&
 						mapStore.csIsMapOnClickSelectionFinished &&
 					<div
@@ -193,15 +192,15 @@ const Map = ({ mode }) => {
 								</Button>);
 						})}
 					</div>
-					}
-					{/* Live map */}
-					<AllDronePositions />
-					<AllOperationsPolygons/>
-					<AllRestrictedFlightVolumes/>
-					<AllUASVolumeReservations/>
+				}
+				{/* Live map */}
+				<AllDronePositions />
+				<AllOperationsPolygons/>
+				<AllRestrictedFlightVolumes/>
+				<AllUASVolumeReservations/>
 
-					{/* Operation creation or edition */}
-					{	mapStore.isEditingOperation &&
+				{/* Operation creation or edition */}
+				{	mapStore.isEditingOperation &&
 							<OperationPolygon
 								id={'polygoncreation'}
 								key={'polygoncreation'}
@@ -209,8 +208,8 @@ const Map = ({ mode }) => {
 								popup={'Volume of operation in construction'}
 								operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
 							/>
-					}
-					{	mapStore.isEditingOperation &&
+				}
+				{	mapStore.isEditingOperation &&
 						mapStore.editorOperation.operation_volumes[0]
 							.operation_geography.coordinates.map((latlng, index) => {
 								const length = mapStore.editorOperation.operation_volumes[0]
@@ -229,8 +228,8 @@ const Map = ({ mode }) => {
 									/>
 								);
 							})}
-					{/* UVR Edition or creation */}
-					{ 	mapStore.isEditingUvr &&
+				{/* UVR Edition or creation */}
+				{ 	mapStore.isEditingUvr &&
 						<OperationPolygon
 							id={'polygonconstr'}
 							key={'polygonconstr'}
@@ -238,78 +237,78 @@ const Map = ({ mode }) => {
 							popup={'Volume of operation in construction'}
 							operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
 						/>
-					}
-					{ 	mapStore.isEditingUvr && mapStore.editorUvr.geography.coordinates.map((latlng, index) => {
-						const length = mapStore.editorUvr.geography.coordinates.length;
+				}
+				{ 	mapStore.isEditingUvr && mapStore.editorUvr.geography.coordinates.map((latlng, index) => {
+					const length = mapStore.editorUvr.geography.coordinates.length;
+					return (
+						<OperationEditMarker
+							id={'marker' + index + 'l' + length}
+							key={'marker' + index + 'l' + length}
+							onDrag={/* istanbul ignore next */ latlng => {
+								mapStore.editUvrVolumePoint(index, latlng.lat, latlng.lng);
+							}}
+							onClick={/* istanbul ignore next */ () => {
+								mapStore.removeUvrVolumePoint(index);
+							}}
+							latlng={latlng}
+						/>
+					);
+				})
+				}
+				{/* Simulator */}
+				{ false && simPaths.map((path, index) => {
+					return /* istanbul ignore next */ path.map((latlng, index2) => {
 						return (
 							<OperationEditMarker
-								id={'marker' + index + 'l' + length}
-								key={'marker' + index + 'l' + length}
-								onDrag={/* istanbul ignore next */ latlng => {
-									mapStore.editUvrVolumePoint(index, latlng.lat, latlng.lng);
-								}}
-								onClick={/* istanbul ignore next */ () => {
-									mapStore.removeUvrVolumePoint(index);
-								}}
+								index={'D' + index + '->' + index2}
+								id={'marker' + index2 + 'p' + index}
+								key={'marker' + index2 + 'p' + index}
+								onDrag={latlng => setSimPath(latlng, index2)}
 								latlng={latlng}
 							/>
 						);
-					})
-					}
-					{/* Simulator */}
-					{ false && simPaths.map((path, index) => {
-						return /* istanbul ignore next */ path.map((latlng, index2) => {
-							return (
-								<OperationEditMarker
-									index={'D' + index + '->' + index2}
-									id={'marker' + index2 + 'p' + index}
-									key={'marker' + index2 + 'p' + index}
-									onDrag={latlng => setSimPath(latlng, index2)}
-									latlng={latlng}
-								/>
-							);
-						});
-					})}
-					{ false && simPaths.map((path, index) => {
-						return (
-							<Polyline
-								key={'polyline' + index}
-								latlngs={path}
-							/>
-						);
-					})}
-					<RightArea
-						forceOpen={
-							isSimulator ||
+					});
+				})}
+				{ false && simPaths.map((path, index) => {
+					return (
+						<Polyline
+							key={'polyline' + index}
+							latlngs={path}
+						/>
+					);
+				})}
+				<RightArea
+					forceOpen={
+						isSimulator ||
 							!mapStore.hasToShowDefaultMapPanels
-						}
-						onClose={() => {
-							if (mapStore.isOperationSelected) mapStore.unsetSelectedOperation();
-							if (mapStore.isDroneSelected) mapStore.unsetSelectedDrone();
-						}}
-					>
-						{ 	mapStore.isOperationSelected &&
+					}
+					onClose={() => {
+						if (mapStore.isOperationSelected) mapStore.unsetSelectedOperation();
+						if (mapStore.isDroneSelected) mapStore.unsetSelectedDrone();
+					}}
+				>
+					{ 	mapStore.isOperationSelected &&
 						<SelectedOperation />
-						}
-						{	mapStore.isDroneSelected &&
+					}
+					{	mapStore.isDroneSelected &&
 						<SelectedDrone gufi={mapStore.selectedDrone}/>
-						}
-						{	mapStore.hasToShowDefaultMapPanels &&
+					}
+					{	mapStore.hasToShowDefaultMapPanels &&
 						<QuickFly />
-						}
-						{	mapStore.hasToShowDefaultMapPanels &&
+					}
+					{	mapStore.hasToShowDefaultMapPanels &&
 						<Layers />
-						}
-						{/* Operation Editor Panels */}
-						{	mapStore.isEditingOperation &&
+					}
+					{/* Operation Editor Panels */}
+					{	mapStore.isEditingOperation &&
 						<OperationInfoEditor />
-						}
-						{/* UVR Editor Panels */}
-						{  	mapStore.isEditingUvr &&
+					}
+					{/* UVR Editor Panels */}
+					{  	mapStore.isEditingUvr &&
 						<UvrInfoEditor/>
-						}
-						{/* Simulator panels*/}
-						{isSimulator &&
+					}
+					{/* Simulator panels*/}
+					{isSimulator &&
 						<SimulatorPanel
 							paths={simPaths}
 							onClick={onSelectSimDrone}
@@ -318,21 +317,20 @@ const Map = ({ mode }) => {
 							startFlying={startFlying}
 							stopFlying={stopFlying}
 						/>
-						}
-					</RightArea>
-				</>
-			);
-		} else {
-			return null;
-		}
-	});
+					}
+				</RightArea>
+			</>
+		);
+	} else {
+		return null;
+	}
 };
 
 /*Map.propTypes = {
 	mode: PropTypes.oneOf(S.Maybe.Just)
 };*/
 
-export default Map;
+export default observer(Map);
 // Might be useful later:
 // https://github.com/Igor-Vladyka/leaflet.motion
 // https://openmaptiles.com/downloads/europe/

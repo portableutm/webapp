@@ -44,7 +44,7 @@
     padding-left: 10px;
     padding-right: 10px;
     transition: all 0.5s;
-    overflow: hidden;
+    overflow: visible;
 }
 .sidebarButtonText:hover {
     color: rgb(255, 111, 0);
@@ -60,6 +60,13 @@
     margin: 5px 0 !important;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.sidebarButtonTextContentOverflows {
+    text-overflow: ellipsis;
+    margin: 5px 0 !important;
+    white-space: nowrap;
+    overflow: visible;
 }
 
 .sidebarButtonTextContentLeft {

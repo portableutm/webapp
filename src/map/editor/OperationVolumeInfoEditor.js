@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup, InputGroup } from '@blueprintjs/core';
+import { FormGroup, InputGroup, Intent } from '@blueprintjs/core';
 import { DateInput, TimePrecision } from '@blueprintjs/datetime';
 import { useTranslation } from 'react-i18next';
 import styles from '../Map.module.css';
@@ -108,11 +108,16 @@ function OperationVolumeInfoEditor() {
 			</FormGroup> */}
 			<FormGroup className={styles.sidebarButtonText} label={t('volumes.max_altitude')} labelFor="max_altitude">
 				<InputGroup
-					className={styles.sidebarButtonTextContent}
+					className={styles.sidebarButtonTextContentOverflows}
 					id="max_altitude"
 					data-test-id="map#editor#volume#info#max_altitude"
+					intent={mapStore.editorOperation.operation_volumes[0].max_altitude > 0 ? Intent.NONE : Intent.WARNING}
 					value={mapStore.editorOperation.operation_volumes[0].max_altitude}
-					onChange={evt => mapStore.setOperationVolumeInfo(0,'max_altitude', evt.target.value)}
+					onChange={evt => {
+						console.log('evt.currentTarget.value', evt.currentTarget.value);
+						const value = evt.currentTarget.value !== '' ? parseInt(evt.currentTarget.value) : 0;
+						mapStore.setOperationVolumeInfo(0,'max_altitude', value);
+					}}
 				/>
 			</FormGroup>
 		</div>

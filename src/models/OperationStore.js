@@ -101,7 +101,9 @@ export const OperationStore = types
 					getRoot(self).setFloatingText('Operation saved successfully');
 					return response;
 				} catch (error) {
-					getRoot(self).setFloatingText('Error while saving Operation: ' + error);
+					let errorString = error;
+					if (error.response && error.response.data && error.response.data.message) errorString = error.response.data.message;
+					getRoot(self).setFloatingText(`An error (${errorString}) has ocurred while saving the operation. Please, contact us.`);
 				}
 			}),
 			updatePending: flow(function* updatePending(gufi, comments, isApproved) {

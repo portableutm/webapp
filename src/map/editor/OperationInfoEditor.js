@@ -38,7 +38,7 @@ function OperationInfoEditor() {
 					labelFor="name"
 				>
 					<InputGroup
-						className={styles.sidebarButtonTextContent}
+						className={styles.sidebarButtonTextContentOverflows}
 						id="name"
 						data-test-id="map#editor#operation#info#name"
 						value={mapStore.editorOperation.name}
@@ -52,7 +52,7 @@ function OperationInfoEditor() {
 					labelFor="name"
 				>
 					<InputGroup
-						className={styles.sidebarButtonTextContent}
+						className={styles.sidebarButtonTextContentOverflows}
 						id="pilot"
 						data-test-id="map#editor#operation#info#pilot"
 						disabled={authStore.role === 'pilot'}
@@ -81,7 +81,7 @@ function OperationInfoEditor() {
 					labelFor="contact"
 				>
 					<InputGroup
-						className={styles.sidebarButtonTextContent}
+						className={styles.sidebarButtonTextContentOverflows}
 						id="contact"
 						data-test-id="map#editor#operation#info#contact"
 						value={mapStore.editorOperation.contact}
@@ -96,7 +96,7 @@ function OperationInfoEditor() {
 					labelFor="contact_phone"
 				>
 					<InputGroup
-						className={styles.sidebarButtonTextContent}
+						className={styles.sidebarButtonTextContentOverflows}
 						id="contact_phone"
 						data-test-id="map#editor#operation#info#contact_phone"
 						value={mapStore.editorOperation.contact_phone}
@@ -111,7 +111,7 @@ function OperationInfoEditor() {
 					labelFor="flight_comments"
 				>
 					<InputGroup
-						className={styles.sidebarButtonTextContent}
+						className={styles.sidebarButtonTextContentOverflows}
 						id="flight_comments"
 						data-test-id="map#editor#operation#info#flight_comments"
 						value={mapStore.editorOperation.flight_comments}

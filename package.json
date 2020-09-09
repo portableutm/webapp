@@ -48,7 +48,8 @@
     "cypress:open": "cypress open"
   },
   "nyc": {
-    "exclude": "src/serviceWorker.js"
+    "exclude": "src/serviceWorker.js",
+    "reporter": ["html"]
   },
   "husky": {
     "hooks": {

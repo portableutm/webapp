@@ -1,8 +1,9 @@
-import { types } from 'mobx-state-tree';
+import { getSnapshot, types } from 'mobx-state-tree';
+import _ from 'lodash';
 import { GeoJsonPoint } from '../types/GeoJsonPoint';
 import { BaseOperationVolume, OperationVolume } from './OperationVolume';
-import {
-	User } from './User';
+import { User } from './User';
+
 
 export const BaseOperation = types
 	.model({
@@ -24,7 +25,59 @@ export const BaseOperation = types
 		//'contingency_plans': ContingencyPlan[];
 		// 'negotiation_agreements'?: NegotiationAgreement[];
 		// 'priority_elements'?: PriorityElements;
-	});
+	})
+	.views(self => ({
+		get asBackendFormat() {
+			const snapshot = _.cloneDeep(getSnapshot(self));
+			snapshot.priority_elements = {
+				priority_level: 1,
+				priority_status: 'EMERGENCY_AIR_AND_GROUND_IMPACT'
+			};
+			snapshot.contingency_plans = [
+				{
+					contingency_cause: ['ENVIRONMENTAL', 'LOST_NAV'],
+					contingency_location_description: 'OPERATOR_UPDATED',
+					contingency_polygon: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[-56.15438461303711, -34.905501548851106],
+								[-56.15138053894043, -34.90873940129964],
+								[-56.14889144897461, -34.907437236859494],
+								[-56.15112304687499, -34.9059942737644],
+								[-56.15438461303711, -34.905501548851106]
+							]
+						]
+					},
+					contingency_response: 'LANDING',
+					free_text: 'Texto libre DE prueba',
+					loiter_altitude: 30,
+					relative_preference: 30,
+					relevant_operation_volumes: [1, 0],
+					valid_time_begin: '2019-12-11T19:59:10Z',
+					valid_time_end: '2019-12-11T20:59:10Z'
+				}
+			];
+			snapshot.negotiation_agreements = [];
+			snapshot.submit_time = new Date().toISOString();
+			snapshot.uas_registrations = [];
+			snapshot.operation_volumes = self.operation_volumes.map((opVolume) => {
+				const newCoordinates =
+					opVolume.operation_geography.coordinates.map(lngLat => [lngLat[1], lngLat[0]]);
+				return {
+					...opVolume,
+					effective_time_begin: opVolume.effective_time_begin.toISOString(),
+					effective_time_end: opVolume.effective_time_end.toISOString(),
+					operation_geography: {
+						...opVolume.operation_geography,
+						type: 'Polygon',
+						coordinates: [[...newCoordinates, newCoordinates[0]]] // First and last point should be the same
+					}
+				};
+			});
+			return snapshot;
+		}
+	}));
 
 export const Operation = BaseOperation
 	.named('Operation')

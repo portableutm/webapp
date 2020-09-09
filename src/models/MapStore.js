@@ -1,4 +1,4 @@
-import { getRoot, types } from 'mobx-state-tree';
+import { flow, getRoot, types } from 'mobx-state-tree';
 import { GeoJsonPoint, Point } from './types/GeoJsonPoint';
 import { BaseOperation } from './entities/Operation';
 import _ from 'lodash';
@@ -278,7 +278,7 @@ export const MapStore = types
 				.operation_geography
 				.coordinates, pointIndex);
 		},
-		saveOperation: (function* saveOperation() {
+		saveOperation: flow(function* saveOperation() {
 			self.removeMapOnClick();
 			/* Check polygon has been created */
 			if (self
@@ -287,19 +287,7 @@ export const MapStore = types
 				.operation_geography.coordinates.length === 0)
 				getRoot(self).setFloatingText(i18n.t('editor.cant_finish'));
 
-			self.editorOperation.submit_time = new Date().toISOString();
-			self.editorOperation.operation_volumes = self.editorOperation.operation_volumes.map((opVolume) => {
-				const newCoordinates =
-					opVolume.operation_geography.coordinates[0].map(lngLat => [lngLat[1], lngLat[0]]);
-				return {
-					...opVolume,
-					operation_geography: {
-						...opVolume.operation_geography,
-						coordinates: [[...newCoordinates, newCoordinates[0]]] // First and last point should be the same
-					}
-				};
-			});
-			yield getRoot(self).operationStore.post(self.editorOperation); // If there is an error, it is managed by the OperationStore directly
+			yield getRoot(self).operationStore.post(self.editorOperation.asBackendFormat); // If there is an error, it is managed by the OperationStore directly
 		}),
 		startUvrEditor(existing) {
 			const uvr = _.cloneDeep(existing ? existing : defaultNewUvr);
@@ -333,7 +321,7 @@ export const MapStore = types
 				.geography
 				.coordinates, pointIndex);
 		},
-		saveUvr: (function* saveUvr() {
+		saveUvr: flow(function* saveUvr() {
 			self.removeMapOnClick();
 			/* Check polygon has been created */
 			if (self.editorUvr
