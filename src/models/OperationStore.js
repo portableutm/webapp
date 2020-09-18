@@ -26,6 +26,11 @@ export const OperationStore = types
 			const correctedOperation = _.cloneDeep(operation);
 			correctedOperation.submit_time = new Date(operation.submit_time);
 			correctedOperation.update_time = new Date(operation.update_time);
+			correctedOperation.uas_registrations = operation.uas_registrations.map(uasr => {
+				const newUasr = _.cloneDeep(uasr);
+				newUasr.date = new Date(uasr.date);
+				return newUasr;
+			});
 			correctedOperation.operation_volumes = operation.operation_volumes.map(
 				(volume) => {
 					const coordinates = volume.operation_geography.coordinates.map((coords) =>
@@ -220,6 +225,7 @@ export const OperationStore = types
 				.chain(values(self.operations))
 				.map((op) => {
 					const opWithVisibility = _.cloneDeep(op);
+					opWithVisibility.uas_registrations = op.uas_registrations.map(uasr => uasr.asDisplayString);
 					opWithVisibility.owner.asDisplayString = op.owner.asDisplayString;
 					opWithVisibility._matchesFiltersByStates =
 						(self.filterShowAccepted && op.state === 'ACCEPTED') ||

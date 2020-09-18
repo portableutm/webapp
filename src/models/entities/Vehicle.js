@@ -33,4 +33,9 @@ export const Vehicle = BaseVehicle
 		date: types.Date,
 		owner: User,
 		registeredBy: User
-	});
+	})
+	.views(self => ({
+		get asDisplayString() {
+			return `${self.vehicleName}: ${self.manufacturer} ${self.model} (${self.faaNumber}) - ${self.owner.asDisplayString}`;
+		}
+	}));

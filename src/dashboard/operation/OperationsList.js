@@ -108,6 +108,14 @@ function Operation({ expanded = false, selected = false, toggleSelected, operati
 					{t('operations.owner')}
 					{operation.owner.asDisplayString}
 				</GenericListLine>
+				{	operation.uas_registrations.map(uasr => {
+					return (
+						<GenericListLine key={uasr}>
+							{t('operations.uas_registration')}
+							{uasr}
+						</GenericListLine>
+					);
+				})}
 				<GenericListLine>
 					{t('volumes.effective_time_begin')}
 					{new Date(operation.operation_volumes[0].effective_time_begin).toLocaleString()}

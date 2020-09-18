@@ -278,6 +278,15 @@ export const MapStore = types
 				.operation_geography
 				.coordinates, pointIndex);
 		},
+		addOperationUASRegistration(uvin) {
+			self.editorOperation
+				.uas_registrations
+				.push(uvin);
+		},
+		removeOperationUASRegistration(uvin) {
+			_.pull(self.editorOperation
+				.uas_registrations, uvin);
+		},
 		saveOperation: flow(function* saveOperation() {
 			self.removeMapOnClick();
 			/* Check polygon has been created */
@@ -360,6 +369,7 @@ export const MapStore = types
 		},
 		get getSelectedOperation() {
 			const operation = getRoot(self).operationStore.operations.get(self.selectedOperation);
+			const uasrs = operation.uas_registrations.map(uasr => ['operations.uas_registration', uasr.asDisplayString]);
 			return [
 				['operations.name', operation.name],
 				['ID',operation.gufi],
@@ -367,6 +377,7 @@ export const MapStore = types
 				['operations.owner', operation.owner.asDisplayString],
 				['operations.contact', operation.contact],
 				['operations.phone', operation.contact_phone],
+				...uasrs,
 				['volumes.effective_time_begin', new Date(operation.operation_volumes[0].effective_time_begin).toLocaleString()],
 				['volumes.effective_time_end', new Date(operation.operation_volumes[0].effective_time_end).toLocaleString()],
 				['volumes.max_altitude', operation.operation_volumes[0].max_altitude+'m'],

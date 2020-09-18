@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { GeoJsonPoint } from '../types/GeoJsonPoint';
 import { BaseOperationVolume, OperationVolume } from './OperationVolume';
 import { User } from './User';
+import { Vehicle } from './Vehicle';
 
 
 export const BaseOperation = types
@@ -21,6 +22,7 @@ export const BaseOperation = types
 		//  faa_rule: types.maybeNull(types.enumeration('FAARule', ['PART_107', 'PART_107X', 'PART_101E', 'OTHER'])),
 		faa_rule: types.maybeNull(types.string),
 		operation_volumes: types.array(BaseOperationVolume),
+		uas_registrations: types.array(types.string),
 		// 'uas_registrations': Array<UasRegistration>;
 		//'contingency_plans': ContingencyPlan[];
 		// 'negotiation_agreements'?: NegotiationAgreement[];
@@ -60,7 +62,6 @@ export const BaseOperation = types
 			];
 			snapshot.negotiation_agreements = [];
 			snapshot.submit_time = new Date().toISOString();
-			snapshot.uas_registrations = [];
 			snapshot.operation_volumes = self.operation_volumes.map((opVolume) => {
 				const newCoordinates =
 					opVolume.operation_geography.coordinates.map(lngLat => [lngLat[1], lngLat[0]]);
@@ -91,6 +92,7 @@ export const Operation = BaseOperation
 		update_time: types.Date,
 		operation_volumes: types.array(OperationVolume),
 		flight_number: types.maybeNull(types.string),
+		uas_registrations: types.array(Vehicle),
 		state: types.enumeration('OperationState', ['PROPOSED' , 'PENDING', 'ACCEPTED', 'NOT_ACCEPTED', 'ACTIVATED' , 'CLOSED' , 'NONCONFORMING', 'ROGUE']),
 	})
 	.views(self => ({
