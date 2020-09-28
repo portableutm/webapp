@@ -63,7 +63,7 @@ function OperationEditMarker({ latlng, onDrag, index, onClick }) {
 				});
 
 				marker.on('dragend', () => {
-					mapStore.internalResetMapOnClickSelection();
+					//mapStore.internalResetMapOnClickSelection();
 				});
 
 				marker.addTo(mapStore.map);

@@ -4,6 +4,7 @@ import { BaseOperation } from './entities/Operation';
 import _ from 'lodash';
 import i18n from 'i18next';
 import Uvr from './entities/Uvr';
+import { GeoJsonPolygon, Polygon } from './types/GeoJsonPolygon';
 
 const defaultNewOperation = {
 	name: 'Untitled',
@@ -143,6 +144,7 @@ export const MapStore = types
 							if (self.csCapturedFns.length > 0) {
 								// Executes for actual clicks, not events like a drag.
 								self.internalSetMapOnClickSelectionFinished();
+
 							} else {
 								self.internalResetMapOnClickSelection();
 								self.csMapOnClickFn(leafletEvent);
@@ -177,17 +179,11 @@ export const MapStore = types
 			self.csX = x;
 			self.csY = y;
 		},
-		internalResetMapOnClickSelection: flow(function* internalResetMapOnClickSelection()  {
+		internalResetMapOnClickSelection()  {
 			self.csIsMapOnClickSelectionActivated = false;
 			self.csIsMapOnClickSelectionFinished = false;
 			self.csCapturedFns = [];
-			self.csIsMapOnClickActivated = false;
-			const promise = new Promise(resolve => setTimeout(() => {
-				self.enableMapOnClick();
-				resolve();
-			}, 500));
-			yield promise;
-		}),
+		},
 		internalSetMapOnClickSelectionFinished() {
 			// Do not use outside of the store. This action exists to allow 'mapOnClickBubbling' to run normally.
 			self.csCapturedFns.push({ label: 'Map', fn: () => {
@@ -195,9 +191,6 @@ export const MapStore = types
 				self.csMapOnClickFn(self.csEvt);
 			} });
 			self.csIsMapOnClickSelectionFinished = true;
-		},
-		enableMapOnClick() {
-			self.csIsMapOnClickActivated = true;
 		},
 		setMapOnClick(fn) {
 			self.csIsMapOnClickActivated = true;
@@ -246,11 +239,18 @@ export const MapStore = types
 		/* Editor actions */
 		startOperationEditor(existing) {
 			const operation = _.cloneDeep(existing ? existing : defaultNewOperation);
-			operation.owner = getRoot(self).authStore.username;
-			operation.operation_volumes[0].effective_time_begin = new Date();
-			operation.operation_volumes[0].effective_time_end = new Date();
-			operation.operation_volumes[0].effective_time_end.setUTCHours(operation.operation_volumes[0].effective_time_end.getUTCHours() + 1);
-			self.editorOperation = operation;
+			if (!existing) {
+				operation.owner = getRoot(self).authStore.username;
+				operation.operation_volumes[0].effective_time_begin = new Date();
+				operation.operation_volumes[0].effective_time_end = new Date();
+				operation.operation_volumes[0].effective_time_end.setUTCHours(operation.operation_volumes[0].effective_time_end.getUTCHours() + 1);
+			} else {
+				operation.owner = operation.owner.username;
+				operation.operation_volumes[0].effective_time_begin = new Date(operation.operation_volumes[0].effective_time_begin);
+				operation.operation_volumes[0].effective_time_end = new Date(operation.operation_volumes[0].effective_time_end);
+				operation.operation_volumes[0].operation_geography = GeoJsonPolygon.create(new Polygon(operation.operation_volumes[0].operation_geography.coordinates));
+			}
+			self.editorOperation = BaseOperation.create(operation);
 			const drawPolygonPointOnClick = (event) => {
 				const { latlng } = event;
 				self.addOperationVolumePoint(0, latlng.lat, latlng.lng);
@@ -274,6 +274,7 @@ export const MapStore = types
 				.operation_geography
 				.coordinates
 				.push([lat, lng]);
+				
 		},
 		editOperationVolumePoint(volumeIndex, pointIndex, lat, lng) {
 			self.editorOperation

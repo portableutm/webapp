@@ -47,7 +47,7 @@ const OperationPolygon = observer(({
 		source => createLeafletPolygonStore(source),
 		{ map: mapStore.map }
 	);
-	const obs = useAsObservableSource({ state, latlngs: Array.from(latlngs), gufi });
+	const obs = useAsObservableSource({ state, latlngs, gufi });
 
 	useEffect(() => { // Mount and unmount
 		// Initialize Polygon,
@@ -55,10 +55,10 @@ const OperationPolygon = observer(({
 		// react to state change
 		const dispose1 = when(
 			// Runs when the map is initialized
-			() => mapStore.isInitialized,
+			() => mapStore.isInitialized && obs.latlngs.length > 0,
 			() => {
 				const polygon = L.polygon(
-					latlngs,
+					obs.latlngs,
 					{
 						color: '#363535',
 						weight: 1,

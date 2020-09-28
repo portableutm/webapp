@@ -216,8 +216,8 @@ const Map = ({ mode }) => {
 									.operation_geography.coordinates.length;
 								return (
 									<OperationEditMarker
-										id={'marker' + index + 'l' + length}
-										key={'marker' + index + 'l' + length}
+										id={'editmarker' + index + 'l' + length}
+										key={'editmarker' + index + 'l' + length}
 										onDrag={/* istanbul ignore next */ latlng => {
 											mapStore.editOperationVolumePoint(0, index, latlng.lat, latlng.lng);
 										}}

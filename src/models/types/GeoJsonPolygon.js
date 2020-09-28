@@ -1,10 +1,10 @@
 import { types } from 'mobx-state-tree';
-import { observable } from 'mobx';
+import { extendObservable } from 'mobx';
 
-class Polygon {
+export class Polygon {
 	constructor(coordinates) {
 		// coordinates is in an array of latlngs
-		this.coordinates = observable(coordinates);
+		extendObservable(this, { coordinates });
 	}
 
 	toString() {
