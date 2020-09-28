@@ -8,6 +8,7 @@ import { Vehicle } from './Vehicle';
 
 export const BaseOperation = types
 	.model({
+		gufi: types.maybeNull(types.string),
 		name: types.string,
 		owner: types.maybeNull(types.string),
 		contact: types.maybeNull(types.string),
@@ -60,6 +61,7 @@ export const BaseOperation = types
 					valid_time_end: '2019-12-11T20:59:10Z'
 				}
 			];
+			snapshot.gufi = snapshot.gufi !== null ? snapshot.gufi : void 0;
 			snapshot.negotiation_agreements = [];
 			snapshot.submit_time = new Date().toISOString();
 			snapshot.operation_volumes = self.operation_volumes.map((opVolume) => {

@@ -63,7 +63,7 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 			.clear()
 			.type('09123456');
 		cy.get('[data-test-id="map#editor#operation#info#name"]').clear().type('CreateNewOp#01');
-		cy.get('[data-test-id="map#editor#operation#info#pilot"]').clear().type('admin');
+		cy.get('[data-test-id="map#editor#operation#info#pilot"]').select('admin');
 	});
 	it('Finish and add', function () {
 		cy.contains('finish').click();

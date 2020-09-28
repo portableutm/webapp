@@ -240,6 +240,7 @@ export const MapStore = types
 		startOperationEditor(existing) {
 			const operation = _.cloneDeep(existing ? existing : defaultNewOperation);
 			if (!existing) {
+				operation.gufi = null;
 				operation.owner = getRoot(self).authStore.username;
 				operation.operation_volumes[0].effective_time_begin = new Date();
 				operation.operation_volumes[0].effective_time_end = new Date();

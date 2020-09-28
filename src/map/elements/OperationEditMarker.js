@@ -62,8 +62,8 @@ function OperationEditMarker({ latlng, onDrag, index, onClick }) {
 					onDrag(evt.latlng);
 				});
 
-				marker.on('dragend', () => {
-					//mapStore.internalResetMapOnClickSelection();
+				marker.on('dragend', (leafletEvent) => {
+					L.DomEvent.stopPropagation(leafletEvent);
 				});
 
 				marker.addTo(mapStore.map);
