@@ -4,14 +4,17 @@ export function createLeafletMarkerStore() {
 		tooltipClass: '',
 		setMarker(marker) {
 			this.leafletMarker = marker;
-			this.leafletMarker.bindTooltip(
-				'',
-				{
-					direction: 'center',
-					permanent: true,
-					interactive: true,
-					className: this.tooltipClass
-				});
+			if (this.tooltipClass !== '') {
+				this.leafletMarker.bindTooltip(
+					'',
+					{
+						direction: 'center',
+						permanent: true,
+						interactive: true,
+						className: this.tooltipClass
+					});
+			}
+
 		},
 		setInfoText(text) {
 			this.leafletMarker

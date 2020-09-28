@@ -25,7 +25,7 @@ function getColorForOperationState(state) {
 		case 'ROGUE':
 			return '#ff0000';
 		default:
-			return '#dedede';
+			return '#999999';
 	}
 }
 
@@ -47,7 +47,7 @@ const OperationPolygon = observer(({
 		source => createLeafletPolygonStore(source),
 		{ map: mapStore.map }
 	);
-	const obs = useAsObservableSource({ state, latlngs, gufi });
+	const obs = useAsObservableSource({ state, latlngs: Array.from(latlngs), gufi });
 
 	useEffect(() => { // Mount and unmount
 		// Initialize Polygon,

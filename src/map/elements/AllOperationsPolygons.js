@@ -11,7 +11,7 @@ const OperationPolygons = ({ operation }) => (
 			isSelected={false}
 			gufi={operation.gufi}
 			name={operation.name}
-			latlngs={volume.operation_geography.coordinates[0]}
+			latlngs={volume.operation_geography.coordinates}
 			state={operation.state}
 		/>;
 	})

@@ -177,11 +177,17 @@ export const MapStore = types
 			self.csX = x;
 			self.csY = y;
 		},
-		internalResetMapOnClickSelection() {
+		internalResetMapOnClickSelection: flow(function* internalResetMapOnClickSelection()  {
 			self.csIsMapOnClickSelectionActivated = false;
 			self.csIsMapOnClickSelectionFinished = false;
 			self.csCapturedFns = [];
-		},
+			self.csIsMapOnClickActivated = false;
+			const promise = new Promise(resolve => setTimeout(() => {
+				self.enableMapOnClick();
+				resolve();
+			}, 500));
+			yield promise;
+		}),
 		internalSetMapOnClickSelectionFinished() {
 			// Do not use outside of the store. This action exists to allow 'mapOnClickBubbling' to run normally.
 			self.csCapturedFns.push({ label: 'Map', fn: () => {
@@ -189,6 +195,9 @@ export const MapStore = types
 				self.csMapOnClickFn(self.csEvt);
 			} });
 			self.csIsMapOnClickSelectionFinished = true;
+		},
+		enableMapOnClick() {
+			self.csIsMapOnClickActivated = true;
 		},
 		setMapOnClick(fn) {
 			self.csIsMapOnClickActivated = true;

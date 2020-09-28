@@ -33,9 +33,7 @@ export const OperationStore = types
 			});
 			correctedOperation.operation_volumes = operation.operation_volumes.map(
 				(volume) => {
-					const coordinates = volume.operation_geography.coordinates.map((coords) =>
-						coords.map((pos) => [pos[1], pos[0]])
-					);
+					const coordinates = volume.operation_geography.coordinates[0].map((pos) => [pos[1], pos[0]]);
 					const operationGeography = { ...volume.operation_geography, coordinates: [coordinates] };
 					return { ...volume,
 						min_altitude: parseInt(volume.min_altitude),

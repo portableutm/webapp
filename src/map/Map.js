@@ -201,13 +201,13 @@ const Map = ({ mode }) => {
 
 				{/* Operation creation or edition */}
 				{	mapStore.isEditingOperation &&
-							<OperationPolygon
-								id={'polygoncreation'}
-								key={'polygoncreation'}
-								latlngs={Array.from(mapStore.editorOperation.operation_volumes[0].operation_geography.coordinates)}
-								popup={'Volume of operation in construction'}
-								operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
-							/>
+					<OperationPolygon
+						id={'polygoncreation'}
+						key={'polygoncreation'}
+						latlngs={mapStore.editorOperation.operation_volumes[0].operation_geography.coordinates}
+						popup={'Volume of operation in construction'}
+						operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
+					/>
 				}
 				{	mapStore.isEditingOperation &&
 						mapStore.editorOperation.operation_volumes[0]

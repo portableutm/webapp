@@ -11,7 +11,7 @@ export const BaseOperationVolume = types
 		actual_time_end: types.maybeNull(types.Date),
 		min_altitude: types.refinement(types.integer, value => value >= -100),
 		max_altitude: types.refinement(types.integer, value => value >= -100),
-		operation_geography: types.optional(GeoJsonPolygon, { type: 'Polygon', coordinates: [[]] }),
+		operation_geography: types.optional(GeoJsonPolygon, GeoJsonPolygon.create({ type: 'Polygon', coordinates: [[]] })),
 		beyond_visual_line_of_sight: types.optional(types.boolean, true)
 	});
 

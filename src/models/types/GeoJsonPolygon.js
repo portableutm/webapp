@@ -1,16 +1,16 @@
 import { types } from 'mobx-state-tree';
-import { extendObservable } from 'mobx';
+import { observable } from 'mobx';
 
 class Polygon {
 	constructor(coordinates) {
-		//this.coordinates = coordinates;
-		extendObservable(this, { coordinates });
+		// coordinates is in an array of latlngs
+		this.coordinates = observable(coordinates);
 	}
 
 	toString() {
 		return {
 			'type': 'Polygon',
-			'coordinates': [this.coords]
+			'coordinates': [this.coordinates]
 		};
 	}
 }
