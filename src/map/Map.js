@@ -6,6 +6,7 @@ import '../Ades.css';
 //import L from 'leaflet';
 import L from '../libs/wise-leaflet-pip';
 import '../css/leaflet.css';
+import _ from 'lodash';
 
 //import PropTypes from 'prop-types';
 import { useStore } from 'mobx-store-provider';
@@ -131,13 +132,30 @@ const Map = ({ mode }) => {
 	}, [viewId, opsFiltered]); // eslint-disable-line react-hooks/exhaustive-deps */
 
 	useEffect(() => {
-		autorun(() => {
+		const dispose1 = autorun(() => {
 			// Change map position if it has changed in the state
 			if (mapStore.isInitialized) {
 				const bounds = L.latLngBounds(mapStore.cornerNW, mapStore.cornerSE);
 				mapStore.map.fitBounds(bounds);
 			}
 		});
+		const dispose2 = autorun(() => {
+			// Change map position if one and only one operation is selected to be shown
+			if (operationStore.filterShownIds.length > 0) {
+				let latlngs = [];
+				operationStore.operations.forEach((op) => {
+					if (_.includes(operationStore.filterShownIds, op.gufi) ) {
+						latlngs.push(op.operation_volumes[0].operation_geography.coordinates);
+					}
+				});
+				const temp = L.polygon(latlngs);
+				mapStore.map.fitBounds(temp.getBounds());
+			}
+		});
+		return () => {
+			dispose1();
+			dispose2();
+		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	/*	Helpers */
