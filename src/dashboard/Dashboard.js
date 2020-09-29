@@ -10,15 +10,6 @@ import { observer } from 'mobx-react';
 
 function Dashboard({ children }) {
 	const { notificationStore } = useStore('RootStore', (store) => ({ notificationStore: store.notificationStore }));
-	useEffect(() => {
-		/* Block user scrolling by using keyboard */
-		window.addEventListener('keydown', function (e) {
-			// space and arrow keys
-			if ([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-				e.preventDefault();
-			}
-		}, false);
-	});
 
 	return (
 		<div className={styles.background}>

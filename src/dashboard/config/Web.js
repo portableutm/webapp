@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import React from 'react';
 import genericListStyle from '../generic/GenericList.module.css';
 import { useTranslation } from 'react-i18next';

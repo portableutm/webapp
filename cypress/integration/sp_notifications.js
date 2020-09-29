@@ -161,6 +161,7 @@ describe('Special Use Case: Notifications', function() {
 			});
 			cy.get('.bp3-card').first().click();
 			cy.get('[data-test-id="acknowledgeNotification"]').first().click();
+			cy.get('[data-test-id="acknowledgeNotification"]').first().click();
 			cy.get('[data-test-id="deleteNotification"]').first().click();
 		});
 	});

@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 export function createLeafletMarkerStore() {
 	return {
 		leafletMarker: null,

@@ -87,5 +87,9 @@ describe('SP1: (Map) Quick Fly', function () {
 		cy.get('[data-test-id="mapButtonquickFly"]').click();
 		cy.contains('quickfly.activate_delete_mode').click();
 		cy.contains('SUMU').click();
+		cy.contains('quickfly.deactivate_delete_mode').click();
+		cy.contains('quickfly.add_new').click();
+		cy.contains('cancel').click();
+		cy.get('[data-test-id="warning#closer"]').click();
 	});
 });

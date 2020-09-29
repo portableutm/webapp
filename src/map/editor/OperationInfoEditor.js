@@ -145,11 +145,12 @@ function OperationInfoEditor() {
 					labelInfo={t('common:forms.optional')}
 					labelFor="uas_registrations"
 				>
-					{ vehicleStore.allVehicles.map(vehicle => {
+					{ vehicleStore.allVehicles.map((vehicle, index) => {
 						if (vehicle.owner.username === mapStore.editorOperation.owner) {
 							return (
 								<Checkbox
 									key={vehicle.faaNumber}
+									data-test-id={'map#editor#operation#info#uas_registration#'+index}
 									checked={_.includes(mapStore.editorOperation.uas_registrations, vehicle.uvin)}
 									label={vehicle.asDisplayString}
 									onChange={(evt) => {

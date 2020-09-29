@@ -20,5 +20,9 @@ describe('Edit operation', function () {
 		cy.window().then((win) => {
 
 		});
+		cy.visit('http://localhost:2000/es');
+		cy.visit('http://localhost:2000/en');
+		cy.visit('http://localhost:2000/de');
+		cy.visit('http://localhost:2000/ru');
 	});
 });

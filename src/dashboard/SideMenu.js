@@ -1,12 +1,12 @@
 import React from 'react';
 import '../Ades.css';
-import {Menu, MenuDivider, MenuItem, Intent, Dialog, Button} from '@blueprintjs/core';
-import {useHistory} from 'react-router-dom';
-import {useTranslation} from 'react-i18next';
+import { Menu, MenuDivider, MenuItem, Intent, Dialog, Button } from '@blueprintjs/core';
+import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import styles from './Dashboard.module.css';
-import {adesVersion} from '../consts';
-import {useStore} from 'mobx-store-provider';
-import {observer, useLocalStore} from 'mobx-react';
+import { adesVersion } from '../consts';
+import { useStore } from 'mobx-store-provider';
+import { observer, useLocalStore } from 'mobx-react';
 
 function SideMenu() {
 	const { t, i18n } = useTranslation(['dashboard', 'glossary']);
@@ -42,10 +42,10 @@ function SideMenu() {
 				<h2>{t('sidemenu.logout_confirmation')}</h2>
 				{t('sidemenu.logout_details')}
 				<div className="logoutButtons">
-					<Button style={{margin: '5px'}} intent={Intent.DANGER} onClick={() => localStore.setLogoutDialogOpen(false)}>
+					<Button style={{ margin: '5px' }} intent={Intent.DANGER} onClick={() => localStore.setLogoutDialogOpen(false)}>
 						{t('sidemenu.logout_negative')}
 					</Button>
-					<Button style={{margin: '5px'}} intent={Intent.SUCCESS} onClick={logout}>
+					<Button style={{ margin: '5px' }} intent={Intent.SUCCESS} onClick={logout}>
 						{t('sidemenu.logout_positive')}
 					</Button>
 				</div>
@@ -103,7 +103,7 @@ function SideMenu() {
 						<MenuItem icon="cog"
 							text={t('ades_options.web')}
 							onClick={() => history.push('/dashboard/configuration')}/>
-						<MenuItem style={{fontFamily: '"Maven Pro", sans-serif'}} text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
+						<MenuItem style={{ fontFamily: '"Maven Pro", sans-serif' }} text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
 					</Menu>
 				</div>
 			</>
@@ -138,71 +138,10 @@ function SideMenu() {
 							text={t('sidemenu.vehicles_list_pilot')}
 							onClick={() => history.push('/dashboard/vehicles')}
 						/>
-						<MenuItem style={{fontFamily: '"Maven Pro", sans-serif'}} text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
+						<MenuItem style={{ fontFamily: '"Maven Pro", sans-serif' }} text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
 					</Menu>
 				</div>
 			</>
-		);
-	} else {
-		return (
-			<div>
-				<div className={styles.side}>
-					<Menu>
-						<MenuItem
-							className='bp3-skeleton'
-							disabled={true}
-							icon="map" intent={Intent.PRIMARY}
-							text={'Loading'}
-						/>
-						<MenuItem
-							className='bp3-skeleton'
-							disabled={true}
-							icon="map" intent={Intent.PRIMARY}
-							text={'Loading'}
-						/>
-						<MenuItem
-							className='bp3-skeleton'
-							disabled={true}
-							icon="map" intent={Intent.PRIMARY}
-							text={'Loading'}
-						/>
-						<>
-							<MenuDivider title='User'/>
-							<MenuItem className='bp3-skeleton' icon="tick-circle" disabled text="Operator"/>
-							<MenuItem className='bp3-skeleton' icon="person" disabled text='Text'/>
-							<MenuItem className='bp3-skeleton' icon="log-out" text='Text' />
-						</>
-
-						<MenuDivider title="Operational Areas"/>
-						<MenuItem className='bp3-skeleton' icon="changes" text="Change active area"/>
-						<MenuItem className='bp3-skeleton' icon="circle" text="All operational areas"/>
-						<MenuDivider title="Users"/>
-						{/* <MenuItem icon="drive-time" text="Add new Operator"/> */}
-						{/* <MenuItem icon="desktop" text="Add new Monitor"/> */}
-						<MenuItem
-							icon="user"
-							className='bp3-skeleton'
-							text="All users"
-							onClick={() => history.push('/dashboard/users')}/>
-						<MenuDivider title="Operations"/>
-						{/* <MenuItem icon="zoom-in" text="Pending assesment"/> */}
-						<MenuItem icon="numbered-list"
-							className='bp3-skeleton'
-							text={t('sidemenu.operations_list')}
-						/>
-						<MenuDivider title="Vehicles"/>
-						<MenuItem icon="airplane"
-							className='bp3-skeleton'
-							text={t('sidemenu.vehicles_new')}
-						/>
-						<MenuItem icon="numbered-list"
-							className='bp3-skeleton'
-							text={t('sidemenu.vehicles_list')}
-						/>
-						<MenuItem style={{fontFamily: '"Maven Pro", sans-serif'}} text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
-					</Menu>
-				</div>
-			</div>
 		);
 	}
 }

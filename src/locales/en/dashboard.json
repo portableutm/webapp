@@ -28,11 +28,11 @@
   },
   "home": {
     "title": "Overview",
-    "total": "Total of operations",
+    "total": "Registered operations",
     "active": "Active operations",
     "accepted": "Accepted operations",
     "pending": "Pending operations",
-    "vehicles": "Vehicles in the air"
+    "vehicles": "Registered vehicles"
   },
   "ades_options": {
     "title": "Configuration",
