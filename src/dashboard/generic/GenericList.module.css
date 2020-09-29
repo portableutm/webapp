@@ -94,6 +94,16 @@
     margin-bottom: 0;
 }
 
+.filterLabel {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 5px;
+}
+
+.filterProperty {
+
+}
+
 .line {
     display: flex;
     justify-content: space-between;

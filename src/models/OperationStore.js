@@ -15,6 +15,7 @@ export const OperationStore = types
 		filterShowOthers: false,
 		filterShownIds: types.array(types.string),
 		filtersMatchingText: '',
+		filterProperty: 'name',
 		sortingProperty: 'name',
 		sortingOrder: 'asc'
 	})
@@ -173,6 +174,9 @@ export const OperationStore = types
 			setFilterByText(text) {
 				self.filtersMatchingText = text;
 			},
+			setFilterProperty(property) {
+				self.filterProperty = property;
+			},
 			/* Sorting */
 			setSortingProperty(prop) {
 				self.sortingProperty = prop;
@@ -216,9 +220,6 @@ export const OperationStore = types
 			});
 		},
 		get operationsWithVisibility() {
-
-
-
 			return _
 				.chain(values(self.operations))
 				.map((op) => {
@@ -231,8 +232,9 @@ export const OperationStore = types
 						(self.filterShowActivated && op.state === 'ACTIVATED') ||
 						(self.filterShowRogue && op.state === 'ROGUE');
 					opWithVisibility._visibility = _.includes(self.filterShownIds, op.gufi);
+					const matchingProperty = self.filterProperty !== 'owner' ? op[self.filterProperty].toLowerCase() : op.owner.asDisplayString.toLowerCase();
 					opWithVisibility._matchesFiltersByNames = _.includes(
-						op.name.toLowerCase(),
+						matchingProperty,
 						self.filtersMatchingText.toLowerCase()
 					);
 					return opWithVisibility;})
@@ -260,8 +262,9 @@ export const OperationStore = types
 				if (operation.state === 'ACTIVATED') activeCount++;
 				if (operation.state === 'ACCEPTED') acceptedCount++;
 				if (operation.state === 'PENDING') pendingCount++;
+				const matchingProperty = self.filterProperty !== 'owner' ? operation[self.filterProperty].toLowerCase() : operation.owner.asDisplayString.toLowerCase();
 				if (_.includes(
-					operation.name.toLowerCase(),
+					matchingProperty,
 					self.filtersMatchingText.toLowerCase()
 				) && ((self.filterShowAccepted && operation.state === 'ACCEPTED') ||
 					(self.filterShowPending && operation.state === 'PENDING') ||

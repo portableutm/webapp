@@ -210,27 +210,14 @@ function OperationsList() {
 							className={styles.filters}
 						>
 							<HTMLSelect
-								id='sorter'
-								name="OperationSorter"
-								value={store.sortingProperty}
-								onChange={(event) => store.setSortingProperty(event.currentTarget.value)}
+								id='filter'
+								name="OperationFilterProperty"
+								className={styles.filterProperty}
+								value={store.filterProperty}
+								onChange={(event) => store.setFilterProperty(event.currentTarget.value)}
 							>
 								<option value="name">Name</option>
-								<option value="flight_number">Flight No.</option>
-								<option value="owner_name">Own. First Name</option>
-								<option value="owner_lastname">Own. Last Name</option>
-								<option value="owner_username">Own. Username</option>
-								<option value="start">Start</option>
-								<option value="end">End</option>
-							</HTMLSelect>
-							<HTMLSelect
-								id='sorter'
-								name="OperationSortingOrder"
-								value={store.sortingOrder}
-								onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
-							>
-								<option value='asc'>Asc.</option>
-								<option value='desc'>Desc.</option>
+								<option value="owner">Owner</option>
 							</HTMLSelect>
 							<InputGroup
 								className={styles.filterTextInput}
@@ -284,6 +271,46 @@ function OperationsList() {
 							>
 								{t('filter.rogue')}
 							</Checkbox>
+						</div>
+						<div
+							className={styles.filters}
+						>
+							<p className={styles.filterLabel}>
+								Sorting by property:
+							</p>
+							<HTMLSelect
+								id='sorter'
+								name="OperationSorter"
+								className={styles.filterProperty}
+								value={store.sortingProperty}
+								minimal
+								onChange={(event) => store.setSortingProperty(event.currentTarget.value)}
+							>
+								<option value="name">Name</option>
+								<option value="flight_number">Flight No.</option>
+								<option value="owner_name">Owner First Name</option>
+								<option value="owner_lastname">Owner Last Name</option>
+								<option value="owner_username">Owner Username</option>
+								<option value="start">Start</option>
+								<option value="end">End</option>
+							</HTMLSelect>
+							<p className={styles.filterLabel}>
+								in
+							</p>
+							<HTMLSelect
+								id='sorter'
+								name="OperationSortingOrder"
+								className={styles.filterProperty}
+								value={store.sortingOrder}
+								minimal
+								onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
+							>
+								<option value='asc'>Ascending</option>
+								<option value='desc'>Descending</option>
+							</HTMLSelect>
+							<p className={styles.filterLabel}>
+								order
+							</p>
 						</div>
 						<GenericList>
 							{store.operationsWithVisibility.map((op) => {
