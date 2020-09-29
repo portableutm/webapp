@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { types } from 'mobx-state-tree';
 import { extendObservable } from 'mobx';
 

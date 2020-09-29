@@ -3,7 +3,6 @@
 */
 
 
-
 import { API } from '../../src/consts';
 
 const date1 = new Date();
@@ -23,7 +22,14 @@ const operations = {
 			name: 'PROPOSED',
 			volumes_description: 'v0.1 - Restricted to one volume.',
 			airspace_authorization: null,
-			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
+			owner: {
+				firstName: 'test',
+				lastName: 'test',
+				username: 'test',
+				email: 'spam@example.com',
+				password: 'fake',
+				role: 'pilot'
+			},
 			flight_number: '12345678',
 			state: 'PROPOSED',
 			controller_location: null,
@@ -142,7 +148,14 @@ const operations = {
 			gufi: 'a20ef8d5-506d-4f54-a981-874f6c8bd4de',
 			uss_name: null,
 			discovery_reference: null,
-			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
+			owner: {
+				firstName: 'test',
+				lastName: 'test',
+				username: 'test',
+				email: 'spam@example.com',
+				password: 'fake',
+				role: 'pilot'
+			},
 			submit_time: '2020-04-13T08:59:46.146Z',
 			update_time: '2020-04-13T09:00:31.552Z',
 			aircraft_comments: null,
@@ -275,7 +288,14 @@ const operations = {
 			gufi: 'b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63',
 			uss_name: null,
 			discovery_reference: null,
-			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
+			owner: {
+				firstName: 'test',
+				lastName: 'test',
+				username: 'test',
+				email: 'spam@example.com',
+				password: 'fake',
+				role: 'pilot'
+			},
 			submit_time: '2020-04-13T08:59:49.740Z',
 			update_time: '2020-04-13T09:00:01.482Z',
 			aircraft_comments: null,
@@ -408,7 +428,14 @@ const operations = {
 			gufi: 'f7891e78-9bb4-431d-94d3-1a506910c254',
 			uss_name: null,
 			discovery_reference: null,
-			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
+			owner: {
+				firstName: 'test',
+				lastName: 'test',
+				username: 'test',
+				email: 'spam@example.com',
+				password: 'fake',
+				role: 'pilot'
+			},
 			submit_time: '2020-04-13T08:59:47.892Z',
 			update_time: '2020-04-13T09:00:00.885Z',
 			aircraft_comments: null,
@@ -545,7 +572,14 @@ const operations = {
 			gufi: 'ff4b6505-c282-42b1-b013-66f02137f5d5',
 			uss_name: null,
 			discovery_reference: null,
-			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
+			owner: {
+				firstName: 'test',
+				lastName: 'test',
+				username: 'test',
+				email: 'spam@example.com',
+				password: 'fake',
+				role: 'pilot'
+			},
 			submit_time: '2020-04-13T08:59:44.339Z',
 			update_time: '2020-04-13T09:00:31.161Z',
 			aircraft_comments: null,
@@ -676,6 +710,51 @@ const operations = {
 		}
 	]
 };
+const uvrs = [{
+	'message_id': 'a7563257-214b-4060-a463-5e817aa3b90d',
+	'uss_name': null,
+	'type': 'DYNAMIC_RESTRICTION',
+	'permitted_uas': [],
+	'required_support': ['ENHANCED_SAFE_LANDING'],
+	'cause': 'SECURITY',
+	'geography': {
+		'type': 'Polygon',
+		'coordinates': [[[-56.1577962941741, -34.9235413280114], [-56.1586868079393, -34.9249445306604], [-56.1563425036297, -34.9261365742477], [-56.1539821056977, -34.9243199105009], [-56.1558920151171, -34.923805174418]]]
+	},
+	'effective_time_begin': '2020-08-07T13:36:57.716Z',
+	'effective_time_end': '2021-08-07T15:36:57.716Z',
+	'actual_time_end': null,
+	'min_altitude': '0',
+	'max_altitude': '50',
+	'reason': 'UVR 1'
+}, {
+	'message_id': 'b875b36b-df8e-4ca9-924c-93399be258ca',
+	'uss_name': null,
+	'type': 'DYNAMIC_RESTRICTION',
+	'permitted_uas': [],
+	'required_support': null,
+	'cause': 'SECURITY',
+	'geography': {
+		'type': 'Polygon',
+		'coordinates': [[[-56.0820284259118, -34.9162024293944], [-56.0805692785329, -34.9227481561825], [-56.0736168704337, -34.9166951366758], [-56.0820284259118, -34.9162024293944]]]
+	},
+	'effective_time_begin': '2020-09-09T15:12:31.497Z',
+	'effective_time_end': '2020-09-09T17:12:31.497Z',
+	'actual_time_end': null,
+	'min_altitude': '0',
+	'max_altitude': '50',
+	'reason': 'UVR 2'
+}];
+const rfvs = [{
+	'id': '056ccb91-c58c-439b-93a0-592e19cba0b8',
+	'geography': {
+		'type': 'Polygon',
+		'coordinates': [[[-56.04538, -34.816622], [-56.058598, -34.850016], [-56.04744, -34.864666], [-56.007099, -34.85396], [-55.992165, -34.828741], [-55.996971, -34.81634], [-56.016884, -34.81479], [-56.04538, -34.816622]]]
+	},
+	'min_altitude': '0',
+	'max_altitude': '50',
+	'comments': 'RFV 1'
+}];
 
 describe('SP1: (Map) Layers', function () {
 	before('Auth', function () {
@@ -690,12 +769,12 @@ describe('SP1: (Map) Layers', function () {
 		cy.route({
 			method: 'GET',
 			url: '/restrictedflightvolume',
-			response: []
+			response: rfvs
 		});
 		cy.route({
 			method: 'GET',
 			url: '/uasvolume',
-			response: []
+			response: uvrs
 		});
 	});
 
@@ -712,6 +791,8 @@ describe('SP1: (Map) Layers', function () {
 		cy.get('[data-test-id="layersACTIVATED"]').uncheck({ force: true });
 		cy.get('[data-test-id="layersPENDING"]').uncheck({ force: true });
 		cy.get('[data-test-id="layersROGUE"]').uncheck({ force: true });
+		cy.contains('UVR 1').click({ force: true });
+		cy.contains('RFV 1').click({ force: true });
 	});
 	/*it('Check PROPOSED operation', function () {
 		cy.get('[data-test-id="layersPROPOSED"]').check({force: true});
@@ -776,5 +857,26 @@ describe('SP1: (Map) Layers', function () {
 		cy.get('#rightAreaInside').then($el =>
 			expect($el).to.contain('ACTIVATED')
 		);
+	});
+	it('Deselects all', function () {
+		/*cy.get('[data-test-id="layersPROPOSED"]').uncheck({force: true});*/
+		cy.get('[data-test-id="layersACCEPTED"]').uncheck({ force: true });
+		cy.get('[data-test-id="layersACTIVATED"]').uncheck({ force: true });
+		cy.get('[data-test-id="layersPENDING"]').uncheck({ force: true });
+		cy.get('[data-test-id="layersROGUE"]').uncheck({ force: true });
+	});
+	it('Tries out the RFVs', function () {
+		cy.get('.bp3-input').clear();
+		cy.get('.bp3-input').type('UVR 1');
+		cy.get('#rightAreaInside').then($el =>
+			expect($el).to.contain('UVR 1')
+		);
+		cy.get('.bp3-input').clear();
+		cy.get('.bp3-input').type('RFV 1');
+		cy.get('#rightAreaInside').then($el =>
+			expect($el).to.contain('RFV 1')
+		);
+		cy.get('.bp3-input').clear();
+		cy.contains('ACTIVATED').click();
 	});
 });

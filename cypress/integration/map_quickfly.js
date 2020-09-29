@@ -47,6 +47,18 @@ describe('SP1: (Map) Quick Fly', function () {
 			url: '/quickfly',    //
 			response: quickFlyLocations
 		});
+		cy.route({
+			method: 'POST',      // Route all GET requests
+			url: '/quickfly',    //
+			response: [],
+			status: 200
+		});
+		cy.route({
+			method: 'DELETE',      // Route all GET requests
+			url: '/quickfly',    //
+			response: [],
+			status: 200
+		});
 	});
 
 	it('Finds button and clicks on first location', function () {
@@ -68,5 +80,12 @@ describe('SP1: (Map) Quick Fly', function () {
 		cy.get('[data-test-id="mapquickFlyNew"]').type('This is a test QF');
 		cy.contains('quickfly.save').click();
 		cy.get('[data-test-id="floating-text"]').then($el => expect($el).to.contain('saved'));
+	});
+	it('Deletes some quickflies', function () {
+		cy.visit('http://localhost:2000/');
+		cy.get('[data-test-id="rightAreaOpener"]').click();
+		cy.get('[data-test-id="mapButtonquickFly"]').click();
+		cy.contains('quickfly.activate_delete_mode').click();
+		cy.contains('SUMU').click();
 	});
 });
