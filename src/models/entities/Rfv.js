@@ -1,5 +1,5 @@
-import {types} from 'mobx-state-tree';
-import {GeoJsonPolygon} from '../types/GeoJsonPolygon';
+import { types } from 'mobx-state-tree';
+import { GeoJsonPolygon } from '../types/GeoJsonPolygon';
 
 const Rfv = types
 	.model({

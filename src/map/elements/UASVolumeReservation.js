@@ -1,21 +1,21 @@
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 
 /* Logic */
 import L from 'leaflet';
 
 /* Global state */
-import {useStore} from 'mobx-store-provider';
-import {autorun} from 'mobx';
-import {observer, useLocalStore} from 'mobx-react';
+import { useStore } from 'mobx-store-provider';
+import { autorun } from 'mobx';
+import { observer, useLocalStore } from 'mobx-react';
 
 /* Internal */
-import {createLeafletPolygonStore} from '../../models/locals/createLeafletPolygonStore';
+import { createLeafletPolygonStore } from '../../models/locals/createLeafletPolygonStore';
 
 
 /**
  * @return {null}
  */
-const UASVolumeReservation = observer(({latlngs, uvrInfo})  => {
+const UASVolumeReservation = observer(({ latlngs, uvrInfo, onClick })  => {
 	const { mapStore } = useStore(
 		'RootStore',
 		(store) => ({
@@ -24,11 +24,9 @@ const UASVolumeReservation = observer(({latlngs, uvrInfo})  => {
 	//const [polygon, setPolygon] = useState(null);
 	const polygonStore = useLocalStore(
 		source => createLeafletPolygonStore(source),
-		{map: mapStore.map}
+		{ map: mapStore.map }
 	);
 
-	const startDate = (new Date(uvrInfo.effective_time_begin)).toLocaleString();
-	const endDate = (new Date(uvrInfo.effective_time_end)).toLocaleString();
 	const minAltitude = uvrInfo.min_altitude;
 	const maxAltitude = uvrInfo.max_altitude;
 	const name = uvrInfo.reason;
@@ -49,12 +47,14 @@ const UASVolumeReservation = observer(({latlngs, uvrInfo})  => {
 					}
 				);
 
-				polygon.bindPopup(
-					'UAS Volume Reservation </br>' +
-					'Reason: <b>' + uvrInfo.reason + '</b><br/>' +
-					'Starts at: <b>' + startDate + '</b><br/>' +
-					'Ends at: <b>' + endDate + '</b>'
-				);
+				const polygonOnClick = onClick ?
+					onClick :
+					() => mapStore.setSelectedUvr(uvrInfo.message_id);
+				// By default, clicking an OperationPolygon selects the operation and shows it in the sidebar
+
+				polygon.on('click',
+					(evt) =>
+						mapStore.executeFunctionInMap(polygonOnClick, uvrInfo.reason, evt));
 
 				polygon.addTo(mapStore.map);
 

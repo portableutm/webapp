@@ -92,6 +92,8 @@ export const MapStore = types
 		/* Selected entity, to highlight in map and show properties */
 		selectedDrone: types.maybeNull(types.string), // If set to a string, the positions of the drone that flew associated to this operation will be shown
 		selectedOperation: types.maybeNull(types.string),
+		selectedRfv: types.maybeNull(types.string),
+		selectedUvr: types.maybeNull(types.string),
 		/* Entity under creation */
 		editorOperation: types.maybeNull(BaseOperation),
 		editorUvr: types.maybeNull(Uvr)
@@ -235,6 +237,20 @@ export const MapStore = types
 		},
 		unsetSelectedDrone() {
 			self.selectedDrone = null;
+		},
+		setSelectedRfv(id) {
+			self.unsetSelectedDrone();
+			self.selectedRfv = id;
+		},
+		unsetSelectedRfv() {
+			self.selectedUvr = null;
+		},
+		setSelectedUvr(message_id) {
+			self.unsetSelectedDrone();
+			self.selectedUvr = message_id;
+		},
+		unsetSelectedUvr() {
+			self.selectedUvr = null;
 		},
 		/* Editor actions */
 		startOperationEditor(existing) {
@@ -398,6 +414,12 @@ export const MapStore = types
 		get isDroneSelected() {
 			return self.selectedDrone !== null;
 		},
+		get isUvrSelected() {
+			return self.selectedUvr !== null;
+		},
+		get isRfvSelected() {
+			return self.selectedRfv !== null;
+		},
 		get mapCorners() {
 			const latLngCNW = self.map.getBounds().getNorthWest();
 			const latLngCSE = self.map.getBounds().getSouthEast();
@@ -406,7 +428,7 @@ export const MapStore = types
 			return { cornerNW: cornerNW, cornerSE: cornerSE };
 		},
 		get hasToShowDefaultMapPanels() {
-			return !self.isEditingOperation && !self.isEditingUvr && !self.isOperationSelected && !self.isDroneSelected;
+			return !self.isEditingOperation && !self.isEditingUvr && !self.isOperationSelected && !self.isDroneSelected && !self.isUvrSelected && !self.isRfvSelected;
 		},
 		/* Map editor */
 		get isEditingOperation() {

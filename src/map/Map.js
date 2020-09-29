@@ -30,7 +30,6 @@ import { initializeLeaflet } from './MapAuxs';
 
 import RightArea from '../layout/RightArea';
 
-import Polyline from './elements/Polyline';
 import { useParams } from 'react-router-dom';
 import UvrInfoEditor from './editor/UvrInfoEditor';
 import { useAsObservableSource, observer } from 'mobx-react';
@@ -40,6 +39,8 @@ import { AllRestrictedFlightVolumes } from './elements/AllRestrictedFlightVolume
 import { AllUASVolumeReservations } from './elements/AllUASVolumeReservations';
 import { AllDronePositions } from './elements/AllDronePositions';
 import { Button, Intent } from '@blueprintjs/core';
+import SelectedRfv from './viewer/SelectedRfv';
+import SelectedUvr from './viewer/SelectedUvr';
 
 
 
@@ -90,7 +91,7 @@ const Map = ({ mode }) => {
 
 
 	/* Simulator state */
-	const [simPaths, setSimPath, simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic('broken');
+	const [simPaths, , simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic('broken');
 	const isSimulator = false;
 
 	/*	 Effects 	*/
@@ -255,28 +256,6 @@ const Map = ({ mode }) => {
 					);
 				})
 				}
-				{/* Simulator */}
-				{ false && simPaths.map((path, index) => {
-					return /* istanbul ignore next */ path.map((latlng, index2) => {
-						return (
-							<OperationEditMarker
-								index={'D' + index + '->' + index2}
-								id={'marker' + index2 + 'p' + index}
-								key={'marker' + index2 + 'p' + index}
-								onDrag={latlng => setSimPath(latlng, index2)}
-								latlng={latlng}
-							/>
-						);
-					});
-				})}
-				{ false && simPaths.map((path, index) => {
-					return (
-						<Polyline
-							key={'polyline' + index}
-							latlngs={path}
-						/>
-					);
-				})}
 				<RightArea
 					forceOpen={
 						isSimulator ||
@@ -284,6 +263,8 @@ const Map = ({ mode }) => {
 					}
 					onClose={() => {
 						if (mapStore.isOperationSelected) mapStore.unsetSelectedOperation();
+						if (mapStore.isUvrSelected) mapStore.unsetSelectedUvr();
+						if (mapStore.isRfvSelected) mapStore.unsetSelectedRfv();
 						if (mapStore.isDroneSelected) mapStore.unsetSelectedDrone();
 					}}
 				>
@@ -291,7 +272,13 @@ const Map = ({ mode }) => {
 						<SelectedOperation />
 					}
 					{	mapStore.isDroneSelected &&
-						<SelectedDrone gufi={mapStore.selectedDrone}/>
+						<SelectedDrone gufi={mapStore.selectedDrone}	/>
+					}
+					{	mapStore.isRfvSelected &&
+						<SelectedRfv id={mapStore.selectedRfv} />
+					}
+					{	mapStore.isUvrSelected &&
+						<SelectedUvr message_id={mapStore.selectedUvr}	/>
 					}
 					{	mapStore.hasToShowDefaultMapPanels &&
 						<QuickFly />

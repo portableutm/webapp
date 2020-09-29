@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import '../Ades.css';
 import Header from './Header';
 import SideMenu from './SideMenu';

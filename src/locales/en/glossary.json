@@ -65,6 +65,13 @@
     "new_vehicle": "Creating new vehicle",
     "name": "Name"
   },
+  "rfvs": {
+    "id": "Identifier",
+    "min_altitude": "Minimum altitude (in meters)",
+    "max_altitude": "Maximum altitude (in meters)",
+    "comments": "Description of restricted area",
+    "selected": "Selected Restricted Flight Volume"
+  },
   "volumes": {
     "effective_time_begin": "Begins at",
     "effective_time_begin_description": "Earliest time the operation will use the operation volume.",

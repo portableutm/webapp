@@ -15,7 +15,7 @@ import { useAsObservableSource } from 'mobx-react';
 /**
  * @return {null}
  */
-function RestrictedFlightVolume({ latlngs, name, minAltitude, maxAltitude }) {
+function RestrictedFlightVolume({ id, latlngs, name, minAltitude, maxAltitude, onClick }) {
 	const { mapStore } = useStore(
 		'RootStore',
 		(store) => ({
@@ -44,12 +44,15 @@ function RestrictedFlightVolume({ latlngs, name, minAltitude, maxAltitude }) {
 
 			const map = mapStore.map;
 
-			polygon.bindPopup(
-				'Restricted Flight Volume </br>' +
-			'<b>' + name + '</b>'
-			);
+			const polygonOnClick = onClick ?
+				onClick :
+				() => mapStore.setSelectedRfv(id);
+			// By default, clicking an OperationPolygon selects the operation and shows it in the sidebar
 
-			//actions.executeOrAddToClickSelection(t('operations.singular_generic'), () => onClick(evt.latlng));
+			polygon.on('click',
+				(evt) =>
+					mapStore.executeFunctionInMap(polygonOnClick, name, evt));
+
 			polygon.addTo(map);
 
 			const minAltitudeText = minAltitude > 0 ? minAltitude : 'GND';
