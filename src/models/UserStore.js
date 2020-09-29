@@ -46,7 +46,7 @@ export const UserStore = types
 				}
 			}),
 			reset() {
-
+				self.hasFetched = false;
 			}
 		};
 	})
