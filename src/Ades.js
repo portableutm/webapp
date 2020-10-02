@@ -352,10 +352,8 @@ function Ades() {
 							<LayoutRoute exact leftIsExpanded path='/operation/edit/:editId' isMapVisible>
 								<Map mode='edit-op'/>
 							</LayoutRoute>
-							<LayoutRoute path='/'>
-								<Dashboard>
-									<PilotHomeScreen />
-								</Dashboard>
+							<LayoutRoute path='/' isMapVisible>
+								<Map mode={S.Maybe.Nothing}/>
 							</LayoutRoute>
 						</Switch>
 					</Router>

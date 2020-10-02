@@ -13,8 +13,12 @@ function Operation({ expanded = false, selected = false, toggleSelected, operati
 	const history = useHistory();
 	const { t, } = useTranslation(['glossary', 'common']);
 	const onClick = selected ?
-		() => toggleSelected(operation)  :
-		() => {
+		(evt) => {
+			evt.stopPropagation();
+			toggleSelected(operation);
+		}  :
+		(evt) => {
+			evt.stopPropagation();
 			toggleSelected(operation);
 			history.push('/operation/' + operation.gufi);
 		};
