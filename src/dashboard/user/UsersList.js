@@ -18,6 +18,7 @@ function User({ expanded = false,  children }) {
 	const [isEditing, setEditing] = useState(false);
 	const toggleOperation = (evt) => {
 		evt.stopPropagation();
+		setEditing(false);
 		setShowProperties(show => {
 			if (show === false) {
 				history.replace('/dashboard/users/' + children.username);
@@ -57,7 +58,7 @@ function User({ expanded = false,  children }) {
 						minimal
 						icon='edit'
 						intent={isEditing ? Intent.DANGER : Intent.SUCCESS}
-						onClick={() => setEditing(current => !current)}
+						onClick={(evt) => {evt.stopPropagation(); setShowProperties(false); setEditing(current => !current);}}
 					>
 						<div className={styles.buttonHoveredTooltip}>
 							{t('edit')}

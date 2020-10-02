@@ -33,7 +33,8 @@
     "active": "Active operations",
     "accepted": "Accepted operations",
     "pending": "Pending operations",
-    "vehicles": "Registered vehicles"
+    "vehicles": "Registered vehicles",
+    "rogue": "Rogue operations"
   },
   "ades_options": {
     "title": "Configuration",

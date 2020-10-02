@@ -88,9 +88,7 @@ function Pilot({ user }) {
 		<>
 			<div className={styles.pilot}>
 				<div className={gStyles.header}>
-					<h1>
-						{t('users.your_user').toUpperCase()}
-					</h1>
+
 				</div>
 				<div className={styles.pilotBottom}>
 					<FormGroup
