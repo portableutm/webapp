@@ -64,6 +64,7 @@ import { observer } from 'mobx-react';
 import { autorun } from 'mobx';
 import UsersList from './dashboard/user/UsersList';
 import PilotHomeScreen from './dashboard/home/PilotHomeScreen';
+import UvrList from './dashboard/uvr/UvrList';
 
 
 /*function alertIsImportant(alertUtmMessage) {
@@ -289,6 +290,16 @@ function Ades() {
 							<LayoutRoute exact path='/dashboard/operations'>
 								<Dashboard>
 									<OperationList/>
+								</Dashboard>
+							</LayoutRoute>
+							<LayoutRoute exact path='/dashboard/uvrs/:id'>
+								<Dashboard>
+									<UvrList/>
+								</Dashboard>
+							</LayoutRoute>
+							<LayoutRoute exact path='/dashboard/uvrs'>
+								<Dashboard>
+									<UvrList/>
 								</Dashboard>
 							</LayoutRoute>
 							<LayoutRoute path='/' isMapVisible>

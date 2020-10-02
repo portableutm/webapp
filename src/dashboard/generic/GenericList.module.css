@@ -16,6 +16,19 @@
     max-height: 20px;
 }
 
+.titleText {
+    height: 100%;
+    max-width: 50%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-right: auto;
+}
+
+.titleText:hover {
+    color: rgb(240, 101, 67);
+}
+
 .button {
     user-select: none;
     transition: all 0.5s;

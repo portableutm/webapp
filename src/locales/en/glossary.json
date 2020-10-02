@@ -27,7 +27,7 @@
     "free_text": "Free text",
     "state": "State"
   },
-  "uvr": {
+  "uvrs": {
     "plural_generic": "UAS Volume Reservations",
     "singular_generic": "UAS Volume Reservation (UVR)",
     "reason": "Reason for the reservation (name)",
@@ -36,7 +36,8 @@
     "effective_time_begin": "Begins at",
     "effective_time_begin_description": "Earliest time the UVR will be active.",
     "effective_time_end": "Ends at",
-    "effective_time_end_description": "Latest time the UVR will be active."
+    "effective_time_end_description": "Latest time the UVR will be active.",
+    "zero_uvrs": "No UVRs are registered in the system, or you don't have the permission to read them."
   },
   "positions": {
     "latitude": "Latitude",

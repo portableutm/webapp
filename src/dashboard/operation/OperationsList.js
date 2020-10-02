@@ -20,22 +20,26 @@ function Operation({ expanded = false, selected = false, toggleSelected, operati
 		};
 	const [showProperties, setShowProperties] = useState(expanded);
 
+	const toggleOperation = (evt) => {
+		evt.stopPropagation();
+		setShowProperties(show => {
+			if (show === false) {
+				history.replace('/dashboard/operations/' + operation.gufi);
+				return true;
+			} else {
+				history.replace('/dashboard/operations');
+				return false;
+			}
+		});
+	};
+
 	return (
 		<Callout
 			key={operation.gufi}
 			className={styles.item}
 			title={
-				<div className={styles.title}>
-					<p style={
-						{
-							height: '100%',
-							maxWidth: '50%',
-							overflow: 'hidden',
-							whiteSpace: 'nowrap',
-							textOverflow: 'ellipsis',
-							marginRight: 'auto'
-						}}
-					>{operation.name}</p>
+				<div className={styles.title} onClick={toggleOperation}>
+					<p className={styles.titleText}>{operation.name}</p>
 					<Button
 						className={styles.button}
 						data-test-id={`showHideProperties${operation.name}`}
@@ -43,15 +47,7 @@ function Operation({ expanded = false, selected = false, toggleSelected, operati
 						minimal
 						icon='menu-open'
 						intent={showProperties ? Intent.DANGER : Intent.SUCCESS}
-						onClick={() => setShowProperties(show => {
-							if (show === false) {
-								history.replace('/dashboard/operations/' + operation.gufi);
-								return true;
-							} else {
-								history.replace('/dashboard/operations');
-								return false;
-							}
-						})}
+						onClick={toggleOperation}
 					>
 						<div className={styles.buttonHoveredTooltip}>
 							{ showProperties &&

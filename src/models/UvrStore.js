@@ -7,8 +7,10 @@ export const UvrStore = types
 	.model('UvrStore', {
 		uvrs: types.map(Uvr),
 		filterShownIds: types.array(types.string),
-		filtersMatchingText: '' // Those that match this string are displayed in the layers list (search)
+		filtersMatchingText: '', // Those that match this string are displayed in the layers list (search)
+		filterProperty: 'reason'
 	})
+	.volatile(() => ({ hasFetched: false }))
 	.actions(self => {
 		const cleanUvr = (uvr) => {
 			// Switch LngLat to LatLng
@@ -41,6 +43,7 @@ export const UvrStore = types
 						}, [])
 					);
 					self.filterShownIds = Array.from(self.uvrs.keys()); // After fetching, show by default all UVRs
+					self.hasFetched = true;
 				} catch (error) {
 					console.group('/uvrStore fetchUvrs *error*');
 					console.log('%cAn error has ocurred', 'color:red; font-size: 36px');
@@ -71,23 +74,58 @@ export const UvrStore = types
 			setFilterByText(text) {
 				self.filtersMatchingText = text;
 			},
+			setFilterProperty(property) {
+				self.filterProperty = property;
+			},
+			/* Sorting */
+			setSortingProperty(prop) {
+				self.sortingProperty = prop;
+			},
+			setSortingOrder(order) {
+				self.sortingOrder = order;
+			},
 			reset() {
 				// Cleans volatile state. The model itself is resetted by the RootStore
+				self.hasFetched = false;
 			}
 		};
 	})
 	.views(self => ({
+		get allUvrs() {
+			return values(self.uvrs);
+		},
 		get shownUvrs() {
 			return _.filter(values(self.uvrs), (uvr) => _.includes(self.filterShownIds, uvr.message_id));
 		},
 		get uvrsWithVisibility() {
-			return _.map(values(self.uvrs), (uvr) => {
-				const uvrWithVisibility = _.cloneDeep(uvr);
-				uvrWithVisibility._visibility = _.includes(self.filterShownIds, uvr.message_id);
-				uvrWithVisibility._matchesFiltersByNames = _.includes(
-					uvr.reason.toLowerCase(),
-					self.filtersMatchingText.toLowerCase());
-				return uvrWithVisibility;
+			return _
+				.chain(values(self.uvrs))
+				.map((uvr) => {
+					const uvrWithVisibility = _.cloneDeep(uvr);
+					uvrWithVisibility._visibility = _.includes(self.filterShownIds, uvr.message_id);
+					uvrWithVisibility._matchesFiltersByNames = _.includes(
+						uvr[self.filterProperty].toLowerCase(),
+						self.filtersMatchingText.toLowerCase()
+					);
+					return uvrWithVisibility;})
+				.orderBy(uvr => {
+					if (self.sortingProperty === 'start') return uvr.effective_time_begin.getTime();
+					if (self.sortingProperty === 'end') return uvr.effective_time_end.getTime();
+					return uvr[self.sortingProperty];
+				}, self.sortingOrder)
+				.value();
+		},
+		get counts() {
+			const uvrs = values(self.uvrs);
+			let uvrCount = 0;
+			let matchesFilters = 0;
+			_.forEach(uvrs, (uvr) => {
+				uvrCount++;
+				if (_.includes(
+					uvr[self.filterProperty].toLowerCase(),
+					self.filtersMatchingText.toLowerCase()
+				)) matchesFilters++;
 			});
+			return { uvrCount, matchesFilters };
 		}
 	}));

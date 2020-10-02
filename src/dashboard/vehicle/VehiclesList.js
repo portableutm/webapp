@@ -12,13 +12,18 @@ function Vehicle({ v }) {
 	const { t,  } = useTranslation(['glossary','common']);
 	const [showProperties, setShowProperties] = useState(false);
 
+	const toggleOperation = (evt) => {
+		evt.stopPropagation();
+		setShowProperties(show => !show);
+	};
+
 	return (
 		<Callout
 			key={v.faaNumber}
 			className={styles.item}
 			title={
-				<div className={styles.title}>
-					<p style={{ height: '100%', maxWidth: '50%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+				<div className={styles.title} onClick={toggleOperation}>
+					<p className={styles.titleText}>
 						{v.vehicleName + ' (' + v.faaNumber + ')'}
 					</p>
 					<Button
@@ -27,7 +32,7 @@ function Vehicle({ v }) {
 						minimal
 						icon='menu-open'
 						intent={showProperties ? Intent.DANGER : Intent.SUCCESS}
-						onClick={() => setShowProperties(show => !show)}
+						onClick={toggleOperation}
 					>
 						<div className={styles.buttonHoveredTooltip}>
 							{ showProperties &&

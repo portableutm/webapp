@@ -141,13 +141,20 @@ const Map = ({ mode }) => {
 		});
 		const dispose2 = autorun(() => {
 			// Change map position if one and only one operation is selected to be shown
-			if (operationStore.filterShownIds.length > 0) {
+			if (operationStore.filterShownIds.length > 0 || uvrStore.filterShownIds.length > 0) {
 				let latlngs = [];
-				operationStore.operations.forEach((op) => {
-					if (_.includes(operationStore.filterShownIds, op.gufi) ) {
-						latlngs.push(op.operation_volumes[0].operation_geography.coordinates);
-					}
-				});
+				if (operationStore.filterShownIds.length > 0)
+					operationStore.operations.forEach((op) => {
+						if (_.includes(operationStore.filterShownIds, op.gufi) ) {
+							latlngs.push(op.operation_volumes[0].operation_geography.coordinates);
+						}
+					});
+				if (uvrStore.filterShownIds.length > 0)
+					uvrStore.uvrs.forEach((uvr) => {
+						if (_.includes(uvrStore.filterShownIds, uvr.message_id) ) {
+							latlngs.push(uvr.geography.coordinates);
+						}
+					});
 				const temp = L.polygon(latlngs);
 				mapStore.map.fitBounds(temp.getBounds());
 			}

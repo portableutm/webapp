@@ -16,36 +16,31 @@ function User({ expanded = false,  children }) {
 	const history = useHistory();
 	const [showProperties, setShowProperties] = useState(expanded);
 	const [isEditing, setEditing] = useState(false);
+	const toggleOperation = (evt) => {
+		evt.stopPropagation();
+		setShowProperties(show => {
+			if (show === false) {
+				history.replace('/dashboard/users/' + children.username);
+				return true;
+			} else {
+				history.replace('/dashboard/users');
+				return false;
+			}
+		});
+	};
 	return useObserver(() => (
 		<Callout
 			className={styles.item}
 			title={
-				<div className={styles.title}>
-					<p style={
-						{
-							height: '100%',
-							maxWidth: '50%',
-							overflow: 'hidden',
-							whiteSpace: 'nowrap',
-							textOverflow: 'ellipsis',
-							marginRight: 'auto'
-						}}
-					>{`${children.firstName} ${children.lastName}`}</p>
+				<div className={styles.title} onClick={toggleOperation}>
+					<p className={styles.titleText}>{`${children.firstName} ${children.lastName}`}</p>
 					<Button
 						className={styles.button}
 						small
 						minimal
 						icon='menu-open'
 						intent={showProperties ? Intent.DANGER : Intent.SUCCESS}
-						onClick={() => setShowProperties(show => {
-							if (show === false) {
-								history.replace('/dashboard/users/' + children.username);
-								return true;
-							} else {
-								history.replace('/dashboard/users');
-								return false;
-							}
-						})}
+						onClick={toggleOperation}
 					>
 						<div className={styles.buttonHoveredTooltip}>
 							{ showProperties &&
