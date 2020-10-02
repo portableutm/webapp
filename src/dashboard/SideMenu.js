@@ -76,8 +76,6 @@ function SideMenu() {
 						<MenuItem icon="log-out" text={t('sidemenu.logout')} onClick={() => localStore.setLogoutDialogOpen(true)}/>
 
 						<MenuDivider title={t('glossary:users.plural_generic')} />
-						{/* <MenuItem icon="drive-time" text="Add new Operator"/> */}
-						{/* <MenuItem icon="desktop" text="Add new Monitor"/> */}
 						<MenuItem
 							icon="user"
 							text={t('sidemenu.all_users')}
@@ -86,19 +84,16 @@ function SideMenu() {
 							icon="new-person"
 							text={t('sidemenu.new_user.text')}
 							onClick={() => history.push('/dashboard/users/new')}/>
-						<MenuDivider title={t('glossary:operations.plural_generic')}/>
-						{/* <MenuItem icon="zoom-in" text="Pending assesment"/> */}
+						<MenuDivider title={t('glossary:entities')}/>
 						<MenuItem icon="numbered-list"
 							text={t('sidemenu.operations_list')}
 							onClick={() => history.push('/dashboard/operations')}/>
-						<MenuDivider title={t('glossary:vehicles.plural_generic')} />
-						{/* As of 0.2 removed as vehicles have owners now...
-						 	<MenuItem icon="airplane"
-							text={t('sidemenu.vehicles_new')}
-							onClick={() => history.push('/dashboard/vehicles/new')}/> */}
 						<MenuItem icon="numbered-list"
 							text={t('sidemenu.vehicles_list')}
 							onClick={() => history.push('/dashboard/vehicles')}/>
+						<MenuItem icon="numbered-list"
+							text={t('sidemenu.uvrs_list')}
+							onClick={() => history.push('/dashboard/uvrs')}/>
 						<MenuDivider title={t('ades_options.title')} />
 						<MenuItem icon="cog"
 							text={t('ades_options.web')}

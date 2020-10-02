@@ -10,7 +10,7 @@
     "logout_details": "You won't be able to use the system if you're not logged in.",
     "logout_negative": "No, take me back",
     "logout_positive": "Yes, log me out",
-    "all_users": "All users",
+    "all_users": "Users",
     "new_user": {
       "text": "Add new user",
       "title": "Creating a new user",
@@ -20,10 +20,11 @@
       "verificated": "User created and verified. It can log in now!",
       "verification_error": "Error verifying the user. Please, contact a System Administrator"
     },
-    "operations_list": "All operations",
+    "operations_list": "Operations",
     "operations_list_pilot": "Your operations",
     "vehicles_new": "Add new vehicle",
-    "vehicles_list": "All vehicles",
+    "vehicles_list": "Vehicles",
+    "uvrs_list": "UAS Volume Reservations",
     "vehicles_list_pilot": "Your vehicles"
   },
   "home": {

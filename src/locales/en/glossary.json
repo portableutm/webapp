@@ -81,6 +81,7 @@
     "min_altitude": "Minimum altitude (in meters)",
     "max_altitude": "Maximum altitude (in meters)"
   },
+  "entities": "Entities",
   "layers": "Layers",
   "actions": "Actions",
   "edit": "Edit",
