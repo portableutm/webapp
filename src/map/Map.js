@@ -19,7 +19,6 @@ import QuickFly from './actions/QuickFlyControl';
 import OperationPolygon from './elements/OperationPolygon';
 import OperationInfoEditor from './editor/OperationInfoEditor';
 import SelectedOperation from './viewer/SelectedOperation';
-import SimulatorPanel from './actions/SimulatorPanel';
 import OperationEditMarker from './elements/OperationEditMarker';
 import SelectedDrone from './viewer/SelectedDrone';
 
@@ -310,9 +309,6 @@ const Map = ({ mode }) => {
 						<SelectedUvr message_id={mapStore.selectedUvr}	/>
 					}
 					{	mapStore.hasToShowDefaultMapPanels &&
-						<QuickFly />
-					}
-					{	mapStore.hasToShowDefaultMapPanels &&
 						<Layers />
 					}
 					{/* Operation Editor Panels */}
@@ -323,16 +319,8 @@ const Map = ({ mode }) => {
 					{  	mapStore.isEditingUvr &&
 						<UvrInfoEditor/>
 					}
-					{/* Simulator panels*/}
-					{isSimulator &&
-						<SimulatorPanel
-							paths={simPaths}
-							onClick={onSelectSimDrone}
-							selected={simDroneIndex}
-							newDrone={addNewDrone}
-							startFlying={startFlying}
-							stopFlying={stopFlying}
-						/>
+					{	mapStore.hasToShowDefaultMapPanels &&
+						<QuickFly />
 					}
 				</RightArea>
 			</>
