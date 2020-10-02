@@ -38,7 +38,8 @@ export function createLeafletPolygonStore(source) {
 
 				polygon._path.setAttribute('id', nameNoSpaces);
 				polygon._path.setAttribute('fill', 'url(#pattern' + nameNoSpaces + ')');
-
+			}
+			if (this.infoName !== '') {
 				polygon.bindTooltip(
 					this.infoText,
 					{

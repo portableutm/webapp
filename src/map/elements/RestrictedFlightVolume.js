@@ -36,7 +36,7 @@ function RestrictedFlightVolume({ id, latlngs, name, minAltitude, maxAltitude, o
 				{
 					color: '#ff0b00',
 					weight: 1,
-					fillColor: '#ff6161',
+					fillColor: '#ffb6b6',
 					fillOpacity: 0.3,
 					lineJoin: 'miter'
 				}
@@ -57,7 +57,7 @@ function RestrictedFlightVolume({ id, latlngs, name, minAltitude, maxAltitude, o
 
 			const minAltitudeText = minAltitude > 0 ? minAltitude : 'GND';
 			polygonStore.setInfo(name, minAltitudeText + '/' + maxAltitude + 'm', 'tooltipAltitudeRFV');
-			polygonStore.setPattern(135, '#FF0B00', '15');
+			if (minAltitude === 0 ) polygonStore.setPattern(135, '#FF0B00', '15');
 			polygonStore.setPolygon(polygon);
 		});
 		//  Redraw if the polygon moved or the state changed
