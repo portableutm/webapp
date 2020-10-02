@@ -109,7 +109,7 @@ function Vehicle({ v }) {
 
 function VehiclesList() {
 	const { t,  } = useTranslation('glossary');
-	const { store } = useStore('RootStore', (store) => ({ store: store.vehicleStore }));
+	const { store, authStore } = useStore('RootStore', (store) => ({ store: store.vehicleStore, authStore: store.authStore }));
 	const { username } = useParams(); // If set, filter only vehicles of a particular user
 	const [isCreatingVehicle, setCreatingVehicle] = useState(false);
 
@@ -145,7 +145,7 @@ function VehiclesList() {
 								{t('add_vehicle')}
 							</Button>
 							}
-							{ !username &&
+							{ !username && authStore.isAdmin &&
 							<p>To add a vehicle, please select a user from "All users". </p>
 							}
 						</div>
@@ -181,7 +181,7 @@ function VehiclesList() {
 									{t('add_vehicle')}
 								</Button>
 							}
-							{ !username &&
+							{ !username && authStore.isAdmin &&
 								<p>To add a vehicle, please select a user from "All users".</p>
 							}
 						</div>

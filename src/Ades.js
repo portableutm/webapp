@@ -346,6 +346,11 @@ function Ades() {
 									<OperationList/>
 								</Dashboard>
 							</LayoutRoute>
+							<LayoutRoute exact path='/dashboard/vehicles'>
+								<Dashboard>
+									<VehiclesList/>
+								</Dashboard>
+							</LayoutRoute>
 							<LayoutRoute exact leftIsExpanded path='/operation/new' isMapVisible>
 								<Map mode='new-op'/>
 							</LayoutRoute>

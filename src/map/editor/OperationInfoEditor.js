@@ -71,7 +71,7 @@ function OperationInfoEditor() {
 						data-test-id="map#editor#operation#info#pilot"
 						value={mapStore.editorOperation.owner}
 						minimal
-						disabled={authStore.role === 'pilot'}
+						disabled={authStore.isPilot}
 						onChange={(evt) => mapStore.setOperationInfo('owner', evt.currentTarget.value)}
 					>
 						{	userStore.allUsers.map(user => {

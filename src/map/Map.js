@@ -22,9 +22,6 @@ import SelectedOperation from './viewer/SelectedOperation';
 import OperationEditMarker from './elements/OperationEditMarker';
 import SelectedDrone from './viewer/SelectedDrone';
 
-/* Hooks */
-import useSimulatorLogic from './hooks/useSimulatorLogic';
-
 /* Auxiliaries */
 import { initializeLeaflet } from './MapAuxs';
 
@@ -90,7 +87,6 @@ const Map = ({ mode }) => {
 
 
 	/* Simulator state */
-	const [simPaths, , simDroneIndex, onSelectSimDrone, addNewDrone, startFlying, stopFlying] = useSimulatorLogic('broken');
 	const isSimulator = false;
 
 	/*	 Effects 	*/
