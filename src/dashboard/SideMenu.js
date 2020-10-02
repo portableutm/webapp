@@ -73,6 +73,7 @@ function SideMenu() {
 						<MenuDivider title={
 							`${t('sidemenu.logged_in')} ${authStore.username}`
 						}/>
+						<MenuItem icon="person" text={t('sidemenu.edit_your_info')} onClick={() => history.push('/dashboard/users/' + authStore.username)}/>
 						<MenuItem icon="log-out" text={t('sidemenu.logout')} onClick={() => localStore.setLogoutDialogOpen(true)}/>
 
 						<MenuDivider title={t('glossary:users.plural_generic')} />
