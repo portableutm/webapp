@@ -226,31 +226,38 @@ export const MapStore = types
 		},
 		/* Set selected entity to display in sidebar */
 		setSelectedOperation(gufi) {
-			self.unsetSelectedDrone();
+			self.unsetAll();
 			self.selectedOperation = gufi;
 		},
 		unsetSelectedOperation() {
 			self.selectedOperation = null;
 		},
 		setSelectedDrone(gufi) {
+			self.unsetAll();
 			self.selectedDrone = gufi;
 		},
 		unsetSelectedDrone() {
 			self.selectedDrone = null;
 		},
 		setSelectedRfv(id) {
-			self.unsetSelectedDrone();
+			self.unsetAll();
 			self.selectedRfv = id;
 		},
 		unsetSelectedRfv() {
 			self.selectedUvr = null;
 		},
 		setSelectedUvr(message_id) {
-			self.unsetSelectedDrone();
+			self.unsetAll();
 			self.selectedUvr = message_id;
 		},
 		unsetSelectedUvr() {
 			self.selectedUvr = null;
+		},
+		unsetAll() {
+			self.selectedDrone = null;
+			self.selectedOperation = null;
+			self.selectedUvr = null;
+			self.selectedRfv = null;
 		},
 		/* Editor actions */
 		startOperationEditor(existing) {

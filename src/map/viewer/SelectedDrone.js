@@ -28,20 +28,24 @@ function Property({ property, value }) {
 function SelectedDrone ({ gufi }) {
 	const { t } = useTranslation('glossary');
 	const obs = useAsObservableSource({ gufi });
-	const { selectedDrone } = useStore(
+	const { selectedDrone, relatedOperation } = useStore(
 		'RootStore',
 		(store) => ({
-			selectedDrone: store.positionStore.positions.get(obs.gufi).slice(-1)[0] // Newest position report of sel. drone
+			selectedDrone: store.positionStore.positions.get(obs.gufi).slice(-1)[0], // Newest position report of sel. drone
+			relatedOperation: store.operationStore.operations.get(obs.gufi)
 		})
 	);
 
 	const info = [
-		['ID', selectedDrone.gufi],
-		[t('positions.latitude'), selectedDrone.location.lat],
-		[t('positions.longitude'), selectedDrone.location.lng],
 		[t('positions.altitude'), selectedDrone.altitude_gps],
 		[t('positions.heading'), selectedDrone.heading],
-		[t('positions.comments'), selectedDrone.comments]
+		[t('positions.comments'), selectedDrone.comments],
+		[t('operations.effective_time_begin'), relatedOperation.operation_volumes[0].effective_time_begin.toLocaleString()],
+		[t('operations.effective_time_end'), relatedOperation.operation_volumes[0].effective_time_end.toLocaleString()],
+		[t('operations.max_altitude'), relatedOperation.operation_volumes[0].max_altitude],
+		[t('positions.latitude'), selectedDrone.location.lat],
+		[t('positions.longitude'), selectedDrone.location.lng],
+		[t('operations.gufi'), selectedDrone.gufi],
 	];
 
 	return(
