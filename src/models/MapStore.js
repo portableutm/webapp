@@ -284,6 +284,11 @@ export const MapStore = types
 		},
 		setOperationInfo(property, value) {
 			self.editorOperation[property] = value;
+			if (property === 'owner') {
+				self.editorOperation.contact = getRoot(self).userStore.users.get(value).asDisplayString;
+				self.editorOperation.contact_phone = getRoot(self).userStore.users.get(value).email;
+				// TODO: Change email for phone, whenever Users will have a phone
+			}
 		},
 		setOperationVolumeInfo(volumeIndex, property, value) {
 			self
