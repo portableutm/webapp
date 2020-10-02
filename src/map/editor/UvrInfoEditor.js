@@ -77,7 +77,7 @@ function UvrInfoEditor() {
 					<div data-test-id="map#editor#uvr#info##effective_time_begin">
 						<DateInput
 							canClearSelection={false}
-							minDate={mapStore.editorUvr.effective_time_begin}
+							minDate={new Date()}
 							formatDate={date => date.toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit' })}
 							parseDate={str => new Date(str)}
 							placeholder="DD/MM/YYYY"
@@ -94,7 +94,7 @@ function UvrInfoEditor() {
 					<div data-test-id="map#editor#uvr#info##effective_time_end">
 						<DateInput
 							canClearSelection={false}
-							minDate={mapStore.editorUvr.effective_time_begin}
+							minDate={new Date()}
 							formatDate={date => date.toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit' })}
 							parseDate={str => new Date(str)}
 							placeholder="DD/MM/YYYY"
