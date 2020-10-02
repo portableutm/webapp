@@ -46,6 +46,7 @@
     transition: all 0.5s;
     overflow: visible;
 }
+
 .sidebarButtonText:hover {
     color: rgb(255, 111, 0);
 }
@@ -60,6 +61,11 @@
     margin: 5px 0 !important;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.sidebarButtonTextContent input[type="checkbox" i] {
+    position: relative !important;
+    margin-left: -15px;
 }
 
 .sidebarButtonTextContentOverflows {
