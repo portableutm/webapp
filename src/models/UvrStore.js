@@ -7,7 +7,7 @@ export const UvrStore = types
 	.model('UvrStore', {
 		uvrs: types.map(Uvr),
 		filterShownIds: types.array(types.string),
-		filtersMatchingText: '', // Those that match this string are displayed in the layers list (search)
+		filterMatchingText: '', // Those that match this string are displayed in the layers list (search)
 		filterProperty: 'reason'
 	})
 	.volatile(() => ({ hasFetched: false }))
@@ -72,7 +72,7 @@ export const UvrStore = types
 				}
 			},
 			setFilterByText(text) {
-				self.filtersMatchingText = text;
+				self.filterMatchingText = text;
 			},
 			setFilterProperty(property) {
 				self.filterProperty = property;
@@ -95,7 +95,13 @@ export const UvrStore = types
 			return values(self.uvrs);
 		},
 		get shownUvrs() {
-			return _.filter(values(self.uvrs), (uvr) => _.includes(self.filterShownIds, uvr.message_id));
+			return _
+				.chain(values(self.uvrs))
+				.filter((uvr) =>
+					_.includes(self.filterShownIds, uvr.message_id) || /* Show in map only matching IDs */
+					uvr.effective_time_end.getTime() > Date.now() /* and not finished */
+				)
+				.value();
 		},
 		get uvrsWithVisibility() {
 			return _
@@ -105,7 +111,7 @@ export const UvrStore = types
 					uvrWithVisibility._visibility = _.includes(self.filterShownIds, uvr.message_id);
 					uvrWithVisibility._matchesFiltersByNames = _.includes(
 						uvr[self.filterProperty].toLowerCase(),
-						self.filtersMatchingText.toLowerCase()
+						self.filterMatchingText.toLowerCase()
 					);
 					return uvrWithVisibility;})
 				.orderBy(uvr => {
@@ -123,7 +129,7 @@ export const UvrStore = types
 				uvrCount++;
 				if (_.includes(
 					uvr[self.filterProperty].toLowerCase(),
-					self.filtersMatchingText.toLowerCase()
+					self.filterMatchingText.toLowerCase()
 				)) matchesFilters++;
 			});
 			return { uvrCount, matchesFilters };

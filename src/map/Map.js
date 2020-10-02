@@ -47,7 +47,9 @@ import SelectedUvr from './viewer/SelectedUvr';
 
 /* Main function */
 const Map = ({ mode }) => {
-	const obs = useAsObservableSource({ mode });
+	/* Route params */
+	const { editId, id } = useParams();
+	const obs = useAsObservableSource({ mode, id });
 
 	/* State holders and references */
 	const { operationStore, mapStore, uvrStore } = useStore(
@@ -58,9 +60,6 @@ const Map = ({ mode }) => {
 			uvrStore: store.uvrStore,
 			rfvStore: store.rfvStore
 		}));
-
-	/* Route params */
-	const { editId } = useParams();
 
 	/* Editor state */
 	//const [mbInfo, infoSetters, save, { isEditingOperation, isEditingUvr }] = useEditorLogic(modeOfEditor, existingInfo);
@@ -139,29 +138,34 @@ const Map = ({ mode }) => {
 				mapStore.map.fitBounds(bounds);
 			}
 		});
+
 		const dispose2 = autorun(() => {
 			// Change map position if one and only one operation is selected to be shown
-			if (operationStore.filterShownIds.length > 0 || uvrStore.filterShownIds.length > 0) {
+			if (operationStore.filterShownIds.length > 0) {
 				let latlngs = [];
-				if (operationStore.filterShownIds.length > 0)
-					operationStore.operations.forEach((op) => {
-						if (_.includes(operationStore.filterShownIds, op.gufi) ) {
-							latlngs.push(op.operation_volumes[0].operation_geography.coordinates);
-						}
-					});
-				if (uvrStore.filterShownIds.length > 0)
-					uvrStore.uvrs.forEach((uvr) => {
-						if (_.includes(uvrStore.filterShownIds, uvr.message_id) ) {
-							latlngs.push(uvr.geography.coordinates);
-						}
-					});
+				operationStore.operations.forEach((op) => {
+					if (_.includes(operationStore.filterShownIds, op.gufi) ) {
+						latlngs.push(op.operation_volumes[0].operation_geography.coordinates);
+					}
+				});
 				const temp = L.polygon(latlngs);
 				mapStore.map.fitBounds(temp.getBounds());
 			}
 		});
+
+		const dispose3 = autorun(() => {
+			if (obs.mode === 'view-uvr') {
+				if (id) {
+					const temp = L.polygon(uvrStore.uvrs.get(id).geography.coordinates);
+					mapStore.map.fitBounds(temp.getBounds());
+				}
+			}
+		});
+
 		return () => {
 			dispose1();
 			dispose2();
+			dispose3();
 		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 

@@ -14,7 +14,7 @@ export const OperationStore = types
 		filterShowRogue: true,
 		filterShowOthers: false,
 		filterShownIds: types.array(types.string),
-		filtersMatchingText: '',
+		filterMatchingText: '',
 		filterProperty: 'name',
 		sortingProperty: 'name',
 		sortingOrder: 'asc'
@@ -172,7 +172,7 @@ export const OperationStore = types
 				self.filterShowOthers = flag;
 			},
 			setFilterByText(text) {
-				self.filtersMatchingText = text;
+				self.filterMatchingText = text;
 			},
 			setFilterProperty(property) {
 				self.filterProperty = property;
@@ -227,15 +227,15 @@ export const OperationStore = types
 					opWithVisibility.uas_registrations = op.uas_registrations.map(uasr => uasr.asDisplayString);
 					opWithVisibility.owner.asDisplayString = op.owner.asDisplayString;
 					opWithVisibility._matchesFiltersByStates =
-						(self.filterShowAccepted && op.state === 'ACCEPTED') ||
-						(self.filterShowPending && op.state === 'PENDING') ||
-						(self.filterShowActivated && op.state === 'ACTIVATED') ||
+						(self.filterShowAccepted && op.state === 'ACCEPTED') 	||
+						(self.filterShowPending && op.state === 'PENDING') 		||
+						(self.filterShowActivated && op.state === 'ACTIVATED') 	||
 						(self.filterShowRogue && op.state === 'ROGUE');
 					opWithVisibility._visibility = _.includes(self.filterShownIds, op.gufi);
 					const matchingProperty = self.filterProperty !== 'owner' ? op[self.filterProperty].toLowerCase() : op.owner.asDisplayString.toLowerCase();
 					opWithVisibility._matchesFiltersByNames = _.includes(
 						matchingProperty,
-						self.filtersMatchingText.toLowerCase()
+						self.filterMatchingText.toLowerCase()
 					);
 					return opWithVisibility;})
 				.orderBy(op => {
@@ -265,7 +265,7 @@ export const OperationStore = types
 				const matchingProperty = self.filterProperty !== 'owner' ? operation[self.filterProperty].toLowerCase() : operation.owner.asDisplayString.toLowerCase();
 				if (_.includes(
 					matchingProperty,
-					self.filtersMatchingText.toLowerCase()
+					self.filterMatchingText.toLowerCase()
 				) && ((self.filterShowAccepted && operation.state === 'ACCEPTED') ||
 					(self.filterShowPending && operation.state === 'PENDING') ||
 					(self.filterShowActivated && operation.state === 'ACTIVATED') ||

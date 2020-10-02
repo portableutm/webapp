@@ -1,23 +1,17 @@
 import React, { useState } from 'react';
 import GenericList, { GenericListLine } from '../generic/GenericList';
-import { Callout, Spinner, Intent, Button, HTMLSelect, InputGroup, Checkbox } from '@blueprintjs/core';
+import { Callout, Spinner, Intent, Button, HTMLSelect, InputGroup } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styles from '../generic/GenericList.module.css';
 import { useStore } from 'mobx-store-provider';
-import { observer, useLocalStore } from 'mobx-react';
+import { observer } from 'mobx-react';
 
-function Uvr({ expanded = false, selected = false, toggleSelected, uvr, changeState, isPilot }) {
+function Uvr({ expanded = false, uvr, changeState, isPilot }) {
 	// Renders an UVR's properties
 	const history = useHistory();
 	const { t, } = useTranslation(['glossary', 'common']);
-	const onClick = selected ?
-		() => toggleSelected(uvr)  :
-		() => {
-			toggleSelected(uvr);
-			history.push('/uvr/' + uvr.message_id);
-		};
 	const [showProperties, setShowProperties] = useState(expanded);
 	const toggleOperation = (evt) => {
 		evt.stopPropagation();
@@ -62,16 +56,14 @@ function Uvr({ expanded = false, selected = false, toggleSelected, uvr, changeSt
 						small
 						minimal
 						icon='pin'
-						intent={selected ? Intent.DANGER : Intent.SUCCESS}
-						onClick={onClick}
+						intent={Intent.SUCCESS}
+						onClick={(evt) => {
+							evt.stopPropagation();
+							history.push('/uvr/' + uvr.message_id);
+						}}
 					>
 						<div className={styles.buttonHoveredTooltip}>
-							{selected &&
-							t('common:remove_from_map')
-							}
-							{!selected &&
-							t('common:show_on_map')
-							}
+							{t('common:show_on_map')}
 						</div>
 					</Button>
 					<Button
@@ -80,7 +72,10 @@ function Uvr({ expanded = false, selected = false, toggleSelected, uvr, changeSt
 						minimal
 						icon='edit'
 						intent={Intent.WARNING}
-						onClick={() => history.push('/uvr/edit/' + uvr.message_id)}
+						onClick={(evt) => {
+							evt.stopPropagation();
+							history.push('/uvr/edit/' + uvr.message_id);
+						}}
 					>
 						<div className={styles.buttonHoveredTooltip}>
 							{t('common:edit_on_map')}
@@ -132,12 +127,11 @@ function Uvr({ expanded = false, selected = false, toggleSelected, uvr, changeSt
 
 function UvrList() {
 	const { t, } = useTranslation('glossary');
-	const { store, authStore, toggleSelected } = useStore(
+	const { store, authStore } = useStore(
 		'RootStore',
 		(store) => ({
 			store: store.uvrStore,
-			authStore: store.authStore,
-			toggleSelected: store.uvrStore.toggleVisibility
+			authStore: store.authStore
 		}));
 	const { id } = useParams();
 
@@ -170,7 +164,7 @@ function UvrList() {
 								leftIcon="search"
 								onChange={(evt) => store.setFilterByText(evt.target.value)}
 								placeholder={t('filter.bytext.description')}
-								value={store.filtersMatchingText}
+								value={store.filterMatchingText}
 							/>
 							<p
 								className={styles.filterTextInfo}
@@ -222,8 +216,6 @@ function UvrList() {
 									return <Uvr
 										key={uvr.message_id}
 										expanded={uvr.message_id === id}
-										selected={uvr._visibility}
-										toggleSelected={toggleSelected}
 										uvr={uvr}
 										isPilot={authStore.role === 'pilot'}
 									/>;
