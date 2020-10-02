@@ -2,7 +2,8 @@
   "quickfly": {
     "title": "Quick Fly",
     "add_new": "Add new QuickFly",
-    "activate_delete_mode": "Delete a Quickfly",
+    "activate_delete_mode": "Delete mode",
+    "deactivate_delete_mode": "Deactivate delete mode",
     "name": "Name",
     "required": "Required",
     "new_location": "New location",
@@ -25,6 +26,12 @@
     "rogue": "Rogue",
     "bystate": "OPERATIONS BY STATE",
     "byid": "OPERATIONS BY ID",
+    "bytext": {
+      "text": "FILTER BY VALUE",
+      "description": "Value to search for"
+    },
+    "byname": "FILTER BY SELECTING",
+    "uvrs": "UAS VOLUME RESERVATIONS",
     "rfvs": "RESTRICTED FLIGHT ZONES"
   },
   "flyto": "Fly in map to",
