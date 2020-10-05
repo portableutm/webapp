@@ -25,10 +25,13 @@
     "volumes_description": "Volumes description",
     "flight_number": "Flight number",
     "free_text": "Free text",
-    "state": "State"
+    "state": "State",
+    "uas_registrations": "Vehicles that will fly the operation"
   },
   "uvrs": {
     "plural_generic": "UAS Volume Reservations",
+    "type": "Type",
+    "cause": "Cause",
     "singular_generic": "UAS Volume Reservation (UVR)",
     "reason": "Reason for the reservation (name)",
     "min_altitude": "Minimum altitude (in meters)",

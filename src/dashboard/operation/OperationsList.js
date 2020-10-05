@@ -180,7 +180,7 @@ function Operation({ expanded = false, selected = false, toggleSelected, operati
 
 
 function OperationsList() {
-	const { t, } = useTranslation('glossary');
+	const { t, } = useTranslation(['glossary','map']);
 	const { store, authStore, toggleSelected } = useStore(
 		'RootStore',
 		(store) => ({
@@ -223,7 +223,7 @@ function OperationsList() {
 								className={styles.filterTextInput}
 								leftIcon="search"
 								onChange={(evt) => filterStore.setText(evt.target.value)}
-								placeholder={t('filter.bytext.description')}
+								placeholder={t('map:filter.bytext.description')}
 								value={filterStore.text}
 							/>
 							<p
@@ -242,7 +242,7 @@ function OperationsList() {
 									store.setFilterAccepted(evt.target.checked);
 								}}
 							>
-								{t('filter.accepted')}
+								{t('map:filter.accepted')}
 							</Checkbox>
 							<Checkbox
 								data-test-id='layersPENDING'
@@ -251,7 +251,7 @@ function OperationsList() {
 									store.setFilterPending(evt.target.checked);
 								}}
 							>
-								{t('filter.pending')}
+								{t('map:filter.pending')}
 							</Checkbox>
 							<Checkbox
 								data-test-id='layersACTIVATED'
@@ -260,7 +260,7 @@ function OperationsList() {
 									store.setFilterActivated(evt.target.checked);
 								}}
 							>
-								{t('filter.activated')}
+								{t('map:filter.activated')}
 							</Checkbox>
 							<Checkbox
 								data-test-id='layersROGUE'
@@ -269,7 +269,7 @@ function OperationsList() {
 									store.setFilterRogue(evt.target.checked);
 								}}
 							>
-								{t('filter.rogue')}
+								{t('map:filter.rogue')}
 							</Checkbox>
 						</div>
 						<div

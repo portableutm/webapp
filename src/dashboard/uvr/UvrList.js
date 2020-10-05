@@ -11,7 +11,7 @@ import { observer } from 'mobx-react';
 function Uvr({ expanded = false, uvr, changeState, isPilot }) {
 	// Renders an UVR's properties
 	const history = useHistory();
-	const { t, } = useTranslation(['glossary', 'common']);
+	const { t, } = useTranslation(['glossary', 'common', 'map']);
 	const [showProperties, setShowProperties] = useState(expanded);
 	const toggleOperation = (evt) => {
 		evt.stopPropagation();
@@ -163,7 +163,7 @@ function UvrList() {
 								className={styles.filterTextInput}
 								leftIcon="search"
 								onChange={(evt) => store.setFilterByText(evt.target.value)}
-								placeholder={t('filter.bytext.description')}
+								placeholder={t('map:filter.bytext.description')}
 								value={store.filterMatchingText}
 							/>
 							<p

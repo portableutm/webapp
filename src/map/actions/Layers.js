@@ -224,7 +224,7 @@ const TextFilter = () => {
 	return useObserver(() => (
 		<>
 			<div className={styles.sidebarSeparator}>
-				{t('filter.bytext')}
+				{t('filter.bytext.text')}
 			</div>
 			<div
 				style={{ height: '40px' }}
@@ -245,7 +245,7 @@ const TextFilter = () => {
 
 /* Button that opens a Menu that permits users selects what layers to show */
 const Layers = () => {
-	const { t } = useTranslation('glossary');
+	const { t } = useTranslation(['glossary', 'map']);
 	return (
 		<>
 			{/*
@@ -267,7 +267,7 @@ const Layers = () => {
 			<SidebarButton
 				useCase='FilterOperations'
 				icon='filter'
-				label={t('filter.bystate').toUpperCase()}
+				label={t('map:filter.bystate').toUpperCase()}
 				simpleChildren={false}
 			>
 				<StateFilters  />
