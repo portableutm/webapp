@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import SidebarButton from '../SidebarButton';
 import { useTranslation } from 'react-i18next';
 import { Button, Dialog, FormGroup, InputGroup, Intent } from '@blueprintjs/core';
@@ -26,6 +27,7 @@ function Property({ property, value }) {
 }
 
 function SelectedOperation() {
+	const history = useHistory();
 	const { t } = useTranslation(['glossary','map']);
 	const [isDialogShown, showDialog] = useState(false);
 	const [isApproved, setApproved] = useState(false);
@@ -98,6 +100,18 @@ function SelectedOperation() {
 				forceOpen={true}
 			>
 				{toShow}
+				<div
+					className={styles.sidebarSeparator}
+				>
+					<Button
+						small={true}
+						intent={Intent.PRIMARY}
+						fill
+						onClick={() => history.push('/dashboard/operations/'+operation[1][1])}
+					>
+						{t('info')}
+					</Button>
+				</div>
 				{operation[2][1] === 'PENDING' &&
 				<div
 					className={styles.sidebarSeparator}
@@ -107,14 +121,14 @@ function SelectedOperation() {
 						intent={Intent.SUCCESS}
 						onClick={() => {setApproved(true);showDialog(true);}}
 					>
-						Approve
+						{t('approve')}
 					</Button>
 					<Button
 						small={true}
 						intent={Intent.DANGER}
 						onClick={() => {setApproved(false);showDialog(true);}}
 					>
-						Reject
+						{t('reject')}
 					</Button>
 				</div>
 				}

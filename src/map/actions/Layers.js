@@ -77,6 +77,20 @@ const StateFilters = () => {
 					{t('filter.rogue')}
 				</Checkbox>
 			</div>
+			<div
+				className={styles.sidebarButtonText}
+			>
+				<Checkbox
+					className={styles.sidebarButtonTextContent}
+					data-test-id='layersCLOSED'
+					checked={store.filterShowClosed}
+					onChange={(evt) => {
+						store.setFilterClosed(evt.target.checked);
+					}}
+				>
+					{t('filter.closed')}
+				</Checkbox>
+			</div>
 		</>
 	));
 };
@@ -132,6 +146,8 @@ const OperationFilters = () => {
 		} else if (store.filterShowActivated && operation.state === 'ACTIVATED') {
 			return true;
 		} else if (store.filterShowRogue && operation.state === 'ROGUE') {
+			return true;
+		} else if (store.filterShowClosed && operation.state === 'CLOSED') {
 			return true;
 		} else {
 			return false;
@@ -244,6 +260,35 @@ const TextFilter = () => {
 };
 
 /* Button that opens a Menu that permits users selects what layers to show */
+const HistoricalModeSwitch = () => {
+	const { t, } = useTranslation('map');
+	const { operationStore } = useStore(
+		'RootStore',
+		(store => ({
+			operationStore: store.operationStore
+		})));
+	return useObserver(() => (
+		<>
+			<div className={styles.sidebarSeparator}>
+				{t('historical_mode')}
+			</div>
+			<div
+				style={{ height: '40px' }}
+				className={styles.sidebarButtonText}
+			>
+				<Checkbox
+					className={styles.sidebarButtonTextContent}
+					data-test-id='historicalModeSwitch'
+					checked={operationStore.isInHistoricalMode}
+					onChange={() => operationStore.toggleHistoricalMode()}
+				>
+					{t('historical_mode_description')}
+				</Checkbox>
+			</div>
+		</>
+	));
+};
+
 const Layers = () => {
 	const { t } = useTranslation(['glossary', 'map']);
 	return (
@@ -265,20 +310,14 @@ const Layers = () => {
 		</div>
 		*/}
 			<SidebarButton
-				useCase='FilterOperations'
-				icon='filter'
-				label={t('map:filter.bystate').toUpperCase()}
-				simpleChildren={false}
-			>
-				<StateFilters  />
-			</SidebarButton>
-			<SidebarButton
 				forceOpen={true}
 				useCase='Layers'
 				icon='layers'
 				label={t('layers').toUpperCase()}
 				simpleChildren={false}
 			>
+				<StateFilters  />
+				<HistoricalModeSwitch />
 				<TextFilter />
 				<OperationFilters />
 				<RfvsFilters />

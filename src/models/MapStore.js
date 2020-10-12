@@ -407,7 +407,8 @@ export const MapStore = types
 			return self.selectedOperation !== null;
 		},
 		get getSelectedOperation() {
-			const operation = getRoot(self).operationStore.operations.get(self.selectedOperation);
+			let operation = getRoot(self).operationStore.operations.get(self.selectedOperation);
+			if (!operation) operation = getRoot(self).operationStore.oldOperations.get(self.selectedOperation);
 			const uasrs = operation.uas_registrations.map(uasr => ['operations.uas_registration', uasr.asDisplayString]);
 			return [
 				['operations.name', operation.name],

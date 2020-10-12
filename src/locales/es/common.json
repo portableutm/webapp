@@ -9,6 +9,9 @@
     "operation_gone_rogue": {
       "header": "OPERACIÓN EN ESTADO ROGUE",
       "body": "La operación \"{{operation}}\" está en el estado ROGUE. Es posible que los vehículos estén fuera de su volúmen. Es importante notificar a todos los vehículos cercanos."
+    },
+    "utmmessage": {
+      "header": "({{severity}}) recibido a las {{time_sent}}"
     }
   },
   "forms": {
@@ -22,5 +25,8 @@
   "save_changes": "Guardar cambios",
   "click_to_expand": "Mostrar información",
   "click_to_collapse": "Esconder información",
-  "edit_on_map": "Editar en mapa"
+  "edit_on_map": "Editar en mapa",
+  "cancel": "Cancelar",
+  "pilot_homescreen": "### PortableUTM v0.5.2-DEV\nNo hay nueva información para mostrar en este momento",
+  "pilot_homescreen_title": "Novedades"
 }

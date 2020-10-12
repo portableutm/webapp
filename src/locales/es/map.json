@@ -8,7 +8,9 @@
     "new_location_created": "¡Nuevo punto de vuelo rápido creado!",
     "creating_new": "Creando nuevo punto de vuelo rápido",
     "save": "Guardar",
-    "info": "La posición del nuevo punto de vuelo rápido es creada automáticamente usando la región actualmente mostrada en el mapa."
+    "info": "La posición del nuevo punto de vuelo rápido es creada automáticamente usando la región actualmente mostrada en el mapa.",
+    "activate_delete_mode": "Eliminar Quickflies",
+    "deactivate_delete_mode": "Dejar de eliminar Quickflies"
   },
   "options": "Opciones",
   "layers": "Capas",
@@ -24,7 +26,13 @@
     "rogue": "Rogue (Furtivas)",
     "bystate": "OPERACIONES POR ESTADO",
     "byid": "OPERACIONES POR ID.",
-    "rfvs": "ZONAS DE VUELO RESTRINGIDO"
+    "rfvs": "ZONAS DE VUELO RESTRINGIDO",
+    "byname": "FILTRADO ÚNICO",
+    "bytext": {
+      "description": "Valor buscado",
+      "text": "BUSCAR POR VALOR"
+    },
+    "uvrs": "UVRS - VOLÚMENES RESERVADOS"
   },
   "flyto": "Volar en mapa a",
   "selected_operation": "Operación seleccionada",
@@ -55,5 +63,7 @@
     "uvr": {
       "complete": "Editando información de la UVR"
     }
-  }
+  },
+  "historical_mode": "Operaciones expiradas",
+  "historical_mode_description": "Mostrar operaciones históricas"
 }

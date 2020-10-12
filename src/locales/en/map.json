@@ -20,7 +20,7 @@
     "proposed": "Proposed",
     "accepted": "Accepted",
     "activated": "Activated",
-    "closed": "DEBUG: Closed",
+    "closed": "Closed",
     "pending": "Pending",
     "nonconforming": "Non-conforming",
     "rogue": "Rogue",
@@ -36,6 +36,8 @@
   },
   "flyto": "Fly in map to",
   "selected_operation": "Selected operation",
+  "historical_mode": "Expired operations",
+  "historical_mode_description": "Show historic operations",
   "editor": {
     "return": "Go back",
     "volume": {

@@ -23,7 +23,9 @@
     "operations_list_pilot": "Tus operaciones",
     "vehicles_new": "Crear nuevo vehículo",
     "vehicles_list": "Todos los vehículos",
-    "vehicles_list_pilot": "Tus vehículos"
+    "vehicles_list_pilot": "Tus vehículos",
+    "logged_in": "Hola,",
+    "uvrs_list": "Reservaciones de volúmenes"
   },
   "home": {
     "title": "Vista general",
@@ -31,7 +33,8 @@
     "active": "Operaciones activas",
     "accepted": "Operaciones aceptadas",
     "pending": "Operaciones pendientes",
-    "vehicles": "Vehículos en el aire"
+    "vehicles": "Vehículos en el aire",
+    "rogue": "Operaciones deshonestas (ROGUE)"
   },
   "ades_options": {
     "endpoint": "URL de PortableUTM DronfiesUSS",

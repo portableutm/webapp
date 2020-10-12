@@ -29,6 +29,7 @@
     "uas_registrations": "Vehicles that will fly the operation"
   },
   "uvrs": {
+    "message_id": "Id.",
     "plural_generic": "UAS Volume Reservations",
     "type": "Type",
     "cause": "Cause",
@@ -90,5 +91,8 @@
   "edit": "Edit",
   "page": "Page {{number}}",
   "go_back": "Back",
-  "add_vehicle": "Create new vehicle"
+  "add_vehicle": "Create new vehicle",
+  "info": "More...",
+  "approve": "Approve",
+  "reject": "Reject"
 }

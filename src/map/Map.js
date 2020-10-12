@@ -154,6 +154,11 @@ const Map = ({ mode }) => {
 					const temp = L.polygon(uvrStore.uvrs.get(id).geography.coordinates);
 					mapStore.map.fitBounds(temp.getBounds());
 				}
+			} else if (obs.mode === 'view-op') {
+				if (id) {
+					const temp = L.polygon(operationStore.operations.get(id).operation_volumes[0].operation_geography.coordinates);
+					mapStore.map.fitBounds(temp.getBounds());
+				}
 			}
 		});
 

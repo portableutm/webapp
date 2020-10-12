@@ -8,11 +8,12 @@ import { Operation } from './entities/Operation';
 export const OperationStore = types
 	.model('OperationStore', {
 		operations: types.map(Operation),
+		oldOperations: types.map(Operation),
 		filterShowAccepted: true,
 		filterShowPending: true,
 		filterShowActivated: true,
 		filterShowRogue: true,
-		filterShowOthers: false,
+		filterShowClosed: false,
 		filterShownIds: types.array(types.string),
 		filterMatchingText: '',
 		filterProperty: 'name',
@@ -20,7 +21,8 @@ export const OperationStore = types
 		sortingOrder: 'asc'
 	})
 	.volatile(() => ({
-		hasFetched: false
+		hasFetched: false,
+		isInHistoricalMode: false
 	}))
 	.actions(self => {
 		const cleanOperation = (operation) => {
@@ -65,6 +67,7 @@ export const OperationStore = types
 								// Only operations that are yet to happen or in progress are considered
 								return [...prior, [correctedOperation.gufi, correctedOperation]];
 							} else {
+								self.oldOperations.set(correctedOperation.gufi, correctedOperation);
 								return [...prior];
 							}
 						}, [])
@@ -168,8 +171,8 @@ export const OperationStore = types
 			setFilterRogue(flag) {
 				self.filterShowRogue = flag;
 			},
-			setFilterOthers(flag) {
-				self.filterShowOthers = flag;
+			setFilterClosed(flag) {
+				self.filterShowClosed = flag;
 			},
 			setFilterByText(text) {
 				self.filterMatchingText = text;
@@ -192,18 +195,26 @@ export const OperationStore = types
 					self.filterShownIds.push(op.gufi);
 				}
 			},
+			/* Historical mode */
+			toggleHistoricalMode() {
+				self.isInHistoricalMode = !self.isInHistoricalMode;
+			},
 			reset() {
 				// Cleans volatile state. The model itself is resetted by the RootStore
 				self.hasFetched = false;
+				self.isInHistoricalMode = false;
 			}
 		};
 	})
 	.views(self => ({
 		get allOperations() {
+			return values(self.operations).concat(values(self.oldOperations));
+		},
+		get allCurrentOperations() {
 			return values(self.operations);
 		},
 		get shownOperations() {
-			return _.filter(values(self.operations), (operation) => {
+			return _.filter(self.isInHistoricalMode ? self.allOperations : self.allCurrentOperations, (operation) => {
 				if (self.filterShowAccepted && operation.state === 'ACCEPTED') {
 					return true;
 				} else if (self.filterShowPending && operation.state === 'PENDING') {
@@ -212,16 +223,16 @@ export const OperationStore = types
 					return true;
 				} else if (self.filterShowRogue && operation.state === 'ROGUE') {
 					return true;
+				} else if (self.filterShowClosed && operation.state === 'CLOSED') {
+					return true;
 				} else if (_.includes(self.filterShownIds, operation.gufi)) {
 					return true;
-				} else {
-					return self.filterShowOthers;
 				}
 			});
 		},
 		get operationsWithVisibility() {
 			return _
-				.chain(values(self.operations))
+				.chain(self.isInHistoricalMode ? self.allOperations : self.allCurrentOperations)
 				.map((op) => {
 					const opWithVisibility = _.cloneDeep(op);
 					opWithVisibility.uas_registrations = op.uas_registrations.map(uasr => uasr.asDisplayString);
@@ -230,6 +241,7 @@ export const OperationStore = types
 						(self.filterShowAccepted && op.state === 'ACCEPTED') 	||
 						(self.filterShowPending && op.state === 'PENDING') 		||
 						(self.filterShowActivated && op.state === 'ACTIVATED') 	||
+						(self.filterShowClosed && op.state === 'CLOSED') 	||
 						(self.filterShowRogue && op.state === 'ROGUE');
 					opWithVisibility._visibility = _.includes(self.filterShownIds, op.gufi);
 					const matchingProperty = self.filterProperty !== 'owner' ? op[self.filterProperty].toLowerCase() : op.owner.asDisplayString.toLowerCase();
@@ -249,7 +261,7 @@ export const OperationStore = types
 				.value();
 		},
 		get counts() {
-			const operations = values(self.operations);
+			const operations = self.isInHistoricalMode ? self.allOperations : self.allCurrentOperations;
 			let operationCount = 0;
 			let activeCount = 0;
 			let acceptedCount = 0;
@@ -268,6 +280,7 @@ export const OperationStore = types
 					self.filterMatchingText.toLowerCase()
 				) && ((self.filterShowAccepted && operation.state === 'ACCEPTED') ||
 					(self.filterShowPending && operation.state === 'PENDING') ||
+					(self.filterShowClosed && operation.state === 'CLOSED') ||
 					(self.filterShowActivated && operation.state === 'ACTIVATED') ||
 					(self.filterShowRogue && operation.state === 'ROGUE'))) matchingTextAndStateCount++;
 			});

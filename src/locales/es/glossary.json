@@ -24,7 +24,9 @@
     "volumes_description": "Descripción de los volumenes",
     "flight_number": "Número de vuelo",
     "free_text": "Texto libre",
-    "state": "Estado"
+    "state": "Estado",
+    "uas_registration": "Vehículos",
+    "uas_registrations": "Vehículos que volarán en la operación"
   },
   "positions": {
     "latitude": "Latitud",
@@ -65,7 +67,8 @@
   "edit": "Editar",
   "page": "Página Nº {{number}}",
   "layers": "Capas",
-  "uvr": {
+  "uvrs": {
+    "message_id": "Id.",
     "effective_time_begin": "Comienzo a las",
     "effective_time_begin_description": "Tiempo desde la cual la reservación estará activa",
     "effective_time_end": "Termina a las",
@@ -74,6 +77,22 @@
     "min_altitude": "Minima altitud",
     "plural_generic": "Reservaciones de Volumenes para UAS (UVRs)",
     "reason": "Motivo de la reservación (nombre)",
-    "singular_generic": "Reserva de volúmen para UAS (UVR)"
+    "singular_generic": "Reserva de volúmen para UAS (UVR)",
+    "cause": "Causa",
+    "type": "Tipo",
+    "zero_uvrs": "No hay UVRs registradas en el sistema, o no tenés los permisos para verlas."
+  },
+  "add_vehicle": "Crear nuevo vehículo",
+  "approve": "Aceptar",
+  "entities": "Entidades",
+  "go_back": "Volver",
+  "info": "Ver más",
+  "reject": "Rechazar",
+  "rfvs": {
+    "comments": "Descripción del área restringida",
+    "id": "Id.",
+    "max_altitude": "Altitud máxima (en metros)",
+    "min_altitude": "Altitud mínima (en metros)",
+    "selected": "Volúmen de vuelo restringido"
   }
 }

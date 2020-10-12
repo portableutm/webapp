@@ -226,11 +226,20 @@ function OperationsList() {
 								placeholder={t('map:filter.bytext.description')}
 								value={filterStore.text}
 							/>
-							<p
+							<Checkbox
+								data-test-id='historical'
+								checked={store.isInHistoricalMode}
+								onChange={(evt) => {
+									store.toggleHistoricalMode(evt.target.checked);
+								}}
+							>
+								{t('map:historical_mode_description')}
+							</Checkbox>
+							{/*<p
 								className={styles.filterTextInfo}
 							>
 								{`Showing ${store.counts.matchingTextAndStateCount} out of ${store.counts.operationCount} operations`}
-							</p>
+							</p>*/}
 						</div>
 						<div
 							className={styles.filters2}
@@ -270,6 +279,15 @@ function OperationsList() {
 								}}
 							>
 								{t('map:filter.rogue')}
+							</Checkbox>
+							<Checkbox
+								data-test-id='layersCLOSED'
+								checked={store.filterShowClosed}
+								onChange={(evt) => {
+									store.setFilterClosed(evt.target.checked);
+								}}
+							>
+								{t('map:filter.closed')}
 							</Checkbox>
 						</div>
 						<div
