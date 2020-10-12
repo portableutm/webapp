@@ -227,6 +227,7 @@ function OperationsList() {
 								value={filterStore.text}
 							/>
 							<Checkbox
+								className={styles.filterTextInfo}
 								data-test-id='historical'
 								checked={store.isInHistoricalMode}
 								onChange={(evt) => {

@@ -53,7 +53,13 @@ export const AuthStore = types
 						getRoot(self).operationStore.updateOne(info.gufi, 'state', info.state);
 					});
 
+					socket.on('chat message', (msg) => {
+						getRoot(self).notificationStore.addInformation(msg);
+					});
+
 					socket.connect();
+
+					window.chat = (header, body) => socket.emit('chat message', { header: header, body: body });
 
 					const decoded = jwtDecode(newToken);
 					/* Save users data parsed from token */
