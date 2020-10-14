@@ -42,7 +42,7 @@
     "nNumber": "Número de vehículo",
     "owner": "Piloto (usuario)",
     "faaNumber": "Número de registro oficial",
-    "faaNumber_desc": "En Uruguay, esta es la matrícula entregada por DINACIA",
+    "faaNumber_desc": "Matricula DINACIA",
     "vehicleName": "Nombre",
     "manufacturer": "Marca",
     "model": "Modelo",
@@ -80,7 +80,7 @@
     "singular_generic": "Reserva de volúmen para UAS (UVR)",
     "cause": "Causa",
     "type": "Tipo",
-    "zero_uvrs": "No hay UVRs registradas en el sistema, o no tenés los permisos para verlas."
+    "zero_uvrs": "No existen UVRs registradas en el sistema, o usted no tiene la autorización para verlas."
   },
   "add_vehicle": "Crear nuevo vehículo",
   "approve": "Aceptar",

@@ -46,15 +46,15 @@
       "closecalendar": "Cerrar calendario"
     },
     "operation": {
-      "complete": "Editing information of operation"
+      "complete": "Editando información de la operación"
     },
     "completesteps": "Completar los pasos para definir una nueva operación.",
-    "definevolume": "Hacé click en el mapa para definir un polígono.",
-    "defineoperationinfo": "Completa los datos solicitados.",
-    "savingoperation": "Guardando operación. Por favor, esperá.",
-    "savingerror": "Por favor, cambiá los parámetros afectados y re-intentá.",
+    "definevolume": "Haga click en el mapa para definir un polígono.",
+    "defineoperationinfo": "Complete los datos solicitados.",
+    "savingoperation": "Guardando operación. Por favor, espera...",
+    "savingerror": "Por favor, cambie los parámetros afectados y intente nuevamente.",
     "step": {
-      "definevolumes": "Paso 1: Definí los volúmenes de la operación.",
+      "definevolumes": "Paso 1: Defina los volúmenes de la operación.",
       "defineoperationinfo": "Paso 2: Completar información general.",
       "finish": "Paso 3: Finalizar."
     },

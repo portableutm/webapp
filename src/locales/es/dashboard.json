@@ -34,11 +34,11 @@
     "accepted": "Operaciones aceptadas",
     "pending": "Operaciones pendientes",
     "vehicles": "Vehículos en el aire",
-    "rogue": "Operaciones deshonestas (ROGUE)"
+    "rogue": "Operaciones «ROGUE»"
   },
   "ades_options": {
     "endpoint": "URL de PortableUTM DronfiesUSS",
-    "endpoint_helper": "No cambies esta configuración salvo que sepas que estás haciendo.",
+    "endpoint_helper": "Esta configuración no será tomada en cuenta por el momento.",
     "title": "Configuración",
     "web": "Configuraciones de la web"
   }

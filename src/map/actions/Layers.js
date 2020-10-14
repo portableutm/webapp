@@ -320,7 +320,7 @@ const Layers = () => {
 				<HistoricalModeSwitch />
 				<TextFilter />
 				<OperationFilters />
-				<RfvsFilters />
+				{ /* <RfvsFilters /> */ }
 				<UvrsFilters />
 			</SidebarButton>
 		</>
