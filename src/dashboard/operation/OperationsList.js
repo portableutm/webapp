@@ -8,20 +8,15 @@ import styles from '../generic/GenericList.module.css';
 import { useStore } from 'mobx-store-provider';
 import { observer, useLocalStore } from 'mobx-react';
 
-function Operation({ expanded = false, selected = false, toggleSelected, operation, changeState, isPilot }) {
+function Operation({ expanded = false, selected = false, operation, changeState, isPilot }) {
 	// Renders one Operation text properties for a list
 	const history = useHistory();
 	const { t, } = useTranslation(['glossary', 'common']);
-	const onClick = selected ?
-		(evt) => {
-			evt.stopPropagation();
-			toggleSelected(operation);
-		}  :
-		(evt) => {
-			evt.stopPropagation();
-			toggleSelected(operation);
-			history.push('/operation/' + operation.gufi);
-		};
+	const onClick = (evt) => {
+		evt.stopPropagation();
+		history.push('/operation/' + operation.gufi);
+	};
+
 	const [showProperties, setShowProperties] = useState(expanded);
 
 	const toggleOperation = (evt) => {
@@ -66,7 +61,7 @@ function Operation({ expanded = false, selected = false, toggleSelected, operati
 						className={styles.button}
 						small
 						minimal
-						icon='pin'
+						icon='eye-open'
 						intent={selected ? Intent.DANGER : Intent.SUCCESS}
 						onClick={onClick}
 					>
@@ -85,7 +80,7 @@ function Operation({ expanded = false, selected = false, toggleSelected, operati
 						minimal
 						icon='edit'
 						intent={Intent.WARNING}
-						onClick={() => history.push('/operation/edit/' + operation.gufi)}
+						onClick={(evt) => {evt.stopPropagation(); history.push('/operation/edit/' + operation.gufi);}}
 					>
 						<div className={styles.buttonHoveredTooltip}>
 							{t('common:edit_on_map')}
@@ -181,12 +176,11 @@ function Operation({ expanded = false, selected = false, toggleSelected, operati
 
 function OperationsList() {
 	const { t, } = useTranslation(['glossary','map']);
-	const { store, authStore, toggleSelected } = useStore(
+	const { store, authStore } = useStore(
 		'RootStore',
 		(store) => ({
 			store: store.operationStore,
-			authStore: store.authStore,
-			toggleSelected: store.operationStore.toggleVisibility
+			authStore: store.authStore
 		}));
 	const { id } = useParams();
 	const filterStore = useLocalStore(() => ({
@@ -338,7 +332,6 @@ function OperationsList() {
 										key={op.gufi}
 										expanded={op.gufi === id}
 										selected={op._visibility}
-										toggleSelected={toggleSelected}
 										operation={op}
 										changeState={store.updateState}
 										isPilot={authStore.role === 'pilot'}

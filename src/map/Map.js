@@ -38,6 +38,7 @@ import { AllDronePositions } from './elements/AllDronePositions';
 import { Button, Intent } from '@blueprintjs/core';
 import SelectedRfv from './viewer/SelectedRfv';
 import SelectedUvr from './viewer/SelectedUvr';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -47,10 +48,14 @@ const Map = ({ mode }) => {
 	const { editId, id } = useParams();
 	const obs = useAsObservableSource({ mode, id });
 
+	/* Libraries */
+	const { t, } = useTranslation('map');
+
 	/* State holders and references */
-	const { operationStore, mapStore, uvrStore } = useStore(
+	const { store, operationStore, mapStore, uvrStore } = useStore(
 		'RootStore',
 		(store) => ({
+			store: store,
 			operationStore: store.operationStore,
 			mapStore: store.mapStore,
 			uvrStore: store.uvrStore,
@@ -134,7 +139,7 @@ const Map = ({ mode }) => {
 			}
 		});
 
-		const dispose2 = autorun(() => {
+		/*const dispose2 = autorun(() => {
 			// Change map position if one and only one operation is selected to be shown
 			if (operationStore.filterShownIds.length > 0) {
 				let latlngs = [];
@@ -146,7 +151,7 @@ const Map = ({ mode }) => {
 				const temp = L.polygon(latlngs);
 				mapStore.map.fitBounds(temp.getBounds());
 			}
-		});
+		});*/
 
 		const dispose3 = autorun(() => {
 			if (obs.mode === 'view-uvr') {
@@ -155,8 +160,16 @@ const Map = ({ mode }) => {
 					mapStore.map.fitBounds(temp.getBounds());
 				}
 			} else if (obs.mode === 'view-op') {
-				if (id) {
-					const temp = L.polygon(operationStore.operations.get(id).operation_volumes[0].operation_geography.coordinates);
+				if (obs.id && operationStore.hasFetched) {
+					let temp;
+					if (operationStore.operations.get(obs.id)) {
+						temp = L.polygon(operationStore.operations.get(obs.id).operation_volumes[0].operation_geography.coordinates);
+					} else if (operationStore.oldOperations.get(obs.id)) {
+						temp = L.polygon(operationStore.oldOperations.get(obs.id).operation_volumes[0].operation_geography.coordinates);
+					} else {
+						store.setFloatingText(t('operation_not_exists'));
+						return;
+					}
 					mapStore.map.fitBounds(temp.getBounds());
 				}
 			}
@@ -164,7 +177,7 @@ const Map = ({ mode }) => {
 
 		return () => {
 			dispose1();
-			dispose2();
+			//dispose2();
 			dispose3();
 		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps

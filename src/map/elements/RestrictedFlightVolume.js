@@ -9,6 +9,8 @@ import { useLocalStore } from 'mobx-react';
 import { createLeafletPolygonStore } from '../../models/locals/createLeafletPolygonStore';
 import { autorun } from 'mobx';
 import { useAsObservableSource } from 'mobx-react';
+import { useHistory } from 'react-router-dom';
+
 
 /* Helpers */
 
@@ -16,6 +18,8 @@ import { useAsObservableSource } from 'mobx-react';
  * @return {null}
  */
 function RestrictedFlightVolume({ id, latlngs, name, minAltitude, maxAltitude, onClick }) {
+	const history = useHistory();
+
 	const { mapStore } = useStore(
 		'RootStore',
 		(store) => ({
@@ -46,7 +50,10 @@ function RestrictedFlightVolume({ id, latlngs, name, minAltitude, maxAltitude, o
 
 			const polygonOnClick = onClick ?
 				onClick :
-				() => mapStore.setSelectedRfv(id);
+				() => {
+					history.push(`/rfv/${id}`);
+					mapStore.setSelectedRfv(id);
+				};
 			// By default, clicking an OperationPolygon selects the operation and shows it in the sidebar
 
 			polygon.on('click',

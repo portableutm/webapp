@@ -65,5 +65,6 @@
     },
     "finish": "Finish",
     "cant_finish": "The OPERATION could not be created, as the polygon was not defined. Please, define a polygon for where the vehicle can fly, by clicking on the map on the appropiate positions"
-  }
+  },
+  "operation_not_exists": "The operation does not exist"
 }

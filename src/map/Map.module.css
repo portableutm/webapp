@@ -54,6 +54,7 @@
 .sidebarButtonTextCollapsed {
     max-height: 0;
     padding: 0;
+    margin: 0 !important;
 }
 
 .sidebarButtonTextContent {

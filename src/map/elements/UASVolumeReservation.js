@@ -7,6 +7,8 @@ import L from 'leaflet';
 import { useStore } from 'mobx-store-provider';
 import { autorun } from 'mobx';
 import { observer, useLocalStore } from 'mobx-react';
+import { useHistory } from 'react-router-dom';
+
 
 /* Internal */
 import { createLeafletPolygonStore } from '../../models/locals/createLeafletPolygonStore';
@@ -16,6 +18,8 @@ import { createLeafletPolygonStore } from '../../models/locals/createLeafletPoly
  * @return {null}
  */
 const UASVolumeReservation = observer(({ latlngs, uvrInfo, onClick })  => {
+	const history = useHistory();
+
 	const { mapStore } = useStore(
 		'RootStore',
 		(store) => ({
@@ -49,7 +53,9 @@ const UASVolumeReservation = observer(({ latlngs, uvrInfo, onClick })  => {
 
 				const polygonOnClick = onClick ?
 					onClick :
-					() => mapStore.setSelectedUvr(uvrInfo.message_id);
+					() => {
+						history.push(`/uvr/${uvrInfo.message_id}`);
+						mapStore.setSelectedUvr(uvrInfo.message_id); };
 				// By default, clicking an OperationPolygon selects the operation and shows it in the sidebar
 
 				polygon.on('click',

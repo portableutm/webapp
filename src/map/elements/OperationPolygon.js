@@ -10,6 +10,7 @@ import { autorun, when } from 'mobx';
 import { observer, useLocalStore } from 'mobx-react';
 import { createLeafletPolygonStore } from '../../models/locals/createLeafletPolygonStore';
 import { useAsObservableSource } from 'mobx-react';
+import { useHistory } from 'react-router-dom';
 
 /* Internal */
 
@@ -38,6 +39,7 @@ const OperationPolygon = observer(({
 	isSelected = false
 }) => {
 	//const { t, } = useTranslation('glossary');
+	const history = useHistory();
 	const { mapStore } = useStore(
 		'RootStore',
 		(store) => ({
@@ -70,12 +72,19 @@ const OperationPolygon = observer(({
 
 				const polygonOnClick = onClick ?
 					onClick :
-					() => mapStore.setSelectedOperation(obs.gufi);
+					() => {
+						history.push(`/operation/${obs.gufi}`);
+						mapStore.setSelectedOperation(obs.gufi);
+					};
 				// By default, clicking an OperationPolygon selects the operation and shows it in the sidebar
 
 				polygon.on('click',
 					(evt) =>
 						mapStore.executeFunctionInMap(polygonOnClick, name, evt));
+
+				polygon.on('contextmenu',
+					(evt) =>
+						mapStore.executeFunctionInMap(() => mapStore.setSelectedOperation(obs.gufi), name, evt));
 
 				polygon.addTo(mapStore.map);
 				polygonStore.setPolygon(polygon);
@@ -97,7 +106,9 @@ const OperationPolygon = observer(({
 		});
 		return () => {
 			// Clean-up when unloading component
-			polygonStore.leafletPolygon.remove();
+			if (polygonStore.isPolygonInstanced) {
+				polygonStore.leafletPolygon.remove();
+			}
 			dispose1();
 			dispose2();
 		};

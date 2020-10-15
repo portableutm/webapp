@@ -261,6 +261,7 @@ export const MapStore = types
 		},
 		/* Editor actions */
 		startOperationEditor(existing) {
+			self.unsetAll();
 			const operation = _.cloneDeep(existing ? existing : defaultNewOperation);
 			if (!existing) {
 				operation.gufi = null;
