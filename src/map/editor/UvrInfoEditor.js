@@ -14,7 +14,7 @@ const Property = ({ propName, required, info, editInfo, t, helperText = '' }) =>
 	return useObserver(() => (<FormGroup
 		className={styles.sidebarButtonText}
 		helperText={helperText}
-		label={t('glossary:uvr.' + propName)}
+		label={t('glossary:uvrs.' + propName)}
 		labelInfo={required ? t('common:forms.required') : t('common:forms.optional')}
 		labelFor={propName}
 	>
@@ -45,7 +45,7 @@ function UvrInfoEditor() {
 			<SidebarButton
 				useCase='editorSteps'
 				icon='flow-linear'
-				label={t('editor.uvr.complete')}
+				label={t('editor.uvrs.complete')}
 				simpleChildren={false}
 				forceOpen={true}
 			>
@@ -72,7 +72,7 @@ function UvrInfoEditor() {
 				/>
 				<div className={styles.sidebarButtonText}>
 					<p className="centerHorizontally">
-						{t('glossary:uvr.effective_time_begin')}
+						{t('glossary:uvrs.effective_time_begin')}
 					</p>
 					<div data-test-id="map#editor#uvr#info##effective_time_begin">
 						<DateInput
@@ -89,7 +89,7 @@ function UvrInfoEditor() {
 				</div>
 				<div className={styles.sidebarButtonText}>
 					<p className="centerHorizontally">
-						{t('glossary:uvr.effective_time_end')}
+						{t('glossary:uvrs.effective_time_end')}
 					</p>
 					<div data-test-id="map#editor#uvr#info##effective_time_end">
 						<DateInput

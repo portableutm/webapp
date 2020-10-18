@@ -251,11 +251,11 @@ function Ades() {
 							<LayoutRoute exact path='/operation/:id' isMapVisible>
 								<Map mode='view-op'/>
 							</LayoutRoute>
-							<LayoutRoute exact path='/uvr/:id' isMapVisible>
-								<Map mode='view-uvr'/>
-							</LayoutRoute>
 							<LayoutRoute exact leftIsExpanded path='/uvr/new' isMapVisible>
 								<Map mode='new-uvr'/>
+							</LayoutRoute>
+							<LayoutRoute exact leftIsExpanded path='/uvr/:id' isMapVisible>
+								<Map mode='edit-uvr'/>
 							</LayoutRoute>
 							{/* Dashboard */}
 							<LayoutRoute exact path='/dashboard/configuration'>

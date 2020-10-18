@@ -102,6 +102,7 @@ const Map = ({ mode }) => {
 				const map = initializeLeaflet();
 				mapStore.setMapRef(map);
 			} else {
+				mapStore.stopEditor();
 				if (obs.mode === 'new-op') {
 					mapStore.startOperationEditor();
 				} else if (obs.mode === 'edit-op') {
@@ -110,8 +111,6 @@ const Map = ({ mode }) => {
 					mapStore.startUvrEditor();
 				} else if (obs.mode === 'edit-uvr') {
 					mapStore.startUvrEditor(uvrStore.uvrs.get(editId));
-				} else {
-					mapStore.stopEditor();
 				}
 			}
 		});

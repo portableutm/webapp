@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useStore } from 'mobx-store-provider';
+import { autorun } from 'mobx';
 import { observer } from 'mobx-react';
 import _ from 'lodash';
 import { Button, Checkbox, FormGroup, HTMLSelect, InputGroup } from '@blueprintjs/core';
@@ -27,6 +28,18 @@ function OperationInfoEditor() {
 		setSaving(false);
 		history.push('/');
 	};
+
+	useEffect(() => {
+		const dispose1 = autorun(() => {
+			if (userStore.allUsers.length > 0) {
+				mapStore.setOperationInfo('contact', userStore.users.get(mapStore.editorOperation.owner).asDisplayString);
+				mapStore.setOperationInfo('contact_phone', userStore.users.get(mapStore.editorOperation.owner).email);
+			}
+		});
+		return () => {
+			dispose1();
+		};
+	});
 
 	if (mapStore.isEditingOperation) {
 		return (
