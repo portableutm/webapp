@@ -40,6 +40,7 @@
     "uvin": "UVIN",
     "date": "Fecha de registro",
     "nNumber": "Número de vehículo",
+    "nNumber_desc": "Número de vehículo",
     "owner": "Piloto (usuario)",
     "faaNumber": "Número de registro oficial",
     "faaNumber_desc": "Matricula DINACIA",
