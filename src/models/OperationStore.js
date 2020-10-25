@@ -52,32 +52,30 @@ export const OperationStore = types
 		return {
 			/* Requests */
 			fetch: flow(function* fetch(allOperations = true /* fetch only the operations to which the current logged in user is the owner*/) {
-				try {
-					const response = yield getRoot(self).axiosInstance.get(allOperations ? 'operation' : 'operation/owner', { headers: { auth: getRoot(self).authStore.token } });
-					self.hasFetched = true;
-					const operations = response.data.ops;
-					self.operations.replace(
-						operations.reduce((prior, operation) => {
-							const correctedOperation = cleanOperation(operation);
-							const qtyOperationVolumes = correctedOperation.operation_volumes.length;
-							if (correctedOperation
-								.operation_volumes[qtyOperationVolumes-1]
-								.effective_time_end >= new Date()
-							) {
-								// Only operations that are yet to happen or in progress are considered
-								return [...prior, [correctedOperation.gufi, correctedOperation]];
-							} else {
-								self.oldOperations.set(correctedOperation.gufi, correctedOperation);
-								return [...prior];
-							}
-						}, [])
-					);
-				} catch (error) {
-					console.group('/rootStore fetchOperations *error*');
-					console.log('%cAn error has ocurred', 'color:red; font-size: 36px');
-					console.error(error);
-					console.groupEnd();
-				}
+				const response = yield getRoot(self).axiosInstance.get(allOperations ? 'operation' : 'operation/owner', { headers: { auth: getRoot(self).authStore.token } });
+				self.hasFetched = true;
+				const operations = response.data.ops;
+				operations.forEach((dirtyOp) => {
+					try {
+						const correctedOperation = cleanOperation(dirtyOp);
+						const qtyOperationVolumes = correctedOperation.operation_volumes.length;
+						if (correctedOperation
+							.operation_volumes[qtyOperationVolumes-1]
+							.effective_time_end >= new Date()
+						) {
+							// Only operations that are yet to happen or in progress are considered
+							self.operations.set(correctedOperation.gufi, correctedOperation);
+						} else {
+							self.oldOperations.set(correctedOperation.gufi, correctedOperation);
+						}
+					} catch (error) {
+						console.group('/rootStore fetchOperations *error*');
+						console.log('%cAn error has ocurred', 'color:red; font-size: 36px');
+						console.error(error);
+						console.error(dirtyOp);
+						console.groupEnd();
+					}
+				});
 			}),
 			fetchOne: flow(function* fetchOne(gufi) {
 				try {
