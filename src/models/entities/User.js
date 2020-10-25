@@ -6,7 +6,7 @@ export const User = types
 		firstName: types.string,
 		lastName: types.string,
 		email: types.string,
-		password: types.maybeNull(types.string),
+		password: types.maybe(types.string),
 		// TODO: We need it when creating a new User
 		role: types.enumeration('UserRoles', ['admin', 'pilot']),
 		// volumesOfInterest:
