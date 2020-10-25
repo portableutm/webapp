@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { autorun } from 'mobx';
+import React  from 'react';
 import { observer, useAsObservableSource } from 'mobx-react';
 import { useStore } from 'mobx-store-provider';
 import ControllerLocationMarker from './ControllerLocationMarker';
@@ -33,7 +32,6 @@ const DronePosition = observer(({ positions, isDroneSelected, setDroneSelected }
 				heading={obs.newestPosition.heading}
 				altitude={obs.newestPosition.altitude_gps}
 				position={obs.newestPosition.location}
-				onClick={() => setDroneSelected()}
 			/>
 		</>
 	);
@@ -51,7 +49,7 @@ export const AllDronePositions = observer(() => {
 		})
 	);
 
-	useEffect(() => {
+	/* useEffect(() => {
 		// When component is mounted, if a drone is selected, auto-pan following its position.
 		const dispose = autorun(() => {
 			if (mapStore.isDroneSelected) {
@@ -62,7 +60,7 @@ export const AllDronePositions = observer(() => {
 		return () => {
 			dispose();
 		};
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps */
 
 	return posStore.allPositions.map((dronePositions) =>
 		// Array of array of positions. Each subarray must at least have one element.
@@ -70,7 +68,6 @@ export const AllDronePositions = observer(() => {
 			key={'dronepos' + dronePositions[0].gufi}
 			positions={dronePositions}
 			isDroneSelected={dronePositions[0].gufi === mapStore.selectedDrone}
-			setDroneSelected={() => mapStore.setSelectedDrone(dronePositions[0].gufi)}
 		/>
 	);
 });

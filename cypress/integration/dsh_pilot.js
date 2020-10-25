@@ -11,8 +11,8 @@ describe('Edit operation', function () {
 	});
 
 	it('Visits Web and navigate to Dashboard', function () {
-		cy.visit('http://localhost:2000/dashboard/users');
-		cy.contains('edit').click();
+		cy.visit('http://localhost:2000/dashboard/users/admin');
+		cy.get('[data-test-id="editadmin"]').click();
 		cy.get('#firstName').type('Roberto');
 		cy.get('#lastName').type('Malawi');
 		cy.get('#email').type('email');

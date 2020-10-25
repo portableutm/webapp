@@ -183,7 +183,7 @@ const OperationFilters = () => {
 	));
 };
 
-const RfvsFilters = () => {
+/* const RfvsFilters = () => {
 	const { t, } = useTranslation('map');
 	const { store } = useStore(
 		'RootStore',
@@ -216,7 +216,7 @@ const RfvsFilters = () => {
 			})}
 		</>
 	));
-};
+}; */
 
 const TextFilter = () => {
 	const { t, } = useTranslation('map');

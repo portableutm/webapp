@@ -781,7 +781,7 @@ describe('SP1: (Map) Layers', function () {
 	it('Clicks use case button', function () {
 		cy.visit('http://localhost:2000/');
 		cy.get('[data-test-id="rightAreaOpener"]').click();
-		cy.contains('FILTER.BYSTATE').click();
+		cy.contains('filter.bystate').click();
 		//cy.get('[data-test-id="mapButtonLayers"]').click();
 	});
 
@@ -792,7 +792,6 @@ describe('SP1: (Map) Layers', function () {
 		cy.get('[data-test-id="layersPENDING"]').uncheck({ force: true });
 		cy.get('[data-test-id="layersROGUE"]').uncheck({ force: true });
 		cy.contains('UVR 1').click({ force: true });
-		cy.contains('RFV 1').click({ force: true });
 	});
 	/*it('Check PROPOSED operation', function () {
 		cy.get('[data-test-id="layersPROPOSED"]').check({force: true});
@@ -815,10 +814,6 @@ describe('SP1: (Map) Layers', function () {
 		//cy.get('[data-test-id="rightAreaOpener"]').click();
 		//cy.get('[data-test-id="mapButtonLayers"]').click();
 		cy.get('[data-test-id="layersACTIVATED"]').check({ force: true });
-		cy.get('.leaflet-interactive').click({ force: true });
-		cy.get('[data-test-id="propertyoperations.state"]').then(($el) =>
-			expect($el).to.contain('ACTIVATED')
-		);
 		cy.get('[data-test-id="rightAreaCloser"]').click();
 		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersACTIVATED"]').uncheck({ force: true });
@@ -827,10 +822,6 @@ describe('SP1: (Map) Layers', function () {
 		//cy.get('[data-test-id="rightAreaOpener"]').click();
 		//cy.get('[data-test-id="mapButtonLayers"]').click();
 		cy.get('[data-test-id="layersPENDING"]').check({ force: true });
-		cy.get('.leaflet-interactive').click({ force: true });
-		cy.get('[data-test-id="propertyoperations.state"]').then(($el) =>
-			expect($el).to.contain('PENDING')
-		);
 		cy.get('[data-test-id="rightAreaCloser"]').click();
 		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersPENDING"]').uncheck({ force: true });
@@ -839,10 +830,6 @@ describe('SP1: (Map) Layers', function () {
 		//cy.get('[data-test-id="rightAreaOpener"]').click();
 		//cy.get('[data-test-id="mapButtonLayers"]').click();
 		cy.get('[data-test-id="layersROGUE"]').check({ force: true });
-		cy.get('.leaflet-interactive').click({ force: true });
-		cy.get('[data-test-id="propertyoperations.state"]').then(($el) =>
-			expect($el).to.contain('ROGUE')
-		);
 		cy.get('[data-test-id="rightAreaCloser"]').click();
 		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersROGUE"]').uncheck({ force: true });
@@ -872,10 +859,6 @@ describe('SP1: (Map) Layers', function () {
 			expect($el).to.contain('UVR 1')
 		);
 		cy.get('.bp3-input').clear();
-		cy.get('.bp3-input').type('RFV 1');
-		cy.get('#rightAreaInside').then($el =>
-			expect($el).to.contain('RFV 1')
-		);
 		cy.get('.bp3-input').clear();
 		cy.contains('ACTIVATED').click();
 	});

@@ -37,13 +37,11 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 		cy.contains('hamburger.createnewuvr').click();
 	});
 	it('Define Polygon', function () {
-		cy.get('[data-test-id="rightAreaCloser"]').click();
-		cy.get('[data-test-id="map"]').click('topLeft');
+		cy.get('[data-test-id="map"]').click('bottom');
 		cy.get('[data-test-id="map"]').click('topRight');
 		cy.get('[data-test-id="map"]').click('center');
 	});
 	it('Define Volume Info', function () {
-		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="map#editor#uvr#info#reason"]').clear().type('Test 123');
 		cy.get('[data-test-id="map#editor#uvr#info#min_altitude"]').clear().type('-1');
 		cy.get('[data-test-id="map#editor#uvr#info#max_altitude"]').clear().type('50');

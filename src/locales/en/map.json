@@ -66,5 +66,6 @@
     "finish": "Finish",
     "cant_finish": "The OPERATION could not be created, as the polygon was not defined. Please, define a polygon for where the vehicle can fly, by clicking on the map on the appropiate positions"
   },
-  "operation_not_exists": "The operation does not exist"
+  "operation_not_exists": "The operation does not exist",
+  "following_drone": "You are now following a vehicle that is in the air. The map has been locked, and you won't be able to drag it. You can still zoom in or zoom out. You may stop following a drone by pressing the CROSS on the SideMenu"
 }

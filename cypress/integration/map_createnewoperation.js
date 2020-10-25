@@ -39,13 +39,11 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 		cy.contains('hamburger.createnewop').click();
 	});
 	it('Define Polygon', function () {
-		cy.get('[data-test-id="rightAreaCloser"]').click();
-		cy.get('[data-test-id="map"]').click('topLeft');
+		cy.get('[data-test-id="map"]').click( 'bottom');
 		cy.get('[data-test-id="map"]').click('topRight');
 		cy.get('[data-test-id="map"]').click('center');
 	});
 	it('Define Volume Info', function () {
-		cy.get('[data-test-id="rightAreaOpener"]').click();
 		//cy.get('[data-test-id="map#editor#volume#info#min_altitude"]').clear().type('-1');
 		cy.get('[data-test-id="map#editor#volume#info#max_altitude"]').clear().type('50');
 		//cy.get('[data-test-id="map#editor#volume#info#near_structure"]').check({force: true});
@@ -76,8 +74,8 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 		cy.visit('http://localhost:2000/');
 		cy.get('[data-test-id="mapButtonMenu"]').click();
 		cy.contains('hamburger.createnewop').click();
-		cy.get('[data-test-id="map#editor#operation#info#uas_registration#0"]').click();
-		cy.get('[data-test-id="map#editor#operation#info#uas_registration#0"]').click();
+		cy.get('[data-test-id="map#editor#operation#info#uas_registration#0"]').click({ force: true });
+		cy.get('[data-test-id="map#editor#operation#info#uas_registration#0"]').click({ force: true });
 		cy.contains('editor.return').click();
 	});
 });

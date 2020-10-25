@@ -249,7 +249,10 @@ function Ades() {
 								<Map mode='edit-op'/>
 							</LayoutRoute>
 							<LayoutRoute exact path='/operation/:id' isMapVisible>
-								<Map mode='view-op'/>
+								<Map mode='view-op' />
+							</LayoutRoute>
+							<LayoutRoute exact path='/vehicle/:id' isMapVisible>
+								<Map mode='view-vehicle'/>
 							</LayoutRoute>
 							<LayoutRoute exact leftIsExpanded path='/uvr/new' isMapVisible>
 								<Map mode='new-uvr'/>

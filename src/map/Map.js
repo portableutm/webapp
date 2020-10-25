@@ -6,7 +6,8 @@ import '../Ades.css';
 //import L from 'leaflet';
 import L from '../libs/wise-leaflet-pip';
 import '../css/leaflet.css';
-import _ from 'lodash';
+import { useHistory } from 'react-router-dom';
+
 
 //import PropTypes from 'prop-types';
 import { useStore } from 'mobx-store-provider';
@@ -41,9 +42,10 @@ import SelectedUvr from './viewer/SelectedUvr';
 import { useTranslation } from 'react-i18next';
 
 
-
 /* Main function */
 const Map = ({ mode }) => {
+	const history = useHistory();
+
 	/* Route params */
 	const { editId, id } = useParams();
 	const obs = useAsObservableSource({ mode, id });
@@ -52,13 +54,14 @@ const Map = ({ mode }) => {
 	const { t, } = useTranslation('map');
 
 	/* State holders and references */
-	const { store, operationStore, mapStore, uvrStore } = useStore(
+	const { store, operationStore, mapStore, uvrStore, positionStore } = useStore(
 		'RootStore',
 		(store) => ({
 			store: store,
 			operationStore: store.operationStore,
 			mapStore: store.mapStore,
 			uvrStore: store.uvrStore,
+			positionStore: store.positionStore,
 			rfvStore: store.rfvStore
 		}));
 
@@ -171,6 +174,30 @@ const Map = ({ mode }) => {
 					}
 					mapStore.map.fitBounds(temp.getBounds());
 				}
+			} else if (obs.mode === 'view-vehicle') {
+				if (id) {
+					mapStore.map.setZoom(17);
+					mapStore.setSelectedDrone(id);
+					store.setFloatingText(t('following_drone'));
+				}
+			}
+		});
+
+		const dispose4 = autorun(() => {
+			if (obs.mode === 'view-vehicle') {
+				mapStore.map.dragging.disable();
+				mapStore.map.touchZoom.disable();
+				mapStore.map.doubleClickZoom.disable();
+				mapStore.map.boxZoom.disable();
+				mapStore.map.keyboard.disable();
+				const positions = positionStore.positions.get(mapStore.selectedDrone);
+				mapStore.panTo(positions[positions.length - 1].location);
+			} else {
+				mapStore.map.dragging.enable();
+				mapStore.map.touchZoom.enable();
+				mapStore.map.doubleClickZoom.enable();
+				mapStore.map.boxZoom.enable();
+				mapStore.map.keyboard.enable();
 			}
 		});
 
@@ -178,6 +205,7 @@ const Map = ({ mode }) => {
 			dispose1();
 			//dispose2();
 			dispose3();
+			dispose4();
 		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -214,73 +242,81 @@ const Map = ({ mode }) => {
 						</Button>
 					</Dialog>
 					*/}
-				{ 	mapStore.csIsMapOnClickActivated &&
-						mapStore.csIsMapOnClickSelectionActivated &&
-						mapStore.csIsMapOnClickSelectionFinished &&
-					<div
-						className="mapOnClickChooser animated fadeIn faster"
-						style={{ left: mapStore.csX, top: mapStore.csY }}
-					>
-						Click on...
-						{mapStore.csCapturedFns.map(labelFn => {
-							return (
-								<Button
-									key={labelFn.label}
-									className="mapOnClickChooserButton"
-									intent={Intent.PRIMARY}
-									onClick={() => labelFn.fn()}
-								>
-									{labelFn.label}
-								</Button>);
-						})}
-					</div>
+				{mapStore.csIsMapOnClickActivated &&
+				mapStore.csIsMapOnClickSelectionActivated &&
+				mapStore.csIsMapOnClickSelectionFinished &&
+				<div
+					className="mapOnClickChooser animated fadeIn faster"
+					style={{ left: mapStore.csX, top: mapStore.csY }}
+				>
+					Click on...
+					{mapStore.csCapturedFns.map(labelFn => {
+						return (
+							<Button
+								key={labelFn.label}
+								className="mapOnClickChooserButton"
+								intent={Intent.PRIMARY}
+								onClick={() => labelFn.fn()}
+							>
+								{labelFn.label}
+							</Button>);
+					})}
+				</div>
 				}
+				{/* !mapStore.map.dragging.enabled() &&
+				<div
+					className="upperRightCorner"
+				>
+					<Icon icon='lock' iconSize={48}/>
+				</div>
+				*/ }
+
 				{/* Live map */}
-				<AllDronePositions />
+				<AllDronePositions/>
 				<AllOperationsPolygons/>
 				<AllRestrictedFlightVolumes/>
 				<AllUASVolumeReservations/>
 
 				{/* Operation creation or edition */}
-				{	mapStore.isEditingOperation &&
-					<OperationPolygon
-						id={'polygoncreation'}
-						key={'polygoncreation'}
-						latlngs={mapStore.editorOperation.operation_volumes[0].operation_geography.coordinates}
-						popup={'Volume of operation in construction'}
-						operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
-					/>
+				{mapStore.isEditingOperation &&
+				<OperationPolygon
+					id={'polygoncreation'}
+					key={'polygoncreation'}
+					latlngs={mapStore.editorOperation.operation_volumes[0].operation_geography.coordinates}
+					popup={'Volume of operation in construction'}
+					operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
+				/>
 				}
-				{	mapStore.isEditingOperation &&
-						mapStore.editorOperation.operation_volumes[0]
-							.operation_geography.coordinates.map((latlng, index) => {
-								const length = mapStore.editorOperation.operation_volumes[0]
-									.operation_geography.coordinates.length;
-								return (
-									<OperationEditMarker
-										id={'editmarker' + index + 'l' + length}
-										key={'editmarker' + index + 'l' + length}
-										onDrag={/* istanbul ignore next */ latlng => {
-											mapStore.editOperationVolumePoint(0, index, latlng.lat, latlng.lng);
-										}}
-										onClick={/* istanbul ignore next */ () => {
-											mapStore.removeOperationVolumePoint(0, index);
-										}}
-										latlng={latlng}
-									/>
-								);
-							})}
+				{mapStore.isEditingOperation &&
+				mapStore.editorOperation.operation_volumes[0]
+					.operation_geography.coordinates.map((latlng, index) => {
+						const length = mapStore.editorOperation.operation_volumes[0]
+							.operation_geography.coordinates.length;
+						return (
+							<OperationEditMarker
+								id={'editmarker' + index + 'l' + length}
+								key={'editmarker' + index + 'l' + length}
+								onDrag={/* istanbul ignore next */ latlng => {
+									mapStore.editOperationVolumePoint(0, index, latlng.lat, latlng.lng);
+								}}
+								onClick={/* istanbul ignore next */ () => {
+									mapStore.removeOperationVolumePoint(0, index);
+								}}
+								latlng={latlng}
+							/>
+						);
+					})}
 				{/* UVR Edition or creation */}
-				{ 	mapStore.isEditingUvr &&
-						<OperationPolygon
-							id={'polygonconstr'}
-							key={'polygonconstr'}
-							latlngs={Array.from(mapStore.editorUvr.geography.coordinates)}
-							popup={'Volume of operation in construction'}
-							operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
-						/>
+				{mapStore.isEditingUvr &&
+				<OperationPolygon
+					id={'polygonconstr'}
+					key={'polygonconstr'}
+					latlngs={Array.from(mapStore.editorUvr.geography.coordinates)}
+					popup={'Volume of operation in construction'}
+					operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
+				/>
 				}
-				{ 	mapStore.isEditingUvr && mapStore.editorUvr.geography.coordinates.map((latlng, index) => {
+				{mapStore.isEditingUvr && mapStore.editorUvr.geography.coordinates.map((latlng, index) => {
 					const length = mapStore.editorUvr.geography.coordinates.length;
 					return (
 						<OperationEditMarker
@@ -300,40 +336,41 @@ const Map = ({ mode }) => {
 				<RightArea
 					forceOpen={
 						isSimulator ||
-							!mapStore.hasToShowDefaultMapPanels
+						!mapStore.hasToShowDefaultMapPanels
 					}
 					onClose={() => {
 						if (mapStore.isOperationSelected) mapStore.unsetSelectedOperation();
 						if (mapStore.isUvrSelected) mapStore.unsetSelectedUvr();
 						if (mapStore.isRfvSelected) mapStore.unsetSelectedRfv();
 						if (mapStore.isDroneSelected) mapStore.unsetSelectedDrone();
+						history.push('/');
 					}}
 				>
-					{ 	mapStore.isOperationSelected &&
-						<SelectedOperation />
+					{mapStore.isOperationSelected &&
+					<SelectedOperation/>
 					}
-					{	mapStore.isDroneSelected &&
-						<SelectedDrone gufi={mapStore.selectedDrone}	/>
+					{mapStore.isDroneSelected &&
+					<SelectedDrone gufi={mapStore.selectedDrone}/>
 					}
-					{	mapStore.isRfvSelected &&
-						<SelectedRfv id={mapStore.selectedRfv} />
+					{mapStore.isRfvSelected &&
+					<SelectedRfv id={mapStore.selectedRfv}/>
 					}
-					{	mapStore.isUvrSelected &&
-						<SelectedUvr message_id={mapStore.selectedUvr}	/>
+					{mapStore.isUvrSelected &&
+					<SelectedUvr message_id={mapStore.selectedUvr}/>
 					}
-					{	mapStore.hasToShowDefaultMapPanels &&
-						<Layers />
+					{mapStore.hasToShowDefaultMapPanels &&
+					<Layers/>
 					}
 					{/* Operation Editor Panels */}
-					{	mapStore.isEditingOperation &&
-						<OperationInfoEditor />
+					{mapStore.isEditingOperation &&
+					<OperationInfoEditor/>
 					}
 					{/* UVR Editor Panels */}
-					{  	mapStore.isEditingUvr &&
-						<UvrInfoEditor/>
+					{mapStore.isEditingUvr &&
+					<UvrInfoEditor/>
 					}
-					{	mapStore.hasToShowDefaultMapPanels &&
-						<QuickFly />
+					{mapStore.hasToShowDefaultMapPanels &&
+					<QuickFly/>
 					}
 				</RightArea>
 			</>

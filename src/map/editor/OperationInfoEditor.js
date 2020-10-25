@@ -159,7 +159,7 @@ function OperationInfoEditor() {
 					labelFor="uas_registrations"
 				>
 					{ vehicleStore.allVehicles.map((vehicle, index) => {
-						if (vehicle.owner.username === mapStore.editorOperation.owner) {
+						if (vehicle && vehicle.owner.username === mapStore.editorOperation.owner) {
 							return (
 								<Checkbox
 									key={vehicle.faaNumber}

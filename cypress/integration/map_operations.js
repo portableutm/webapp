@@ -696,11 +696,5 @@ describe('SP2: (Dashboard)', function () {
 			expect($el).to.contain('b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63');
 		});
 		cy.contains('show_on_map').click();
-		cy.wait(2000);
-		cy.get('[data-test-id="mapButtonMenu"]').click();
-		cy.contains('hamburger.dashboard').click();
-		cy.contains('sidemenu.operations_list').click();
-		cy.get('[data-test-id="opACTIVATED"]').click();
-		cy.contains('remove_from_map').click();
 	});
 });

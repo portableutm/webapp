@@ -78,6 +78,7 @@ export const BaseOperation = types
 					}
 				};
 			});
+			console.log('POST SNAPSHOT', snapshot);
 			return snapshot;
 		}
 	}));

@@ -47,6 +47,11 @@ function Pilot({ user }) {
 	}));
 
 	const changePassword = () => {
+		if (document.getElementById('newpassword').value !==
+			document.getElementById('newpasswordverification').value) {
+			setWarning('The passwords do not match');
+			return;
+		}
 		const newUserData = { ...user };
 		localStore.setPasswordChangeEnabled(false);
 		localStore.setUserDataChangeEnabled(false);

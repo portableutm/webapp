@@ -271,6 +271,7 @@ export const MapStore = types
 				operation.operation_volumes[0].effective_time_end.setUTCHours(operation.operation_volumes[0].effective_time_end.getUTCHours() + 1);
 			} else {
 				operation.owner = operation.owner.username;
+				operation.uas_registrations = operation.uas_registrations.map((uasr) => {return uasr.uvin;});
 				operation.operation_volumes[0].effective_time_begin = new Date(operation.operation_volumes[0].effective_time_begin);
 				operation.operation_volumes[0].effective_time_end = new Date(operation.operation_volumes[0].effective_time_end);
 				operation.operation_volumes[0].operation_geography = GeoJsonPolygon.create(new Polygon(operation.operation_volumes[0].operation_geography.coordinates));

@@ -11,6 +11,7 @@ import './css/animate.css';
 import * as classnames from 'classnames';
 import emptySfx from './sounds/empty.mp3';
 import { observer } from 'mobx-react';
+import ReactMarkdown from 'react-markdown';
 
 function NotificationCenter() {
 	const { notStore } = useStore('RootStore', (store) => ({ notStore: store.notificationStore }));
@@ -96,7 +97,9 @@ function NotificationCenter() {
 								<p>{notification.header}</p>
 								<p style={{ fontSize: '12px' }}>{notification.time_sent.toLocaleTimeString()}</p>
 							</div>
-							{notification.body}
+							<ReactMarkdown
+								source={notification.body}
+							/>
 							<div
 
 								className={

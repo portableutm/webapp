@@ -53,6 +53,7 @@ function User({ expanded = false,  children }) {
 						</div>
 					</Button>
 					<Button
+						data-test-id={`edit${children.username}`}
 						className={styles.button}
 						small
 						minimal

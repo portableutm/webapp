@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import L from 'leaflet';
 import 'leaflet-rotatedmarker';
 import 'leaflet-hotline';
+import { useHistory } from 'react-router-dom';
 import { useStore } from 'mobx-store-provider';
 import { when, autorun } from 'mobx';
 import { useAsObservableSource, useLocalStore } from 'mobx-react';
@@ -58,13 +59,15 @@ const hasToDrawTrail = false; // TODO: Add this to Options
  * @return {null}
  */
 function DroneMarker({ id, position, heading, altitude, risk = 'EXTREME', onClick }) {
+	const history = useHistory();
+
 	const { mapStore } = useStore(
 		'RootStore',
 		(store) => ({
 			mapStore: store.mapStore
 		}));
 
-	const obs = useAsObservableSource({ position, heading, altitude });
+	const obs = useAsObservableSource({ id, position, heading, altitude });
 	const markerStore = useLocalStore(createLeafletMarkerStore);
 
 	useEffect(() => {
@@ -89,10 +92,21 @@ function DroneMarker({ id, position, heading, altitude, risk = 'EXTREME', onClic
 					max: MAX_POINTS_HISTORY - 1
 				}); */
 
-				onClick && marker.on('click', (evt) => {
-					onClick(evt.latlng);
-					L.DomEvent.stopPropagation(evt);
-				});
+				const markerOnClick = onClick ?
+					onClick :
+					() => {
+						history.push(`/vehicle/${obs.id}`);
+						// mapStore.setSelectedDrone(obs.id);
+					};
+
+				marker.on('click',
+					(evt) =>
+						mapStore.executeFunctionInMap(markerOnClick, obs.id, evt));
+
+				marker.on('click',
+					(evt) =>
+						mapStore.executeFunctionInMap(() => mapStore.setSelectedDrone(obs.id), obs.id, evt));
+
 
 				marker.addTo(mapStore.map);
 				markerStore.setTooltipClass('tooltipAltitudeDrone');

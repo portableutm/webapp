@@ -76,20 +76,20 @@ describe('SP1: (Map) Quick Fly', function () {
 		cy.get('[data-test-id="mapquickFly2"]').click();
 	});
 	it('Opens sidebar and creates a new QF', function () {
-		cy.contains('quickfly.add_new').click();
+		cy.contains('quickfly.add_new').click({ force: true });
 		cy.get('[data-test-id="mapquickFlyNew"]').type('This is a test QF');
-		cy.contains('quickfly.save').click();
+		cy.contains('quickfly.save').click({ force: true });
 		cy.get('[data-test-id="floating-text"]').then($el => expect($el).to.contain('saved'));
 	});
 	it('Deletes some quickflies', function () {
 		cy.visit('http://localhost:2000/');
 		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="mapButtonquickFly"]').click();
-		cy.contains('quickfly.activate_delete_mode').click();
+		cy.contains('quickfly.activate_delete_mode').click({ force: true });
 		cy.contains('SUMU').click();
-		cy.contains('quickfly.deactivate_delete_mode').click();
-		cy.contains('quickfly.add_new').click();
-		cy.contains('cancel').click();
+		cy.contains('quickfly.deactivate_delete_mode').click({ force: true });
+		cy.contains('quickfly.add_new').click({ force: true });
+		cy.contains('cancel').click({ force: true });
 		cy.get('[data-test-id="warning#closer"]').click();
 	});
 });

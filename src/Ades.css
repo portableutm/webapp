@@ -290,6 +290,20 @@ th, td {
     padding: 15px;
 }
 
+.upperRightCorner {
+    position: absolute;
+    right: 5px;
+    top: 10px;
+    z-index: 99999;
+    color: rgb(57, 64, 83);
+    animation: flashingBlue 2s alternate infinite
+}
+
+@keyframes flashingBlue {
+    from{color: rgb(57, 64, 83);}
+    to{color: rgb(88, 125, 196);}
+}
+
 .mapOnClickChooser {
     position: absolute;
     background-color: #30404d;

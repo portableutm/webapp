@@ -4,6 +4,7 @@ import { values } from 'mobx';
 import _ from 'lodash';
 
 import { Operation } from './entities/Operation';
+import i18n from 'i18next';
 
 export const OperationStore = types
 	.model('OperationStore', {
@@ -146,10 +147,10 @@ export const OperationStore = types
 						if (value === 'ROGUE') {
 							// Send ROGUE notification
 							getRoot(self).notificationStore.addOperationGoneRogue(gufi);
-						} else if (value === 'ACTIVATED') {
+						} else {
 							getRoot(self).notificationStore.addInformation({
-								header: 'OPERATION ACTIVATED',
-								body: `The operation with id ${gufi} is now ACTIVATED: its Pilot is now allowed to use the reserved Volume`
+								header: i18n.t('operation_state_changed'),
+								body: i18n.t('operation_state_changed_text', { name: current.name, state: value })
 							});
 						}
 					}
