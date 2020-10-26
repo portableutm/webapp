@@ -64,7 +64,14 @@ function NewVehicle({ userId, finish /* Callback when the new vehicle is created
 			</div>
 			<Form
 				localStore={localStore}
-				properties={['nNumber', 'faaNumber', 'vehicleName', 'manufacturer', 'model', 'owner']}
+				properties={[
+					'nNumber', 'faaNumber', 'vehicleName', 'manufacturer', 'model', /* 'material',
+					'year', 'serial', 'weight', 'payload', 'takeoff', 'sensor_type',
+					'wingspan', 'length', 'height', 'color', 'max_speed', 'cruise_speed', 'landing_speed',
+					'batterylifemin', 'radiomt', 'ceilingmt', 'controlsystem', 'motortype',
+					'fueltype', 'rotortype', 'rotormaterial', 'maintenance', 'remarks', */
+					'owner'
+				]}
 			/>
 			<RadioGroup
 				label={t('vehicles.class')}
