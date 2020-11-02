@@ -200,6 +200,15 @@ function Ades() {
 
 	console.count('Render Ades');
 
+	/* Check that all instance variables have been correctly set */
+	if (!process.env.REACT_APP_ADESAPI || !process.env.REACT_APP_ADESISDINACIA) {
+		return <div style={{ color: 'white', backgroundColor: 'red' }}>
+			PortableUTM WebApp - INSTANCE IS NOT CONFIGURED <br/>
+			{`process.env.REACT_APP_ADESAPI ${process.env.REACT_APP_ADESAPI}`} <br/>
+			{`process.env.REACT_APP_ADESISDINACIA ${process.env.REACT_APP_ADESISDINACIA}`} <br/>
+		</div>;
+	}
+
 	if (!rootStore.authStore.isLoggedIn) {
 		return (
 			<StateProvider value={rootStore}>
