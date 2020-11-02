@@ -28,7 +28,7 @@
   "click_to_expand": "Show properties",
   "click_to_collapse": "Hide properties",
   "pilot_homescreen_title": "Newsfeed",
-  "pilot_homescreen": "Welcome! All systems are operative!",
+  "pilot_homescreen": "### PortableUTM v0.5.2-DEV\nThere's no new information to be shown in this moment.",
   "operation_state_changed": "Operation state has changed!",
   "operation_state_changed_text": "The operation *{{name}}* is now in the **{{state}}** state"
 }

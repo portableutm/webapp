@@ -77,9 +77,9 @@
     pointer-events: none;
     background-image:
             linear-gradient(to top,
-            rgba(44, 44, 89, 0) 0%,
-            rgb(44, 44, 89) 25%,
-            rgb(44, 44, 89) 100%);
+            rgba(57, 64, 83, 0) 0%,
+            rgb(48, 64, 77) 25%,
+            rgb(48, 64, 77) 100%);
     left: 0;
     right: 12px;
     height: 60px;
@@ -93,8 +93,8 @@
     pointer-events: none;
     background-image:
             linear-gradient(to bottom,
-            rgba(44, 44, 89, 0),
-            rgb(44, 44, 89) 100%);
+            rgba(57, 64, 83, 0),
+            rgb(48, 64, 77) 100%);
     left: 0;
     right: 12px;
     height: 60px;
