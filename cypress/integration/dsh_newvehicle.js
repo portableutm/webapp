@@ -28,8 +28,8 @@ describe('Use Case: Add new vehicle', function () {
 		cy.get('#text-manufacturer').type('DJI', { force: true });
 		cy.get('#text-model').type(' 303', { force: true });
 		cy.contains('Fixed-wing').click();
-		cy.contains('submit').click();
-		cy.wait('@postVehicle');
+		//cy.contains('submit').click();
+		//cy.wait('@postVehicle');
 	});
 	
 	/*

@@ -60,7 +60,7 @@ const HomeScreen = () => {
 				/>
 				<SimpleValue
 					title={t('home.vehicles')}
-					value={vehStore.count}
+					value={vehStore.counts.vehicleCount}
 					color="darkmagenta"
 				/>
 				{/*
