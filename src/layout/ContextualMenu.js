@@ -23,7 +23,7 @@ function ContextualMenu() {
 			{authStore.isAdmin &&
 			<MenuItem icon="polygon-filter" text={t('hamburger.createnewuvr')} onClick={() => history.push('/uvr/new')}/>
 			}
-			<MenuItem text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
+			<MenuItem style={{ fontFamily: '"Maven Pro", sans-serif' }} text={'v' + adesVersion} disabled={true}/>
 		</Menu>
 	);
 }

@@ -56,11 +56,11 @@
     width: 100%;
     grid-area: 2 / 2 / 3 / 3;
     margin: auto;
-    background-color: rgba(237, 255, 236, 0.8) !important;
+    background-color: rgb(44, 44, 89);
 }
 
 .window * {
-    color: #2D2C59 !important;
+    color: white !important;
 }
 
 .windowVerification {
