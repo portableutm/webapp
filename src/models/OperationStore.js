@@ -104,7 +104,7 @@ export const OperationStore = types
 					//const operationSnapshot = getSnapshot(newOperation);
 					const response =
 						yield getRoot(self).axiosInstance.post('operation', newOperation, { headers: { auth: getRoot(self).authStore.token } });
-					yield self.fetch();
+					yield self.fetch(getRoot(self).authStore.role === 'admin');
 					getRoot(self).setFloatingText('Operation saved successfully');
 					return response;
 				} catch (error) {
