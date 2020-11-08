@@ -30,6 +30,7 @@ export const OperationStore = types
 			const correctedOperation = _.cloneDeep(operation);
 			correctedOperation.submit_time = new Date(operation.submit_time);
 			correctedOperation.update_time = new Date(operation.update_time);
+			correctedOperation.creator = operation.creator.username;
 			correctedOperation.uas_registrations = operation.uas_registrations.map(uasr => {
 				const newUasr = _.cloneDeep(uasr);
 				newUasr.date = new Date(uasr.date);
@@ -103,7 +104,7 @@ export const OperationStore = types
 					//const operationSnapshot = getSnapshot(newOperation);
 					const response =
 						yield getRoot(self).axiosInstance.post('operation', newOperation, { headers: { auth: getRoot(self).authStore.token } });
-					yield self.fetch();
+					yield self.fetch(getRoot(self).authStore.role === 'admin');
 					getRoot(self).setFloatingText('Operation saved successfully');
 					return response;
 				} catch (error) {

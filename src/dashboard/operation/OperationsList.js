@@ -198,156 +198,155 @@ function OperationsList() {
 						{t('operations.plural_generic').toUpperCase()}
 					</h1>
 				</div>
-				{	store.allOperations.length > 0 &&
-					<>
-						<div
-							className={styles.filters}
+				<>
+					<div
+						className={styles.filters}
+					>
+						<HTMLSelect
+							id='filter'
+							name="OperationFilterProperty"
+							className={styles.filterProperty}
+							value={store.filterProperty}
+							onChange={(event) => store.setFilterProperty(event.currentTarget.value)}
 						>
-							<HTMLSelect
-								id='filter'
-								name="OperationFilterProperty"
-								className={styles.filterProperty}
-								value={store.filterProperty}
-								onChange={(event) => store.setFilterProperty(event.currentTarget.value)}
-							>
-								<option value="name">Name</option>
-								<option value="owner">Owner</option>
-							</HTMLSelect>
-							<InputGroup
-								className={styles.filterTextInput}
-								leftIcon="search"
-								onChange={(evt) => filterStore.setText(evt.target.value)}
-								placeholder={t('map:filter.bytext.description')}
-								value={filterStore.text}
-							/>
-							<Checkbox
-								className={styles.filterTextInfo}
-								data-test-id='historical'
-								checked={store.isInHistoricalMode}
-								onChange={(evt) => {
-									store.toggleHistoricalMode(evt.target.checked);
-								}}
-							>
-								{t('map:historical_mode_description')}
-							</Checkbox>
-							{/*<p
+							<option value="name">Name</option>
+							<option value="owner">Owner</option>
+						</HTMLSelect>
+						<InputGroup
+							className={styles.filterTextInput}
+							leftIcon="search"
+							onChange={(evt) => filterStore.setText(evt.target.value)}
+							placeholder={t('map:filter.bytext.description')}
+							value={filterStore.text}
+						/>
+						<Checkbox
+							className={styles.filterTextInfo}
+							data-test-id='historical'
+							checked={store.isInHistoricalMode}
+							onChange={(evt) => {
+								store.toggleHistoricalMode(evt.target.checked);
+							}}
+						>
+							{t('map:historical_mode_description')}
+						</Checkbox>
+						{/*<p
 								className={styles.filterTextInfo}
 							>
 								{`Showing ${store.counts.matchingTextAndStateCount} out of ${store.counts.operationCount} operations`}
 							</p>*/}
-						</div>
-						<div
-							className={styles.filters2}
+					</div>
+					<div
+						className={styles.filters2}
+					>
+						<Checkbox
+							data-test-id='layersACCEPTED'
+							checked={store.filterShowAccepted}
+							onChange={(evt) => {
+								store.setFilterAccepted(evt.target.checked);
+							}}
 						>
-							<Checkbox
-								data-test-id='layersACCEPTED'
-								checked={store.filterShowAccepted}
-								onChange={(evt) => {
-									store.setFilterAccepted(evt.target.checked);
-								}}
-							>
-								{t('map:filter.accepted')}
-							</Checkbox>
-							<Checkbox
-								data-test-id='layersPENDING'
-								checked={store.filterShowPending}
-								onChange={(evt) => {
-									store.setFilterPending(evt.target.checked);
-								}}
-							>
-								{t('map:filter.pending')}
-							</Checkbox>
-							<Checkbox
-								data-test-id='layersACTIVATED'
-								checked={store.filterShowActivated}
-								onChange={(evt) => {
-									store.setFilterActivated(evt.target.checked);
-								}}
-							>
-								{t('map:filter.activated')}
-							</Checkbox>
-							<Checkbox
-								data-test-id='layersROGUE'
-								checked={store.filterShowRogue}
-								onChange={(evt) => {
-									store.setFilterRogue(evt.target.checked);
-								}}
-							>
-								{t('map:filter.rogue')}
-							</Checkbox>
-							<Checkbox
-								data-test-id='layersCLOSED'
-								checked={store.filterShowClosed}
-								onChange={(evt) => {
-									store.setFilterClosed(evt.target.checked);
-								}}
-							>
-								{t('map:filter.closed')}
-							</Checkbox>
-						</div>
-						<div
-							className={styles.filters}
+							{t('map:filter.accepted')}
+						</Checkbox>
+						<Checkbox
+							data-test-id='layersPENDING'
+							checked={store.filterShowPending}
+							onChange={(evt) => {
+								store.setFilterPending(evt.target.checked);
+							}}
 						>
-							<p className={styles.filterLabel}>
+							{t('map:filter.pending')}
+						</Checkbox>
+						<Checkbox
+							data-test-id='layersACTIVATED'
+							checked={store.filterShowActivated}
+							onChange={(evt) => {
+								store.setFilterActivated(evt.target.checked);
+							}}
+						>
+							{t('map:filter.activated')}
+						</Checkbox>
+						<Checkbox
+							data-test-id='layersROGUE'
+							checked={store.filterShowRogue}
+							onChange={(evt) => {
+								store.setFilterRogue(evt.target.checked);
+							}}
+						>
+							{t('map:filter.rogue')}
+						</Checkbox>
+						<Checkbox
+							data-test-id='layersCLOSED'
+							checked={store.filterShowClosed}
+							onChange={(evt) => {
+								store.setFilterClosed(evt.target.checked);
+							}}
+						>
+							{t('map:filter.closed')}
+						</Checkbox>
+					</div>
+					<div
+						className={styles.filters}
+					>
+						<p className={styles.filterLabel}>
 								Sorting by property:
-							</p>
-							<HTMLSelect
-								id='sorter'
-								name="OperationSorter"
-								className={styles.filterProperty}
-								value={store.sortingProperty}
-								minimal
-								onChange={(event) => store.setSortingProperty(event.currentTarget.value)}
-							>
-								<option value="name">Name</option>
-								<option value="flight_number">Flight No.</option>
-								<option value="owner_name">Owner First Name</option>
-								<option value="owner_lastname">Owner Last Name</option>
-								<option value="owner_username">Owner Username</option>
-								<option value="start">Start</option>
-								<option value="end">End</option>
-							</HTMLSelect>
-							<p className={styles.filterLabel}>
+						</p>
+						<HTMLSelect
+							id='sorter'
+							name="OperationSorter"
+							className={styles.filterProperty}
+							value={store.sortingProperty}
+							minimal
+							onChange={(event) => store.setSortingProperty(event.currentTarget.value)}
+						>
+							<option value="name">Name</option>
+							<option value="flight_number">Flight No.</option>
+							<option value="owner_name">Owner First Name</option>
+							<option value="owner_lastname">Owner Last Name</option>
+							<option value="owner_username">Owner Username</option>
+							<option value="start">Start</option>
+							<option value="end">End</option>
+						</HTMLSelect>
+						<p className={styles.filterLabel}>
 								in
-							</p>
-							<HTMLSelect
-								id='sorter'
-								name="OperationSortingOrder"
-								className={styles.filterProperty}
-								value={store.sortingOrder}
-								minimal
-								onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
-							>
-								<option value='asc'>Ascending</option>
-								<option value='desc'>Descending</option>
-							</HTMLSelect>
-							<p className={styles.filterLabel}>
+						</p>
+						<HTMLSelect
+							id='sorter'
+							name="OperationSortingOrder"
+							className={styles.filterProperty}
+							value={store.sortingOrder}
+							minimal
+							onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
+						>
+							<option value='asc'>Ascending</option>
+							<option value='desc'>Descending</option>
+						</HTMLSelect>
+						<p className={styles.filterLabel}>
 								order
-							</p>
-						</div>
-						<GenericList>
-							{store.operationsWithVisibility.map((op) => {
-								if (op._matchesFiltersByNames && op._matchesFiltersByStates) {
-									return <Operation
-										key={op.gufi}
-										expanded={op.gufi === id}
-										selected={op._visibility}
-										operation={op}
-										changeState={store.updateState}
-										isPilot={authStore.role === 'pilot'}
-									/>;
-								} else {
-									return null;
-								}
-							})}
-						</GenericList>
-					</>
-				}
-				{	store.allOperations.length === 0 &&
-				<h2>
-					{t('operations.zero_operations')}
-				</h2>
-				}
+						</p>
+					</div>
+					<GenericList>
+						{store.operationsWithVisibility.map((op) => {
+							if (op._matchesFiltersByNames && op._matchesFiltersByStates) {
+								return <Operation
+									key={op.gufi}
+									expanded={op.gufi === id}
+									selected={op._visibility}
+									operation={op}
+									changeState={store.updateState}
+									isPilot={authStore.role === 'pilot'}
+								/>;
+							} else {
+								return null;
+							}
+						})}
+					</GenericList>
+					{store.counts.matchingTextAndStateCount === 0 &&
+					<h3 style={{ textAlign: 'center' }}>
+						{t('operations.zero_operations')}
+					</h3>
+					}
+				</>
+
 			</>
 		);
 	} else {
