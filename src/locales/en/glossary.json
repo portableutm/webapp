@@ -1,13 +1,24 @@
 {
   "users": {
     "plural_generic": "Users",
-    "firstname": "First name",
-    "lastname": "Last name",
+    "firstName": "First name",
+    "lastName": "Last name",
     "username": "Username",
     "email": "E-mail",
     "role": "Role",
     "role_pilot": "Pilot",
-    "role_admin": "Monitor"
+    "role_admin": "Monitor",
+    "password": "Password",
+    "repeat_password": "Re-enter password",
+    "address": "Address",
+    "document_type": "Govt. issued ID type",
+    "document_number": "Govt. issued ID number",
+    "phone": "Telephone number",
+    "cellphone": "Mobile phone number",
+    "nationality": "Nationality",
+    "document_file": "Scan of your document",
+    "permit_front_file": "Scan of the front of your Pilot Permit",
+    "permit_back_file": "Scan of the back of your Pilot Permit"
   },
   "operations": {
     "plural_generic": "Operations",
