@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Button, Callout, Intent, Spinner } from '@blueprintjs/core';
+import { Button, Callout, HTMLSelect, InputGroup, Intent, Spinner } from '@blueprintjs/core';
 import { useTranslation } from 'react-i18next';
 import { useStore } from 'mobx-store-provider';
 import { observer, useObserver } from 'mobx-react';
@@ -10,6 +10,7 @@ import { useHistory } from 'react-router-dom';
 import styles from '../generic/GenericList.module.css';
 import GenericList, { GenericListLine } from '../generic/GenericList';
 import Pilot from './Pilot';
+import { ISDINACIA } from '../../consts';
 
 function User({ expanded = false,  children }) {
 	const { t, } = useTranslation(['glossary', 'common']);
@@ -84,28 +85,44 @@ function User({ expanded = false,  children }) {
 		>
 			{showProperties &&
 			<div className="animated fadeIn faster">
-				<GenericListLine>
-					{t('users.username')}
-					<div data-test-id='dash#selected#username'>
-						{children.username}
-					</div>
-				</GenericListLine>
-				<GenericListLine>
-					{t('users.firstname')}
-					{children.firstName}
-				</GenericListLine>
-				<GenericListLine>
-					{t('users.lastname')}
-					{children.lastName}
-				</GenericListLine>
-				<GenericListLine>
-					{t('users.email')}
-					{children.email}
-				</GenericListLine>
-				<GenericListLine>
-					{t('users.role')}
-					{children.role}
-				</GenericListLine>
+				{ Object.keys(children).map((prop => {
+					if (prop !== 'dinacia_user' && prop !== 'password' && prop !== '_matchesFiltersByNames') {
+						return (
+							<GenericListLine key={prop}>
+								{t(`users.${prop}`)}
+								<div data-test-id={`dash#selected#${prop}`}>
+									{children[prop]}
+								</div>
+							</GenericListLine>
+						);
+					} else {
+						return null;
+					}
+				}))}
+				{ ISDINACIA && children.dinacia_user != void 0 && Object.keys(children.dinacia_user).map((prop => {
+					if (prop !== 'dinacia_company') {
+						return (
+							<GenericListLine key={prop}>
+								{t(`users.${prop}`)}
+								<div data-test-id={`dash#selected#${prop}`}>
+									{children[prop]}
+								</div>
+							</GenericListLine>
+						);
+					} else {
+						return null;
+					}
+				}))}
+				{ ISDINACIA && children.dinacia_user != void 0 && children.dinacia_user.dinacia_company != void 0 && Object.keys(children.dinacia_user.dinacia_company).map((prop => {
+					return (
+						<GenericListLine key={prop}>
+							{t(`users.${prop}`)}
+							<div data-test-id={`dash#selected#${prop}`}>
+								{children[prop]}
+							</div>
+						</GenericListLine>
+					);
+				}))}
 				{/* TODO: ADD volumesOfInterest! */}
 			</div>
 			}
@@ -118,6 +135,8 @@ function User({ expanded = false,  children }) {
 
 function UsersList() {
 	const { t, } = useTranslation('glossary');
+	const history = useHistory();
+
 	const { store } = useStore(
 		'RootStore',
 		(store) => ({
@@ -137,18 +156,104 @@ function UsersList() {
 			</div>
 			}
 			{	store.allUsers.length > 0 &&
-				<GenericList>
-					{store.allUsers.map((user) => {
-						return (
-							<User
-								key={user.username}
-								expanded={user.username === username}
-							>
-								{user}
-							</User>
-						);
-					})}
-				</GenericList>
+				<>
+					<div
+						className={styles.filters}
+					>
+						<HTMLSelect
+							id='filter'
+							name="UvrFilterProperty"
+							className={styles.filterProperty}
+							value={store.filterProperty}
+							onChange={(event) => store.setFilterProperty(event.currentTarget.value)}
+						>
+							<option value="username">{t('users.username')}</option>
+							<option value="firstName">{t('users.firstName')}</option>
+							<option value="lastName">{t('users.lastName')}</option>
+							<option value="email">{t('users.email')}</option>
+							<option value="role">{t('users.role')}</option>
+						</HTMLSelect>
+						<InputGroup
+							className={styles.filterTextInput}
+							leftIcon="search"
+							onChange={(evt) => store.setFilterByText(evt.target.value)}
+							placeholder={t('map:filter.bytext.description')}
+							value={store.filterMatchingText}
+						/>
+						<p
+							className={styles.filterTextInfo}
+						>
+							{`Showing ${store.counts.matchesFilters} out of ${store.counts.userCount} vehicles`}
+						</p>
+					</div>
+					<div
+						className={styles.filters}
+					>
+						<p className={styles.filterLabel}>
+							Sorting by property:
+						</p>
+						<HTMLSelect
+							id='sorter'
+							name="UvrSorter"
+							className={styles.filterProperty}
+							value={store.sortingProperty}
+							minimal
+							onChange={(event) => store.setSortingProperty(event.currentTarget.value)}
+						>
+							<option value="username">{t('users.username')}</option>
+							<option value="firstName">{t('users.firstName')}</option>
+							<option value="lastName">{t('users.lastName')}</option>
+							<option value="email">{t('users.email')}</option>
+							<option value="role">{t('users.role')}</option>
+						</HTMLSelect>
+						<p className={styles.filterLabel}>
+							in
+						</p>
+						<HTMLSelect
+							id='sorter'
+							name="UvrSortingOrder"
+							className={styles.filterProperty}
+							value={store.sortingOrder}
+							minimal
+							onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
+						>
+							<option value='asc'>Ascending</option>
+							<option value='desc'>Descending</option>
+						</HTMLSelect>
+						<p className={styles.filterLabel}>
+							order
+						</p>
+					</div>
+					<div
+						className={styles.actionArea}
+					>
+						<Button
+							className={styles.buttonAction}
+							icon='add'
+							onClick={() => {
+								history.push('/dashboard/users/new');
+							}}
+						>
+							{t('add_user')}
+						</Button>
+					</div>
+					<GenericList>
+						{store.usersWithVisibility.map((user) => {
+							if (user._matchesFiltersByNames) {
+								return (
+									<User
+										key={user.username}
+										expanded={user.username === username}
+									>
+										{user}
+									</User>
+								);
+							} else {
+								return null;
+							}
+						})}
+					</GenericList>
+				</>
 			}
 			{	store.allUsers.length === 0 &&
 				<h2>

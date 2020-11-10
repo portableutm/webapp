@@ -1,10 +1,15 @@
 import { flow, getRoot, types } from 'mobx-state-tree';
 import { User } from './entities/User';
 import { values } from 'mobx';
+import _ from 'lodash';
 
 export const UserStore = types
 	.model('UserStore', {
-		users: types.map(User)
+		users: types.map(User),
+		filterMatchingText: '', // Those that match this string are displayed in the layers list (search)
+		filterProperty: 'username',
+		sortingProperty: 'username',
+		sortingOrder: 'asc'
 	})
 	.volatile(() => ({
 		hasFetched: false
@@ -45,6 +50,19 @@ export const UserStore = types
 					console.groupEnd();
 				}
 			}),
+			setFilterByText(text) {
+				self.filterMatchingText = text;
+			},
+			setFilterProperty(property) {
+				self.filterProperty = property;
+			},
+			/* Sorting */
+			setSortingProperty(prop) {
+				self.sortingProperty = prop;
+			},
+			setSortingOrder(order) {
+				self.sortingOrder = order;
+			},
 			reset() {
 				self.hasFetched = false;
 			}
@@ -67,6 +85,34 @@ export const UserStore = types
 				} else {
 					return null;
 				}
+			},
+			get usersWithVisibility() {
+				return _
+					.chain(values(self.users))
+					.map((user) => {
+						const userWithVisibility = _.cloneDeep(user);
+						userWithVisibility._matchesFiltersByNames = _.includes(
+							user[self.filterProperty].toLowerCase(),
+							self.filterMatchingText.toLowerCase()
+						);
+						return userWithVisibility;})
+					.orderBy(user => {
+						return user[self.sortingProperty];
+					}, self.sortingOrder)
+					.value();
+			},
+			get counts() {
+				const users = values(self.users);
+				let userCount = 0;
+				let matchesFilters = 0;
+				_.forEach(users, (user) => {
+					userCount++;
+					if (_.includes(
+						user[self.filterProperty].toLowerCase(),
+						self.filterMatchingText.toLowerCase()
+					)) matchesFilters++;
+				});
+				return { userCount, matchesFilters };
 			}
 		};
 	});
