@@ -175,6 +175,7 @@ function Operation({ expanded = false, selected = false, operation, changeState,
 
 
 function OperationsList() {
+	const history = useHistory();
 	const { t, } = useTranslation(['glossary','map']);
 	const { store, authStore } = useStore(
 		'RootStore',
@@ -323,6 +324,19 @@ function OperationsList() {
 						<p className={styles.filterLabel}>
 								order
 						</p>
+					</div>
+					<div
+						className={styles.actionArea}
+					>
+						<Button
+							className={styles.buttonAction}
+							icon='add'
+							onClick={() => {
+								history.push('/operation/new');
+							}}
+						>
+							{t('add_operation')}
+						</Button>
 					</div>
 					<GenericList>
 						{store.operationsWithVisibility.map((op) => {

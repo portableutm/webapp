@@ -173,5 +173,7 @@
   "info": "More...",
   "approve": "Approve",
   "reject": "Reject",
-  "upload": "Upload"
+  "upload": "Upload",
+  "add_user": "Create new user",
+  "add_operation": "Create new operation"
 }
