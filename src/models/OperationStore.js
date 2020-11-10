@@ -30,7 +30,7 @@ export const OperationStore = types
 			const correctedOperation = _.cloneDeep(operation);
 			correctedOperation.submit_time = new Date(operation.submit_time);
 			correctedOperation.update_time = new Date(operation.update_time);
-			correctedOperation.creator = operation.creator.username;
+			//correctedOperation.creator = operation.creator.username;
 			correctedOperation.uas_registrations = operation.uas_registrations.map(uasr => {
 				const newUasr = _.cloneDeep(uasr);
 				newUasr.date = new Date(uasr.date);
