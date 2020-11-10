@@ -45,7 +45,7 @@
     "owner": "Piloto (usuario)",
     "owner_desc": "",
     "faaNumber": "Número de registro oficial",
-    "faaNumber_desc": "Matricula DINACIA",
+    "faaNumber_desc": "Ingrese la matrícula si dispone de una o deje en blanco para que se le asigne automáticamente",
     "vehicleName": "Nombre",
     "vehicleName_desc": "Nombre corto para recordar el vehículo, o identificador interno de la empresa",
     "manufacturer": "Marca",

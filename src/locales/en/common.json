@@ -30,5 +30,6 @@
   "pilot_homescreen_title": "Newsfeed",
   "pilot_homescreen": "### PortableUTM v0.5.2-DEV\nThere's no new information to be shown in this moment.",
   "operation_state_changed": "Operation state has changed!",
-  "operation_state_changed_text": "The operation *{{name}}* is now in the **{{state}}** state"
+  "operation_state_changed_text": "The operation *{{name}}* is now in the **{{state}}** state",
+  "upload": "common:upload"
 }

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import GenericList, { GenericListLine } from '../generic/GenericList';
 import styles from '../generic/GenericList.module.css';
 import NewVehicle from './NewVehicle';
+import { ISDINACIA } from '../../consts';
 
 function Vehicle({ v }) {
 	const { t,  } = useTranslation(['glossary','common']);
@@ -24,7 +25,7 @@ function Vehicle({ v }) {
 			title={
 				<div className={styles.title} onClick={toggleOperation}>
 					<p className={styles.titleText}>
-						{v.vehicleName + ' (' + v.faaNumber + ')'}
+						{v.asShortDisplayString}
 					</p>
 					<Button
 						className={styles.button}
@@ -57,14 +58,18 @@ function Vehicle({ v }) {
 					{t('vehicles.date')}
 					{v.date.toLocaleString()}
 				</GenericListLine>
-				<GenericListLine>
-					{t('vehicles.nNumber')}
-					{v.nNumber}
-				</GenericListLine>
-				<GenericListLine>
-					{t('vehicles.faaNumber')}
-					{v.faaNumber}
-				</GenericListLine>
+				{ !ISDINACIA &&
+				<>
+					<GenericListLine>
+						{t('vehicles.nNumber')}
+						{v.nNumber}
+					</GenericListLine>
+					<GenericListLine>
+						{t('vehicles.faaNumber')}
+						{v.faaNumber}
+					</GenericListLine>
+				</>
+				}
 				<GenericListLine>
 					{t('vehicles.name')}
 					{v.vehicleName}
@@ -101,6 +106,51 @@ function Vehicle({ v }) {
 					{t('vehicles.registeredBy')}
 					{v.registeredBy.asDisplayString}
 				</GenericListLine>
+				{ 	ISDINACIA &&
+					v.dinacia_vehicle !== null &&
+					['caa_registration',
+						'usage',
+						'construction_material',
+						'year',
+						'empty_weight',
+						'max_weight',
+						'takeoff_method',
+						'sensor_type_and_mark',
+						'packing',
+						'longitude',
+						'height',
+						'color',
+						'max_speed',
+						'cruise_speed',
+						'landing_speed',
+						'time_autonomy',
+						'radio_accion',
+						'ceiling',
+						'communication_control_system_command_navigation_vigilance',
+						'maintenance_inspections',
+						'remarks',
+						'engine_manufacturer',
+						'engine_type',
+						'engine_model',
+						'engine_power',
+						'engine_fuel',
+						'engine_quantity_batteries',
+						'propeller_type',
+						'propeller_model',
+						'propeller_material',
+						'serial_number'
+					].map((dinaciaProp) => {
+						if (v.dinacia_vehicle[dinaciaProp] !== null) {
+							return <GenericListLine key={dinaciaProp}>
+								{t(`vehicles.${dinaciaProp}`)}
+								{v.dinacia_vehicle[dinaciaProp]}
+							</GenericListLine>;
+						} else {
+							return null;
+						}
+					})
+
+				}
 			</div>
 			}
 		</Callout>
@@ -260,7 +310,8 @@ function VehiclesList() {
 								} else {
 									if (vehicle._matchesFiltersByNames) {
 										return <Vehicle
-											key={vehicle.faaNumber} v={vehicle}
+											key={vehicle.faaNumber}
+											v={vehicle}
 										/>;
 									} else {
 										return null;

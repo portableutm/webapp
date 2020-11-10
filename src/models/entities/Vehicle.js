@@ -1,5 +1,6 @@
 import { types } from 'mobx-state-tree';
 import { User } from './User';
+import { BaseDinaciaVehicle, DinaciaVehicle } from './DinaciaVehicle';
 
 export const BaseVehicle = types
 	// Used as a base class for vehicles. Mostly for data entry and publishing to the server.
@@ -9,15 +10,29 @@ export const BaseVehicle = types
 		vehicleName: types.string,
 		manufacturer: types.string,
 		model: types.string,
-		'class': types.enumeration('VehicleType', ['MULTIROTOR', 'FIXEDWING']),
-		owner: types.string,
-		registeredBy: types.string
+		'class': types.string,
+		owner_id: types.maybe(types.string),
+		//registeredBy: types.string,
+		dinacia_vehicle: types.maybeNull(BaseDinaciaVehicle) // If the instance is NOT DINACIA, this MUST BE null
 	})
 	.actions(self => {
 		return {
 			setProperty(prop, value) {
 				try {
 					self[prop] = value;
+					return true;
+				} catch (error) {
+					return false;
+				}
+			},
+			setDinaciaProperty(prop, value) {
+				try {
+					if (prop === 'serial_number_file') {
+						if (!(value instanceof File) || value.type.substring(0,5) !== 'image') {
+							return false;
+						}
+					}
+					self.dinacia_vehicle[prop] = value;
 					return true;
 				} catch (error) {
 					return false;
@@ -32,10 +47,22 @@ export const Vehicle = BaseVehicle
 		uvin: types.identifier,
 		date: types.Date,
 		owner: User,
-		registeredBy: User
+		registeredBy: User,
+		dinacia_vehicle: types.maybeNull(DinaciaVehicle) // If the instance is NOT DINACIA, this MUST BE null
 	})
 	.views(self => ({
+		get asShortDisplayString() {
+			if (self.dinacia_vehicle === null) {
+				return `${self.vehicleName} (${self.faaNumber})`;
+			} else {
+				return `${self.vehicleName} (${self.dinacia_vehicle.caa_registration})`;
+			}
+		},
 		get asDisplayString() {
-			return `${self.vehicleName}: ${self.manufacturer} ${self.model} (${self.faaNumber}) - ${self.owner.asDisplayString}`;
+			if (self.dinacia_vehicle === null) {
+				return `${self.vehicleName}: ${self.manufacturer} ${self.model} (${self.faaNumber}) - ${self.owner.asDisplayString}`;
+			} else {
+				return `${self.vehicleName}: ${self.manufacturer} ${self.model} (${self.dinacia_vehicle.caa_registration}) - ${self.owner.asDisplayString}`;
+			}
 		}
 	}));

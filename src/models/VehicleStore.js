@@ -2,6 +2,7 @@ import { flow, getRoot, getSnapshot, types } from 'mobx-state-tree';
 import { values } from 'mobx';
 import { Vehicle } from './entities/Vehicle';
 import _ from 'lodash';
+import { ISDINACIA } from '../consts';
 
 export const VehicleStore = types
 	.model('VehicleStore',{
@@ -44,7 +45,19 @@ export const VehicleStore = types
 			post: flow(function* post(vehicle) {
 				try {
 					const vehicleSnapshot = getSnapshot(vehicle);
-					const response = yield getRoot(self).axiosInstance.post('vehicle', vehicleSnapshot,{ headers: { auth: getRoot(self).authStore.token } });
+					const data = new FormData();
+					for (const key in vehicleSnapshot) {
+						if (key !== 'dinacia_vehicle') {
+							// noinspection JSUnfilteredForInLoop
+							data.append(key, vehicleSnapshot[key]);
+						} else if (ISDINACIA) {
+							data.append('dinacia_vehicle_str', JSON.stringify(vehicleSnapshot.dinacia_vehicle));
+							data.append('serial_number_file', vehicle.dinacia_vehicle.serial_number_file);
+						}
+					}
+					const response = yield getRoot(self)
+						.axiosInstance
+						.post('vehicle', data,{ headers: { 'Content-Type': 'multipart/form-data', auth: getRoot(self).authStore.token } });
 					yield self.fetch();
 					getRoot(self).setFloatingText('Vehicle saved successfully! ');
 					return response;
@@ -80,12 +93,16 @@ export const VehicleStore = types
 				return _
 					.chain(values(self.vehicles))
 					.map((vehicle) => {
-						const uvrWithVisibility = _.cloneDeep(vehicle);
-						uvrWithVisibility._matchesFiltersByNames = _.includes(
+						const vehicleWithVisibility = _.cloneDeep(vehicle);
+						vehicleWithVisibility._matchesFiltersByNames = _.includes(
 							vehicle[self.filterProperty].toLowerCase(),
 							self.filterMatchingText.toLowerCase()
 						);
-						return uvrWithVisibility;})
+						vehicleWithVisibility.asDisplayString = vehicle.asDisplayString;
+						vehicleWithVisibility.owner.asDisplayString = vehicle.owner.asDisplayString;
+						vehicleWithVisibility.registeredBy.asDisplayString = vehicle.registeredBy.asDisplayString;
+						vehicleWithVisibility.asShortDisplayString = vehicle.asShortDisplayString;
+						return vehicleWithVisibility;})
 					.orderBy(vehicle => {
 						return vehicle[self.sortingProperty];
 					}, self.sortingOrder)

@@ -5,7 +5,8 @@ const USERS_DATA_TOO_OLD = 2 * 60000; // Only fetch user list if saved user list
 
 //const hostname = window && window.location && window.location.hostname;
 //console.log(`API::${process.env.ADES_API}`)
-API = process.env.REACT_APP_ADESAPI;
+API = process.env.REACT_APP_ADESAPI || 'error';
+const ISDINACIA = true;
 DEBUG = process.env.REACT_APP_DEBUG || DEBUG;
 
-export { API, DEBUG, adesVersion, USERS_DATA_TOO_OLD };
+export { API, DEBUG, adesVersion, USERS_DATA_TOO_OLD, ISDINACIA };

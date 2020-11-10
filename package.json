@@ -39,9 +39,9 @@
     "use-sound": "^1.0.2"
   },
   "scripts": {
-    "start": "set PORT=2000 && react-scripts -r @cypress/instrument-cra start",
-    "start-localhost": "cross-env REACT_APP_ADESAPI=\"http://localhost:3000/\" react-scripts -r @cypress/instrument-cra start",
-    "start-dev": "cross-env REACT_APP_DEBUG=true react-scripts -r @cypress/instrument-cra start",
+    "start": "cross-env REACT_APP_ADESAPI=\"http://68.183.22.43:3000/\" react-scripts -r @cypress/instrument-cra start",
+    "start-localhost": "cross-env REACT_APP_ADESAPI=\"http://localhost:3000/\" REACT_APP_DEBUG=true react-scripts -r @cypress/instrument-cra start",
+    "start-dev": "cross-env REACT_APP_ADESAPI=\"http://68.183.22.43:3000/\" REACT_APP_DEBUG=true react-scripts -r @cypress/instrument-cra start",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns \\\"node_modules/(?!use-global-hook)/\\\"",
     "eject": "react-scripts eject",
@@ -84,7 +84,6 @@
     "@testing-library/react": "^9.5.0",
     "cross-env": "^7.0.2",
     "cypress": "^5.4.0",
-    "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.3",

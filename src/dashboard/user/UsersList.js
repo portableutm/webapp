@@ -71,7 +71,7 @@ function User({ expanded = false,  children }) {
 						minimal
 						icon='known-vehicle'
 						intent={Intent.SUCCESS}
-						onClick={() => history.push('/dashboard/vehicles/' + children.username)}
+						onClick={(evt) => { evt.stopPropagation(); history.push('/dashboard/vehicles/' + children.username);}}
 					>
 						<div className={styles.buttonHoveredTooltip}>
 							{t('vehicles.plural_generic')}

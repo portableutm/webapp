@@ -16,7 +16,7 @@ import { NotificationStore } from './NotificationStore';
 export const RootStore = types
 	.model('RootStore', {
 		authStore: types.optional(AuthStore, {}),
-		operationStore: types.optional(OperationStore, { operations: {} }),
+		operationStore: types.optional(OperationStore, { operations: {}, oldOperations: {}, filterShownIds: [] }),
 		uvrStore: types.optional(UvrStore, { uvrs: {} }),
 		rfvStore: types.optional(RfvStore, { rfvs: {} }),
 		mapStore: types.optional(MapStore, {
