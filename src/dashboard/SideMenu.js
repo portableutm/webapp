@@ -10,9 +10,10 @@ import { observer, useLocalStore } from 'mobx-react';
 
 function SideMenu() {
 	const { t, i18n } = useTranslation(['dashboard', 'glossary']);
-	const { authStore, logout } = useStore('RootStore',
+	const { authStore, setFloatingText, logout } = useStore('RootStore',
 		(store) => ({
 			authStore: store.authStore,
+			setFloatingText: store.setFloatingText,
 			logout: store.reset
 		}));
 	const history = useHistory();
@@ -63,13 +64,20 @@ function SideMenu() {
 							icon="map" intent={Intent.PRIMARY}
 							text={t('sidemenu.returnmap')}
 							onClick={() => history.push('/')}/>
-						<MenuItem icon="home"
+						<MenuItem icon="inbox"
 							text={t('sidemenu.dshhome')}
 							onClick={() => history.push('/dashboard')}/>
 						<MenuItem icon="flag"
 							text={t('sidemenu.changelanguage')}
 							onClick={() => changeLanguage()}/>
-
+						<MenuItem icon="envelope"
+							text={t('sidemenu.send_message')}
+							onClick={() => {
+								const header = prompt(t('sidemenu.send_message_title'), t('sidemenu.send_message_title_default'));
+								const body = prompt(t('sidemenu.send_message_text'), t('sidemenu.send_message_text_default'));
+								window.chat(header,body);
+								setFloatingText(t('sidemenu.send_message_sent'));
+							}}/>
 						<MenuDivider title={
 							`${t('sidemenu.logged_in')} ${authStore.username}`
 						}/>

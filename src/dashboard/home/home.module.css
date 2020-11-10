@@ -1,6 +1,12 @@
 .homeScreen {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.textDescription {
+    text-align: center;
+    font-size: 15px;
+    font-style: italic;
 }
 
 .simpleValue {
@@ -12,8 +18,14 @@
     padding: 5%;
     border-radius: 5px;
     color: rgb(255, 255, 255);
-    background-image: linear-gradient(0deg, rgb(51, 86, 179), rgb(42, 75, 147));
-    background-blend-mode: color-dodge;
+    background-image: linear-gradient(-15deg, rgb(108, 108, 108), rgb(141, 141, 141));
+    background-blend-mode: hard-light;
+    outline: 0;
+    box-shadow: 0.05em 0.05em 5px rgba(0,0,0,0.1);
+}
+
+.simpleValue:hover {
+    transform: scale(1.1,1.1)
 }
 
 .simpleValue > p {
@@ -21,11 +33,11 @@
 }
 
 .simpleValueText {
-    font-size: 20px;
+    font-size: 15px;
 }
 
 .simpleValueValue {
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bold;
 }
 

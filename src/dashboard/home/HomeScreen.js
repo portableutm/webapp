@@ -2,15 +2,17 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStore } from 'mobx-store-provider';
 import styles from './home.module.css';
+import { useHistory } from 'react-router-dom';
 import genericListStyle from '../generic/GenericList.module.css';
 import { observer } from 'mobx-react';
 import * as classnames from 'classnames';
 
-const SimpleValue = ({ title, value, color, addtlClass = null }) => {
+const SimpleValue = ({ title, onClick, value, color, addtlClass = null }) => {
 	return (
 		<div
 			className={classnames(styles.simpleValue, { [addtlClass]: addtlClass !== null })}
 			style={{ backgroundColor: color }}
+			onClick={onClick}
 		>
 			<p className={styles.simpleValueText}>{title}</p>
 			<p className={styles.simpleValueValue}>{value}</p>
@@ -19,6 +21,7 @@ const SimpleValue = ({ title, value, color, addtlClass = null }) => {
 };
 
 const HomeScreen = () => {
+	const history = useHistory();
 	const { opStore, vehStore } = useStore('RootStore', (store) => ({
 		opStore: store.operationStore,
 		vehStore: store.vehicleStore
@@ -32,37 +35,62 @@ const HomeScreen = () => {
 					{t('home.title').toUpperCase()}
 				</h1>
 			</div>
+			<p className={styles.textDescription}>
+				{t('home.click_over_any_item_to')}
+			</p>
 			<div className={styles.homeScreen}>
 				<SimpleValue
+					title={t('home.pending')}
+					value={opStore.counts.pendingCount}
+					color={'#ecbf08'}
+					onClick={() => {
+						opStore.setFilterPending(true);
+						opStore.setFilterAccepted(false);
+						opStore.setFilterActivated(false);
+						opStore.setFilterRogue(false);
+						opStore.setFilterClosed(false);
+						history.push('/dashboard/operations');
+					}}
+				/>
+				{/*<SimpleValue
 					title={t('home.total')}
 					value={opStore.counts.operationCount}
-				/>
+				/> */}
 				<SimpleValue
 					title={t('home.rogue')}
 					value={opStore.counts.rogueCount}
-					color="darkred"
+					color={'#b31e1e'}
 					addtlClass={opStore.counts.rogueCount > 0 ? styles.rogueValueWarning : styles.rogueValueInactive}
+					onClick={() => {
+						opStore.setFilterPending(false);
+						opStore.setFilterAccepted(false);
+						opStore.setFilterActivated(false);
+						opStore.setFilterRogue(true);
+						opStore.setFilterClosed(false);
+						history.push('/dashboard/operations');
+					}}
 				/>
 				<SimpleValue
 					title={t('home.active')}
 					value={opStore.counts.activeCount}
-					color="chocolate"
-				/>
-				<SimpleValue
-					title={t('home.accepted')}
-					value={opStore.counts.acceptedCount}
+					onClick={() => {
+						opStore.setFilterPending(false);
+						opStore.setFilterAccepted(false);
+						opStore.setFilterActivated(true);
+						opStore.setFilterRogue(false);
+						opStore.setFilterClosed(false);
+						history.push('/dashboard/operations');
+					}}
 					color="rgb(0,100,0)"
 				/>
-				<SimpleValue
-					title={t('home.pending')}
-					value={opStore.counts.pendingCount}
-					color="orangered"
+				{/* <SimpleValue
+					title={t('home.accepted')}
+					value={opStore.counts.acceptedCount}
 				/>
 				<SimpleValue
 					title={t('home.vehicles')}
 					value={vehStore.counts.vehicleCount}
-					color="darkmagenta"
-				/>
+				/> */}
 				{/*
 				<div className="div-ops-by-month">
 					Operations Evolution in the Last 12 Months
