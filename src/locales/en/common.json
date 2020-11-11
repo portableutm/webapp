@@ -33,5 +33,8 @@
   "operation_state_changed_text": "The operation *{{name}}* is now in the **{{state}}** state",
   "upload": "Upload",
   "passwords_are_not_equal": "The passwords are not equal. Please, try again.",
-  "email_is_not_valid": "The email entered does not follow the guidelines. Please, check the email entered is correct."
+  "email_is_not_valid": "The email entered does not follow the guidelines. Please, check the email entered is correct.",
+  "approve": "Approve",
+  "reject": "Reject",
+  "reason": "Reason for accepting or rejecting the operation"
 }

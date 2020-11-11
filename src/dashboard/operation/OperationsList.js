@@ -8,13 +8,44 @@ import styles from '../generic/GenericList.module.css';
 import { useStore } from 'mobx-store-provider';
 import { observer, useLocalStore } from 'mobx-react';
 
-function Operation({ expanded = false, selected = false, operation, changeState, isPilot }) {
+function Operation({ expanded = false, selected = false, operation, isPilot }) {
 	// Renders one Operation text properties for a list
 	const history = useHistory();
 	const { t, } = useTranslation(['glossary', 'common']);
 	const onClick = (evt) => {
 		evt.stopPropagation();
 		history.push('/operation/' + operation.gufi);
+	};
+	const { opStore } = useStore(
+		'RootStore',
+		(store) => ({
+			opStore: store.operationStore,
+		}));
+
+	const changeState = (newState) => {
+		opStore.updateState(operation.gufi, newState);
+	};
+
+	const pendingToAccepted = (evt) => {
+		evt.stopPropagation();
+		const comments = prompt(t('common:reason'));
+		if (comments === null) return;
+		opStore.updatePending(
+			operation.gufi,
+			comments,
+			true
+		);
+	};
+
+	const pendingToRejected = (evt) => {
+		evt.stopPropagation();
+		const comments = prompt(t('common:reason'));
+		if (comments === null) return;
+		opStore.updatePending(
+			operation.gufi,
+			comments,
+			false
+		);
 	};
 
 	const [showProperties, setShowProperties] = useState(expanded);
@@ -39,6 +70,36 @@ function Operation({ expanded = false, selected = false, operation, changeState,
 			title={
 				<div className={styles.title} onClick={toggleOperation}>
 					<p className={styles.titleText}>{operation.name}</p>
+					{ operation.state === 'PENDING' &&
+						<>
+							<Button
+								className={styles.button}
+								data-test-id={`approve${operation.name}`}
+								small
+								minimal
+								icon='tick'
+								intent={Intent.SUCCESS}
+								onClick={pendingToAccepted}
+							>
+								<div className={styles.buttonHoveredTooltip}>
+									{t('common:approve')}
+								</div>
+							</Button>
+							<Button
+								className={styles.button}
+								data-test-id={`reject${operation.name}`}
+								small
+								minimal
+								icon='cross'
+								intent={Intent.DANGER}
+								onClick={pendingToRejected}
+							>
+								<div className={styles.buttonHoveredTooltip}>
+									{t('common:reject')}
+								</div>
+							</Button>
+						</>
+					}
 					<Button
 						className={styles.button}
 						data-test-id={`showHideProperties${operation.name}`}
@@ -147,7 +208,7 @@ function Operation({ expanded = false, selected = false, operation, changeState,
 						value={operation.state}
 						minimal
 						disabled={isPilot}
-						onChange={(event) => changeState(operation.gufi, event.currentTarget.value)}
+						onChange={(event) => changeState(event.currentTarget.value)}
 					>
 						<option value="PROPOSED">PROPOSED</option>
 						<option value="PENDING">PENDING</option>
@@ -346,7 +407,6 @@ function OperationsList() {
 									expanded={op.gufi === id}
 									selected={op._visibility}
 									operation={op}
-									changeState={store.updateState}
 									isPilot={authStore.role === 'pilot'}
 								/>;
 							} else {

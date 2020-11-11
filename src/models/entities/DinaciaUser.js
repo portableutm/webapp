@@ -37,5 +37,8 @@ export const DinaciaUser = BaseDinaciaUser
 	.named('DinaciaUser')
 	.props({
 		id: types.string,
+		document_file_path: types.maybe(types.string),
+		permit_front_file_path: types.maybe(types.string),
+		permit_back_file_path: types.maybe(types.string),
 		dinacia_company: types.maybeNull(DinaciaCompany)
 	});
