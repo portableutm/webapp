@@ -94,6 +94,7 @@ export const MapStore = types
 		selectedOperation: types.maybeNull(types.string),
 		selectedRfv: types.maybeNull(types.string),
 		selectedUvr: types.maybeNull(types.string),
+		selectedParaglider: types.maybeNull(types.string),
 		/* Entity under creation */
 		editorOperation: types.maybeNull(BaseOperation),
 		editorUvr: types.maybeNull(Uvr)
@@ -253,11 +254,16 @@ export const MapStore = types
 		unsetSelectedUvr() {
 			self.selectedUvr = null;
 		},
+		setSelectedParaglider(username) {
+			self.unsetAll();
+			self.selectedParaglider = username;
+		},
 		unsetAll() {
 			self.selectedDrone = null;
 			self.selectedOperation = null;
 			self.selectedUvr = null;
 			self.selectedRfv = null;
+			self.selectedParaglider = null;
 		},
 		/* Editor actions */
 		startOperationEditor(existing) {
@@ -430,6 +436,9 @@ export const MapStore = types
 		get isRfvSelected() {
 			return self.selectedRfv !== null;
 		},
+		get isParagliderSelected() {
+			return self.selectedParaglider !== null;
+		},
 		get mapCorners() {
 			const latLngCNW = self.map.getBounds().getNorthWest();
 			const latLngCSE = self.map.getBounds().getSouthEast();
@@ -438,7 +447,7 @@ export const MapStore = types
 			return { cornerNW: cornerNW, cornerSE: cornerSE };
 		},
 		get hasToShowDefaultMapPanels() {
-			return !self.isEditingOperation && !self.isEditingUvr && !self.isOperationSelected && !self.isDroneSelected && !self.isUvrSelected && !self.isRfvSelected;
+			return !self.isEditingOperation && !self.isEditingUvr && !self.isOperationSelected && !self.isDroneSelected && !self.isUvrSelected && !self.isRfvSelected && !self.isParagliderSelected;
 		},
 		/* Map editor */
 		get isEditingOperation() {

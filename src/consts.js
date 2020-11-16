@@ -8,5 +8,6 @@ const USERS_DATA_TOO_OLD = 2 * 60000; // Only fetch user list if saved user list
 API = process.env.REACT_APP_ADESAPI || 'error';
 const ISDINACIA = true;
 DEBUG = process.env.REACT_APP_DEBUG || DEBUG;
+const INACTIVE_TIMEOUT = 20000;
 
-export { API, DEBUG, adesVersion, USERS_DATA_TOO_OLD, ISDINACIA };
+export { API, DEBUG, adesVersion, USERS_DATA_TOO_OLD, ISDINACIA, INACTIVE_TIMEOUT };

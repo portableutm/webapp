@@ -3,10 +3,12 @@
 import { types } from 'mobx-state-tree';
 import { values } from 'mobx';
 import { Position } from './entities/Position';
+import { ParagliderPosition } from './entities/ParagliderPosition';
 
 export const PositionStore = types
 	.model('PositionStore', {
-		positions: types.map(types.array(Position))
+		positions: types.map(types.array(Position)),
+		paraglidersPositions: types.map(types.array(ParagliderPosition))
 	})
 	.volatile(() => ({
 		hasFetched: false
@@ -33,6 +35,18 @@ export const PositionStore = types
 					self.positions.set(position.gufi, [correctedPosition]);
 				}
 			},
+			addParagliderPosition(position) {
+				const locationLatLng = {
+					...position.location,
+					coordinates: [position.location.coordinates[1], position.location.coordinates[0]]
+				};
+				const correctedPosition = { ...position, location: locationLatLng, username: position.user.username, time_sent: new Date(position.time_sent) };
+				if (self.paraglidersPositions.has(correctedPosition.username)) {
+					self.paraglidersPositions.get(correctedPosition.username).push(correctedPosition);
+				} else {
+					self.paraglidersPositions.set(correctedPosition.username, [correctedPosition]);
+				}
+			},
 			reset() {
 				self.hasFetched = false;
 			}
@@ -42,6 +56,9 @@ export const PositionStore = types
 		return {
 			get allPositions() {
 				return values(self.positions);
+			},
+			get allParagliderPositions() {
+				return values(self.paraglidersPositions);
 			}
 		};
 	});

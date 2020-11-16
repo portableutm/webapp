@@ -175,5 +175,10 @@
   "reject": "Reject",
   "upload": "Upload",
   "add_user": "Create new user",
-  "add_operation": "Create new operation"
+  "add_operation": "Create new operation",
+  "paraglider": {
+    "selected": "Selected paraglider",
+    "username": "Paraglider",
+    "time_sent": "Time message was sent"
+  }
 }

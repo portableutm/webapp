@@ -40,6 +40,8 @@ import { Button, Intent } from '@blueprintjs/core';
 import SelectedRfv from './viewer/SelectedRfv';
 import SelectedUvr from './viewer/SelectedUvr';
 import { useTranslation } from 'react-i18next';
+import { AllParagliderPositions } from './elements/AllParagliderPositions';
+import SelectedParaglider from './viewer/SelectedParaglider';
 
 
 /* Main function */
@@ -273,6 +275,7 @@ const Map = ({ mode }) => {
 
 				{/* Live map */}
 				<AllDronePositions/>
+				<AllParagliderPositions />
 				<AllOperationsPolygons/>
 				<AllRestrictedFlightVolumes/>
 				<AllUASVolumeReservations/>
@@ -351,6 +354,9 @@ const Map = ({ mode }) => {
 					}
 					{mapStore.isDroneSelected &&
 					<SelectedDrone gufi={mapStore.selectedDrone}/>
+					}
+					{mapStore.isParagliderSelected &&
+					<SelectedParaglider username={mapStore.selectedParaglider}/>
 					}
 					{mapStore.isRfvSelected &&
 					<SelectedRfv id={mapStore.selectedRfv}/>

@@ -45,6 +45,10 @@ export const AuthStore = types
 						getRoot(self).positionStore.addPosition(info);
 					});
 
+					socket.on('new-paragliding-position', function (info) {
+						getRoot(self).positionStore.addParagliderPosition(info);
+					});
+
 					socket.on('new-operation', function (info) {
 						getRoot(self).operationStore.fetchOne(info.gufi);
 					});
