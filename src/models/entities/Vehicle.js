@@ -4,7 +4,7 @@ import { User } from './User';
 export const BaseVehicle = types
 	// Used as a base class for vehicles. Mostly for data entry and publishing to the server.
 	.model('BaseVehicle', {
-		nNumber: types.refinement(types.string, value => value.length < 10),
+		nNumber: types.refinement(types.string, value => value.length < 100),
 		faaNumber: types.string,
 		vehicleName: types.string,
 		manufacturer: types.string,

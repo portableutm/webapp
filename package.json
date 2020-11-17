@@ -41,6 +41,7 @@
   "scripts": {
     "start": "set PORT=2000 && react-scripts -r @cypress/instrument-cra start",
     "start-localhost": "cross-env REACT_APP_ADESAPI=\"http://localhost:3000/\" react-scripts -r @cypress/instrument-cra start",
+    "start-dinacia": "cross-env REACT_APP_ADESAPI=\"http://161.35.12.214:3000/\" react-scripts -r @cypress/instrument-cra start",
     "start-dev": "cross-env REACT_APP_DEBUG=true react-scripts -r @cypress/instrument-cra start",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns \\\"node_modules/(?!use-global-hook)/\\\"",
