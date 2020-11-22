@@ -137,8 +137,7 @@ function Vehicle({ v }) {
 						'engine_quantity_batteries',
 						'propeller_type',
 						'propeller_model',
-						'propeller_material',
-						'serial_number'
+						'propeller_material'
 					].map((dinaciaProp) => {
 						if (v.dinacia_vehicle[dinaciaProp] !== null) {
 							return <GenericListLine key={dinaciaProp}>
@@ -149,7 +148,20 @@ function Vehicle({ v }) {
 							return null;
 						}
 					})
-
+				}
+				{	ISDINACIA && v.operators &&
+					v.operators.map(operator => {
+						return <GenericListLine key={operator}>
+							{t('vehicles.operator')}
+							{operator}
+						</GenericListLine>;
+					})
+				}
+				{	ISDINACIA && v.dinacia_vehicle &&
+					<GenericListLine>
+						<img className={styles.lineImage} src={v.dinacia_vehicle.serial_number_file_path} alt="Serial number image" />
+						<p></p>
+					</GenericListLine>
 				}
 			</div>
 			}

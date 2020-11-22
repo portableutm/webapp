@@ -44,5 +44,5 @@ export const DinaciaVehicle = BaseDinaciaVehicle
 	.props({
 		id: types.string,
 		authorized: types.boolean,
-		//serial_number_path: types.string,
+		serial_number_file_path: types.maybeNull(types.string),
 	});

@@ -75,6 +75,7 @@ function NewVehicle({ userId, finish /* Callback when the new vehicle is created
 			vehicleTypeId: '',
 			'org-uuid': '',
 			dinacia_vehicle: BaseDinaciaVehicle.create({}),
+			operators: [],
 			/*registeredBy: authStore.username,*/
 			owner_id: obs.userId
 		})
@@ -147,6 +148,20 @@ function NewVehicle({ userId, finish /* Callback when the new vehicle is created
 				]}
 			/>
 			}
+			{ localStore.vehicle.operators.map(operator => {
+				return ( 
+					<p key={operator}>{operator}</p>
+				);
+			})}
+
+			<Button
+				onClick={() => {
+					const username = prompt(t('glossary:add_new_operator_username'));
+					localStore.vehicle.addOperator(username);
+				}}
+			>
+				{t('glossary:add_new_operator')}
+			</Button>
 			{ISDINACIA &&
 			<FileInput fill buttonText={t('upload')} inputProps={{ accept: 'image/*' }}
 					   text={localStore.vehicle.dinacia_vehicle.serial_number_file === null ? t('vehicles.serial_number_file') : localStore.vehicle.dinacia_vehicle.serial_number_file.name}

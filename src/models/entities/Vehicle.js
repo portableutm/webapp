@@ -12,6 +12,7 @@ export const BaseVehicle = types
 		model: types.string,
 		'class': types.string,
 		owner_id: types.maybe(types.string),
+		operators: types.array(types.string),
 		//registeredBy: types.string,
 		dinacia_vehicle: types.maybeNull(BaseDinaciaVehicle) // If the instance is NOT DINACIA, this MUST BE null
 	})
@@ -37,9 +38,21 @@ export const BaseVehicle = types
 				} catch (error) {
 					return false;
 				}
+			},
+			addOperator(username) {
+				try {
+					self.operators.push(username);
+				} catch (error) {
+					return false;
+				}
 			}
 		};
-	});
+	})
+	.views(self => ({
+		get operatorsBackend() {
+			return self.operators.map(operatorString => ({ username : operatorString }));
+		}
+	}));
 
 export const Vehicle = BaseVehicle
 	.named('Vehicle')

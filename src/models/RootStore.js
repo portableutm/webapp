@@ -52,7 +52,7 @@ export const RootStore = types
 			afterCreate() {
 				self.axiosInstance = A.create({
 					baseURL: API,
-					timeout: 15000,
+					timeout: 150000,
 					headers: {
 						'Content-Type': 'application/json',
 					}
@@ -110,7 +110,7 @@ export const RootStore = types
 				self.API = newApi;
 				self.axiosInstance = A.create({
 					baseURL: newApi,
-					timeout: 15000,
+					timeout: 1500000,
 					headers: {
 						'Content-Type': 'application/json',
 					}

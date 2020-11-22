@@ -121,6 +121,7 @@
 .line {
     display: flex;
     justify-content: space-between;
+    width: 100%;
     padding: 2px;
     border-bottom: 1px solid #2D2C59;
 }
@@ -130,7 +131,16 @@
 }
 
 .lineRight {
+}
 
+.lineImage {
+    width: auto;
+    max-height: 100px;
+    transition: all 0.5s;
+}
+
+.lineImage:hover {
+    max-height: 300px;
 }
 
 .header {

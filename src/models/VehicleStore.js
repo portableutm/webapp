@@ -20,6 +20,7 @@ export const VehicleStore = types
 		function processVehicle(vehicle) {
 			const newVehicle = _.cloneDeep(vehicle);
 			newVehicle.date = new Date(vehicle.date);
+			newVehicle.operators = vehicle.operators.map(operator => operator.username);
 			return newVehicle;
 		}
 		return {
@@ -47,14 +48,17 @@ export const VehicleStore = types
 					const vehicleSnapshot = getSnapshot(vehicle);
 					const data = new FormData();
 					for (const key in vehicleSnapshot) {
-						if (key !== 'dinacia_vehicle') {
+						if (key !== 'dinacia_vehicle' && key !== 'operators') {
 							// noinspection JSUnfilteredForInLoop
 							data.append(key, vehicleSnapshot[key]);
-						} else if (ISDINACIA) {
-							data.append('dinacia_vehicle_str', JSON.stringify(vehicleSnapshot.dinacia_vehicle));
-							data.append('serial_number_file', vehicle.dinacia_vehicle.serial_number_file);
 						}
 					}
+					if (ISDINACIA) {
+						data.append('dinacia_vehicle_str', JSON.stringify(vehicleSnapshot.dinacia_vehicle));
+						data.append('operators_str', JSON.stringify(vehicle.operatorsBackend));
+						data.append('serial_number_file', vehicle.dinacia_vehicle.serial_number_file, 'serial_number_file');
+					}
+					console.dir(data);
 					const response = yield getRoot(self)
 						.axiosInstance
 						.post('vehicle', data,{ headers: { 'Content-Type': 'multipart/form-data', auth: getRoot(self).authStore.token } });
