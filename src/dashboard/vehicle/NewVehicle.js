@@ -58,9 +58,9 @@ const DinaciaVehicleProperties = ({ localStore, properties }) => {
 };
 
 function NewVehicle({ userId, finish /* Callback when the new vehicle is created, or the go back button is pressed */ }) {
-	const { authStore, vehicleStore } = useStore(
+	const { authStore, vehicleStore, userStore } = useStore(
 		'RootStore',
-		(store) => ({ authStore: store.authStore, vehicleStore: store.vehicleStore }));
+		(store) => ({ authStore: store.authStore, vehicleStore: store.vehicleStore, userStore: store.userStore }));
 	const obs = useAsObservableSource({ userId });
 
 	const localStore = useLocalStore(() => ({
@@ -153,19 +153,40 @@ function NewVehicle({ userId, finish /* Callback when the new vehicle is created
 					<p key={operator}>{operator}</p>
 				);
 			})}
-
-			<Button
-				onClick={() => {
-					const username = prompt(t('glossary:add_new_operator_username'));
-					localStore.vehicle.addOperator(username);
-				}}
-			>
-				{t('glossary:add_new_operator')}
-			</Button>
+			<h3>
+				{t('glossary:vehicles.operators')}
+			</h3>
+			{userStore.hasError &&
+				<Button
+					onClick={() => {
+						const username = prompt(t('glossary:add_new_operator_username'));
+						localStore.vehicle.addOperator(username);
+					}}
+				>
+					{t('glossary:add_new_operator')}
+				</Button>
+			}
+			{!userStore.hasError &&
+			<ul>
+				{ userStore.allUsers.map(user => {
+					return <li key={user.username} style={localStore.vehicle.operators.indexOf(user.username) === -1 ?
+						{ color: 'red' } :
+						{ color: 'green' }
+					}	onClick={() => {
+						if (localStore.vehicle.operators.indexOf(user.username) === -1) {
+							localStore.vehicle.addOperator(user.username);
+						} else {
+							localStore.vehicle.removeOperator(user.username);
+						}
+					}}
+					>{user.asDisplayString}</li>;
+				})}
+			</ul>
+			}
 			{ISDINACIA &&
 			<FileInput fill buttonText={t('upload')} inputProps={{ accept: 'image/*' }}
-					   text={localStore.vehicle.dinacia_vehicle.serial_number_file === null ? t('vehicles.serial_number_file') : localStore.vehicle.dinacia_vehicle.serial_number_file.name}
-					   onInputChange={(evt) => localStore.vehicle.setDinaciaProperty('serial_number_file', evt.target.files[0])}/>
+				text={localStore.vehicle.dinacia_vehicle.serial_number_file === null ? t('vehicles.serial_number_file') : localStore.vehicle.dinacia_vehicle.serial_number_file.name}
+				onInputChange={(evt) => localStore.vehicle.setDinaciaProperty('serial_number_file', evt.target.files[0])}/>
 			}
 			{/*<RadioGroup
 				label={t('vehicles.class')}

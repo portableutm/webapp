@@ -342,10 +342,7 @@ const Map = ({ mode }) => {
 						!mapStore.hasToShowDefaultMapPanels
 					}
 					onClose={() => {
-						if (mapStore.isOperationSelected) mapStore.unsetSelectedOperation();
-						if (mapStore.isUvrSelected) mapStore.unsetSelectedUvr();
-						if (mapStore.isRfvSelected) mapStore.unsetSelectedRfv();
-						if (mapStore.isDroneSelected) mapStore.unsetSelectedDrone();
+						mapStore.unsetAll();
 						history.push('/');
 					}}
 				>

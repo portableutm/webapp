@@ -12,7 +12,8 @@ export const UserStore = types
 		sortingOrder: 'asc'
 	})
 	.volatile(() => ({
-		hasFetched: false
+		hasFetched: false,
+		hasError: false
 	}))
 	.actions(self => {
 		return {
@@ -30,6 +31,7 @@ export const UserStore = types
 						}, [])
 					);
 				} catch (error) {
+					self.hasError = true;
 					console.group('/userStore fetchUsers *error*');
 					console.log('%cAn error has ocurred', 'color:red; font-size: 36px');
 					console.error(error);
@@ -65,6 +67,7 @@ export const UserStore = types
 			},
 			reset() {
 				self.hasFetched = false;
+				self.hasError = false;
 			}
 		};
 	})

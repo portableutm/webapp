@@ -45,6 +45,13 @@ export const BaseVehicle = types
 				} catch (error) {
 					return false;
 				}
+			},
+			removeOperator(username) {
+				try {
+					self.operators.remove(username);
+				} catch (error) {
+					return false;
+				}
 			}
 		};
 	})
