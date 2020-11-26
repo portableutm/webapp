@@ -16,10 +16,11 @@ function Operation({ expanded = false, selected = false, operation, isPilot }) {
 		evt.stopPropagation();
 		history.push('/operation/' + operation.gufi);
 	};
-	const { opStore } = useStore(
+	const { opStore, authStore } = useStore(
 		'RootStore',
 		(store) => ({
 			opStore: store.operationStore,
+			authStore: store.authStore
 		}));
 
 	const changeState = (newState) => {
@@ -70,7 +71,8 @@ function Operation({ expanded = false, selected = false, operation, isPilot }) {
 			title={
 				<div className={styles.title} onClick={toggleOperation}>
 					<p className={styles.titleText}>{operation.name}</p>
-					{ operation.state === 'PENDING' &&
+					{ 	operation.state === 'PENDING' &&
+						authStore.isAdmin &&
 						<>
 							<Button
 								className={styles.button}

@@ -31,11 +31,12 @@ function SelectedOperation() {
 	const { t } = useTranslation(['glossary','map']);
 	const [isDialogShown, showDialog] = useState(false);
 	const [isApproved, setApproved] = useState(false);
-	const { operation, updatePending } = useStore(
+	const { operation, updatePending, authStore } = useStore(
 		'RootStore',
 		(store) => ({
 			operation: store.mapStore.getSelectedOperation,
-			updatePending: store.operationStore.updatePending
+			updatePending: store.operationStore.updatePending,
+			authStore: store.authStore
 		})
 	);
 
@@ -112,7 +113,8 @@ function SelectedOperation() {
 						{t('info')}
 					</Button>
 				</div>
-				{operation[2][1] === 'PENDING' &&
+				{	operation[2][1] === 'PENDING' &&
+					authStore.isAdmin &&
 				<div
 					className={styles.sidebarSeparator}
 				>
