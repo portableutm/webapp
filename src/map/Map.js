@@ -343,7 +343,7 @@ const Map = ({ mode }) => {
 					}
 					onClose={() => {
 						mapStore.unsetAll();
-						history.push('/');
+						history.replace('/');
 					}}
 				>
 					{mapStore.isOperationSelected &&
