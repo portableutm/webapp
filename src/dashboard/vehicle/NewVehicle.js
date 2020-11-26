@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, FormGroup, InputGroup, Radio, RadioGroup, Intent, FileInput } from '@blueprintjs/core';
 import styles from '../generic/GenericList.module.css';
+import form from '../generic/LongForm.module.css';
+import { useParams, useHistory } from 'react-router-dom';
 import { useStore } from 'mobx-store-provider';
 import { BaseVehicle } from '../../models/entities/Vehicle';
 import { useLocalStore, useAsObservableSource, observer, useObserver } from 'mobx-react';
@@ -25,6 +27,7 @@ const GenericVehicleProperties = ({ localStore, properties }) => {
 						id={'text-' + property}
 						key={'text-' + property}
 						value={localStore.vehicle[property]}
+						disabled={property === 'owner_id'}
 						onChange={(evt) => localStore.vehicle.setProperty(property, evt.target.value)}
 					/>
 				</FormGroup>
@@ -57,11 +60,14 @@ const DinaciaVehicleProperties = ({ localStore, properties }) => {
 	});
 };
 
-function NewVehicle({ userId, finish /* Callback when the new vehicle is created, or the go back button is pressed */ }) {
-	const { authStore, vehicleStore, userStore } = useStore(
+function NewVehicle(props) {
+	const { vehicleStore, userStore } = useStore(
 		'RootStore',
 		(store) => ({ authStore: store.authStore, vehicleStore: store.vehicleStore, userStore: store.userStore }));
-	const obs = useAsObservableSource({ userId });
+
+	const { username } = useParams();
+	const history = useHistory();
+	const obs = useAsObservableSource({ userId: props.userId || username });
 
 	const localStore = useLocalStore(() => ({
 		vehicle: BaseVehicle.create({
@@ -81,12 +87,6 @@ function NewVehicle({ userId, finish /* Callback when the new vehicle is created
 		})
 	}));
 
-	useEffect(() => {
-		autorun(() => {
-			console.log(localStore.vehicle.dinacia_vehicle.serial_number_file);
-		});
-	}, []);
-
 	const { t, } = useTranslation(['glossary', 'common']);
 	const [isSubmitting, setSubmitting] = useState(false);
 
@@ -97,65 +97,113 @@ function NewVehicle({ userId, finish /* Callback when the new vehicle is created
 					{t('vehicles.new_vehicle').toUpperCase()}
 				</h1>
 			</div>
-			<GenericVehicleProperties
-				localStore={localStore}
-				properties={
-					ISDINACIA ?
-						[
-							'vehicleName', 'manufacturer', 'model', 'owner_id', 'class'
-						]
-						:
-						[
-							'faaNumber', 'nNumber', 'vehicleName', 'manufacturer', 'model', 'owner_id', 'class'
-						]
+			<section className={form.grid}>
+				<div className={form.col}>
+					<h2>{t('glossary:required_fields')}</h2>
+					<GenericVehicleProperties
+						localStore={localStore}
+						properties={
+							ISDINACIA ?
+								[
+									'vehicleName', 'manufacturer', 'model', 'owner_id', 'class'
+								]
+								:
+								[
+									'faaNumber', 'nNumber', 'vehicleName', 'manufacturer', 'model', 'owner_id', 'class'
+								]
+						}
+					/>
+				</div>
+				{ISDINACIA &&
+				<div className={form.col}>
+					<h2>{t('glossary:optional_fields')}</h2>
+					<DinaciaVehicleProperties
+						localStore={localStore}
+						properties={[
+							'caa_registration',
+							'usage',
+							'construction_material',
+							'year',
+							'serial_number'
+						]}
+					/>
+				</div>
 				}
-			/>
+			</section>
 			{ISDINACIA &&
-			<DinaciaVehicleProperties
-				localStore={localStore}
-				properties={[
-					'caa_registration',
-					'usage',
-					'construction_material',
-					'year',
-					'serial_number',
-					'empty_weight',
-					'max_weight',
-					'takeoff_method',
-					'sensor_type_and_mark',
-					'packing',
-					'longitude',
-					'height',
-					'color',
-					'max_speed',
-					'cruise_speed',
-					'landing_speed',
-					'time_autonomy',
-					'radio_accion',
-					'ceiling',
-					'communication_control_system_command_navigation_vigilance',
-					'maintenance_inspections',
-					'remarks',
-					'engine_manufacturer',
-					'engine_type',
-					'engine_model',
-					'engine_power',
-					'engine_fuel',
-					'engine_quantity_batteries',
-					'propeller_type',
-					'propeller_model',
-					'propeller_material'
-				]}
-			/>
+				<section className={form.grid}>
+					<div className={form.col}>
+						<h2>{t('glossary:optional_fields')}</h2>
+						<DinaciaVehicleProperties
+							localStore={localStore}
+							properties={[
+								'empty_weight',
+								'max_weight',
+								'takeoff_method',
+								'sensor_type_and_mark',
+								'packing',
+								'longitude',
+								'height',
+								'color',
+								'max_speed',
+								'cruise_speed',
+								'landing_speed',
+								'time_autonomy',
+								'radio_accion'
+							]}
+						/>
+					</div>
+					<div className={form.col}>
+						<h2>{t('glossary:optional_fields')}</h2>
+						<DinaciaVehicleProperties
+							localStore={localStore}
+							properties={[
+								'ceiling',
+								'communication_control_system_command_navigation_vigilance',
+								'maintenance_inspections',
+								'remarks',
+								'engine_manufacturer',
+								'engine_type',
+								'engine_model',
+								'engine_power',
+								'engine_fuel',
+								'engine_quantity_batteries',
+								'propeller_type',
+								'propeller_model',
+								'propeller_material'
+							]}
+						/>
+					</div>
+				</section>
 			}
-			{ localStore.vehicle.operators.map(operator => {
-				return ( 
-					<p key={operator}>{operator}</p>
-				);
-			})}
-			<h3>
-				{t('glossary:vehicles.operators')}
-			</h3>
+			<section className={form.grid}>
+				<div className={form.col}>
+					<h3>
+						{t('glossary:vehicles.operators')}
+					</h3>
+					{ localStore.vehicle.operators.map(operator => {
+						return (
+							<p key={operator}>{operator}</p>
+						);
+					})}
+				</div>
+				<div className={form.col}>
+					{!userStore.hasError &&
+					<ul>
+						{ userStore.allUsers.map(user => {
+							return <Button key={user.username} small style={{ marginBottom: '5px' }} intent={localStore.vehicle.operators.indexOf(user.username) === -1 ? Intent.SUCCESS : Intent.DANGER} icon={localStore.vehicle.operators.indexOf(user.username) === -1 ? 'plus' : 'minus'}	onClick={() => {
+								if (localStore.vehicle.operators.indexOf(user.username) === -1) {
+									localStore.vehicle.addOperator(user.username);
+								} else {
+									localStore.vehicle.removeOperator(user.username);
+								}
+							}}
+							>{user.asDisplayString}</Button>;
+						})}
+					</ul>
+					}
+				</div>
+			</section>
 			{userStore.hasError &&
 				<Button
 					onClick={() => {
@@ -166,23 +214,7 @@ function NewVehicle({ userId, finish /* Callback when the new vehicle is created
 					{t('glossary:add_new_operator')}
 				</Button>
 			}
-			{!userStore.hasError &&
-			<ul>
-				{ userStore.allUsers.map(user => {
-					return <li key={user.username} style={localStore.vehicle.operators.indexOf(user.username) === -1 ?
-						{ color: 'red' } :
-						{ color: 'green' }
-					}	onClick={() => {
-						if (localStore.vehicle.operators.indexOf(user.username) === -1) {
-							localStore.vehicle.addOperator(user.username);
-						} else {
-							localStore.vehicle.removeOperator(user.username);
-						}
-					}}
-					>{user.asDisplayString}</li>;
-				})}
-			</ul>
-			}
+
 			{ISDINACIA &&
 			<FileInput fill buttonText={t('upload')} inputProps={{ accept: 'image/*' }}
 				text={localStore.vehicle.dinacia_vehicle.serial_number_file === null ? t('vehicles.serial_number_file') : localStore.vehicle.dinacia_vehicle.serial_number_file.name}
@@ -202,7 +234,7 @@ function NewVehicle({ userId, finish /* Callback when the new vehicle is created
 					style={{ marginRight: '2px' }}
 					intent={Intent.PRIMARY}
 					onClick={() => {
-						finish();
+						history.push(`/dashboard/vehicles/${username ? username : ''}`);
 					}}
 				>
 					{t('go_back')}
@@ -215,7 +247,7 @@ function NewVehicle({ userId, finish /* Callback when the new vehicle is created
 						setSubmitting(true);
 						await vehicleStore.post(localStore.vehicle);
 						setSubmitting(false);
-						finish();
+						history.push(`/dashboard/vehicles/${username ? username : ''}`);
 					}}
 				>
 					{t('submit')}
@@ -224,22 +256,5 @@ function NewVehicle({ userId, finish /* Callback when the new vehicle is created
 		</>
 	);
 }
-
-/*
-{
-	"owner_id": "JudithaStrut",
-    "uvin": "32b858dd-8c63-4e99-9a18-6df064cf64cb",
-    "nNumber": "",
-    "faaNumber": "AW7B64A",
-    "vehicleName": "vehicle.name8",
-    "manufacturer": "DJI",
-    "model": "Phantom 3",
-    "class": "FIXEDWING",
-    "accessType": "",
-    "vehicleTypeId": "",
-    "org-uuid": "",
-    "registeredBy": "admin"
-}
- */
 
 export default observer(NewVehicle);

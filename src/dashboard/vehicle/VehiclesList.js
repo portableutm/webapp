@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from 'mobx-store-provider';
 import { observer } from 'mobx-react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Button, Callout, HTMLSelect, InputGroup, Intent, Spinner } from '@blueprintjs/core';
 import { useTranslation } from 'react-i18next';
 import GenericList, { GenericListLine } from '../generic/GenericList';
@@ -173,167 +173,154 @@ function VehiclesList() {
 	const { t,  } = useTranslation('glossary');
 	const { store, authStore } = useStore('RootStore', (store) => ({ store: store.vehicleStore, authStore: store.authStore }));
 	const { username } = useParams(); // If set, filter only vehicles of a particular user
-	const [isCreatingVehicle, setCreatingVehicle] = useState(false);
+	const history = useHistory();
 
 	if (store.hasFetched) {
 		if (store.isEmpty) {
-			if (username && isCreatingVehicle) {
-				return (
-					<NewVehicle userId={username} finish={() => setCreatingVehicle(false)}/>
-				);
-			} else {
-				return (
-					<>
-						<div className={styles.header}>
-							<h1>
-								{t('vehicles.plural_generic').toUpperCase()}
-							</h1>
-						</div>
-						<h2>
-							{t('vehicles.zero_vehicles')}
-						</h2>
-						<div
-							className={styles.actionArea}
+			return (
+				<>
+					<div className={styles.header}>
+						<h1>
+							{t('vehicles.plural_generic').toUpperCase()}
+						</h1>
+					</div>
+					<h2>
+						{t('vehicles.zero_vehicles')}
+					</h2>
+					<div
+						className={styles.actionArea}
+					>
+						{	username &&
+						<Button
+							className={styles.buttonAction}
+							disabled={!username}
+							icon='add'
+							onClick={() => {
+								history.push(`/dashboard/vehicles/${username}/new`);
+							}}
 						>
-							{	username &&
-							<Button
-								className={styles.buttonAction}
-								disabled={!username}
-								icon='add'
-								onClick={() => {
-									setCreatingVehicle(true);
-								}}
-							>
-								{t('add_vehicle')}
-							</Button>
-							}
-							{ !username && authStore.isAdmin &&
-							<p>To add a vehicle, please select a user from "All users". </p>
-							}
-						</div>
-					</>
-				);
-			}
-
+							{t('add_vehicle')}
+						</Button>
+						}
+						{ !username && authStore.isAdmin &&
+						<p>To add a vehicle, please select a user from "All users". </p>
+						}
+					</div>
+				</>
+			);
 		} else {
-			if (username && isCreatingVehicle) {
-				return (
-					<NewVehicle userId={username} finish={() => setCreatingVehicle(false)}/>
-				);
-			} else {
-				return (
-					<>
-						<div className={styles.header}>
-							<h1>
-								{t('vehicles.plural_generic').toUpperCase()}
-							</h1>
-						</div>
-						<div
-							className={styles.filters}
+			return (
+				<>
+					<div className={styles.header}>
+						<h1>
+							{t('vehicles.plural_generic').toUpperCase()}
+						</h1>
+					</div>
+					<div
+						className={styles.filters}
+					>
+						<HTMLSelect
+							id='filter'
+							name="UvrFilterProperty"
+							className={styles.filterProperty}
+							value={store.filterProperty}
+							onChange={(event) => store.setFilterProperty(event.currentTarget.value)}
 						>
-							<HTMLSelect
-								id='filter'
-								name="UvrFilterProperty"
-								className={styles.filterProperty}
-								value={store.filterProperty}
-								onChange={(event) => store.setFilterProperty(event.currentTarget.value)}
-							>
-								<option value="nNumber">{t('vehicles.nNumber')}</option>
-								<option value="faaNumber">{t('vehicles.faaNumber')}</option>
-								<option value="vehicleName">{t('vehicles.vehicleName')}</option>
-								<option value="manufacturer">{t('vehicles.manufacturer')}</option>
-								<option value="model">{t('vehicles.model')}</option>
-							</HTMLSelect>
-							<InputGroup
-								className={styles.filterTextInput}
-								leftIcon="search"
-								onChange={(evt) => store.setFilterByText(evt.target.value)}
-								placeholder={t('map:filter.bytext.description')}
-								value={store.filterMatchingText}
-							/>
-							<p
-								className={styles.filterTextInfo}
-							>
-								{`Showing ${store.counts.matchesFilters} out of ${store.counts.vehicleCount} vehicles`}
-							</p>
-						</div>
-						<div
-							className={styles.filters}
+							<option value="nNumber">{t('vehicles.nNumber')}</option>
+							<option value="faaNumber">{t('vehicles.faaNumber')}</option>
+							<option value="vehicleName">{t('vehicles.vehicleName')}</option>
+							<option value="manufacturer">{t('vehicles.manufacturer')}</option>
+							<option value="model">{t('vehicles.model')}</option>
+						</HTMLSelect>
+						<InputGroup
+							className={styles.filterTextInput}
+							leftIcon="search"
+							onChange={(evt) => store.setFilterByText(evt.target.value)}
+							placeholder={t('map:filter.bytext.description')}
+							value={store.filterMatchingText}
+						/>
+						<p
+							className={styles.filterTextInfo}
 						>
-							<p className={styles.filterLabel}>
-								Sorting by property:
-							</p>
-							<HTMLSelect
-								id='sorter'
-								name="UvrSorter"
-								className={styles.filterProperty}
-								value={store.sortingProperty}
-								minimal
-								onChange={(event) => store.setSortingProperty(event.currentTarget.value)}
-							>
-								<option value="nNumber">{t('vehicles.nNumber')}</option>
-								<option value="faaNumber">{t('vehicles.faaNumber')}</option>
-								<option value="vehicleName">{t('vehicles.vehicleName')}</option>
-								<option value="manufacturer">{t('vehicles.manufacturer')}</option>
-								<option value="model">{t('vehicles.model')}</option>
-							</HTMLSelect>
-							<p className={styles.filterLabel}>
-								in
-							</p>
-							<HTMLSelect
-								id='sorter'
-								name="UvrSortingOrder"
-								className={styles.filterProperty}
-								value={store.sortingOrder}
-								minimal
-								onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
-							>
-								<option value='asc'>Ascending</option>
-								<option value='desc'>Descending</option>
-							</HTMLSelect>
-							<p className={styles.filterLabel}>
-								order
-							</p>
-						</div>
-						<div
-							className={styles.actionArea}
+							{`Showing ${store.counts.matchesFilters} out of ${store.counts.vehicleCount} vehicles`}
+						</p>
+					</div>
+					<div
+						className={styles.filters}
+					>
+						<p className={styles.filterLabel}>
+							Sorting by property:
+						</p>
+						<HTMLSelect
+							id='sorter'
+							name="UvrSorter"
+							className={styles.filterProperty}
+							value={store.sortingProperty}
+							minimal
+							onChange={(event) => store.setSortingProperty(event.currentTarget.value)}
 						>
-							{	username &&
-								<Button
-									className={styles.buttonAction}
-									disabled={!username}
-									icon='add'
-									onClick={() => {
-										setCreatingVehicle(true);
-									}}
-								>
-									{t('add_vehicle')}
-								</Button>
-							}
-							{ !username && authStore.isAdmin &&
-								<p>To add a vehicle, please select a user from the user list.</p>
-							}
-						</div>
-						<GenericList>
-							{store.vehiclesWithVisibility.map((vehicle) => {
-								if (username && vehicle.owner.username !== username) {
-									// Display only vehicles owned by the selected user, if chosen.
-									return null;
+							<option value="nNumber">{t('vehicles.nNumber')}</option>
+							<option value="faaNumber">{t('vehicles.faaNumber')}</option>
+							<option value="vehicleName">{t('vehicles.vehicleName')}</option>
+							<option value="manufacturer">{t('vehicles.manufacturer')}</option>
+							<option value="model">{t('vehicles.model')}</option>
+						</HTMLSelect>
+						<p className={styles.filterLabel}>
+							in
+						</p>
+						<HTMLSelect
+							id='sorter'
+							name="UvrSortingOrder"
+							className={styles.filterProperty}
+							value={store.sortingOrder}
+							minimal
+							onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
+						>
+							<option value='asc'>Ascending</option>
+							<option value='desc'>Descending</option>
+						</HTMLSelect>
+						<p className={styles.filterLabel}>
+							order
+						</p>
+					</div>
+					<div
+						className={styles.actionArea}
+					>
+						{	username &&
+						<Button
+							className={styles.buttonAction}
+							disabled={!username}
+							icon='add'
+							onClick={() => {
+								history.push(`/dashboard/vehicles/${username}/new`);
+							}}
+						>
+							{t('add_vehicle')}
+						</Button>
+						}
+						{ !username && authStore.isAdmin &&
+						<p>To add a vehicle, please select a user from the user list.</p>
+						}
+					</div>
+					<GenericList>
+						{store.vehiclesWithVisibility.map((vehicle) => {
+							if (username && vehicle.owner.username !== username) {
+								// Display only vehicles owned by the selected user, if chosen.
+								return null;
+							} else {
+								if (vehicle._matchesFiltersByNames) {
+									return <Vehicle
+										key={vehicle.faaNumber}
+										v={vehicle}
+									/>;
 								} else {
-									if (vehicle._matchesFiltersByNames) {
-										return <Vehicle
-											key={vehicle.faaNumber}
-											v={vehicle}
-										/>;
-									} else {
-										return null;
-									}
+									return null;
 								}
-							})}
-						</GenericList>
-					</>
-				);
-			}
+							}
+						})}
+					</GenericList>
+				</>
+			);
 		}
 	} else {
 		if (store.hasError) {

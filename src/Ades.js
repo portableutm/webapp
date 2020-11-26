@@ -287,6 +287,11 @@ function Ades() {
 									<UsersList/>
 								</Dashboard>
 							</LayoutRoute>
+							<LayoutRoute exact path='/dashboard/vehicles/:username/new'>
+								<Dashboard>
+									<NewVehicle />
+								</Dashboard>
+							</LayoutRoute>
 							<LayoutRoute exact path='/dashboard/vehicles/:username?'>
 								<Dashboard>
 									<VehiclesList/>
@@ -345,7 +350,7 @@ function Ades() {
 							</LayoutRoute>
 							<LayoutRoute exact path={'/dashboard/vehicles/new'}>
 								<Dashboard>
-									<NewVehicle userId={rootStore.authStore.username} finish={() => window.location.href = '/'}/>
+									<NewVehicle userId={rootStore.authStore.username}/>
 								</Dashboard>
 							</LayoutRoute>
 							<LayoutRoute exact path='/dashboard/operations/:id'>

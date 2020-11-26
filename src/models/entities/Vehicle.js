@@ -1,4 +1,4 @@
-import { types } from 'mobx-state-tree';
+import { getChildType, types } from 'mobx-state-tree';
 import { User } from './User';
 import { BaseDinaciaVehicle, DinaciaVehicle } from './DinaciaVehicle';
 
@@ -33,9 +33,15 @@ export const BaseVehicle = types
 							return false;
 						}
 					}
-					self.dinacia_vehicle[prop] = value;
+					if (getChildType(self.dinacia_vehicle, prop).name === 'number' || getChildType(self.dinacia_vehicle, prop).name.substring(1,7) === 'number') {
+						const castedValue = Number(value);
+						self.dinacia_vehicle[prop] = castedValue;
+					} else {
+						self.dinacia_vehicle[prop] = value;
+					}
 					return true;
 				} catch (error) {
+					console.dir(error);
 					return false;
 				}
 			},
