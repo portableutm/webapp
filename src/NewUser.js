@@ -20,6 +20,7 @@ import * as classnames from 'classnames';
 import { observer, useLocalStore, useObserver } from 'mobx-react';
 import { useStore } from 'mobx-store-provider';
 import { BaseUser } from './models/entities/User';
+import UserInputs from './dashboard/user/UserInputs';
 
 const Axios = A.create({
 	baseURL: API,
@@ -47,51 +48,6 @@ const UnloggedScreen = ({ showUnlogged = true, children }) => {
 	}
 };
 
-const Inputs = ({ localStore }) => {
-	const { t,  } = useTranslation('glossary');
-	return useObserver(() => {
-		return Object.keys(localStore.user).map((prop) => {
-			if (prop !== 'role' && prop !== 'dinacia_user' && prop !== 'password') {
-				return (
-					<FormGroup
-						key={prop}
-						label={t(`users.${prop}`)}
-						labelFor={`input-${prop}`}>
-						<InputGroup
-							key={'input' + prop}
-							id={`input-${prop}`}
-							value={localStore.user[prop]}
-							onChange={e => localStore.user.setProperty(prop, e.target.value)}
-						/>
-					</FormGroup>
-				);
-			} else if (ISDINACIA && prop === 'dinacia_user') {
-				return Object.keys(localStore.user.dinacia_user).map((propDu) => {
-					if (propDu !== 'dinacia_company' && propDu.substring(propDu.length - 5) !== '_file') {
-						return (
-							<FormGroup
-								key={propDu}
-								label={t(`users.${propDu}`)}
-								labelFor={`input-${propDu}`}>
-								<InputGroup
-									key={'input' + propDu}
-									id={`input-${propDu}`}
-									value={localStore.user.dinacia_user[propDu]}
-									onChange={e => localStore.user.setDinaciaProperty(propDu, e.target.value)}
-								/>
-							</FormGroup>
-						);
-					} else {
-						return null;
-					}
-				});
-			} else {
-				return null;
-			}
-		});
-	});
-};
-
 const NewUser = ({ isSelfRegistering = true }) => {
 	const localStore = useLocalStore(() => ({
 		user: BaseUser.create({
@@ -112,8 +68,6 @@ const NewUser = ({ isSelfRegistering = true }) => {
 			}
 		})
 	}));
-
-	window.user = localStore.user;
 
 	const { store } = useStore(
 		'RootStore',
@@ -235,7 +189,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 						<Radio label={t('glossary:users.role_pilot')} value="pilot"/>
 					</RadioGroup>
 					}
-					<Inputs localStore={localStore} />
+					<UserInputs localStore={localStore} />
 					{ISDINACIA &&
 						<>
 							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}

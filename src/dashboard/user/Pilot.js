@@ -2,10 +2,12 @@ import React  from 'react';
 import { observer, useLocalStore, useAsObservableSource } from 'mobx-react';
 import { useStore } from 'mobx-store-provider';
 import { useTranslation } from 'react-i18next';
-import { Button, Intent, FormGroup, InputGroup } from '@blueprintjs/core';
+import { Button, Intent, FormGroup, InputGroup, FileInput } from '@blueprintjs/core';
 import * as classnames from 'classnames';
 import gStyles from '../generic/GenericList.module.css';
 import styles from './Pilot.module.css';
+import { BaseUser } from '../../models/entities/User';
+import { ISDINACIA } from '../../consts';
 
 function Pilot({ user }) {
 	const { t, } = useTranslation(['glossary', 'common']);
@@ -76,6 +78,7 @@ function Pilot({ user }) {
 		newUserData.firstName = document.getElementById('firstName').value;
 		newUserData.lastName = document.getElementById('lastName').value;
 		newUserData.email = document.getElementById('email').value;
+		if (newUserData.dinacia_user != void 0) newUserData.dinacia_user.permit_expire_date = document.getElementById('permit_expire_date').value;
 		axiosInstance
 			.put('/user/info/' + newUserData.username, newUserData, { headers: { auth: token } })
 			.then(() => {
@@ -119,6 +122,33 @@ function Pilot({ user }) {
 							<InputGroup leftIcon="person" disabled={!localStore.isUserDataChangeEnabled} id="lastName"
 								defaultValue={user.lastName}/>
 						</FormGroup>
+						{	user.dinacia_user != void 0 &&
+							<FormGroup
+								label={t('users.permit_expire_date')}
+								labelFor="permit_expire_date"
+							>
+								<InputGroup leftIcon="person" disabled={!localStore.isUserDataChangeEnabled}
+									id="permit_expire_date"
+									type="date"
+									defaultValue={user.dinacia_user.permit_expire_date}/>
+							</FormGroup>
+						}
+						{ISDINACIA &&
+						<>
+							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+								text={t('glossary:users.document_file')}
+								onInputChange={(evt) =>
+									localStore.user.setDinaciaProperty('document_file', evt.target.files[0])}/>
+							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+								text={t('glossary:users.permit_front_file')}
+								onInputChange={(evt) =>
+									localStore.user.setDinaciaProperty('permit_front_file', evt.target.files[0])}/>
+							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+								text={t('glossary:users.permit_back_file')}
+								onInputChange={(evt) =>
+									localStore.user.setDinaciaProperty('permit_back_file', evt.target.files[0])}/>
+						</>
+						}
 						<FormGroup
 							label={t('users.email')}
 							labelFor="email"
