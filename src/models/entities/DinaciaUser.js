@@ -2,7 +2,7 @@ import { types } from 'mobx-state-tree';
 
 export const BaseDinaciaCompany = types
 	// Used as a base class for vehicles. Mostly for data entry and publishing to the server.
-	.model('BaseDinaciaUser', {
+	.model('BaseDinaciaCompany', {
 		razon_social : types.maybeNull(types.string),
 		nombre_comercial : types.maybeNull(types.string),
 		domicilio : types.maybeNull(types.string),
@@ -25,6 +25,7 @@ export const BaseDinaciaUser = types
 		phone: types.maybeNull(types.string),
 		cellphone: types.maybeNull(types.string),
 		nationality: types.maybeNull(types.string),
+		permit_expire_date: types.maybeNull(types.Date),
 		dinacia_company: types.maybeNull(BaseDinaciaCompany)
 	})
 	.volatile(() => ({

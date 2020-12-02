@@ -112,6 +112,12 @@ const NewUser = ({ isSelfRegistering = true }) => {
 		// avoid submit
 		e.preventDefault();
 
+		if (ISDINACIA) {
+			if (document.getElementById('permit_expire_date').value) {
+				localStore.user.setDinaciaProperty('permit_expire_date', document.getElementById('permit_expire_date').valueAsDate);
+			}
+		}
+
 		if (!validEmail(localStore.user.email)) {
 			store.setFloatingText(t('common:email_is_not_valid'));
 			return;
@@ -130,7 +136,10 @@ const NewUser = ({ isSelfRegistering = true }) => {
 				// noinspection JSUnfilteredForInLoop
 				data.append(key, localStore.user[key]);
 			} else if (ISDINACIA) {
-				data.append('dinacia_user_str', JSON.stringify(localStore.user.dinacia_user));
+				const dinaciaUserData = { ...localStore.user.dinacia_user };
+				dinaciaUserData.permit_expire_date = dinaciaUserData.permit_expire_date.toISOString();
+
+				data.append('dinacia_user_str', JSON.stringify(dinaciaUserData));
 				data.append('document_file', localStore.user.dinacia_user.document_file);
 				data.append('permit_front_file', localStore.user.dinacia_user.permit_front_file);
 				data.append('permit_back_file', localStore.user.dinacia_user.permit_back_file);
@@ -210,6 +219,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 									localStore.user.dinacia_user.permit_back_file.name}
 								onInputChange={(evt) =>
 									localStore.user.setDinaciaProperty('permit_back_file', evt.target.files[0])}/>
+							<input type='date' id='permit_expire_date' style={{ width: '100%', marginBottom: '50px' }} />
 						</>
 					}
 					<FormGroup

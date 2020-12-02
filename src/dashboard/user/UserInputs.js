@@ -24,7 +24,10 @@ const UserInputs = ({ localStore }) => {
 				);
 			} else if (ISDINACIA && prop === 'dinacia_user') {
 				return Object.keys(localStore.user.dinacia_user).map((propDu) => {
-					if (propDu !== 'dinacia_company' && propDu.substring(propDu.length - 5) !== '_file') {
+					if (propDu !== 'dinacia_company' &&
+						propDu.substring(propDu.length - 5) !== '_file' &&
+						propDu.substring(propDu.length - 5) !== '_date'
+					) {
 						return (
 							<FormGroup
 								key={propDu}
