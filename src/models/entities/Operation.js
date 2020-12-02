@@ -81,7 +81,16 @@ export const BaseOperation = types
 			console.log('POST SNAPSHOT', snapshot);
 			return snapshot;
 		}
+	}))
+	.actions((self) => ({
+		addUasRegistration: (uvin) => {
+			self.uas_registrations.push(uvin);
+		},
+		removeUasRegistration: (uvin) => {
+			self.uas_registrations = _.without(self.uas_registrations, uvin);
+		}
 	}));
+
 
 export const Operation = BaseOperation
 	.named('Operation')

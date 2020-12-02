@@ -322,12 +322,11 @@ export const MapStore = types
 		},
 		addOperationUASRegistration(uvin) {
 			self.editorOperation
-				.uas_registrations
-				.push(uvin);
+				.addUasRegistration(uvin);
 		},
 		removeOperationUASRegistration(uvin) {
-			_.pull(self.editorOperation
-				.uas_registrations, uvin);
+			self.editorOperation
+				.removeUasRegistration(uvin);
 		},
 		saveOperation: flow(function* saveOperation() {
 			self.removeMapOnClick();

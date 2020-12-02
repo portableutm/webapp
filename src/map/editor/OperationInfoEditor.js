@@ -173,7 +173,7 @@ function OperationInfoEditor() {
 						if (vehicle && vehicle.owner.username === mapStore.editorOperation.owner) {
 							return (
 								<Checkbox
-									key={vehicle.faaNumber}
+									key={vehicle.uvin}
 									data-test-id={'map#editor#operation#info#uas_registration#'+index}
 									checked={_.includes(mapStore.editorOperation.uas_registrations, vehicle.uvin)}
 									label={vehicle.asDisplayString}
