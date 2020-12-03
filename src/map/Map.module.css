@@ -20,6 +20,25 @@
     overflow: hidden;
 }
 
+.sidebarWarning {
+    background-color: rgba(240, 101, 67, .5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 10px;
+    padding: 5px;
+    min-height: 20vh;
+    border-radius: 5px;
+    border: solid 2px rgb(240, 101, 67);
+}
+
+.sidebarWarning p:first-child {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
 .sidebarSeparator {
     color: #d0d0d0;
     padding: 5px;

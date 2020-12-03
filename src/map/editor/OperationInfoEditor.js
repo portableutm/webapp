@@ -28,6 +28,7 @@ function OperationInfoEditor() {
 
 	const [doesNothingContact, setDoesNothingContact] = useState('');
 	const [doesNothingPhone, setDoesNothingPhone] = useState('');
+	const [expandedLabel, setExpandedLabel] = useState('');
 
 	const saveOperationAndSetSaving = async () => {
 		setSaving(true);
@@ -97,6 +98,7 @@ function OperationInfoEditor() {
 						data-test-id="map#editor#operation#info#pilot"
 						value={mapStore.editorOperation.owner}
 						minimal
+						fill
 						disabled={authStore.isPilot}
 						onChange={(evt) => mapStore.setOperationInfo('owner', evt.currentTarget.value)}
 					>
@@ -176,19 +178,24 @@ function OperationInfoEditor() {
 					{ vehicleStore.allVehicles.map((vehicle, index) => {
 						if (vehicle && canPilotFlyVehicle(vehicle, mapStore.editorOperation.owner)) {
 							return (
-								<Checkbox
+								<div
+									onMouseEnter={() => setExpandedLabel(vehicle.uvin)}
+									onMouseOut ={() => setExpandedLabel('')}
 									key={vehicle.uvin}
-									data-test-id={'map#editor#operation#info#uas_registration#'+index}
-									checked={_.includes(mapStore.editorOperation.uas_registrations, vehicle.uvin)}
-									label={vehicle.asDisplayString}
-									onChange={(evt) => {
-										if (evt.currentTarget.checked) {
-											mapStore.addOperationUASRegistration(vehicle.uvin);
-										} else {
-											mapStore.removeOperationUASRegistration(vehicle.uvin);
-										}
-									}}
-								/>
+								>
+									<Checkbox
+										data-test-id={'map#editor#operation#info#uas_registration#'+index}
+										checked={_.includes(mapStore.editorOperation.uas_registrations, vehicle.uvin)}
+										label={expandedLabel === vehicle.uvin ? vehicle.asDisplayString : vehicle.asShortDisplayString}
+										onChange={(evt) => {
+											if (evt.currentTarget.checked) {
+												mapStore.addOperationUASRegistration(vehicle.uvin);
+											} else {
+												mapStore.removeOperationUASRegistration(vehicle.uvin);
+											}
+										}}
+									/>
+								</div>
 							);
 						} else {
 							return null;
@@ -196,6 +203,10 @@ function OperationInfoEditor() {
 					})}
 				</FormGroup>
 				<OperationVolumeInfoEditor />
+				<div className={styles.sidebarWarning}>
+					<p>{t('editor.expired_permit.title')}</p>
+					<p>{t('editor.expired_permit.text')}</p>
+				</div>
 				<div
 					className={styles.sidebarButtonTextRight}
 				>

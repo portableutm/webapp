@@ -34,6 +34,7 @@ export const OperationStore = types
 			correctedOperation.uas_registrations = operation.uas_registrations.map(uasr => {
 				const newUasr = _.cloneDeep(uasr);
 				newUasr.date = new Date(uasr.date);
+				newUasr.operators = uasr.operators.map(user => user.username);
 				return newUasr;
 			});
 			correctedOperation.operation_volumes = operation.operation_volumes.map(
