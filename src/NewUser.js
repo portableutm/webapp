@@ -142,6 +142,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 				data.append('dinacia_user_str', JSON.stringify(dinaciaUserData));
 				data.append('document_file', localStore.user.dinacia_user.document_file);
 				data.append('permit_front_file', localStore.user.dinacia_user.permit_front_file);
+				data.append('remote_sensor_file', localStore.user.dinacia_user.remote_sensor_file);
 				data.append('permit_back_file', localStore.user.dinacia_user.permit_back_file);
 			}
 		}
@@ -219,6 +220,12 @@ const NewUser = ({ isSelfRegistering = true }) => {
 									localStore.user.dinacia_user.permit_back_file.name}
 								onInputChange={(evt) =>
 									localStore.user.setDinaciaProperty('permit_back_file', evt.target.files[0])}/>
+							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+								text={localStore.user.dinacia_user.remote_sensor_file === null ?
+									t('glossary:users.remote_sensor_file') :
+									localStore.user.dinacia_user.remote_sensor_file.name}
+								onInputChange={(evt) =>
+									localStore.user.setDinaciaProperty('remote_sensor_file', evt.target.files[0])}/>
 							<input type='date' id='permit_expire_date' style={{ width: '100%', marginBottom: '50px' }} />
 						</>
 					}

@@ -32,7 +32,8 @@ export const BaseDinaciaUser = types
 	.volatile(() => ({
 		document_file: null,
 		permit_front_file: null,
-		permit_back_file: null
+		permit_back_file: null,
+		remote_sensor_file: null
 	}));
 
 export const DinaciaUser = BaseDinaciaUser
@@ -42,5 +43,6 @@ export const DinaciaUser = BaseDinaciaUser
 		document_file_path: types.maybe(types.string),
 		permit_front_file_path: types.maybe(types.string),
 		permit_back_file_path: types.maybe(types.string),
+		remote_sensor_file_path: types.maybe(types.string),
 		dinacia_company: types.maybeNull(DinaciaCompany)
 	});

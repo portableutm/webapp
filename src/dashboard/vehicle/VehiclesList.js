@@ -163,7 +163,7 @@ function Vehicle({ v }) {
 				}
 				{	ISDINACIA && v.dinacia_vehicle &&
 					<GenericListLine>
-						<img className={styles.lineImage} src={v.dinacia_vehicle.serial_number_file_path} alt="Serial number image" />
+						<img className={styles.lineImage} src={v.dinacia_vehicle.serial_number_file_path} alt="Serial number" />
 						<p></p>
 					</GenericListLine>
 				}
