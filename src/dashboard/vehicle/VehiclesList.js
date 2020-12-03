@@ -98,14 +98,18 @@ function Vehicle({ v }) {
 					{t('vehicles.org-uuid')}
 					{v['org-uuid']}
 				</GenericListLine>*/}
+				{	v.owner && // If undefined, it's your own vehicle
 				<GenericListLine>
 					{t('vehicles.owner')}
 					{v.owner.asDisplayString}
 				</GenericListLine>
+				}
+				{	v.registeredBy && // If undefined, it's your own vehicle. This should still be not undefined, but...
 				<GenericListLine>
 					{t('vehicles.registeredBy')}
 					{v.registeredBy.asDisplayString}
 				</GenericListLine>
+				}
 				{ 	ISDINACIA &&
 					v.dinacia_vehicle !== null &&
 					['caa_registration',

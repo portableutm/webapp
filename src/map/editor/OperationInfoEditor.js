@@ -10,6 +10,10 @@ import SidebarButton from '../SidebarButton';
 import OperationVolumeInfoEditor from './OperationVolumeInfoEditor';
 import styles from '../Map.module.css';
 
+const canPilotFlyVehicle = (vehicle, user) => {
+	return (vehicle.owner && vehicle.owner.username === user) ||
+		(vehicle.operators.length > 0 && _.indexOf(vehicle.operators, user) >= 0);
+};
 
 function OperationInfoEditor() {
 	const {
@@ -170,7 +174,7 @@ function OperationInfoEditor() {
 					labelFor="uas_registrations"
 				>
 					{ vehicleStore.allVehicles.map((vehicle, index) => {
-						if (vehicle && vehicle.owner.username === mapStore.editorOperation.owner) {
+						if (vehicle && canPilotFlyVehicle(vehicle, mapStore.editorOperation.owner)) {
 							return (
 								<Checkbox
 									key={vehicle.uvin}

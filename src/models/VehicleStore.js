@@ -26,7 +26,7 @@ export const VehicleStore = types
 		return {
 			fetch: flow(function* fetch() {
 				try {
-					const response = yield getRoot(self).axiosInstance.get('vehicle', { headers: { auth: getRoot(self).authStore.token } });
+					const response = yield getRoot(self).axiosInstance.get(getRoot(self).authStore.isAdmin ? 'vehicle' : 'vehicle/operator', { headers: { auth: getRoot(self).authStore.token } });
 					self.hasFetched = true;
 					const vehicles = response.data;
 					self.vehicles.replace(
@@ -103,8 +103,8 @@ export const VehicleStore = types
 							self.filterMatchingText.toLowerCase()
 						);
 						vehicleWithVisibility.asDisplayString = vehicle.asDisplayString;
-						vehicleWithVisibility.owner.asDisplayString = vehicle.owner.asDisplayString;
-						vehicleWithVisibility.registeredBy.asDisplayString = vehicle.registeredBy.asDisplayString;
+						if (vehicleWithVisibility.owner) vehicleWithVisibility.owner.asDisplayString = vehicle.owner.asDisplayString;
+						if (vehicleWithVisibility.registeredBy) vehicleWithVisibility.registeredBy.asDisplayString = vehicle.registeredBy.asDisplayString;
 						vehicleWithVisibility.asShortDisplayString = vehicle.asShortDisplayString;
 						return vehicleWithVisibility;})
 					.orderBy(vehicle => {

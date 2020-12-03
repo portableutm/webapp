@@ -292,6 +292,7 @@ export const MapStore = types
 		},
 		setOperationInfo(property, value) {
 			self.editorOperation[property] = value;
+			if (property === 'owner') self.editorOperation.uas_registrations = [];
 		},
 		setOperationVolumeInfo(volumeIndex, property, value) {
 			self

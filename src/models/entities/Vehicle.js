@@ -72,8 +72,8 @@ export const Vehicle = BaseVehicle
 	.props({
 		uvin: types.identifier,
 		date: types.Date,
-		owner: User,
-		registeredBy: User,
+		owner: types.maybe(User),
+		registeredBy: types.maybe(User),
 		dinacia_vehicle: types.maybeNull(DinaciaVehicle) // If the instance is NOT DINACIA, this MUST BE null
 	})
 	.views(self => ({
@@ -86,9 +86,9 @@ export const Vehicle = BaseVehicle
 		},
 		get asDisplayString() {
 			if (self.dinacia_vehicle === null) {
-				return `${self.vehicleName}: ${self.manufacturer} ${self.model} (${self.faaNumber}) - ${self.owner.asDisplayString}`;
+				return `${self.vehicleName}: ${self.manufacturer} ${self.model} (${self.faaNumber})${self.owner ? ` - ${self.owner.asDisplayString}` : ''}`;
 			} else {
-				return `${self.vehicleName}: ${self.manufacturer} ${self.model} (${self.dinacia_vehicle.caa_registration}) - ${self.owner.asDisplayString}`;
+				return `${self.vehicleName}: ${self.manufacturer} ${self.model} (${self.dinacia_vehicle.caa_registration})${self.owner ? ` - ${self.owner.asDisplayString}` : ''}`;
 			}
 		}
 	}));

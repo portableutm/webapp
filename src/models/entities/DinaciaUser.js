@@ -26,6 +26,7 @@ export const BaseDinaciaUser = types
 		cellphone: types.maybeNull(types.string),
 		nationality: types.maybeNull(types.string),
 		permit_expire_date: types.maybeNull(types.Date),
+		remote_sensor_id: types.maybeNull(types.string),
 		dinacia_company: types.maybeNull(BaseDinaciaCompany)
 	})
 	.volatile(() => ({
