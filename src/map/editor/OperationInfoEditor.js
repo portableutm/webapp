@@ -26,27 +26,24 @@ function OperationInfoEditor() {
 	const [isSaving, setSaving] = useState(false);
 	const history = useHistory();
 
-	const [doesNothingContact, setDoesNothingContact] = useState('');
-	const [doesNothingPhone, setDoesNothingPhone] = useState('');
 	const [expandedLabel, setExpandedLabel] = useState('');
 
 	const saveOperationAndSetSaving = async () => {
 		setSaving(true);
 		await mapStore.saveOperation();
-		setSaving(false);
 		history.push('/');
 	};
 
 	useEffect(() => {
 		const dispose = autorun(() => {
-			if (mapStore.editorOperation.owner !== null) {
+			if (mapStore.isEditingOperation && mapStore.editorOperation.owner !== null) {
 				const user = userStore.users.get(mapStore.editorOperation.owner);
-				setDoesNothingContact(user.asDisplayString);
+				mapStore.setOperationInfo('contact', user.asDisplayString);
 				if (user.dinacia_user !== null) {
-					if (user.dinacia_user.phone !== null) {
-						setDoesNothingPhone(user.dinacia_user.phone);
+					if (user.dinacia_user.phone !== null && user.dinacia_user.phone.length > 0) {
+						mapStore.setOperationInfo('contact_phone', user.dinacia_user.phone);
 					} else {
-						setDoesNothingPhone(user.dinacia_user.cellphone);
+						mapStore.setOperationInfo('contact_phone', user.dinacia_user.cellphone);
 					}
 
 				}
@@ -133,9 +130,8 @@ function OperationInfoEditor() {
 						className={styles.sidebarButtonTextContentOverflows}
 						id="contact"
 						data-test-id="map#editor#operation#info#contact"
-						value={doesNothingContact}
-						// TODO: Uncomment when this makes sense value={mapStore.editorOperation.contact}
-						// TODO: Uncomment when this makes sense onChange={(evt) => mapStore.setOperationInfo('contact', evt.target.value)}
+						value={mapStore.editorOperation.contact}
+						onChange={(evt) => mapStore.setOperationInfo('contact', evt.target.value)}
 					/>
 				</FormGroup>
 				{/* "Contact Phone"*/}
@@ -149,9 +145,8 @@ function OperationInfoEditor() {
 						className={styles.sidebarButtonTextContentOverflows}
 						id="contact_phone"
 						data-test-id="map#editor#operation#info#contact_phone"
-						value={doesNothingPhone}
-						// TODO: Uncomment when this makes sense value={mapStore.editorOperation.contact_phone}
-						// onChange={(evt) => mapStore.setOperationInfo('contact_phone', evt.target.value)}
+						value={mapStore.editorOperation.contact_phone}
+						onChange={(evt) => mapStore.setOperationInfo('contact_phone', evt.target.value)}
 					/>
 				</FormGroup>
 				{/* "flight_comments": "Untitled" */}
