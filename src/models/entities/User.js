@@ -1,5 +1,5 @@
 import { types } from 'mobx-state-tree';
-import { BaseDinaciaUser } from './DinaciaUser';
+import { BaseDinaciaUser, DinaciaUser } from './DinaciaUser';
 
 export const BaseUser = types
 	.model('BaseUser', {
@@ -54,5 +54,6 @@ export const BaseUser = types
 export const User = BaseUser
 	.named('User')
 	.props({
-		username: types.identifier
+		username: types.identifier,
+		dinacia_user: types.maybeNull(DinaciaUser)
 	});

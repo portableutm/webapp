@@ -38,14 +38,15 @@ function OperationInfoEditor() {
 		const dispose = autorun(() => {
 			if (mapStore.isEditingOperation && mapStore.editorOperation.owner !== null) {
 				const user = userStore.users.get(mapStore.editorOperation.owner);
-				mapStore.setOperationInfo('contact', user.asDisplayString);
-				if (user.dinacia_user !== null) {
-					if (user.dinacia_user.phone !== null && user.dinacia_user.phone.length > 0) {
-						mapStore.setOperationInfo('contact_phone', user.dinacia_user.phone);
-					} else {
-						mapStore.setOperationInfo('contact_phone', user.dinacia_user.cellphone);
+				if (user) {
+					mapStore.setOperationInfo('contact', user.asDisplayString);
+					if (user.dinacia_user !== null) {
+						if (user.dinacia_user.phone !== null && user.dinacia_user.phone.length > 0) {
+							mapStore.setOperationInfo('contact_phone', user.dinacia_user.phone);
+						} else {
+							mapStore.setOperationInfo('contact_phone', user.dinacia_user.cellphone);
+						}
 					}
-
 				}
 			}
 		});
@@ -198,10 +199,16 @@ function OperationInfoEditor() {
 					})}
 				</FormGroup>
 				<OperationVolumeInfoEditor />
+				{	userStore.users.get(mapStore.editorOperation.owner) &&
+					userStore.users.get(mapStore.editorOperation.owner).dinacia_user &&
+					( userStore.users.get(mapStore.editorOperation.owner).dinacia_user.permit_expire_date === null ||
+					userStore.users.get(mapStore.editorOperation.owner).dinacia_user.permit_expire_date < new Date() ) &&
+				// Show a warning indicating that the permit has expired
 				<div className={styles.sidebarWarning}>
 					<p>{t('editor.expired_permit.title')}</p>
 					<p>{t('editor.expired_permit.text')}</p>
 				</div>
+				}
 				<div
 					className={styles.sidebarButtonTextRight}
 				>

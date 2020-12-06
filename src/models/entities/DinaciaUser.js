@@ -36,13 +36,24 @@ export const BaseDinaciaUser = types
 		remote_sensor_file: null
 	}));
 
-export const DinaciaUser = BaseDinaciaUser
+const DinaciaUserInternal = BaseDinaciaUser
 	.named('DinaciaUser')
 	.props({
-		id: types.string,
 		document_file_path: types.maybe(types.string),
 		permit_front_file_path: types.maybe(types.string),
 		permit_back_file_path: types.maybe(types.string),
 		remote_sensor_file_path: types.maybe(types.string),
 		dinacia_company: types.maybeNull(DinaciaCompany)
 	});
+
+export const DinaciaUser = types.snapshotProcessor(DinaciaUserInternal, {
+	preProcessor(snapshot) {
+		if (snapshot != null) {
+			return {
+				permit_expire_date: new Date(snapshot.permit_expire_date)
+			};
+		} else {
+			return null;
+		}
+	}
+});
