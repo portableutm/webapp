@@ -27,7 +27,14 @@ function Pilot({ user }) {
 		isUserDataChangeEnabled: true,
 		isPasswordChangeEnabled: false,
 		email: obsUser.email,
+		document_file: null,
+		permit_front_file: null,
+		remote_sensor_file: null,
+		permit_back_file: null,
 
+		setProperty(property, value) {
+			localStore[property] = value;
+		},
 		setEmail(newEmail) {
 			localStore.email = newEmail;
 		},
@@ -61,7 +68,7 @@ function Pilot({ user }) {
 		//if (newUserData.password.includes(' ')) alert('Your password contains an invalid character');
 		axiosInstance
 			.put(
-				'/user/password/' + newUserData.username,
+				'/user/password/' + user.username,
 				newUserData,
 				{ headers: { auth: token } })
 			.then(() => {
@@ -74,13 +81,26 @@ function Pilot({ user }) {
 	};
 	const changeUserData = () => {
 		localStore.setUserDataChangeEnabled(false);
-		const newUserData = { ...user };
-		newUserData.firstName = document.getElementById('firstName').value;
-		newUserData.lastName = document.getElementById('lastName').value;
-		newUserData.email = document.getElementById('email').value;
-		if (newUserData.dinacia_user != void 0) newUserData.dinacia_user.permit_expire_date = document.getElementById('permit_expire_date').value;
+
+		const newUserData = new FormData();
+		if (ISDINACIA) {
+			const dinaciaUserData = { ...user.dinacia_user };
+			dinaciaUserData.permit_expire_date = dinaciaUserData.permit_expire_date.toISOString();
+			if (document.getElementById('permit_expire_date').valueAsNumber > 0)
+				dinaciaUserData.permit_expire_date = document.getElementById('permit_expire_date').valueAsDate;
+			newUserData.append('dinacia_user_str', JSON.stringify(dinaciaUserData));
+			newUserData.append('document_file', localStore.document_file);
+			newUserData.append('permit_front_file', localStore.permit_front_file);
+			newUserData.append('remote_sensor_file', localStore.remote_sensor_file);
+			newUserData.append('permit_back_file', localStore.permit_back_file);
+		}
+
+		newUserData.append('firstName', document.getElementById('firstName').value);
+		newUserData.append('lastName', document.getElementById('lastName').value);
+		newUserData.append('email', document.getElementById('email').value);
+
 		axiosInstance
-			.put('/user/info/' + newUserData.username, newUserData, { headers: { auth: token } })
+			.put('/user/info/' + user.username, newUserData, { headers: { 'Content-Type': 'multipart/form-data', auth: token } })
 			.then(() => {
 				setWarning('Data change was successful');
 				fetchUsers();
@@ -122,7 +142,32 @@ function Pilot({ user }) {
 							<InputGroup leftIcon="person" disabled={!localStore.isUserDataChangeEnabled} id="lastName"
 								defaultValue={user.lastName}/>
 						</FormGroup>
-						{	user.dinacia_user != void 0 &&
+						{ISDINACIA &&
+						<>
+							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+								text={localStore.document_file === null ?
+									t('glossary:users.document_file') :
+									localStore.document_file.name}
+								onInputChange={(evt) =>
+									localStore.setProperty('document_file', evt.target.files[0])}/>
+							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+								text={localStore.permit_front_file === null ?
+									t('glossary:users.permit_front_file') :
+									localStore.permit_front_file.name}
+								onInputChange={(evt) =>
+									localStore.setProperty('permit_front_file', evt.target.files[0])}/>
+							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+								text={localStore.permit_back_file === null ?
+									t('glossary:users.permit_back_file') :
+									localStore.permit_back_file.name}
+								onInputChange={(evt) =>
+									localStore.setProperty('permit_back_file', evt.target.files[0])}/>
+							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+								text={localStore.remote_sensor_file === null ?
+									t('glossary:users.remote_sensor_file') :
+									localStore.remote_sensor_file.name}
+								onInputChange={(evt) =>
+									localStore.setProperty('remote_sensor_file', evt.target.files[0])}/>
 							<FormGroup
 								label={t('users.permit_expire_date')}
 								labelFor="permit_expire_date"
@@ -130,23 +175,13 @@ function Pilot({ user }) {
 								<InputGroup leftIcon="person" disabled={!localStore.isUserDataChangeEnabled}
 									id="permit_expire_date"
 									type="date"
-									defaultValue={user.dinacia_user.permit_expire_date}/>
+								/>
+								{user.dinacia_user != null &&
+								<p>
+									{t('glossary:current')} {user.dinacia_user.permit_expire_date.toDateString()}
+								</p>
+								}
 							</FormGroup>
-						}
-						{ISDINACIA &&
-						<>
-							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
-								text={t('glossary:users.document_file')}
-								onInputChange={(evt) =>
-									localStore.user.setDinaciaProperty('document_file', evt.target.files[0])}/>
-							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
-								text={t('glossary:users.permit_front_file')}
-								onInputChange={(evt) =>
-									localStore.user.setDinaciaProperty('permit_front_file', evt.target.files[0])}/>
-							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
-								text={t('glossary:users.permit_back_file')}
-								onInputChange={(evt) =>
-									localStore.user.setDinaciaProperty('permit_back_file', evt.target.files[0])}/>
 						</>
 						}
 						<FormGroup

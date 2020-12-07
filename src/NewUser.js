@@ -134,10 +134,14 @@ const NewUser = ({ isSelfRegistering = true }) => {
 		for (const key in localStore.user) {
 			if (key !== 'dinacia_user') {
 				// noinspection JSUnfilteredForInLoop
-				data.append(key, localStore.user[key]);
+				let value = localStore.user[key];
+				if (key === 'firstName' || key === 'lastName') {
+					value = value.length > 0 ? `${value.charAt().toUpperCase()}${value.substring(1)}` : value;
+				}
+				data.append(key, value);
 			} else if (ISDINACIA) {
 				const dinaciaUserData = { ...localStore.user.dinacia_user };
-				dinaciaUserData.permit_expire_date = dinaciaUserData.permit_expire_date.toISOString();
+				if (dinaciaUserData.permit_expire_date != null) dinaciaUserData.permit_expire_date = dinaciaUserData.permit_expire_date.toISOString();
 
 				data.append('dinacia_user_str', JSON.stringify(dinaciaUserData));
 				data.append('document_file', localStore.user.dinacia_user.document_file);
@@ -226,7 +230,14 @@ const NewUser = ({ isSelfRegistering = true }) => {
 									localStore.user.dinacia_user.remote_sensor_file.name}
 								onInputChange={(evt) =>
 									localStore.user.setDinaciaProperty('remote_sensor_file', evt.target.files[0])}/>
-							<input type='date' id='permit_expire_date' style={{ width: '100%', marginBottom: '50px' }} />
+							<FormGroup
+								label={t('users.permit_expire_date')}
+								labelFor="permit_expire_date"
+							>
+								<InputGroup leftIcon="person"
+									id="permit_expire_date"
+									type="date"/>
+							</FormGroup>
 						</>
 					}
 					<FormGroup
@@ -273,19 +284,19 @@ const NewUser = ({ isSelfRegistering = true }) => {
 		} else if (verificationStatus === VERIFICATION_NOT_STARTED) {
 			return (
 				<UnloggedScreen showUnlogged={isSelfRegistering}>
-					{t('dsh.new_glossary:users.verifying')}
+					{t('dashboard:sidemenu.new_user.verifying')}
 				</UnloggedScreen>
 			);
 		} else if (verificationStatus === VERIFICATION_OK) {
 			return (
 				<UnloggedScreen showUnlogged={isSelfRegistering}>
-					{t('dsh.new_glossary:users.verificated')}
+					{t('dashboard:sidemenu.new_user.verificated')}
 				</UnloggedScreen>
 			);
 		} else if (verificationStatus === VERIFICATION_ERROR) {
 			return (
 				<UnloggedScreen showUnlogged={isSelfRegistering}>
-					{t('dsh.new_glossary:users.verification_error')}
+					{t('dashboard:sidemenu.new_user.verification_error')}
 				</UnloggedScreen>
 			);
 		}

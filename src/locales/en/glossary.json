@@ -180,5 +180,6 @@
     "selected": "Selected paraglider",
     "username": "Paraglider",
     "time_sent": "Time message was sent"
-  }
+  },
+  "current": "Current expire date set is "
 }

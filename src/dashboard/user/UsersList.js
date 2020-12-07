@@ -105,7 +105,8 @@ function User({ expanded = false,  children }) {
 							<GenericListLine key={prop}>
 								{t(`users.${prop}`)}
 								<div data-test-id={`dash#selected#${prop}`}>
-									{children[prop]}
+									{prop.substr(-5) !== '_date' && children.dinacia_user[prop] !== null && children.dinacia_user[prop]}
+									{prop.substr(-5) === '_date' && children.dinacia_user[prop].toLocaleDateString()}
 								</div>
 							</GenericListLine>
 						);
@@ -118,7 +119,7 @@ function User({ expanded = false,  children }) {
 						<GenericListLine key={prop}>
 							{t(`users.${prop}`)}
 							<div data-test-id={`dash#selected#${prop}`}>
-								{children[prop]}
+								{children.dinacia_user.dinacia_company[prop]}
 							</div>
 						</GenericListLine>
 					);
