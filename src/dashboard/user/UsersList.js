@@ -100,7 +100,7 @@ function User({ expanded = false,  children }) {
 					}
 				}))}
 				{ ISDINACIA && children.dinacia_user != void 0 && Object.keys(children.dinacia_user).map((prop => {
-					if (prop !== 'dinacia_company') {
+					if (prop !== 'dinacia_company' && prop.substr(-4) !== 'path' && prop.substr(-4) !== 'file') {
 						return (
 							<GenericListLine key={prop}>
 								{t(`users.${prop}`)}
@@ -124,6 +124,30 @@ function User({ expanded = false,  children }) {
 						</GenericListLine>
 					);
 				}))}
+				{	ISDINACIA && children.dinacia_user && children.dinacia_user.document_file_path &&
+				<GenericListLine>
+					<img className={styles.lineImage} src={children.dinacia_user.document_file_path} alt="Document" />
+					<p></p>
+				</GenericListLine>
+				}
+				{	ISDINACIA && children.dinacia_user && children.dinacia_user.permit_front_file_path &&
+					<GenericListLine>
+						<img className={styles.lineImage} src={children.dinacia_user.permit_front_file_path} alt="Front of the permit" />
+						<p></p>
+					</GenericListLine>
+				}
+				{	ISDINACIA && children.dinacia_user && children.dinacia_user.permit_back_file_path &&
+				<GenericListLine>
+					<img className={styles.lineImage} src={children.dinacia_user.permit_back_file_path} alt="Back of the permit" />
+					<p></p>
+				</GenericListLine>
+				}
+				{	ISDINACIA && children.dinacia_user && children.dinacia_user.remote_sensor_file_path &&
+				<GenericListLine>
+					<img className={styles.lineImage} src={children.dinacia_user.remote_sensor_file_path} alt="Remote Sensor ID" />
+					<p></p>
+				</GenericListLine>
+				}
 				{/* TODO: ADD volumesOfInterest! */}
 			</div>
 			}

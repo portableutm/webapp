@@ -46,7 +46,11 @@
       "closecalendar": "Cerrar calendario"
     },
     "operation": {
-      "complete": "Editando información de la operación"
+      "complete": "Editando información de la operación",
+      "email_close_dialog": "Cerrar sin enviar",
+      "email_info": "Enviar un reporte por email",
+      "send_email": "Enviar reporte",
+      "send_email_to": "Enviar un email conteniendo un reporte de esta operación al siguiente email."
     },
     "completesteps": "Completar los pasos para definir una nueva operación.",
     "definevolume": "Haga click en el mapa para definir un polígono.",
@@ -62,8 +66,14 @@
     "cant_finish": "No se pudo crear la OPERACIÓN, ya que el polígono no estaba definido. Por favor, defina un polígono donde el vehículo pueda volar, haciendo clic en el mapa en las posiciones apropiadas",
     "uvr": {
       "complete": "Editando información de la UVR"
+    },
+    "expired_permit": {
+      "title": "¡Tu libreta de piloto está vencida!",
+      "text": "Al crear tu operación, no será aprobada automaticamente y deberás esperar la autorización manual de un administrador del sistema. Si ya has renovado tu libreta, puedes cambiar esta información desde el panel de control."
     }
   },
   "historical_mode": "Operaciones expiradas",
-  "historical_mode_description": "Mostrar operaciones históricas"
+  "historical_mode_description": "Mostrar operaciones históricas",
+  "following_drone": "Ahora estás siguiendo los movimientos de un vehículo en el aire. El mapa ha sido bloqueado, y no podrás desplazarte en el mismo. Puedes dejar de seguir un drone en el mapa presionando la cruz en el menú lateral izquierdo.",
+  "operation_not_exists": "La operación no existe"
 }

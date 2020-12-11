@@ -48,7 +48,11 @@
       "closecalendar": "Close calendar"
     },
     "operation": {
-      "complete": "Editing information of operation"
+      "complete": "Editing information of operation",
+      "send_email_to": "Send an email contaning a report of this operation, for auditing purposes, to the following email",
+      "email_close_dialog": "Close without sending",
+      "email_info": "Send a report",
+      "send_email": "Send report"
     },
     "uvr": {
       "complete": "Editing information of UVR"
@@ -69,7 +73,6 @@
       "title": "Your permit has expired!",
       "text": "When you submit your operation, it will not be approved automatically. You will have to await the manual approval by an administrator of the system"
     }
-
   },
   "operation_not_exists": "The operation does not exist",
   "following_drone": "You are now following a vehicle that is in the air. The map has been locked, and you won't be able to drag it. You can still zoom in or zoom out. You may stop following a drone by pressing the CROSS on the SideMenu"
