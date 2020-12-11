@@ -140,6 +140,21 @@ export const OperationStore = types
 					getRoot(self).setFloatingText('Error while updating operation state: ' + error);
 				}
 			}),
+			sendOperationEmail: flow(function* sendOperationEmail(gufi, recipient, body) {
+				try {
+					const response = yield getRoot(self).axiosInstance.post('mail/operation',
+						{ receiverMail: recipient, gufi: gufi, bodyMail: body },
+						{ headers: { auth: getRoot(self).authStore.token } });
+					getRoot(self).setFloatingText('Email sent successfully!');
+					return response;
+				} catch (error) {
+					console.group('operationStore sendOperationEmail *error*');
+					console.log('%cAn error has ocurred', 'color:red; font-size: 36px');
+					console.error(error);
+					console.groupEnd();
+					getRoot(self).setFloatingText('Error while updating operation state: ' + error);
+				}
+			}),
 			/* Update internal state */
 			updateOne(gufi, property, value) {
 				const current = self.operations.get(gufi);

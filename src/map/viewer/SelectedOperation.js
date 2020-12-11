@@ -32,11 +32,12 @@ function SelectedOperation() {
 	const [isDialogShown, showDialog] = useState(false);
 	const [isEmailDialogShown, showEmailDialog] = useState(false);
 	const [isApproved, setApproved] = useState(false);
-	const { operation, updatePending, authStore } = useStore(
+	const { operation, updatePending, authStore, sendOperationEmail } = useStore(
 		'RootStore',
 		(store) => ({
 			operation: store.mapStore.getSelectedOperation,
 			updatePending: store.operationStore.updatePending,
+			sendOperationEmail: store.operationStore.sendOperationEmail,
 			authStore: store.authStore
 		})
 	);
@@ -68,12 +69,12 @@ function SelectedOperation() {
 					</FormGroup>
 					<FormGroup
 						className='fullW'
-						label="Comments"
+						label="Message"
 						inline={true}
-						labelFor="comments"
+						labelFor="message"
 						labelInfo="(optional)"
 					>
-						<InputGroup id="comments" placeholder="Explanation" />
+						<InputGroup id="message" placeholder="Message" />
 					</FormGroup>
 					<div
 						className='fullW'
@@ -87,7 +88,8 @@ function SelectedOperation() {
 							{t('map:editor.operation.email_close_dialog')}
 						</Button>
 						<Button
-							onClick={() => {
+							onClick={async () => {
+								await sendOperationEmail(operation[1][1], document.getElementById('email').value, document.getElementById('message').value);
 								showEmailDialog(false);
 							}}
 							intent={Intent.PRIMARY}
