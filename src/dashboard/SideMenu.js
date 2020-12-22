@@ -74,7 +74,9 @@ function SideMenu() {
 							text={t('sidemenu.send_message')}
 							onClick={() => {
 								const header = prompt(t('sidemenu.send_message_title'), t('sidemenu.send_message_title_default'));
+								if (header === null) return;
 								const body = prompt(t('sidemenu.send_message_text'), t('sidemenu.send_message_text_default'));
+								if (body === null) return;
 								window.chat(header,body);
 								setFloatingText(t('sidemenu.send_message_sent'));
 							}}/>

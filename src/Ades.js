@@ -267,6 +267,9 @@ function Ades() {
 								<Map mode='new-uvr'/>
 							</LayoutRoute>
 							<LayoutRoute exact leftIsExpanded path='/uvr/:id' isMapVisible>
+								<Map mode='view-uvr'/>
+							</LayoutRoute>
+							<LayoutRoute exact leftIsExpanded path='/uvr/edit/:id' isMapVisible>
 								<Map mode='edit-uvr'/>
 							</LayoutRoute>
 							{/* Dashboard */}
