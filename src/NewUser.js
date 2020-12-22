@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { useCookies } from 'react-cookie';
 import styles from './LoginScreen.module.css';
 import * as classnames from 'classnames';
-import { observer, useLocalStore, useObserver } from 'mobx-react';
+import { observer, useLocalStore } from 'mobx-react';
 import { useStore } from 'mobx-store-provider';
 import { BaseUser } from './models/entities/User';
 import UserInputs from './dashboard/user/UserInputs';

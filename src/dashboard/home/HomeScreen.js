@@ -22,7 +22,7 @@ const SimpleValue = ({ title, onClick, value, color, addtlClass = null }) => {
 
 const HomeScreen = () => {
 	const history = useHistory();
-	const { opStore, vehStore } = useStore('RootStore', (store) => ({
+	const { opStore } = useStore('RootStore', (store) => ({
 		opStore: store.operationStore,
 		vehStore: store.vehicleStore
 	}));

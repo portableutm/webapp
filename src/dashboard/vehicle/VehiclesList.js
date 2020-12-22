@@ -6,7 +6,6 @@ import { Button, Callout, HTMLSelect, InputGroup, Intent, Spinner } from '@bluep
 import { useTranslation } from 'react-i18next';
 import GenericList, { GenericListLine } from '../generic/GenericList';
 import styles from '../generic/GenericList.module.css';
-import NewVehicle from './NewVehicle';
 import { ISDINACIA } from '../../consts';
 
 function Vehicle({ v }) {

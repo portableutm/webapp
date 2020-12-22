@@ -51,7 +51,7 @@ function OperationInfoEditor() {
 			}
 		});
 		return () => {dispose();};
-	}, []);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	if (mapStore.isEditingOperation) {
 		return (

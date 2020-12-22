@@ -99,7 +99,7 @@ function User({ expanded = false,  children }) {
 						return null;
 					}
 				}))}
-				{ ISDINACIA && children.dinacia_user != void 0 && Object.keys(children.dinacia_user).map((prop => {
+				{ ISDINACIA && children.dinacia_user && Object.keys(children.dinacia_user).map((prop => {
 					if (prop !== 'dinacia_company' && prop.substr(-4) !== 'path' && prop.substr(-4) !== 'file') {
 						return (
 							<GenericListLine key={prop}>
@@ -114,7 +114,7 @@ function User({ expanded = false,  children }) {
 						return null;
 					}
 				}))}
-				{ ISDINACIA && children.dinacia_user != void 0 && children.dinacia_user.dinacia_company != void 0 && Object.keys(children.dinacia_user.dinacia_company).map((prop => {
+				{ ISDINACIA && children.dinacia_user && children.dinacia_user.dinacia_company && Object.keys(children.dinacia_user.dinacia_company).map((prop => {
 					return (
 						<GenericListLine key={prop}>
 							{t(`users.${prop}`)}
