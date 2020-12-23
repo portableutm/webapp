@@ -33,7 +33,7 @@ export const BaseVehicle = types
 							return false;
 						}
 					}
-					if (getChildType(self.dinacia_vehicle, prop).name === 'number' || getChildType(self.dinacia_vehicle, prop).name.substring(1,7) === 'number') {
+					if (getChildType(self.dinacia_vehicle, prop) && getChildType(self.dinacia_vehicle, prop).name.substring(1,7) === 'number') {
 						const castedValue = Number(value);
 						self.dinacia_vehicle[prop] = castedValue;
 					} else {

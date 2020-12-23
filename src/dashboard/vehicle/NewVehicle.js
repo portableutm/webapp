@@ -217,7 +217,7 @@ function NewVehicle(props) {
 			{ISDINACIA &&
 			<FileInput fill buttonText={t('upload')} inputProps={{ accept: 'image/*' }}
 				text={localStore.vehicle.dinacia_vehicle.serial_number_file === null ? t('vehicles.serial_number_file') : localStore.vehicle.dinacia_vehicle.serial_number_file.name}
-				onInputChange={(evt) => localStore.vehicle.setDinaciaProperty('serial_number_file', evt.target.files[0])}/>
+				onInputChange={(evt) => localStore.vehicle.setDinaciaProperty('serial_number_file', evt.currentTarget.files[0])}/>
 			}
 			{/*<RadioGroup
 				label={t('vehicles.class')}
