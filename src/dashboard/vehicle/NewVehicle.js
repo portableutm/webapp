@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, FormGroup, InputGroup, Radio, RadioGroup, Intent, FileInput } from '@blueprintjs/core';
+import { Button, FormGroup, InputGroup, Intent, FileInput } from '@blueprintjs/core';
 import styles from '../generic/GenericList.module.css';
 import form from '../generic/LongForm.module.css';
 import { useParams, useHistory } from 'react-router-dom';
 import { useStore } from 'mobx-store-provider';
 import { BaseVehicle } from '../../models/entities/Vehicle';
 import { useLocalStore, useAsObservableSource, observer, useObserver } from 'mobx-react';
-import { autorun } from 'mobx';
 import { ISDINACIA } from '../../consts';
 import { BaseDinaciaVehicle } from '../../models/entities/DinaciaVehicle';
 
@@ -218,7 +217,7 @@ function NewVehicle(props) {
 			{ISDINACIA &&
 			<FileInput fill buttonText={t('upload')} inputProps={{ accept: 'image/*' }}
 				text={localStore.vehicle.dinacia_vehicle.serial_number_file === null ? t('vehicles.serial_number_file') : localStore.vehicle.dinacia_vehicle.serial_number_file.name}
-				onInputChange={(evt) => localStore.vehicle.setDinaciaProperty('serial_number_file', evt.target.files[0])}/>
+				onInputChange={(evt) => localStore.vehicle.setDinaciaProperty('serial_number_file', evt.currentTarget.files[0])}/>
 			}
 			{/*<RadioGroup
 				label={t('vehicles.class')}

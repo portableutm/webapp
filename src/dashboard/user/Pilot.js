@@ -6,7 +6,6 @@ import { Button, Intent, FormGroup, InputGroup, FileInput } from '@blueprintjs/c
 import * as classnames from 'classnames';
 import gStyles from '../generic/GenericList.module.css';
 import styles from './Pilot.module.css';
-import { BaseUser } from '../../models/entities/User';
 import { ISDINACIA } from '../../consts';
 
 function Pilot({ user }) {
@@ -85,9 +84,11 @@ function Pilot({ user }) {
 		const newUserData = new FormData();
 		if (ISDINACIA) {
 			const dinaciaUserData = { ...user.dinacia_user };
-			dinaciaUserData.permit_expire_date = dinaciaUserData.permit_expire_date.toISOString();
+			if (dinaciaUserData.permit_expire_date)
+				dinaciaUserData.permit_expire_date = dinaciaUserData.permit_expire_date.toISOString();
 			if (document.getElementById('permit_expire_date').valueAsNumber > 0)
 				dinaciaUserData.permit_expire_date = document.getElementById('permit_expire_date').valueAsDate;
+			console.log(JSON.stringify(dinaciaUserData));
 			newUserData.append('dinacia_user_str', JSON.stringify(dinaciaUserData));
 			newUserData.append('document_file', localStore.document_file);
 			newUserData.append('permit_front_file', localStore.permit_front_file);

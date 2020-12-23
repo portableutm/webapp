@@ -80,6 +80,9 @@ export const BaseOperation = types
 			});
 			console.log('POST SNAPSHOT', snapshot);
 			return snapshot;
+		},
+		get uasRegistrationCount() {
+			return self.uas_registrations.length;
 		}
 	}))
 	.actions((self) => ({

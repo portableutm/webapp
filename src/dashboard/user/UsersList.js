@@ -99,14 +99,14 @@ function User({ expanded = false,  children }) {
 						return null;
 					}
 				}))}
-				{ ISDINACIA && children.dinacia_user != void 0 && Object.keys(children.dinacia_user).map((prop => {
-					if (prop !== 'dinacia_company') {
+				{ ISDINACIA && children.dinacia_user && Object.keys(children.dinacia_user).map((prop => {
+					if (prop !== 'dinacia_company' && prop.substr(-4) !== 'path' && prop.substr(-4) !== 'file') {
 						return (
 							<GenericListLine key={prop}>
 								{t(`users.${prop}`)}
 								<div data-test-id={`dash#selected#${prop}`}>
 									{prop.substr(-5) !== '_date' && children.dinacia_user[prop] !== null && children.dinacia_user[prop]}
-									{prop.substr(-5) === '_date' && children.dinacia_user[prop].toLocaleDateString()}
+									{prop.substr(-5) === '_date' && children.dinacia_user[prop] !== null && children.dinacia_user[prop].toLocaleDateString()}
 								</div>
 							</GenericListLine>
 						);
@@ -114,7 +114,7 @@ function User({ expanded = false,  children }) {
 						return null;
 					}
 				}))}
-				{ ISDINACIA && children.dinacia_user != void 0 && children.dinacia_user.dinacia_company != void 0 && Object.keys(children.dinacia_user.dinacia_company).map((prop => {
+				{ ISDINACIA && children.dinacia_user && children.dinacia_user.dinacia_company && Object.keys(children.dinacia_user.dinacia_company).map((prop => {
 					return (
 						<GenericListLine key={prop}>
 							{t(`users.${prop}`)}
@@ -124,6 +124,30 @@ function User({ expanded = false,  children }) {
 						</GenericListLine>
 					);
 				}))}
+				{	ISDINACIA && children.dinacia_user && children.dinacia_user.document_file_path &&
+				<GenericListLine>
+					<img className={styles.lineImage} src={children.dinacia_user.document_file_path} alt="Document" />
+					<p></p>
+				</GenericListLine>
+				}
+				{	ISDINACIA && children.dinacia_user && children.dinacia_user.permit_front_file_path &&
+					<GenericListLine>
+						<img className={styles.lineImage} src={children.dinacia_user.permit_front_file_path} alt="Front of the permit" />
+						<p></p>
+					</GenericListLine>
+				}
+				{	ISDINACIA && children.dinacia_user && children.dinacia_user.permit_back_file_path &&
+				<GenericListLine>
+					<img className={styles.lineImage} src={children.dinacia_user.permit_back_file_path} alt="Back of the permit" />
+					<p></p>
+				</GenericListLine>
+				}
+				{	ISDINACIA && children.dinacia_user && children.dinacia_user.remote_sensor_file_path &&
+				<GenericListLine>
+					<img className={styles.lineImage} src={children.dinacia_user.remote_sensor_file_path} alt="Remote Sensor ID" />
+					<p></p>
+				</GenericListLine>
+				}
 				{/* TODO: ADD volumesOfInterest! */}
 			</div>
 			}

@@ -30,7 +30,7 @@
     "send_message_title": "What's the title of the message? For instance, if this is an urgent request, you could write 'Attention!'",
     "send_message_title_default": "Important, this is a live announcement from the administrators",
     "send_message_text": "What's the body of the message?",
-    "send_message_text_default": "",
+    "send_message_text_default": "Attention",
     "send_message_sent": "The message has been sent to all users connected in the web application!"
   },
   "home": {

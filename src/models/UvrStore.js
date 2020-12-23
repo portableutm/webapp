@@ -98,8 +98,8 @@ export const UvrStore = types
 			return _
 				.chain(values(self.uvrs))
 				.filter((uvr) =>
-					_.includes(self.filterShownIds, uvr.message_id) || /* Show in map only matching IDs */
-					uvr.effective_time_end.getTime() > Date.now() /* and not finished */
+					_.includes(self.filterShownIds, uvr.message_id) /* Show in map only matching IDs */
+					/*  uvr.effective_time_end.getTime() > Date.now() and not finished */
 				)
 				.value();
 		},

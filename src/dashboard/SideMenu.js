@@ -74,7 +74,9 @@ function SideMenu() {
 							text={t('sidemenu.send_message')}
 							onClick={() => {
 								const header = prompt(t('sidemenu.send_message_title'), t('sidemenu.send_message_title_default'));
+								if (header === null) return;
 								const body = prompt(t('sidemenu.send_message_text'), t('sidemenu.send_message_text_default'));
+								if (body === null) return;
 								window.chat(header,body);
 								setFloatingText(t('sidemenu.send_message_sent'));
 							}}/>
@@ -103,10 +105,10 @@ function SideMenu() {
 						<MenuItem icon="numbered-list"
 							text={t('sidemenu.uvrs_list')}
 							onClick={() => history.push('/dashboard/uvrs')}/>
-						<MenuDivider title={t('ades_options.title')} />
+						{/*<MenuDivider title={t('ades_options.title')} />
 						<MenuItem icon="cog"
 							text={t('ades_options.web')}
-							onClick={() => history.push('/dashboard/configuration')}/>
+							onClick={() => history.push('/dashboard/configuration')}/> */}
 						<MenuItem style={{ fontFamily: '"Maven Pro", sans-serif' }} text={'PortableUTM WebApp v' + adesVersion} disabled={true}/>
 					</Menu>
 				</div>

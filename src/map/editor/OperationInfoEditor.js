@@ -51,7 +51,7 @@ function OperationInfoEditor() {
 			}
 		});
 		return () => {dispose();};
-	}, []);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	if (mapStore.isEditingOperation) {
 		return (
@@ -124,7 +124,7 @@ function OperationInfoEditor() {
 				<FormGroup
 					className={styles.sidebarButtonText}
 					label={t('glossary:operations.contact')}
-					//labelInfo={t('common:forms.optional')}
+					labelInfo={t('common:forms.required')}
 					labelFor="contact"
 				>
 					<InputGroup
@@ -139,7 +139,7 @@ function OperationInfoEditor() {
 				<FormGroup
 					className={styles.sidebarButtonText}
 					label={t('glossary:operations.phone')}
-					labelInfo={t('common:forms.optional')}
+					labelInfo={t('common:forms.required')}
 					labelFor="contact_phone"
 				>
 					<InputGroup
@@ -168,7 +168,7 @@ function OperationInfoEditor() {
 				<FormGroup
 					className={styles.sidebarButtonText}
 					label={t('glossary:operations.uas_registrations')}
-					labelInfo={t('common:forms.optional')}
+					labelInfo={t('common:forms.required')}
 					labelFor="uas_registrations"
 				>
 					{ vehicleStore.allVehicles.map((vehicle, index) => {
@@ -224,6 +224,7 @@ function OperationInfoEditor() {
 						fill
 						icon="floppy-disk"
 						style={{ marginLeft: '2.5px' }}
+						disabled={mapStore.editorOperation.uasRegistrationCount === 0}
 						loading={isSaving}
 						onClick={() => saveOperationAndSetSaving()}
 					>

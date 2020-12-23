@@ -108,6 +108,11 @@ const Map = ({ mode }) => {
 				mapStore.setMapRef(map);
 			} else {
 				mapStore.stopEditor();
+				operationStore.setFilterProperty('name');
+				operationStore.setFilterByText('');
+				uvrStore.setFilterProperty('reason');
+				uvrStore.setFilterByText('');
+
 				if (obs.mode === 'new-op') {
 					mapStore.startOperationEditor();
 				} else if (obs.mode === 'edit-op') {
@@ -287,6 +292,7 @@ const Map = ({ mode }) => {
 					key={'polygoncreation'}
 					latlngs={mapStore.editorOperation.operation_volumes[0].operation_geography.coordinates}
 					popup={'Volume of operation in construction'}
+					disableOnClick
 					operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
 				/>
 				}
@@ -315,6 +321,7 @@ const Map = ({ mode }) => {
 					id={'polygonconstr'}
 					key={'polygonconstr'}
 					latlngs={Array.from(mapStore.editorUvr.geography.coordinates)}
+					disableOnClick
 					popup={'Volume of operation in construction'}
 					operationInfo={{ gufi: '', flight_comments: '** Editing **', state: '**EDITOR' }}
 				/>
