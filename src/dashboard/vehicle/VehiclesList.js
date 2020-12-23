@@ -313,7 +313,7 @@ function VehiclesList() {
 							} else {
 								if (vehicle._matchesFiltersByNames) {
 									return <Vehicle
-										key={vehicle.faaNumber}
+										key={vehicle.uvin}
 										v={vehicle}
 									/>;
 								} else {

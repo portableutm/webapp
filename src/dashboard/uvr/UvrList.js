@@ -172,6 +172,7 @@ function UvrList() {
 								{`Showing ${store.counts.matchesFilters} out of ${store.counts.uvrCount} UVRs`}
 							</p>
 						</div>
+						{/*
 						<div
 							className={styles.filters}
 						>
@@ -210,6 +211,7 @@ function UvrList() {
 								order
 							</p>
 						</div>
+						*/}
 						<GenericList>
 							{store.uvrsWithVisibility.map((uvr) => {
 								if (uvr._matchesFiltersByNames) {

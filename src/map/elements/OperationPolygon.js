@@ -36,6 +36,7 @@ const OperationPolygon = observer(({
 	name,
 	gufi, /* Handlers */
 	onClick,
+	disableOnClick = false,
 	isSelected = false
 }) => {
 	//const { t, } = useTranslation('glossary');
@@ -78,11 +79,11 @@ const OperationPolygon = observer(({
 					};
 				// By default, clicking an OperationPolygon selects the operation and shows it in the sidebar
 
-				polygon.on('click',
+				if (!disableOnClick) polygon.on('click',
 					(evt) =>
 						mapStore.executeFunctionInMap(polygonOnClick, name, evt));
 
-				polygon.on('contextmenu',
+				if (!disableOnClick) polygon.on('contextmenu',
 					(evt) =>
 						mapStore.executeFunctionInMap(() => mapStore.setSelectedOperation(obs.gufi), name, evt));
 

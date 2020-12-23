@@ -247,13 +247,7 @@ function OperationsList() {
 			authStore: store.authStore
 		}));
 	const { id } = useParams();
-	const filterStore = useLocalStore(() => ({
-		text: '',
-		setText(newText) {
-			store.setFilterByText(newText);
-			this.text = newText;
-		}
-	}));
+
 	if (store.hasFetched) {
 		return (
 			<>
@@ -279,9 +273,9 @@ function OperationsList() {
 						<InputGroup
 							className={styles.filterTextInput}
 							leftIcon="search"
-							onChange={(evt) => filterStore.setText(evt.target.value)}
+							onChange={(evt) => store.setFilterByText(evt.target.value)}
 							placeholder={t('map:filter.bytext.description')}
-							value={filterStore.text}
+							value={store.filterMatchingText}
 						/>
 						<Checkbox
 							className={styles.filterTextInfo}
