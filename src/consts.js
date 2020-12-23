@@ -1,6 +1,6 @@
 let API;
 let DEBUG = false;
-const adesVersion = '1.1.0-DEV';
+const adesVersion = '1.1.0';
 const USERS_DATA_TOO_OLD = 2 * 60000; // Only fetch user list if saved user list is older than 2 minutes
 
 //const hostname = window && window.location && window.location.hostname;
