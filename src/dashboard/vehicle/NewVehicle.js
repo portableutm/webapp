@@ -1,40 +1,93 @@
-import React, {useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Button, FormGroup, InputGroup, Radio, RadioGroup} from '@blueprintjs/core';
-import useAdesState from '../../state/AdesState';
-import { useHistory, useParams } from 'react-router-dom';
-import {fM} from '../../libs/SaferSanctuary';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button, FormGroup, InputGroup, Intent, FileInput } from '@blueprintjs/core';
 import styles from '../generic/GenericList.module.css';
+import form from '../generic/LongForm.module.css';
+import { useParams, useHistory } from 'react-router-dom';
+import { useStore } from 'mobx-store-provider';
+import { BaseVehicle } from '../../models/entities/Vehicle';
+import { useLocalStore, useAsObservableSource, observer, useObserver } from 'mobx-react';
+import { ISDINACIA } from '../../consts';
+import { BaseDinaciaVehicle } from '../../models/entities/DinaciaVehicle';
 
-const Text = ({name, label, description, placeholder = '', ...props}) => (
-	<FormGroup
-		helperText={description}dsh
-		label={label}
-		labelFor={'text-' + name}
-	>
-		<InputGroup
-			id={'text-' + name}
-			key={'text-' + name}
-			placeholder={placeholder}
-			disabled={props.disabled}
-			intent={props.intent}
-		/>
-	</FormGroup>
-);
+const GenericVehicleProperties = ({ localStore, properties }) => {
+	const { t, } = useTranslation(['glossary', 'common']);
 
-function NewVehicle({userId}) {
-	const { username } = useParams();
+	return useObserver(() => {
+		return properties.map(property => {
+			return (
+				<FormGroup
+					key={property}
+					helperText={t(`vehicles.${property}_desc`)}
+					label={t(`vehicles.${property}`)}
+					labelFor={'text-' + property}
+				>
+					<InputGroup
+						id={'text-' + property}
+						key={'text-' + property}
+						value={localStore.vehicle[property]}
+						disabled={property === 'owner_id'}
+						onChange={(evt) => localStore.vehicle.setProperty(property, evt.target.value)}
+					/>
+				</FormGroup>
+			);
+		});
+	});
+};
+
+const DinaciaVehicleProperties = ({ localStore, properties }) => {
 	const { t, } = useTranslation('glossary');
-	const history = useHistory();
-	const [state, actions] = useAdesState();
-	const [isSubmitting, setSubmitting] = useState(false);
-	const [tclass, setTClass] = useState('MULTIROTOR');
 
-	useEffect(() => {
-		// Only run in mount
-		/* Fetch vehicle data if too old, when loading component */
-		actions.vehicles.fetchIfOld();
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+	return useObserver(() => {
+		return properties.map(property => {
+			return (
+				<FormGroup
+					key={property}
+					helperText={t(`vehicles.${property}_desc`)}
+					label={t(`vehicles.${property}`)}
+					labelFor={'text-' + property}
+				>
+					<InputGroup
+						id={'text-' + property}
+						key={'text-' + property}
+						value={localStore.vehicle.dinacia_vehicle[property] === null ? '' : localStore.vehicle.dinacia_vehicle[property]}
+						onChange={(evt) => localStore.vehicle.setDinaciaProperty(property, evt.target.value)}
+					/>
+				</FormGroup>
+			);
+		});
+	});
+};
+
+function NewVehicle(props) {
+	const { vehicleStore, userStore } = useStore(
+		'RootStore',
+		(store) => ({ authStore: store.authStore, vehicleStore: store.vehicleStore, userStore: store.userStore }));
+
+	const { username } = useParams();
+	const history = useHistory();
+	const obs = useAsObservableSource({ userId: props.userId || username });
+
+	const localStore = useLocalStore(() => ({
+		vehicle: BaseVehicle.create({
+			nNumber: '',
+			faaNumber: '',
+			vehicleName: '',
+			manufacturer: '',
+			model: '',
+			'class': 'MULTIROTOR',
+			accessType: '',
+			vehicleTypeId: '',
+			'org-uuid': '',
+			dinacia_vehicle: BaseDinaciaVehicle.create({}),
+			operators: [],
+			/*registeredBy: authStore.username,*/
+			owner_id: obs.userId
+		})
+	}));
+
+	const { t, } = useTranslation(['glossary', 'common']);
+	const [isSubmitting, setSubmitting] = useState(false);
 
 	return (
 		<>
@@ -43,121 +96,164 @@ function NewVehicle({userId}) {
 					{t('vehicles.new_vehicle').toUpperCase()}
 				</h1>
 			</div>
-			<Text
-				name="nNumber"
-				label={t('vehicles.nNumber')}
-				description="Vehicle number"
-			/>
-			<Text
-				name="faaNumber"
-				label={t('vehicles.faaNumber')}
-				placeholder="N707JT"
-				description={t('vehicles.faaNumber_desc')}
-			/>
-			<Text
-				name="vehicleName"
-				label={t('vehicles.vehicleName')}
-				placeholder="Air Force One"
-				description="Short descriptive name of the vehicle"
-			/>
-			<Text
-				name="manufacturer"
-				label={t('vehicles.manufacturer')}
-				placeholder="DJI"
-				description="Brand or company that fabricated the vehicle"
-			/>
-			<Text
-				name="model"
-				label={t('vehicles.model')}
-				placeholder="Phantom 6 Mini"
-				description="Model of the vehicle"
-			/>
-			<RadioGroup
+			<section className={form.grid}>
+				<div className={form.col}>
+					<h2>{t('glossary:required_fields')}</h2>
+					<GenericVehicleProperties
+						localStore={localStore}
+						properties={
+							ISDINACIA ?
+								[
+									'vehicleName', 'manufacturer', 'model', 'owner_id', 'class'
+								]
+								:
+								[
+									'faaNumber', 'nNumber', 'vehicleName', 'manufacturer', 'model', 'owner_id', 'class'
+								]
+						}
+					/>
+				</div>
+				{ISDINACIA &&
+				<div className={form.col}>
+					<h2>{t('glossary:optional_fields')}</h2>
+					<DinaciaVehicleProperties
+						localStore={localStore}
+						properties={[
+							'caa_registration',
+							'usage',
+							'construction_material',
+							'year',
+							'serial_number'
+						]}
+					/>
+				</div>
+				}
+			</section>
+			{ISDINACIA &&
+				<section className={form.grid}>
+					<div className={form.col}>
+						<h2>{t('glossary:optional_fields')}</h2>
+						<DinaciaVehicleProperties
+							localStore={localStore}
+							properties={[
+								'empty_weight',
+								'max_weight',
+								'takeoff_method',
+								'sensor_type_and_mark',
+								'packing',
+								'longitude',
+								'height',
+								'color',
+								'max_speed',
+								'cruise_speed',
+								'landing_speed',
+								'time_autonomy',
+								'radio_accion'
+							]}
+						/>
+					</div>
+					<div className={form.col}>
+						<h2>{t('glossary:optional_fields')}</h2>
+						<DinaciaVehicleProperties
+							localStore={localStore}
+							properties={[
+								'ceiling',
+								'communication_control_system_command_navigation_vigilance',
+								'maintenance_inspections',
+								'remarks',
+								'engine_manufacturer',
+								'engine_type',
+								'engine_model',
+								'engine_power',
+								'engine_fuel',
+								'engine_quantity_batteries',
+								'propeller_type',
+								'propeller_model',
+								'propeller_material'
+							]}
+						/>
+					</div>
+				</section>
+			}
+			<section className={form.grid}>
+				<div className={form.col}>
+					<h3>
+						{t('glossary:vehicles.operators')}
+					</h3>
+					{ localStore.vehicle.operators.map(operator => {
+						return (
+							<p key={operator}>{operator}</p>
+						);
+					})}
+				</div>
+				<div className={form.col}>
+					{!userStore.hasError &&
+					<ul>
+						{ userStore.allUsers.map(user => {
+							return <Button key={user.username} small style={{ marginBottom: '5px' }} intent={localStore.vehicle.operators.indexOf(user.username) === -1 ? Intent.SUCCESS : Intent.DANGER} icon={localStore.vehicle.operators.indexOf(user.username) === -1 ? 'plus' : 'minus'}	onClick={() => {
+								if (localStore.vehicle.operators.indexOf(user.username) === -1) {
+									localStore.vehicle.addOperator(user.username);
+								} else {
+									localStore.vehicle.removeOperator(user.username);
+								}
+							}}
+							>{user.asDisplayString}</Button>;
+						})}
+					</ul>
+					}
+				</div>
+			</section>
+			{userStore.hasError &&
+				<Button
+					onClick={() => {
+						const username = prompt(t('glossary:add_new_operator_username'));
+						localStore.vehicle.addOperator(username);
+					}}
+				>
+					{t('glossary:add_new_operator')}
+				</Button>
+			}
+
+			{ISDINACIA &&
+			<FileInput fill buttonText={t('upload')} inputProps={{ accept: 'image/*' }}
+				text={localStore.vehicle.dinacia_vehicle.serial_number_file === null ? t('vehicles.serial_number_file') : localStore.vehicle.dinacia_vehicle.serial_number_file.name}
+				onInputChange={(evt) => localStore.vehicle.setDinaciaProperty('serial_number_file', evt.currentTarget.files[0])}/>
+			}
+			{/*<RadioGroup
 				label={t('vehicles.class')}
-				onChange={(evt) => setTClass(evt.currentTarget.value)}
-				selectedValue={tclass}
+				onChange={(evt) => localStore.vehicle.setProperty('class',evt.currentTarget.value)}
+				selectedValue={localStore.vehicle.class}
 			>
 				<Radio label="Multirotor" value="MULTIROTOR" />
 				<Radio label="Fixed-wing" value="FIXEDWING" />
-			</RadioGroup>
-			{/*<Text
-				name="accessType"
-				label={t('vehicles.accessType')}
-				placeholder=""
-				disabled={true}
-			/>
-
-			<Text
-				name="vehicleTypeId"
-				label={t('vehicles.vehicleTypeId')}
-				placeholder=""
-				disabled={true}
-			/>
-			<Text
-				name="org-uuid"
-				label={t('vehicles.org-uuid')}
-				placeholder=""
-				disabled={true}
-			/>*/}
-
-			<Text
-				name="owner_id"
-				label={t('vehicles.owner')}
-				placeholder={userId || username}
-				disabled={true}
-			/>{/*
-			<Text
-				name="registeredBy"
-				label={t('vehicles.registeredBy')}
-				placeholder={fM(state.auth.user).username}
-				disabled={true}
-			/>*/}
-			<Button
-				fill
-				disabled={isSubmitting}
-				onClick={() => {
-					const vehicle = {
-						owner_id: userId || username,
-						nNumber: document.getElementById('text-nNumber').value,
-						faaNumber: document.getElementById('text-faaNumber').value,
-						vehicleName: document.getElementById('text-vehicleName').value,
-						manufacturer: document.getElementById('text-manufacturer').value,
-						model: document.getElementById('text-model').value,
-						'class': tclass,
-						accessType: '',
-						vehicleTypeId: '',
-						'org-uuid': '',
-						registeredBy: fM(state.auth.user).username,
-					};
-					setSubmitting(true);
-					actions.vehicles.post(
-						vehicle, 
-						() => history.push('/dashboard/vehicles'),
-						(err) => {actions.warning.setWarning(err); setSubmitting(false);}
-					);
-				}}
-			>
-				{t('submit')}
-			</Button>
+			</RadioGroup> */}
+			<div className={styles.actionArea}>
+				<Button
+					disabled={isSubmitting}
+					style={{ marginRight: '2px' }}
+					intent={Intent.PRIMARY}
+					onClick={() => {
+						history.push(`/dashboard/vehicles/${username ? username : ''}`);
+					}}
+				>
+					{t('go_back')}
+				</Button>
+				<Button
+					disabled={isSubmitting}
+					intent={Intent.SUCCESS}
+					style={{ marginLeft: '2px' }}
+					onClick={async () => {
+						setSubmitting(true);
+						await vehicleStore.post(localStore.vehicle);
+						setSubmitting(false);
+						history.push(`/dashboard/vehicles/${username ? username : ''}`);
+					}}
+				>
+					{t('submit')}
+				</Button>
+			</div>
 		</>
 	);
 }
 
-/*
-{
-	"owner_id": "JudithaStrut",
-    "uvin": "32b858dd-8c63-4e99-9a18-6df064cf64cb",
-    "nNumber": "",
-    "faaNumber": "AW7B64A",
-    "vehicleName": "vehicle.name8",
-    "manufacturer": "DJI",
-    "model": "Phantom 3",
-    "class": "FIXEDWING",
-    "accessType": "",
-    "vehicleTypeId": "",
-    "org-uuid": "",
-    "registeredBy": "admin"
-}
- */
-
-export default NewVehicle;
+export default observer(NewVehicle);

@@ -2,12 +2,16 @@
   "hamburger": {
     "map": "Mapa en tiempo real",
     "dashboard": "Panel de control",
-    "createnewop": "Crear nueva operación"
+    "createnewop": "Crear nueva operación",
+    "createnewuvr": "Crear nueva UVR"
   },
   "notifications": {
     "operation_gone_rogue": {
       "header": "OPERACIÓN EN ESTADO ROGUE",
       "body": "La operación \"{{operation}}\" está en el estado ROGUE. Es posible que los vehículos estén fuera de su volúmen. Es importante notificar a todos los vehículos cercanos."
+    },
+    "utmmessage": {
+      "header": "({{severity}}) recibido a las {{time_sent}}"
     }
   },
   "forms": {
@@ -20,5 +24,17 @@
   "change_password": "Cambiar la contraseña de {{name}}",
   "save_changes": "Guardar cambios",
   "click_to_expand": "Mostrar información",
-  "click_to_collapse": "Esconder información"
+  "click_to_collapse": "Esconder información",
+  "edit_on_map": "Editar en mapa",
+  "cancel": "Cancelar",
+  "pilot_homescreen": "### PortableUTM v0.5.2-DEV\nNo hay nueva información para mostrar en este momento",
+  "pilot_homescreen_title": "Novedades",
+  "upload": "Cargar",
+  "approve": "Aceptar",
+  "email_is_not_valid": "El email introducido no sigue las guías. Por favor, verifica que el email entrado es correcto.",
+  "operation_state_changed": "¡Una operación ha cambiado de estado!",
+  "operation_state_changed_text": "La operación *{{name}}* está ahora en el estado **{{state}}**",
+  "passwords_are_not_equal": "Las contraseñas ingresadas no son iguales. Por favor, intenta nuevamente.",
+  "reason": "Motivo por el cual acepta o rechaza la operación",
+  "reject": "Rechazar"
 }

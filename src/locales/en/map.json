@@ -2,6 +2,8 @@
   "quickfly": {
     "title": "Quick Fly",
     "add_new": "Add new QuickFly",
+    "activate_delete_mode": "Delete mode",
+    "deactivate_delete_mode": "Deactivate delete mode",
     "name": "Name",
     "required": "Required",
     "new_location": "New location",
@@ -18,16 +20,24 @@
     "proposed": "Proposed",
     "accepted": "Accepted",
     "activated": "Activated",
-    "closed": "DEBUG: Closed",
+    "closed": "Closed",
     "pending": "Pending",
     "nonconforming": "Non-conforming",
     "rogue": "Rogue",
-    "bystate": "FILTER BY STATE",
-    "byid": "FILTER BY OPERATION",
+    "bystate": "OPERATIONS BY STATE",
+    "byid": "OPERATIONS BY ID",
+    "bytext": {
+      "text": "FILTER BY VALUE",
+      "description": "Value to search for"
+    },
+    "byname": "FILTER BY SELECTING",
+    "uvrs": "UAS VOLUME RESERVATIONS",
     "rfvs": "RESTRICTED FLIGHT ZONES"
   },
   "flyto": "Fly in map to",
   "selected_operation": "Selected operation",
+  "historical_mode": "Expired operations",
+  "historical_mode_description": "Show historic operations",
   "editor": {
     "return": "Go back",
     "volume": {
@@ -38,7 +48,14 @@
       "closecalendar": "Close calendar"
     },
     "operation": {
-      "complete": "Editing information of operation"
+      "complete": "Editing information of operation",
+      "send_email_to": "Send an email contaning a report of this operation, for auditing purposes, to the following email",
+      "email_close_dialog": "Close without sending",
+      "email_info": "Send a report",
+      "send_email": "Send report"
+    },
+    "uvr": {
+      "complete": "Editing information of UVR"
     },
     "completesteps": "Complete the steps to define a new operation.",
     "definevolume": "Click on the map to define a polygon.",
@@ -51,6 +68,12 @@
       "finish": "Step 3: Finish."
     },
     "finish": "Finish",
-    "cant_finish": "The OPERATION could not be created, as the polygon was not defined. Please, define a polygon for where the vehicle can fly, by clicking on the map on the appropiate positions"
-  }
+    "cant_finish": "The OPERATION could not be created, as the polygon was not defined. Please, define a polygon for where the vehicle can fly, by clicking on the map on the appropiate positions",
+    "expired_permit": {
+      "title": "Your permit has expired!",
+      "text": "When you submit your operation, it will not be approved automatically. You will have to await the manual approval by an administrator of the system"
+    }
+  },
+  "operation_not_exists": "The operation does not exist",
+  "following_drone": "You are now following a vehicle that is in the air. The map has been locked, and you won't be able to drag it. You can still zoom in or zoom out. You may stop following a drone by pressing the CROSS on the SideMenu"
 }

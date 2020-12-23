@@ -8,7 +8,9 @@
     "new_location_created": "¡Nuevo punto de vuelo rápido creado!",
     "creating_new": "Creando nuevo punto de vuelo rápido",
     "save": "Guardar",
-    "info": "La posición del nuevo punto de vuelo rápido es creada automáticamente usando la región actualmente mostrada en el mapa."
+    "info": "La posición del nuevo punto de vuelo rápido es creada automáticamente usando la región actualmente mostrada en el mapa.",
+    "activate_delete_mode": "Eliminar Quickflies",
+    "deactivate_delete_mode": "Dejar de eliminar Quickflies"
   },
   "options": "Opciones",
   "layers": "Capas",
@@ -18,13 +20,19 @@
     "proposed": "Propuestas",
     "accepted": "Aceptadas",
     "activated": "Activadas",
-    "closed": "DEBUG: Cerradas",
+    "closed": "Cerradas",
     "pending": "Pendientes",
     "nonconforming": "Desconformes",
     "rogue": "Rogue (Furtivas)",
-    "bystate": "FILTRAR POR ESTADO",
-    "byid": "FILTRAR OPERACIONES ESPECÍFICAS",
-    "rfvs": "ZONAS DE VUELO RESTRINGIDO"
+    "bystate": "OPERACIONES POR ESTADO",
+    "byid": "OPERACIONES POR ID.",
+    "rfvs": "ZONAS DE VUELO RESTRINGIDO",
+    "byname": "FILTRADO ÚNICO",
+    "bytext": {
+      "description": "Valor buscado",
+      "text": "BUSCAR POR VALOR"
+    },
+    "uvrs": "UVRS - VOLÚMENES RESERVADOS"
   },
   "flyto": "Volar en mapa a",
   "selected_operation": "Operación seleccionada",
@@ -38,19 +46,34 @@
       "closecalendar": "Cerrar calendario"
     },
     "operation": {
-      "complete": "Editing information of operation"
+      "complete": "Editando información de la operación",
+      "email_close_dialog": "Cerrar sin enviar",
+      "email_info": "Enviar un reporte por email",
+      "send_email": "Enviar reporte",
+      "send_email_to": "Enviar un email conteniendo un reporte de esta operación al siguiente email."
     },
     "completesteps": "Completar los pasos para definir una nueva operación.",
-    "definevolume": "Hacé click en el mapa para definir un polígono.",
-    "defineoperationinfo": "Completa los datos solicitados.",
-    "savingoperation": "Guardando operación. Por favor, esperá.",
-    "savingerror": "Por favor, cambiá los parámetros afectados y re-intentá.",
+    "definevolume": "Haga click en el mapa para definir un polígono.",
+    "defineoperationinfo": "Complete los datos solicitados.",
+    "savingoperation": "Guardando operación. Por favor, espera...",
+    "savingerror": "Por favor, cambie los parámetros afectados y intente nuevamente.",
     "step": {
-      "definevolumes": "Paso 1: Definí los volúmenes de la operación.",
+      "definevolumes": "Paso 1: Defina los volúmenes de la operación.",
       "defineoperationinfo": "Paso 2: Completar información general.",
       "finish": "Paso 3: Finalizar."
     },
     "finish": "Finalizar",
-    "cant_finish": "No se pudo crear la OPERACIÓN, ya que el polígono no estaba definido. Por favor, defina un polígono donde el vehículo pueda volar, haciendo clic en el mapa en las posiciones apropiadas"
-  }
+    "cant_finish": "No se pudo crear la OPERACIÓN, ya que el polígono no estaba definido. Por favor, defina un polígono donde el vehículo pueda volar, haciendo clic en el mapa en las posiciones apropiadas",
+    "uvr": {
+      "complete": "Editando información de la UVR"
+    },
+    "expired_permit": {
+      "title": "¡Tu libreta de piloto está vencida!",
+      "text": "Al crear tu operación, no será aprobada automaticamente y deberás esperar la autorización manual de un administrador del sistema. Si ya has renovado tu libreta, puedes cambiar esta información desde el panel de control."
+    }
+  },
+  "historical_mode": "Operaciones expiradas",
+  "historical_mode_description": "Mostrar operaciones históricas",
+  "following_drone": "Ahora estás siguiendo los movimientos de un vehículo en el aire. El mapa ha sido bloqueado, y no podrás desplazarte en el mismo. Puedes dejar de seguir un drone en el mapa presionando la cruz en el menú lateral izquierdo.",
+  "operation_not_exists": "La operación no existe"
 }

@@ -7,6 +7,10 @@ th, td {
     text-align: left;
 }
 
+.bp3-control-indicator {
+    outline: none !important;
+}
+
 .donotselect {
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
@@ -222,12 +226,113 @@ th, td {
     pointer-events: auto;
 }
 
+.leaflet-marker-icon {
+    transition: all 0.1s;
+}
 
+.tooltipAltitudeDrone {
+    position: absolute;
+    right: 0;
+    opacity: 1 !important;
+    border: none !important;
+    font-size: 16px !important;
+    font-weight: bolder;
+    color: black !important;
+    box-shadow: none !important;
+    background-color: rgba(255,11,0,0.0) !important;
+    transition: all 0.1s;
+    overflow: visible;
+}
+
+.tooltipAltitudeRFV {
+    opacity: 1 !important;
+    border: none !important;
+    font-size: 20px !important;
+    font-weight: bolder;
+    color: #ffffff !important;
+    text-shadow: 0 0 4px black;
+    box-shadow: none !important;
+    background-color: rgba(255,11,0,0.0) !important;
+    transition: all 0.5s;
+    overflow: visible;
+}
+
+.tooltipAltitudeRFV:hover {
+    color: rgb(26, 11, 9) !important;
+    text-shadow: 0 0 4px #ff0000;
+}
+
+.tooltipAltitudeUVR {
+    opacity: 1 !important;
+    border: none !important;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 16px !important;
+    font-weight: bold;
+    color: #ff8400 !important;
+    text-shadow:
+        1px 1px 0 #ffffff,
+        -1px -1px 0 #ffffff;
+
+    box-shadow: none !important;
+    background-color: rgba(255,11,0,0.0) !important;
+    transition: all 0.5s;
+    overflow: visible;
+}
+
+.tooltipAltitudeUVR:hover {
+    color: rgb(26, 11, 9) !important;
+    text-shadow: 0 0 4px #ff7700;
+}
 
 .dialogify {
     height: 100%;
     width: 100%;
     padding: 15px;
+}
+
+.upperRightCorner {
+    position: absolute;
+    right: 5px;
+    top: 10px;
+    z-index: 99999;
+    color: rgb(57, 64, 83);
+    animation: flashingBlue 2s alternate infinite
+}
+
+@keyframes flashingBlue {
+    from{color: rgb(57, 64, 83);}
+    to{color: rgb(88, 125, 196);}
+}
+
+.mapOnClickChooser {
+    position: absolute;
+    background-color: #30404d;
+    color: white;
+    height: 125px;
+    width: 100px;
+    z-index: 9999;
+    border-radius: 5px;
+    -webkit-box-shadow: 5px 0px 14px -8px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 5px 0px 14px -8px rgba(0, 0, 0, 0.75);
+    box-shadow: 5px 0px 14px -8px rgba(0, 0, 0, 0.75);
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    transition: all 0.5s;
+}
+
+.mapOnClickChooserButton {
+    background-color: rgb(240, 101, 67) !important;
+    color: white !important;
+    border: 0 !important;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 90%;
+    box-shadow: none;
+    background-image: none;
 }
 
 .fullW {
@@ -310,6 +415,19 @@ th, td {
 
 
 
+.pilotHomeScreen {
+    padding: 5px;
+}
+
+.pilotHomeScreen h1 {
+    text-align: center;
+    background-color: #2D2C59;
+}
+
+.pilotHomeScreen h2 {
+    text-align: center;
+    background-color: #2D2C59;
+}
 
 
 

@@ -23,7 +23,15 @@
     "operations_list_pilot": "Tus operaciones",
     "vehicles_new": "Crear nuevo vehículo",
     "vehicles_list": "Todos los vehículos",
-    "vehicles_list_pilot": "Tus vehículos"
+    "vehicles_list_pilot": "Tus vehículos",
+    "logged_in": "Hola,",
+    "uvrs_list": "Reservaciones de volúmenes",
+    "send_message": "Enviar anuncio a todos los usuarios conectados al sistema",
+    "send_message_sent": "¡El mensaje ha sido enviado a todos los usuarios conectados a la aplicación web!",
+    "send_message_text": "Texto del mensaje a enviar",
+    "send_message_text_default": "Atención",
+    "send_message_title": "Titulo del mensaje.",
+    "send_message_title_default": "Importante, anuncio en tiempo real desde la torre de control"
   },
   "home": {
     "title": "Vista general",
@@ -31,6 +39,14 @@
     "active": "Operaciones activas",
     "accepted": "Operaciones aceptadas",
     "pending": "Operaciones pendientes",
-    "vehicles": "Vehículos en el aire"
+    "vehicles": "Vehículos en el aire",
+    "rogue": "Operaciones «ROGUE»",
+    "click_over_any_item_to": "Haga click sobre cualquier item para ver una lista completa de las operaciones correspondientes"
+  },
+  "ades_options": {
+    "endpoint": "URL de PortableUTM DronfiesUSS",
+    "endpoint_helper": "Esta configuración no será tomada en cuenta por el momento.",
+    "title": "Configuración",
+    "web": "Configuraciones de la web"
   }
 }

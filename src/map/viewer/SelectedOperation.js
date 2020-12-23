@@ -1,19 +1,20 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import SidebarButton from '../SidebarButton';
-import useAdesState from '../../state/AdesState';
-import S from 'sanctuary';
-import {fM} from '../../libs/SaferSanctuary';
-import {useTranslation} from 'react-i18next';
-import {Button, Dialog, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
+import { useTranslation } from 'react-i18next';
+import { Button, Dialog, FormGroup, InputGroup, Intent } from '@blueprintjs/core';
 import styles from '../Map.module.css';
+import { useStore } from 'mobx-store-provider';
+import { observer } from 'mobx-react';
 
-function Property({property, value}) {
+function Property({ property, value }) {
+	const { t } = useTranslation(['glossary','map']);
 	return (
 		<>
 			<div
 				className={styles.sidebarSeparator}
 			>
-				{property}
+				{t(property)}
 			</div>
 			<div
 				data-test-id={'property' + property}
@@ -25,31 +26,80 @@ function Property({property, value}) {
 	);
 }
 
-function SelectedOperation ({gufi}) {
+function SelectedOperation() {
+	const history = useHistory();
 	const { t } = useTranslation(['glossary','map']);
-	const [state, actions] = useAdesState();
 	const [isDialogShown, showDialog] = useState(false);
+	const [isEmailDialogShown, showEmailDialog] = useState(false);
 	const [isApproved, setApproved] = useState(false);
-	const operation = fM(S.value(gufi)(state.operations.list));
-	const info = [
-		[t('operations.name'), operation.name],
-		['ID',operation.gufi],
-		[t('operations.state'), operation.state],
-		[t('operations.owner'), operation.owner.firstName + ' ' + operation.owner.lastName + ' (' + operation.owner.username + ')'],
-		[t('operations.contact'), operation.contact],
-		[t('operations.phone'), '097431725'],
-		[t('volumes.effective_time_begin'), new Date(operation.operation_volumes[0].effective_time_begin).toLocaleString()],
-		[t('volumes.effective_time_end'), new Date(operation.operation_volumes[0].effective_time_end).toLocaleString()],
-		[t('volumes.max_altitude'), operation.operation_volumes[0].max_altitude+'m'],
-		[t('operations.flight_comments'), operation.flight_comments]
-	];
+	const { operation, updatePending, authStore, sendOperationEmail } = useStore(
+		'RootStore',
+		(store) => ({
+			operation: store.mapStore.getSelectedOperation,
+			updatePending: store.operationStore.updatePending,
+			sendOperationEmail: store.operationStore.sendOperationEmail,
+			authStore: store.authStore
+		})
+	);
 
-	const toShow = info.map((propvalue) =>
+	const toShow = operation.map((propvalue) =>
 		<Property key={'raop' + propvalue[0]} property={propvalue[0]} value={propvalue[1]} />
 	);
 
 	return(
 		<>
+			<Dialog
+				className='bp3-dark'
+				title={t('map:editor.operation.email_info')}
+				isOpen={isEmailDialogShown}
+				onClose={() => showEmailDialog(false)}
+			>
+				<div className='dialogify'>
+					<p className='fullW'>
+						{t('map:editor.operation.send_email_to')}
+					</p>
+					<FormGroup
+						className='fullW'
+						label="Email"
+						inline={true}
+						labelFor="email"
+						labelInfo="(required)"
+					>
+						<InputGroup id="email" placeholder="Email address" />
+					</FormGroup>
+					<FormGroup
+						className='fullW'
+						label="Message"
+						inline={true}
+						labelFor="message"
+						labelInfo="(optional)"
+					>
+						<InputGroup id="message" placeholder="Message" />
+					</FormGroup>
+					<div
+						className='fullW'
+					>
+						<Button
+							onClick={() => {
+								showEmailDialog(false);
+							}}
+							intent={Intent.WARNING}
+						>
+							{t('map:editor.operation.email_close_dialog')}
+						</Button>
+						<Button
+							onClick={async () => {
+								await sendOperationEmail(operation[1][1], document.getElementById('email').value, document.getElementById('message').value);
+								showEmailDialog(false);
+							}}
+							intent={Intent.PRIMARY}
+						>
+							{t('map:editor.operation.send_email')}
+						</Button>
+					</div>
+
+				</div>
+			</Dialog>
 			<Dialog
 				className='bp3-dark'
 				title={t('map:editor.operation.complete')}
@@ -82,12 +132,12 @@ function SelectedOperation ({gufi}) {
 						</Button>
 						<Button
 							onClick={() => {
-								actions.operations.pendingacceptation(
-									operation.gufi,
+								showDialog(false);
+								updatePending(
+									operation[1][1],
 									document.getElementById('comments').value,
 									isApproved
 								);
-								showDialog(false);
 							}}
 							intent={Intent.PRIMARY}
 						>
@@ -105,7 +155,30 @@ function SelectedOperation ({gufi}) {
 				forceOpen={true}
 			>
 				{toShow}
-				{operation.state === 'PENDING' &&
+				<div
+					className={styles.sidebarSeparator}
+				>
+					<Button
+						small={true}
+						intent={Intent.WARNING}
+						fill
+						style={{ marginRight: '5px ' }}
+						onClick={() =>showEmailDialog(true)}
+					>
+						{t('email')}
+					</Button>
+					<Button
+						small={true}
+						intent={Intent.PRIMARY}
+						fill
+						style={{ marginLeft: '5px ' }}
+						onClick={() => history.push('/dashboard/operations/'+operation[1][1])}
+					>
+						{t('info')}
+					</Button>
+				</div>
+				{	operation[2][1] === 'PENDING' &&
+					authStore.isAdmin &&
 				<div
 					className={styles.sidebarSeparator}
 				>
@@ -114,29 +187,20 @@ function SelectedOperation ({gufi}) {
 						intent={Intent.SUCCESS}
 						onClick={() => {setApproved(true);showDialog(true);}}
 					>
-						Approve
+						{t('approve')}
 					</Button>
 					<Button
 						small={true}
 						intent={Intent.DANGER}
 						onClick={() => {setApproved(false);showDialog(true);}}
 					>
-						Reject
+						{t('reject')}
 					</Button>
 				</div>
 				}
-				{/*
-			'ID <b>' + info.gufi + '</b><br/>' + // ID <b>a20ef8d5-506d-4f54-a981-874f6c8bd4de</b>
-			t('operation') + ' <b>' + info.flight_comments + '</b><br/>' + // Operation <b>NAME</b>
-			t('state') + ' <b>' + state + '</b><br />' + // State <b>STATE</b>
-			t('effective_time_begin') + ' <b>' + new Date(info.operation_volumes[0].effective_time_begin).toLocaleString() + '</b><br/>' + // Start Date&Time
-			t('effective_time_end') + ' <b>' + new Date(info.operation_volumes[0].effective_time_end).toLocaleString() + '</b><br/>' + // End Date&Time
-			t('max_altitude') + ' <b>' + info.operation_volumes[0].max_altitude + '</b><br/>' + // Max Altitude 999
-			t('contact') + ' <b>' + info.contact + '</b><br/>' + // Contact Name Lastname
-			t('phone') + ' <b>097431725</b>' // Phone 097431725 */}
 			</SidebarButton>
 		</>
 	);
 }
 
-export default SelectedOperation;
+export default observer(SelectedOperation);

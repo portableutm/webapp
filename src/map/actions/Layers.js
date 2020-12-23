@@ -1,150 +1,296 @@
 import React from 'react';
 
 /* Visuals */
-import {Button, Checkbox} from '@blueprintjs/core';
 import styles from '../Map.module.css';
+import { Checkbox, InputGroup } from '@blueprintjs/core';
 
 /* Logic */
-import useOperationFilter from '../hooks/useOperationFilter';
-import S from 'sanctuary';
-import PropTypes from 'prop-types';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import SidebarButton from '../SidebarButton';
-import {fM} from '../../libs/SaferSanctuary';
-import useAdesState from '../../state/AdesState';
+import { useStore } from 'mobx-store-provider';
+import { useObserver, useLocalStore } from 'mobx-react';
+import * as classnames from 'classnames';
 
-const StateFilters = ({selectedFilters, setSelectedFilters}) => {
-	const [, , , , , states] = useOperationFilter();
+const StateFilters = () => {
 	const { t, } = useTranslation('map');
-	return (
+	const { operationStore: store } = useStore('RootStore');
+	return useObserver(() => (
 		<>
 			<div className={styles.sidebarSeparator}>
 				{t('filter.bystate')}
 			</div>
-			{states.map((filter, index) => {
+			<div
+				className={styles.sidebarButtonText}
+			>
+				<Checkbox
+					className={styles.sidebarButtonTextContent}
+					data-test-id='layersACCEPTED'
+					checked={store.filterShowAccepted}
+					onChange={(evt) => {
+						store.setFilterAccepted(evt.target.checked);
+					}}
+				>
+					{t('filter.accepted')}
+				</Checkbox>
+			</div>
+			<div
+				className={styles.sidebarButtonText}
+			>
+				<Checkbox
+					className={styles.sidebarButtonTextContent}
+					data-test-id='layersPENDING'
+					checked={store.filterShowPending}
+					onChange={(evt) => {
+						store.setFilterPending(evt.target.checked);
+					}}
+				>
+					{t('filter.pending')}
+				</Checkbox>
+			</div>
+
+			<div
+				className={styles.sidebarButtonText}
+			>
+
+				<Checkbox
+					className={styles.sidebarButtonTextContent}
+					data-test-id='layersACTIVATED'
+					checked={store.filterShowActivated}
+					onChange={(evt) => {
+						store.setFilterActivated(evt.target.checked);
+					}}
+				>
+					{t('filter.activated')}
+				</Checkbox>
+			</div>
+			<div
+				className={styles.sidebarButtonText}
+			>
+				<Checkbox
+					className={styles.sidebarButtonTextContent}
+					data-test-id='layersROGUE'
+					checked={store.filterShowRogue}
+					onChange={(evt) => {
+						store.setFilterRogue(evt.target.checked);
+					}}
+				>
+					{t('filter.rogue')}
+				</Checkbox>
+			</div>
+			<div
+				className={styles.sidebarButtonText}
+			>
+				<Checkbox
+					className={styles.sidebarButtonTextContent}
+					data-test-id='layersCLOSED'
+					checked={store.filterShowClosed}
+					onChange={(evt) => {
+						store.setFilterClosed(evt.target.checked);
+					}}
+				>
+					{t('filter.closed')}
+				</Checkbox>
+			</div>
+		</>
+	));
+};
+
+const UvrsFilters = () => {
+	const { t, } = useTranslation('map');
+	const { store } = useStore(
+		'RootStore',
+		(store) => ({ store: store.uvrStore })
+	);
+	return useObserver(() => (
+		<>
+			<div className={styles.sidebarSeparator}>
+				{t('filter.uvrs')}
+			</div>
+			{store.uvrsWithVisibility.map((uvr, index) => {
 				return (
 					<div
-						key={index + filter.text}
-						className={styles.sidebarButtonText}
+						key={uvr.message_id}
+						className={classnames(
+							styles.sidebarButtonText,
+							{ [styles.sidebarButtonTextCollapsed]: !uvr._matchesFiltersByNames }
+						)}
 					>
 						<Checkbox
-							className='donotselect'
-							data-test-id={'layers' + filter.filter}
-							checked={S.maybeToNullable(S.value('' + index)(selectedFilters))}
-							onChange={(evt) => {
-								setSelectedFilters((current) =>
-									S.insert('' + index)(!fM(S.value('' + index)(current)))(current)
-								);
-							}}
+							className={styles.sidebarButtonTextContent}
+							disabled={!uvr._matchesFiltersByNames}
+							data-test-id={'uvr' + index}
+							checked={uvr._visibility}
+							onChange={() => store.toggleVisibility(uvr)}
 						>
-							{filter.text}
+							{uvr.reason}
 						</Checkbox>
-
 					</div>
 				);
 			})}
 		</>
-	);
+	));
 };
 
-const OperationFilters = ({operations, ids, setIds}) => {
+const OperationFilters = () => {
 	const { t,  } = useTranslation('map');
-	const [ state, actions ] = useAdesState();
-	const showOrHide = (id) => {
-		if (ids.indexOf(id) !== -1) {
-			setIds(current => current.filter(idi => idi !== id));
+	const { store } = useStore(
+		'RootStore',
+		(store) => ({ store: store.operationStore })
+	);
+	const doesOperationStateMatchOneOfTheStateFilters = (operation) => {
+		// Do not let user uncheck an operation that is being shown because it matches by state
+		if (store.filterShowAccepted && operation.state === 'ACCEPTED') {
+			return true;
+		} else if (store.filterShowPending && operation.state === 'PENDING') {
+			return true;
+		} else if (store.filterShowActivated && operation.state === 'ACTIVATED') {
+			return true;
+		} else if (store.filterShowRogue && operation.state === 'ROGUE') {
+			return true;
+		} else if (store.filterShowClosed && operation.state === 'CLOSED') {
+			return true;
 		} else {
-			setIds(current => {
-				const newIds = current.slice();
-				newIds.push(id);
-				return newIds;
-			});
+			return false;
 		}
 	};
-	return (
+	return useObserver(() => (
 		<>
 			<div className={styles.sidebarSeparator}>
-				{t('filter.byid')}
+				{t('filter.byname')}
 			</div>
-			{operations.map((op, index) => {
-				if (state.map.ids.indexOf(op.gufi) !== -1) {
-					return (
-						<div
-							className={styles.sidebarButtonText}
-							key={op.gufi + index}
-						>
-							<Checkbox
-								checked={ids.indexOf(op.gufi) !== -1}
-								onChange={() => showOrHide(op.gufi)}
-							/>
-							{op.name}
-							<Button
-								className={styles.sidebarButtonAlternate}
-								icon='cross'
-								small={true}
-								onClick={() => actions.map.removeId(op.gufi)}
-							/>
-						</div>
-					);
-				} else {
-					return (
-						<div
-							key={op.gufi + index}
-						>
-						</div>
-					);
-				}
+			{store.operationsWithVisibility.map((op) => {
+				return (<div
+					className={classnames(
+						styles.sidebarButtonText,
+						{ [styles.sidebarButtonTextCollapsed]: !op._matchesFiltersByNames }
+					)}
+					key={op.gufi}
+				>
+					<Checkbox
+						className={styles.sidebarButtonTextContent}
+						checked={op._visibility || doesOperationStateMatchOneOfTheStateFilters(op)}
+						disabled={!op._matchesFiltersByNames  || doesOperationStateMatchOneOfTheStateFilters(op)}
+						onChange={() => store.toggleVisibility(op)}
+						data-test-id={'op' + op.gufi}
+					>
+						{op.name}
+					</Checkbox>
+				</div>
+				);
 			}
 			)}
 		</>
-	);
+	));
 };
 
-const RfvsFilters = ({rfvs, setRfvs}) => {
-	const [state, ] = useAdesState();
+/* const RfvsFilters = () => {
 	const { t, } = useTranslation('map');
-	return (
+	const { store } = useStore(
+		'RootStore',
+		(store => ({ store: store.rfvStore })));
+	return useObserver(() => (
 		<>
 			<div className={styles.sidebarSeparator}>
 				{t('filter.rfvs')}
 			</div>
-			{S.map
-			((rfv, index) => {
-				const isSelected = rfvs.indexOf(rfv.id) !== -1;
+			{store.rfvsWithVisibility.map((rfv, index) => {
 				return (
 					<div
-						key={rfv.comments}
-						className={styles.sidebarButtonText}
+						key={rfv.id}
+						className={classnames(
+							styles.sidebarButtonText,
+							{ [styles.sidebarButtonTextCollapsed]: !rfv._matchesFiltersByNames }
+						)}
 					>
 						<Checkbox
-							className='donotselect'
+							className={styles.sidebarButtonTextContent}
 							data-test-id={'rfv' + index}
-							checked={isSelected}
-							onChange={() => setRfvs(curr => {
-								if (isSelected) {
-									return curr.filter(rfvi => rfvi !== rfv.id);
-								} else {
-									const newIds = curr.slice();
-									newIds.push(rfv.id);
-									return newIds;
-								}
-							})}
+							disabled={!rfv._matchesFiltersByNames}
+							checked={rfv._visibility}
+							onChange={() => store.toggleVisibility(rfv)}
 						>
 							{rfv.comments}
 						</Checkbox>
-
 					</div>
 				);
-			})
-			(S.values(state.rfv.list))
-			}
+			})}
 		</>
-	);
+	));
+}; */
+
+const TextFilter = () => {
+	const { t, } = useTranslation('map');
+	const { rfvStore, uvrStore, operationStore } = useStore(
+		'RootStore',
+		(store => ({
+			rfvStore: store.rfvStore,
+			uvrStore: store.uvrStore,
+			operationStore: store.operationStore
+		})));
+	const filterStore = useLocalStore(() => ({
+		text: '',
+		setText(newText) {
+			uvrStore.setFilterByText(newText);
+			rfvStore.setFilterByText(newText);
+			operationStore.setFilterByText(newText);
+			this.text = newText;
+		}
+	}));
+
+	return useObserver(() => (
+		<>
+			<div className={styles.sidebarSeparator}>
+				{t('filter.bytext.text')}
+			</div>
+			<div
+				style={{ height: '40px' }}
+				className={styles.sidebarButtonText}
+			>
+				<InputGroup
+					className={styles.sidebarButtonTextContent}
+					leftIcon="search"
+					onChange={(evt) => filterStore.setText(evt.target.value)}
+					placeholder={t('filter.bytext.description')}
+					value={filterStore.text}
+					fill
+				/>
+			</div>
+		</>
+	));
 };
 
 /* Button that opens a Menu that permits users selects what layers to show */
-const Layers = ({filtersSelected, setFiltersSelected, operations, disabled, idsSelected, setIdsSelected, rfvs, setRfvsShowing}) => {
-	const { t } = useTranslation('glossary');
+const HistoricalModeSwitch = () => {
+	const { t, } = useTranslation('map');
+	const { operationStore } = useStore(
+		'RootStore',
+		(store => ({
+			operationStore: store.operationStore
+		})));
+	return useObserver(() => (
+		<>
+			<div className={styles.sidebarSeparator}>
+				{t('historical_mode')}
+			</div>
+			<div
+				style={{ height: '40px' }}
+				className={styles.sidebarButtonText}
+			>
+				<Checkbox
+					className={styles.sidebarButtonTextContent}
+					data-test-id='historicalModeSwitch'
+					checked={operationStore.isInHistoricalMode}
+					onChange={() => operationStore.toggleHistoricalMode()}
+				>
+					{t('historical_mode_description')}
+				</Checkbox>
+			</div>
+		</>
+	));
+};
+
+const Layers = () => {
+	const { t } = useTranslation(['glossary', 'map']);
 	return (
 		<>
 			{/*
@@ -170,20 +316,15 @@ const Layers = ({filtersSelected, setFiltersSelected, operations, disabled, idsS
 				label={t('layers').toUpperCase()}
 				simpleChildren={false}
 			>
-				<StateFilters selectedFilters={filtersSelected} setSelectedFilters={setFiltersSelected}/>
-				<OperationFilters operations={operations} ids={idsSelected} setIds={setIdsSelected}/>
-				<RfvsFilters rfvs={rfvs} setRfvs={setRfvsShowing}/>
+				<StateFilters  />
+				<HistoricalModeSwitch />
+				<TextFilter />
+				<OperationFilters />
+				{ /* <RfvsFilters /> */ }
+				<UvrsFilters />
 			</SidebarButton>
 		</>
 	);
 };
 
-Layers.propTypes = {
-	filtersSelected: PropTypes.object.isRequired,
-	setFiltersSelected: PropTypes.func.isRequired,
-	operations: PropTypes.array.isRequired,
-	idsSelected: PropTypes.array.isRequired,
-	setIdsSelected: PropTypes.func.isRequired,
-	disabled: PropTypes.bool.isRequired
-};
 export default Layers;

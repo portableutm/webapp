@@ -1,103 +1,84 @@
-import {useEffect, useRef, useState} from 'react';
+import { useEffect } from 'react';
 
 /* Logic */
-import S from 'sanctuary';
 import L from 'leaflet';
 
 /* Global state */
-import {fM} from '../../libs/SaferSanctuary';
-import useAdesState from '../../state/AdesState';
+import { useStore } from 'mobx-store-provider';
+import { useLocalStore } from 'mobx-react';
+import { createLeafletPolygonStore } from '../../models/locals/createLeafletPolygonStore';
+import { autorun } from 'mobx';
+import { useAsObservableSource } from 'mobx-react';
+import { useHistory } from 'react-router-dom';
+
 
 /* Helpers */
 
 /**
  * @return {null}
  */
-function RestrictedFlightVolume({map, latlngs, name}) {
-	const [state, ] = useAdesState();
-	const [polygon, setPolygon] = useState(S.Nothing);
-	const onClicksDisabled = useRef(state.map.onClicksDisabled);
+function RestrictedFlightVolume({ id, latlngs, name, minAltitude, maxAltitude, onClick }) {
+	const history = useHistory();
+
+	const { mapStore } = useStore(
+		'RootStore',
+		(store) => ({
+			mapStore: store.mapStore
+		}));
+	const polygonStore = useLocalStore(
+		source => createLeafletPolygonStore(source),
+		{ map: mapStore.map }
+	);
+	
+	const obs = useAsObservableSource({ latlngs });
 
 	useEffect(() => { // Mount and unmount
 		// Initialize Polygon, draw on Map
-		const polygon = L.polygon(
-			latlngs,
-			{
-				color: '#ff0b00',
-				weight: 1,
-				fillColor: '#ff6161',
-				fillOpacity: 0.3,
-				lineJoin: 'miter'
-			}
-		);
+		const dispose1 = autorun(() => {
+			const polygon = L.polygon(
+				latlngs,
+				{
+					color: '#ff0b00',
+					weight: 1,
+					fillColor: '#ffb6b6',
+					fillOpacity: 0.3,
+					lineJoin: 'miter'
+				}
+			);
 
-		polygon.bindPopup(
-			'Restricted Flight Volume </br>' +
-			'<b>' + name + '</b>'
-		);
+			const map = mapStore.map;
 
-		// Only use the popup if there's content for the Popup that happens when clicking the Operation
-		polygon.addTo(map);
+			const polygonOnClick = onClick ?
+				onClick :
+				() => {
+					history.push(`/rfv/${id}`);
+					mapStore.setSelectedRfv(id);
+				};
+			// By default, clicking an OperationPolygon selects the operation and shows it in the sidebar
 
-		setPolygon(S.Just(polygon));
+			polygon.on('click',
+				(evt) =>
+					mapStore.executeFunctionInMap(polygonOnClick, name, evt));
+
+			polygon.addTo(map);
+
+			const minAltitudeText = minAltitude > 0 ? minAltitude : 'GND';
+			polygonStore.setInfo(name, minAltitudeText + '/' + maxAltitude + 'm', 'tooltipAltitudeRFV');
+			if (minAltitude === 0 ) polygonStore.setPattern(135, '#FF0B00', '15');
+			polygonStore.setPolygon(polygon);
+		});
+		//  Redraw if the polygon moved or the state changed
+		const dispose2 = autorun(() => {
+			if (polygonStore.isPolygonInstanced) polygonStore.leafletPolygon.setLatLngs(obs.latlngs);
+		});
 		return () => {
 			// Clean-up when unloading component
-			polygon.remove();
+			polygonStore.leafletPolygon.remove();
+			dispose1();
+			dispose2();
 		};
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
-		// Redraw if the polygon moved or the state changed
-		if (S.isJust(polygon)) {
-			fM(polygon).setLatLngs(latlngs);
-		}
-	}, [latlngs]); // eslint-disable-line react-hooks/exhaustive-deps
-
-	useEffect(() => {
-		if (map != null) {
-			if (S.isJust(polygon)) {
-				// Add svg pattern
-				const pattern = document.createElementNS('http://www.w3.org/2000/svg', 'pattern');
-				pattern.setAttribute('id', 'stripes');
-				pattern.setAttribute('patternUnits', 'userSpaceOnUse');
-				pattern.setAttribute('width', '28.5');
-				pattern.setAttribute('height', '28.5');
-				pattern.setAttribute('patternTransform', 'rotate(45)');
-
-				const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-				line.setAttribute('x1', '0');
-				line.setAttribute('y1', '0');
-				line.setAttribute('x2', '0');
-				line.setAttribute('y2', '28.5');
-				line.setAttribute('stroke', '#FF0B00');
-				line.setAttribute('stroke-width', '15');
-				pattern.appendChild(line);
-
-				const ovp = map.getPanes().overlayPane.firstChild;
-				if (ovp) {
-					const defs = ovp.querySelector('defs') || document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-					defs.appendChild(pattern);
-					ovp.insertBefore(defs, ovp.firstChild);
-				}
-
-				fM(polygon)._path.setAttribute('fill', 'url(#stripes)');
-			}
-		}
-	}, [map, polygon]);
-
-	useEffect(() => {
-		onClicksDisabled.current = state.map.onClicksDisabled;
-		if (S.isJust(polygon)) {
-			if (onClicksDisabled.current) {
-				fM(polygon).unbindPopup();
-			} else {
-				fM(polygon).bindPopup(
-					'Restricted Flight Volume </br>' +
-					'<b>' + name + '</b>'
-				);
-			}
-		}
-	}, [state.map.onClicksDisabled]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [polygonStore]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return null;
 }

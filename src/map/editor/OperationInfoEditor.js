@@ -1,65 +1,113 @@
-import React, {useState} from 'react';
-
-import {Button, FormGroup, InputGroup} from '@blueprintjs/core';
-
-import PropTypes from 'prop-types';
-import {Just, maybeToNullable, Maybe} from 'sanctuary';
-import {useTranslation} from 'react-i18next';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useStore } from 'mobx-store-provider';
+import { autorun } from 'mobx';
+import { observer } from 'mobx-react';
+import _ from 'lodash';
+import { Button, Checkbox, FormGroup, HTMLSelect, InputGroup } from '@blueprintjs/core';
+import { useTranslation } from 'react-i18next';
 import SidebarButton from '../SidebarButton';
 import OperationVolumeInfoEditor from './OperationVolumeInfoEditor';
 import styles from '../Map.module.css';
-import { useHistory } from 'react-router-dom';
 
-function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOperation}) {
+const canPilotFlyVehicle = (vehicle, user) => {
+	return (vehicle.owner && vehicle.owner.username === user) ||
+		(vehicle.operators.length > 0 && _.indexOf(vehicle.operators, user) >= 0);
+};
+
+function OperationInfoEditor() {
+	const {
+		mapStore,
+		authStore,
+		vehicleStore,
+		userStore
+	} = useStore('RootStore', store => ({ mapStore: store.mapStore, authStore: store.authStore, userStore: store.userStore, vehicleStore: store.vehicleStore }));
 	const { t, } = useTranslation(['map', 'glossary', 'common']);
 	const [isSaving, setSaving] = useState(false);
 	const history = useHistory();
-	const editInfo = (property, newInfo) => setInfo((data) => {
-		const newData = {...maybeToNullable(data)};
-		newData[property] = newInfo;
-		return Just(newData);
-	});
 
-	const saveOperationAndSetSaving = () => {
+	const [expandedLabel, setExpandedLabel] = useState('');
+
+	const saveOperationAndSetSaving = async () => {
 		setSaving(true);
-		saveOperation(() => setSaving(false));
+		await mapStore.saveOperation();
+		history.push('/');
 	};
 
-	return (
-		<SidebarButton
-			useCase='editorSteps'
-			icon='flow-linear'
-			label={t('editor.operation.complete')}
-			simpleChildren={false}
-			forceOpen={true}
-		>
-			<FormGroup
-				className={styles.sidebarButtonText}
-				label={t('glossary:operations.name')}
-				labelInfo={t('common:forms.required')}
-				labelFor="name"
+	useEffect(() => {
+		const dispose = autorun(() => {
+			if (mapStore.isEditingOperation && mapStore.editorOperation.owner !== null) {
+				const user = userStore.users.get(mapStore.editorOperation.owner);
+				if (user) {
+					mapStore.setOperationInfo('contact', user.asDisplayString);
+					if (user.dinacia_user !== null) {
+						if (user.dinacia_user.phone !== null && user.dinacia_user.phone.length > 0) {
+							mapStore.setOperationInfo('contact_phone', user.dinacia_user.phone);
+						} else {
+							mapStore.setOperationInfo('contact_phone', user.dinacia_user.cellphone);
+						}
+					}
+				}
+			}
+		});
+		return () => {dispose();};
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+	if (mapStore.isEditingOperation) {
+		return (
+			<SidebarButton
+				useCase='editorSteps'
+				icon='flow-linear'
+				label={t('editor.operation.complete')}
+				simpleChildren={false}
+				forceOpen={true}
 			>
-				<InputGroup
-					id="name"
-					data-test-id="map#editor#operation#info#name"
-					value={info.name}
-					onChange={(evt) => editInfo('name', evt.target.value)}
-				/>
-			</FormGroup>
-			<FormGroup
-				className={styles.sidebarButtonText}
-				label={t('glossary:operations.owner_editable')}
-				labelInfo={t('common:forms.required')}
-				labelFor="name"
-			>
-				<InputGroup
-					id="pilot"
-					data-test-id="map#editor#operation#info#pilot"
-					value={info.owner}
-					onChange={(evt) => editInfo('owner', evt.target.value)}
-				/>
-			</FormGroup>
-			{/* "flight_number": "12345678"
+				<FormGroup
+					className={styles.sidebarButtonText}
+					label={t('glossary:operations.name')}
+					labelInfo={t('common:forms.required')}
+					labelFor="name"
+				>
+					<InputGroup
+						className={styles.sidebarButtonTextContentOverflows}
+						id="name"
+						data-test-id="map#editor#operation#info#name"
+						value={mapStore.editorOperation.name}
+						onChange={(evt) => mapStore.setOperationInfo('name', evt.target.value)}
+					/>
+				</FormGroup>
+				<FormGroup
+					className={styles.sidebarButtonText}
+					label={t('glossary:operations.owner_editable')}
+					labelInfo={t('common:forms.required')}
+					labelFor="pilot"
+				>
+					{/*<InputGroup
+						className={styles.sidebarButtonTextContentOverflows}
+						id="pilot"
+						data-test-id="map#editor#operation#info#pilot"
+						disabled={authStore.role === 'pilot'}
+						value={mapStore.editorOperation.owner}
+						onChange={(evt) => mapStore.setOperationInfo('owner', evt.target.value)}
+					/>*/}
+					<HTMLSelect
+						id="pilot"
+						className={styles.sidebarButtonTextContentOverflows}
+						data-test-id="map#editor#operation#info#pilot"
+						value={mapStore.editorOperation.owner}
+						minimal
+						fill
+						disabled={authStore.isPilot}
+						onChange={(evt) => mapStore.setOperationInfo('owner', evt.currentTarget.value)}
+					>
+						{	userStore.allUsers.map(user => {
+							return (
+								<option key={user.username} value={user.username}>{user.asDisplayString}</option>
+							);
+						})}
+					</HTMLSelect>
+				</FormGroup>
+				{/* "flight_number": "12345678"
 			<FormGroup
 				className={styles.sidebarButtonText}
 				label={t('editor.operation.flightnumber')}
@@ -72,79 +120,122 @@ function OperationInfoEditor({info, setInfo, volumeInfo, setVolumeInfo, saveOper
 					onChange={(evt) => editInfo('flight_number', evt.target.value)}
 				/>
 			</FormGroup>*/}
-			{/* "Contact Name"*/}
-			<FormGroup
-				className={styles.sidebarButtonText}
-				label={t('glossary:operations.contact')}
-				labelInfo={t('common:forms.optional')}
-				labelFor="contact"
-			>
-				<InputGroup
-					id="contact"
-					data-test-id="map#editor#operation#info#contact"
-					value={info.contact}
-					onChange={(evt) => editInfo('contact', evt.target.value)}
-				/>
-			</FormGroup>
-			{/* "Contact Phone"*/}
-			<FormGroup
-				className={styles.sidebarButtonText}
-				label={t('glossary:operations.phone')}
-				labelInfo={t('common:forms.optional')}
-				labelFor="contact_phone"
-			>
-				<InputGroup
-					id="contact_phone"
-					data-test-id="map#editor#operation#info#contact_phone"
-					value={info.contact_phone}
-					onChange={(evt) => editInfo('contact_phone', evt.target.value)}
-				/>
-			</FormGroup>
-			{/* "flight_comments": "Untitled" */}
-			<FormGroup
-				className={styles.sidebarButtonText}
-				label={t('glossary:operations.flight_comments')}
-				labelInfo={t('common:forms.optional')}
-				labelFor="flight_comments"
-			>
-				<InputGroup
-					id="flight_comments"
-					data-test-id="map#editor#operation#info#flight_comments"
-					value={info.flight_comments}
-					onChange={(evt) => editInfo('flight_comments', evt.target.value)}
-				/>
-			</FormGroup>
-			<OperationVolumeInfoEditor
-				info={volumeInfo}
-				setInfo={setVolumeInfo}
-			/>
-			<div
-				className={styles.sidebarButtonTextRight}
-			>
-				<Button
-					fill
-					icon="undo"
-					style={{marginRight: '2.5px'}}
-					onClick={() => history.push('/')}
+				{/* "Contact Name"*/}
+				<FormGroup
+					className={styles.sidebarButtonText}
+					label={t('glossary:operations.contact')}
+					labelInfo={t('common:forms.required')}
+					labelFor="contact"
 				>
-					{t('editor.return')}
-				</Button>
-				<Button
-					fill
-					icon="floppy-disk"
-					style={{marginLeft: '2.5px'}}
-					loading={isSaving}
-					onClick={() => saveOperationAndSetSaving()}
+					<InputGroup
+						className={styles.sidebarButtonTextContentOverflows}
+						id="contact"
+						data-test-id="map#editor#operation#info#contact"
+						value={mapStore.editorOperation.contact}
+						onChange={(evt) => mapStore.setOperationInfo('contact', evt.target.value)}
+					/>
+				</FormGroup>
+				{/* "Contact Phone"*/}
+				<FormGroup
+					className={styles.sidebarButtonText}
+					label={t('glossary:operations.phone')}
+					labelInfo={t('common:forms.required')}
+					labelFor="contact_phone"
 				>
-					{t('editor.finish')}
-				</Button>
-			</div>
-		</SidebarButton>
-	);
+					<InputGroup
+						className={styles.sidebarButtonTextContentOverflows}
+						id="contact_phone"
+						data-test-id="map#editor#operation#info#contact_phone"
+						value={mapStore.editorOperation.contact_phone}
+						onChange={(evt) => mapStore.setOperationInfo('contact_phone', evt.target.value)}
+					/>
+				</FormGroup>
+				{/* "flight_comments": "Untitled" */}
+				<FormGroup
+					className={styles.sidebarButtonText}
+					label={t('glossary:operations.flight_comments')}
+					labelInfo={t('common:forms.optional')}
+					labelFor="flight_comments"
+				>
+					<InputGroup
+						className={styles.sidebarButtonTextContentOverflows}
+						id="flight_comments"
+						data-test-id="map#editor#operation#info#flight_comments"
+						value={mapStore.editorOperation.flight_comments}
+						onChange={(evt) => mapStore.setOperationInfo('flight_comments', evt.target.value)}
+					/>
+				</FormGroup>
+				<FormGroup
+					className={styles.sidebarButtonText}
+					label={t('glossary:operations.uas_registrations')}
+					labelInfo={t('common:forms.required')}
+					labelFor="uas_registrations"
+				>
+					{ vehicleStore.allVehicles.map((vehicle, index) => {
+						if (vehicle && canPilotFlyVehicle(vehicle, mapStore.editorOperation.owner)) {
+							return (
+								<div
+									onMouseEnter={() => setExpandedLabel(vehicle.uvin)}
+									onMouseOut ={() => setExpandedLabel('')}
+									key={vehicle.uvin}
+								>
+									<Checkbox
+										data-test-id={'map#editor#operation#info#uas_registration#'+index}
+										checked={_.includes(mapStore.editorOperation.uas_registrations, vehicle.uvin)}
+										label={expandedLabel === vehicle.uvin ? vehicle.asDisplayString : vehicle.asShortDisplayString}
+										onChange={(evt) => {
+											if (evt.currentTarget.checked) {
+												mapStore.addOperationUASRegistration(vehicle.uvin);
+											} else {
+												mapStore.removeOperationUASRegistration(vehicle.uvin);
+											}
+										}}
+									/>
+								</div>
+							);
+						} else {
+							return null;
+						}
+					})}
+				</FormGroup>
+				<OperationVolumeInfoEditor />
+				{	userStore.users.get(mapStore.editorOperation.owner) &&
+					userStore.users.get(mapStore.editorOperation.owner).dinacia_user &&
+					( userStore.users.get(mapStore.editorOperation.owner).dinacia_user.permit_expire_date === null ||
+					userStore.users.get(mapStore.editorOperation.owner).dinacia_user.permit_expire_date < new Date() ) &&
+				// Show a warning indicating that the permit has expired
+				<div className={styles.sidebarWarning}>
+					<p>{t('editor.expired_permit.title')}</p>
+					<p>{t('editor.expired_permit.text')}</p>
+				</div>
+				}
+				<div
+					className={styles.sidebarButtonTextRight}
+				>
+					<Button
+						fill
+						icon="undo"
+						style={{ marginRight: '2.5px' }}
+						onClick={() => history.push('/')}
+					>
+						{t('editor.return')}
+					</Button>
+					<Button
+						fill
+						icon="floppy-disk"
+						style={{ marginLeft: '2.5px' }}
+						disabled={mapStore.editorOperation.uasRegistrationCount === 0}
+						loading={isSaving}
+						onClick={() => saveOperationAndSetSaving()}
+					>
+						{t('editor.finish')}
+					</Button>
+				</div>
+			</SidebarButton>
+		);
+	} else {
+		return null;
+	}
 }
 
-OperationInfoEditor.propTypes = {
-	maybeInfo: PropTypes.instanceOf(Maybe)
-};
-
-export default OperationInfoEditor;
+export default observer(OperationInfoEditor);

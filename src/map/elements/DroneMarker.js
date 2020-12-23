@@ -1,18 +1,20 @@
-import {useEffect, useRef, useState} from 'react';
+import { useEffect } from 'react';
 
 /* Logic */
-import S from 'sanctuary';
 import PropTypes from 'prop-types';
 import L from 'leaflet';
 import 'leaflet-rotatedmarker';
 import 'leaflet-hotline';
-import {fM} from '../../libs/SaferSanctuary';
-import useAdesState from '../../state/AdesState';
+import { useHistory } from 'react-router-dom';
+import { useStore } from 'mobx-store-provider';
+import { when, autorun } from 'mobx';
+import { useAsObservableSource, useLocalStore } from 'mobx-react';
+import { createLeafletMarkerStore } from '../../models/locals/createLeafletMarkerStore';
 
 
 /* Constants */
 
-const MAX_POINTS_HISTORY = 50;
+//const MAX_POINTS_HISTORY = 50;
 const MEDIUM_RISK_DRONE_ICON = L.icon({
 	iconUrl: require('../../images/marker-icon-red.png'),
 	iconSize: [30, 30],
@@ -38,6 +40,7 @@ const LOW_RISK_DRONE_ICON = L.icon({
 	shadowAnchor: [0, 0],
 	popupAnchor: [0, -24]
 });
+/*
 const INACTIVE_DRONE_ICON = L.icon({
 	iconUrl: require('../../images/marker-icon.png'),
 	shadowUrl: require('../../images/marker-shadow.png'), // TODO: Design a shadow for the final icon
@@ -49,62 +52,90 @@ const INACTIVE_DRONE_ICON = L.icon({
 });
 const INACTIVE_TIMEOUT = 60000; // milliseconds
 const hasToDrawTrail = false; // TODO: Add this to Options
-
-/* Helpers */
-const hasToRemoveOldest = (path) => path.length > MAX_POINTS_HISTORY;
+*/
 
 
 /**
  * @return {null}
  */
-function DroneMarker({map, id, position, heading, altitude, risk, onClick}) {
-	const [marker, setMarker] = useState(S.Nothing);
-	const [state, ] = useAdesState();
-	const [polyline, setPolyline] = useState(S.Nothing);
-	const [path, setPath] = useState([]);
-	const [timer, setTimer] = useState(null);
-	const onClicksDisabled = useRef(state.map.onClicksDisabled);
+function DroneMarker({ id, position, heading, altitude, risk = 'EXTREME', onClick }) {
+	const history = useHistory();
+
+	const { mapStore } = useStore(
+		'RootStore',
+		(store) => ({
+			mapStore: store.mapStore
+		}));
+
+	const obs = useAsObservableSource({ id, position, heading, altitude });
+	const markerStore = useLocalStore(createLeafletMarkerStore);
 
 	useEffect(() => {
 		// Create marker, add it to map. Remove from map on unmount
-		const marker = L.marker(position, {
-			icon: risk === 'EXTREME' ? EXTREME_RISK_DRONE_ICON : risk === 'MEDIUM' ?  MEDIUM_RISK_DRONE_ICON :  LOW_RISK_DRONE_ICON,
-			rotationAngle: heading - 90.0
-		});
-		const polyline = L.hotline([], {
-			outlineWidth: 0,
-			palette: {
-				0.0: 'green',
-				1.0: 'red'
-			},
-			min: 0,
-			max: MAX_POINTS_HISTORY - 1
-		});
+
+		const dispose1 = when(
+			// Runs when the map is initialized
+			() => mapStore.isInitialized,
+			() => {
+				const marker = L.marker(position, {
+					icon: risk === 'EXTREME' ? EXTREME_RISK_DRONE_ICON : risk === 'MEDIUM' ?  MEDIUM_RISK_DRONE_ICON :  LOW_RISK_DRONE_ICON,
+					rotationAngle: heading - 90.0
+				});
+
+				/* const polyline = L.hotline([], {
+					outlineWidth: 0,
+					palette: {
+						0.0: 'green',
+						1.0: 'red'
+					},
+					min: 0,
+					max: MAX_POINTS_HISTORY - 1
+				}); */
+
+				const markerOnClick = onClick ?
+					onClick :
+					() => {
+						history.push(`/vehicle/${obs.id}`);
+						// mapStore.setSelectedDrone(obs.id);
+					};
+
+				marker.on('click',
+					(evt) =>
+						mapStore.executeFunctionInMap(markerOnClick, obs.id, evt));
+
+				marker.on('click',
+					(evt) =>
+						mapStore.executeFunctionInMap(() => mapStore.setSelectedDrone(obs.id), obs.id, evt));
 
 
+				marker.addTo(mapStore.map);
+				markerStore.setTooltipClass('tooltipAltitudeDrone');
+				markerStore.setMarker(marker);
+				markerStore.setInfoText('' + Date.now());
+				/* hasToDrawTrail && polyline.addTo(map);
+				// Save initialized values
 
-		onClick && marker.on('click', (evt) => {
-			if (!onClicksDisabled.current) {
-				onClick(evt.latlng);
-				L.DomEvent.stopPropagation(evt);
+				hasToDrawTrail && setPolyline(S.Just(polyline));
+				setPath([position]); */
+			}
+		);
+
+		autorun(() => {
+			if (markerStore.isMarkerInstanced) {
+				markerStore.leafletMarker.setLatLng(obs.position);
+				markerStore.setInfoText('' + obs.altitude);
+				markerStore.leafletMarker.setRotationAngle(obs.heading - 90.0);
 			}
 		});
 
-
-
-		marker.addTo(map);
-		hasToDrawTrail && polyline.addTo(map);
-		// Save initialized values
-		setMarker(S.Just(marker));
-		hasToDrawTrail && setPolyline(S.Just(polyline));
-		setPath([position]);
 		return () => {
 			// Clean when Component unloaded
-			marker.remove();
+			dispose1();
+			markerStore.leafletMarker.remove();
 		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
+	/*useEffect(() => {
 		if (!S.isNothing(marker)) {
 			if (timer !== null) clearTimeout(timer);
 			const markerGraphic = fM(marker);
@@ -113,7 +144,7 @@ function DroneMarker({map, id, position, heading, altitude, risk, onClick}) {
 			if (!markerGraphic.getLatLng().equals(position)) {
 				// Drone moved
 				markerGraphic.setLatLng(position);
-				if /* istanbul ignore next */ (hasToDrawTrail) {
+				if /* istanbul ignore next *//* (hasToDrawTrail) {
 					// Newest values of position are at the start of the array of positions
 					path.unshift(position);
 					if (hasToRemoveOldest(path)) path.splice(path.length - 1, 1);
@@ -125,28 +156,19 @@ function DroneMarker({map, id, position, heading, altitude, risk, onClick}) {
 			}
 			setTimer(setTimeout(() => markerGraphic.setIcon(INACTIVE_DRONE_ICON), INACTIVE_TIMEOUT)); // Inactivity after INACTIVE_TIMEOUT seconds
 		}
-	}, [position.lat, position.lng, heading, altitude]); // eslint-disable-line react-hooks/exhaustive-deps
-
-	useEffect(() => {
-		onClicksDisabled.current = state.map.onClicksDisabled;
-	}, [state.map.onClicksDisabled]);
-
+	}, [position.location.lat, position.location.lng, heading, altitude]); // eslint-disable-line react-hooks/exhaustive-deps
+*/
 	return null;
 }
 
 DroneMarker.propTypes = {
-	map: PropTypes.oneOfType([
-		PropTypes.func,
-		PropTypes.shape({ current: PropTypes.any })
-	]).isRequired,
 	id: PropTypes.string.isRequired,
 	position: PropTypes.shape({
 		lat: PropTypes.number.isRequired,
 		lng: PropTypes.number.isRequired
 	}),
 	heading: PropTypes.number.isRequired,
-	altitude: PropTypes.number.isRequired,
-	risk: PropTypes.string.isRequired
+	altitude: PropTypes.number.isRequired
 };
 
 export default DroneMarker;

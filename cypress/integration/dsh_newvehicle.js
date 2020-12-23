@@ -1,7 +1,6 @@
 /*
 UseCase 01A: Create new Operation
  */
-import {API} from '../../src/consts';
 describe('Use Case: Add new vehicle', function () {
 	beforeEach('Auth', function () {
 		cy.setCookie('sneaky', 'admin');
@@ -20,16 +19,17 @@ describe('Use Case: Add new vehicle', function () {
 		});
 	});*/
 	it('Create valid vehicle for admin', function() {
-		cy.visit('http://localhost:2000/dashboard/vehicles/admin/new');
+		cy.visit('http://localhost:2000/dashboard/vehicles/admin');
+		cy.contains('add_vehicle').click();
 		cy.wait(3000);
-		cy.get('#text-nNumber').type('13245', {force: true});
-		cy.get('#text-faaNumber').type('NJ371', {force: true});
-		cy.get('#text-vehicleName').type('Air Force One', {force: true});
-		cy.get('#text-manufacturer').type('DJI', {force: true});
-		cy.get('#text-model').type(' 303', {force: true});
+		cy.get('#text-nNumber').type('13245', { force: true });
+		cy.get('#text-faaNumber').type('NJ371', { force: true });
+		cy.get('#text-vehicleName').type('Air Force One', { force: true });
+		cy.get('#text-manufacturer').type('DJI', { force: true });
+		cy.get('#text-model').type(' 303', { force: true });
 		cy.contains('Fixed-wing').click();
-		cy.contains('submit').click();
-		cy.wait('@postVehicle');
+		//cy.contains('submit').click();
+		//cy.wait('@postVehicle');
 	});
 	
 	/*

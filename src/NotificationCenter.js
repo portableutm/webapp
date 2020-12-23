@@ -1,27 +1,28 @@
-import React, {useState, useEffect} from 'react';
-import {Elevation, Card, Button, Intent, Icon} from '@blueprintjs/core';
-import {animateScroll as scroll} from 'react-scroll';
-import useAdesState from './state/AdesState';
-
-import S from 'sanctuary';
-import './Ades.css';
-import styles from './entities/Notification/notification.module.css';
-import './css/animate.css';
-import {fM} from './libs/SaferSanctuary';
+import React, { useState, useEffect } from 'react';
+import { Elevation, Card, Button, Intent, Icon } from '@blueprintjs/core';
+import { animateScroll as scroll } from 'react-scroll';
+import { useStore } from 'mobx-store-provider';
+import { autorun } from 'mobx';
 import useSound from 'use-sound';
+
+import './Ades.css';
+import styles from './models/entities/notification.module.css';
+import './css/animate.css';
 import * as classnames from 'classnames';
+import emptySfx from './sounds/empty.mp3';
+import { observer } from 'mobx-react';
+import ReactMarkdown from 'react-markdown';
 
 function NotificationCenter() {
-	const [state, actions] = useAdesState(state => state.notifications, actions => actions.notifications);
-	const notifications = S.values(state.list);
+	const { notStore } = useStore('RootStore', (store) => ({ notStore: store.notificationStore }));
 	const [scrolled, setScrolled] = useState(0);
 	const [maxScroll, setMaxScroll] = useState(0);
 	const [enlarged, setEnlarged] = useState(-1);
-	const [sound, setSound] = useState('');
-	const [play, {stop}] = useSound(sound, { loop: true, interrupt: true });
+	const [sound, setSound] = useState(emptySfx);
+	const [play, { stop }] = useSound(sound, { loop: true, interrupt: true });
 
 	useEffect(() => {
-		if (sound !== '') {
+		if (sound !== null) {
 			play();
 		} else {
 			stop();
@@ -29,32 +30,31 @@ function NotificationCenter() {
 	}, [sound, play, stop]);
 
 	useEffect(() => {
-		scroll.scrollTo(scrolled, {smooth: true, containerId: 'notifications', ignoreCancelEvents: true});
+		scroll.scrollTo(scrolled, { smooth: true, containerId: 'notifications', ignoreCancelEvents: true });
 	}, [scrolled]);
 
 	useEffect(() => {
 		setScrolled(document.getElementById('notifications').scrollHeight - window.innerHeight);
 		setMaxScroll(document.getElementById('notifications').scrollHeight - window.innerHeight);
-	}, [notifications.length]);
+	}, [notStore.amount]);
+
 
 	useEffect(() => {
-		let hasAnySound = false;
-		notifications.forEach(notification => {
-			if (S.isJust(notification.sound)) {
-				hasAnySound = true;
-				setSound(fM(notification.sound));
-			}
+		const dispose = autorun(() => {
+			setSound(notStore.firstSound);
 		});
-		if (!hasAnySound) setSound('');
-	}, [state.updated]); // eslint-disable-line react-hooks/exhaustive-deps
+		return () => {
+			dispose();
+		};
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<>
-			{   notifications.length > 0 &&
+			{   notStore.isNotEmpty &&
 			<div className={styles.scrollControl}>
 				<Button icon="arrow-up" intent={Intent.PRIMARY}
 					disabled={scrolled <= 0}
-					style={{marginRight: '5px', backgroundColor: 'rgb(57, 64, 83)'}}
+					style={{ marginRight: '5px', backgroundColor: 'rgb(57, 64, 83)' }}
 					onClick={() => {
 						setScrolled(curr => {
 							const calc = curr - (window.innerHeight/2);
@@ -63,7 +63,7 @@ function NotificationCenter() {
 					}}/>
 				<Button icon="arrow-down" intent={Intent.PRIMARY}
 					disabled={scrolled >= maxScroll}
-					style={{backgroundColor: 'rgb(57, 64, 83)'}}
+					style={{ backgroundColor: 'rgb(57, 64, 83)' }}
 					onClick={() => {
 						setScrolled(curr => {
 							const calc = curr + (window.innerHeight/2);
@@ -72,46 +72,40 @@ function NotificationCenter() {
 					}}/>
 			</div>
 			}
-			{notifications.map((notification, index) => {
-				/*let styling = notification.recent ?
-					'notificationCard-' + notification.severity + ' animated fadeIn slower' :
-					'notificationCard-' + notification.severity;
-				styling = index === enlarged ? 'notificationCard-' + notification.severity + ' animated fast pulse infinite' : styling; // Effect for selected
-				styling = notification.focus ? styling + ' notificationFocused' : styling; // Show over overlay for focused notification
-				 */
-
+			{ 	notStore.list.map((notification) => {
 				return (
 					<React.Fragment key={notification.id}>
 						<Card
-							className={notification.getStylingString()}
+							className={notification.stylingString}
 							interactive={true}
 							onClick={() => {
-								if (enlarged === index) {
-									notification.isEnlarged = false;
+								if (enlarged === notification.id) {
+									notification.collapse();
 									setEnlarged(-1);
 								} else {
 									if (enlarged > -1) {
 										/* There's a notification currently selected */
-										notifications[enlarged].isEnlarged = false;
-										actions.update(notifications[enlarged]);
+										notStore.collapseNotification(enlarged);
 									}
-									notification.isEnlarged = true;
-									setEnlarged(index);
+									notification.enlarge();
+									setEnlarged(notification.id);
 								}
-								actions.update(notification);
 							}}
 							elevation={Elevation.TWO}
 						>
 							<div className={styles.notificationHeader}>
 								<p>{notification.header}</p>
-								<p style={{fontSize: '12px'}}>{(new Date(parseInt(notification.id))).toLocaleTimeString()}</p>
+								<p style={{ fontSize: '12px' }}>{notification.time_sent.toLocaleTimeString()}</p>
 							</div>
-							{notification.body}
+							<ReactMarkdown
+								source={notification.body}
+							/>
 							<div
+
 								className={
 									classnames(
 										styles.actions,
-										{[styles.actionsVisible]: notification.isEnlarged})
+										{ [styles.actionsVisible]: notification.isEnlarged })
 								}
 								onClick={
 									/* This prevents the execution of the onClick of the card - i.e. the selecting/deselecting */
@@ -121,9 +115,9 @@ function NotificationCenter() {
 							>
 								<div
 									className={styles.notificationButtonTop}
+									data-test-id="acknowledgeNotification"
 									onClick={() => {
-										notification.isAcknowledged = !notification.isAcknowledged;
-										actions.update(notification);
+										notification.toggleAck();
 									}}
 								>
 									{!notification.isAcknowledged &&
@@ -140,11 +134,11 @@ function NotificationCenter() {
 									}
 								</div>
 								<div
+									data-test-id="deleteNotification"
 									className={styles.notificationButtonBottom}
 									onClick={() => {
 										setEnlarged(-1);
-
-										actions.remove(notification.id);
+										notStore.remove(notification.id);
 									}}
 								>
 									<Icon
@@ -166,4 +160,4 @@ function NotificationCenter() {
 	);
 }
 
-export default NotificationCenter;
+export default observer(NotificationCenter);

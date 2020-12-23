@@ -1,41 +1,60 @@
-import {useEffect, useState} from 'react';
+import { useEffect } from 'react';
 
 /* Logic */
-import S from 'sanctuary';
 import L from 'leaflet';
+import { useStore } from 'mobx-store-provider';
+import { useLocalStore, useAsObservableSource } from 'mobx-react';
+import { createLeafletPolylineStore } from '../../models/locals/createLeafletPolylineStore';
+import { autorun, when } from 'mobx';
 
 /* Global state */
-import {fM} from '../../libs/SaferSanctuary';
 
 /**
  * @return {null}
  */
-function Polyline({map, latlngs}) {
-	const [polyline, setPolyline] = useState(S.Nothing);
+function Polyline({ latlngs }) {
+	const { mapStore } = useStore(
+		'RootStore',
+		(store) => ({
+			mapStore: store.mapStore
+		}));
+
+	const obs = useAsObservableSource({ latlngs });
+	const polylineStore = useLocalStore(createLeafletPolylineStore);
+
+
 	useEffect(() => { // Mount and unmount
 		// Initialize Polygon, draw on Map
-		const poly = new L.Polyline(
-			latlngs,
-			{
-				color: '#363535',
-				weight: 1,
-				lineJoin: 'miter'
-			}
-		);
+		const dispose = when(
+			() => mapStore.isInitialized,
+			() => {
+				const poly = new L.Polyline(
+					obs.latlngs,
+					{
+						color: '#0303ff',
+						weight: 2,
+						lineJoin: 'round',
+						dashArray: '4 1'
+					}
+				);
 
-		poly.addTo(map);
-		setPolyline(S.Just(poly));
+				poly.addTo(mapStore.map);
+				polylineStore.setPolyline(poly);
+			});
+
+		const dispose2 = autorun(() => {
+			if (polylineStore.isPolylineInstanced) {
+				polylineStore.leafletPolyline.setLatLngs(obs.latlngs);
+			}
+		});
+
 		return () => {
 			// Clean-up when unloading component
-			poly.remove();
+			dispose();
+			dispose2();
+			polylineStore.leafletPolyline.remove();
 		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
-	useEffect(() => {
-		// Redraw if the polyline moved or the state changed
-		if (S.isJust(polyline)) {
-			fM(polyline).setLatLngs(latlngs);
-		}
-	}, [latlngs]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return null;
 }

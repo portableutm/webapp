@@ -1,95 +1,121 @@
-import {useEffect, useRef, useState} from 'react';
+import { useEffect } from 'react';
 
 /* Logic */
-import S from 'sanctuary';
 import L from 'leaflet';
 
 /* Global state */
-import {fM} from '../../libs/SaferSanctuary';
-import {useTranslation} from 'react-i18next';
-import useAdesState from '../../state/AdesState';
+//import { useTranslation } from 'react-i18next';
+import { useStore } from 'mobx-store-provider';
+import { autorun, when } from 'mobx';
+import { observer, useLocalStore } from 'mobx-react';
+import { createLeafletPolygonStore } from '../../models/locals/createLeafletPolygonStore';
+import { useAsObservableSource } from 'mobx-react';
+import { useHistory } from 'react-router-dom';
 
 /* Internal */
 
 /* Helpers */
 function getColorForOperationState(state) {
 	switch (state) {
-	case 'ACCEPTED':
-		return '#001aff';
-	case 'PENDING':
-		return '#fff300';
-	case 'ACTIVATED':
-		return '#2dff00';
-	case 'ROGUE':
-		return '#ff0000';
-	default:
-		return '#dedede';
+		case 'ACCEPTED':
+			return '#001aff';
+		case 'PENDING':
+			return '#fff300';
+		case 'ACTIVATED':
+			return '#2dff00';
+		case 'ROGUE':
+			return '#ff0000';
+		default:
+			return '#999999';
 	}
 }
 
-/**
- * @return {null}
- */
-function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ onClick, onClickPopup, isSelected = false}) {
-	const {t,} = useTranslation();
-	const [adesState,] = useAdesState();
-	const [polygon, setPolygon] = useState(S.Nothing);
-	const onClicksDisabled = useRef(adesState.map.onClicksDisabled);
+const OperationPolygon = observer(({
+	latlngs, /* Data */
+	state,
+	name,
+	gufi, /* Handlers */
+	onClick,
+	disableOnClick = false,
+	isSelected = false
+}) => {
+	//const { t, } = useTranslation('glossary');
+	const history = useHistory();
+	const { mapStore } = useStore(
+		'RootStore',
+		(store) => ({
+			mapStore: store.mapStore
+		}));
+	const polygonStore = useLocalStore(
+		source => createLeafletPolygonStore(source),
+		{ map: mapStore.map }
+	);
+	const obs = useAsObservableSource({ state, latlngs, gufi });
 
 	useEffect(() => { // Mount and unmount
-		// Initialize Polygon, draw on Map
-		const polygon = L.polygon(
-			latlngs,
-			{
-				color: '#363535',
-				weight: 1,
-				fillColor: getColorForOperationState(state),
-				fillOpacity: 0.3,
-				lineJoin: 'miter'
+		// Initialize Polygon,
+		// draw on Map,
+		// react to state change
+		const dispose1 = when(
+			// Runs when the map is initialized
+			() => mapStore.isInitialized && obs.latlngs.length > 0,
+			() => {
+				const polygon = L.polygon(
+					obs.latlngs,
+					{
+						color: '#363535',
+						weight: 1,
+						fillColor: getColorForOperationState(state),
+						fillOpacity: 0.3,
+						lineJoin: 'miter'
+					}
+				);
+
+				const polygonOnClick = onClick ?
+					onClick :
+					() => {
+						history.push(`/operation/${obs.gufi}`);
+						mapStore.setSelectedOperation(obs.gufi);
+					};
+				// By default, clicking an OperationPolygon selects the operation and shows it in the sidebar
+
+				if (!disableOnClick) polygon.on('click',
+					(evt) =>
+						mapStore.executeFunctionInMap(polygonOnClick, name, evt));
+
+				if (!disableOnClick) polygon.on('contextmenu',
+					(evt) =>
+						mapStore.executeFunctionInMap(() => mapStore.setSelectedOperation(obs.gufi), name, evt));
+
+				polygon.addTo(mapStore.map);
+				polygonStore.setPolygon(polygon);
 			}
 		);
-
-		onClick && polygon.on('click', (evt) => {
-			if (!onClicksDisabled.current) {
-				onClick(evt.latlng);
-				L.DomEvent.stopPropagation(evt);
+		const dispose2 = autorun(() => {
+			// Runs whenever state is changed
+			if (polygonStore.isPolygonInstanced) {
+				polygonStore.leafletPolygon.setLatLngs(obs.latlngs);
+				polygonStore.leafletPolygon.setStyle({
+					fillColor: getColorForOperationState(obs.state)
+				});
+				if (obs.state === 'ROGUE') {
+					polygonStore.leafletPolygon._path.classList.add('polygonRogue');
+				} else {
+					polygonStore.leafletPolygon._path.classList.remove('polygonRogue');
+				}
 			}
 		});
-
-		!onClick && onClickPopup && polygon.bindPopup(onClickPopup);
-		!onClick && !onClickPopup && polygon.bindPopup(
-			'ID <b>' + info.gufi + '</b><br/>' + // ID <b>a20ef8d5-506d-4f54-a981-874f6c8bd4de</b>
-			t('operation') + ' <b>' + info.flight_comments + '</b><br/>' + // Operation <b>NAME</b>
-			t('state') + ' <b>' + state + '</b><br />' + // State <b>STATE</b>
-			t('effective_time_begin') + ' <b>' + new Date(info.operation_volumes[0].effective_time_begin).toLocaleString() + '</b><br/>' + // Start Date&Time
-			t('effective_time_end') + ' <b>' + new Date(info.operation_volumes[0].effective_time_end).toLocaleString() + '</b><br/>' + // End Date&Time
-			t('max_altitude') + ' <b>' + info.operation_volumes[0].max_altitude + '</b><br/>' + // Max Altitude 999
-			t('contact') + ' <b>' + info.contact + '</b><br/>' + // Contact Name Lastname
-			t('phone') + ' <b>097431725</b>' // Phone 097431725
-		);
-
-		// Only use the popup if there's content for the Popup that happens when clicking the Operation
-		polygon.addTo(map);
-		setPolygon(S.Just(polygon));
 		return () => {
 			// Clean-up when unloading component
-			polygon.remove();
+			if (polygonStore.isPolygonInstanced) {
+				polygonStore.leafletPolygon.remove();
+			}
+			dispose1();
+			dispose2();
 		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	useEffect(() => {
-		onClicksDisabled.current = adesState.map.onClicksDisabled;
-	}, [adesState.map.onClicksDisabled]);
-
-	useEffect(() => {
-		if (S.isJust(polygon)) {
-			// If the state is ROGUE, draw appropiate flashy classes
-			if (state === 'ROGUE') {
-				fM(polygon)._path.classList.add('polygonRogue');
-			}
-		}
-	}, [polygon]); // eslint-disable-line react-hooks/exhaustive-deps
-
+	/*
 	useEffect(() => {
 		if (S.isJust(polygon)) {
 			if (isSelected) {
@@ -99,6 +125,7 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 			}
 		}
 	}, [isSelected]); // eslint-disable-line react-hooks/exhaustive-deps
+
 
 	useEffect(() => {
 		// Redraw if the polygon moved or the state changed
@@ -111,9 +138,10 @@ function OperationPolygon({map, latlngs, /* Data */ state, info, /* Handlers */ 
 				fM(polygon)._path.classList.remove('polygonRogue');
 			}
 		}
-	}, [latlngs, state]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [latlngs, state]); // eslint-disable-line react-hooks/exhaustive-deps */
 
 	return null;
 }
+);
 
 export default OperationPolygon;

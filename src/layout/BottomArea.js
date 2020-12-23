@@ -1,26 +1,31 @@
 import React from 'react';
-import S from 'sanctuary';
-import useAdesState from '../state/AdesState.js';
-import {Icon} from '@blueprintjs/core';
-import {fM} from '../libs/SaferSanctuary';
+import { Icon } from '@blueprintjs/core';
 import styles from './BottomArea.module.css';
+import { useStore } from 'mobx-store-provider';
+import { observer } from 'mobx-react';
 
 const BottomArea = () => {
-	const [warning, actions] = useAdesState(state => state.warning, actions => actions.warning);
-	const warningText = fM(warning);
-	if (S.isJust(warning)) {
+	const { floatingText, isFloatingTextEnabled, hideFloatingText } = useStore(
+		'RootStore',
+		(store) => ({
+			floatingText: store.floatingText,
+			isFloatingTextEnabled: store.isFloatingTextEnabled,
+			hideFloatingText: store.hideFloatingText
+		})
+	);
+	if ( isFloatingTextEnabled ) {
 		return (
 			<div className={styles.bottomArea}>
-				<div className={styles.bottomAreaInside}>
+				<div data-test-id="floating-text" className={styles.bottomAreaInside}>
 					<div className={styles.bottomAreaCloser}>
 						<Icon
 							data-test-id="warning#closer"
 							icon="cross"
 							iconSize={25}
-							onClick={() => actions.close()}
+							onClick={() => hideFloatingText()}
 						/>
 					</div>
-					{warningText}
+					{floatingText}
 				</div>
 			</div>
 		);
@@ -29,4 +34,4 @@ const BottomArea = () => {
 	}
 };
 
-export default BottomArea;
+export default observer(BottomArea);

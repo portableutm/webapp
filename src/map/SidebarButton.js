@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
-import {Icon} from '@blueprintjs/core';
+import React, { useState } from 'react';
+import { Icon } from '@blueprintjs/core';
 import * as classnames from 'classnames';
 import styles from './Map.module.css';
 
-function ExpandedRightAreaButton({useCase, isExpanded, onClick , simpleChildren, children}) {
+function ExpandedRightAreaButton({ useCase, isExpanded, onClick , simpleChildren, children }) {
 	return (
 		<div
-			className={classnames(styles.sidebarText, {[styles.sidebarExpanded]: isExpanded}, {[styles.sidebarContracted]: !isExpanded})}
+			className={classnames(styles.sidebarText, { [styles.sidebarExpanded]: isExpanded }, { [styles.sidebarContracted]: !isExpanded })}
 		>
 			{	simpleChildren && children.map((sub, index) => {
 				if (sub.isSpecial != null && sub.isSpecial) {
@@ -19,7 +19,11 @@ function ExpandedRightAreaButton({useCase, isExpanded, onClick , simpleChildren,
 							key={sub.name}
 							onClick={() => onClick(sub)}
 						>
-							{sub.name}
+							<div
+								className={styles.sidebarButtonTextContent}
+							>
+								{sub.name}
+							</div>
 						</div>
 					);
 				}
@@ -33,7 +37,7 @@ function ExpandedRightAreaButton({useCase, isExpanded, onClick , simpleChildren,
 	);
 }
 
-function SidebarButton({forceOpen = false, useCase, icon, label, onClick, simpleChildren, children, className = ''}) {
+function SidebarButton({ forceOpen = false, useCase, icon, label, onClick, simpleChildren, doubleSize, children, className = '' }) {
 	const [isExpanded, setExpanded] = useState(forceOpen);
 	return (
 		<>
@@ -58,6 +62,7 @@ function SidebarButton({forceOpen = false, useCase, icon, label, onClick, simple
 				useCase={useCase}
 				onClick={onClick}
 				simpleChildren={simpleChildren}
+				doubleSize={doubleSize}
 			>
 				{children}
 			</ExpandedRightAreaButton>

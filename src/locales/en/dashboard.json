@@ -3,13 +3,14 @@
     "returnmap": "RETURN TO REALTIME MAP",
     "dshhome": "Overview",
     "changelanguage": "Usar PortableUTM en Español",
+    "logged_in": "Welcome,",
     "edit_your_info": "Edit your info",
     "logout": "Log out",
     "logout_confirmation": "Are you sure you want to log out?",
     "logout_details": "You won't be able to use the system if you're not logged in.",
     "logout_negative": "No, take me back",
     "logout_positive": "Yes, log me out",
-    "all_users": "All users",
+    "all_users": "Users",
     "new_user": {
       "text": "Add new user",
       "title": "Creating a new user",
@@ -19,18 +20,33 @@
       "verificated": "User created and verified. It can log in now!",
       "verification_error": "Error verifying the user. Please, contact a System Administrator"
     },
-    "operations_list": "All operations",
+    "operations_list": "Operations",
     "operations_list_pilot": "Your operations",
     "vehicles_new": "Add new vehicle",
-    "vehicles_list": "All vehicles",
-    "vehicles_list_pilot": "Your vehicles"
+    "vehicles_list": "Vehicles",
+    "uvrs_list": "UAS Volume Reservations",
+    "vehicles_list_pilot": "Your vehicles",
+    "send_message": "Send message to all users",
+    "send_message_title": "What's the title of the message? For instance, if this is an urgent request, you could write 'Attention!'",
+    "send_message_title_default": "Important, this is a live announcement from the administrators",
+    "send_message_text": "What's the body of the message?",
+    "send_message_text_default": "Attention",
+    "send_message_sent": "The message has been sent to all users connected in the web application!"
   },
   "home": {
     "title": "Overview",
-    "total": "Total of operations",
+    "total": "Registered operations",
     "active": "Active operations",
     "accepted": "Accepted operations",
     "pending": "Pending operations",
-    "vehicles": "Vehicles in the air"
+    "vehicles": "Registered vehicles",
+    "rogue": "Rogue operations",
+    "click_over_any_item_to": "Click over any item to see the complete list of corresponding operations"
+  },
+  "ades_options": {
+    "title": "Configuration",
+    "web": "Settings of the web",
+    "endpoint": "URL of PortableUTM DronfiesUSS",
+    "endpoint_helper": "Please, don't change this configuration unless you know what you're doing."
   }
 }

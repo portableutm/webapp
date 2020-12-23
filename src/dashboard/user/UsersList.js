@@ -1,187 +1,293 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 
-/* External */
-import {useTranslation} from 'react-i18next';
+import { Button, Callout, HTMLSelect, InputGroup, Intent, Spinner } from '@blueprintjs/core';
+import { useTranslation } from 'react-i18next';
+import { useStore } from 'mobx-store-provider';
+import { observer, useObserver } from 'mobx-react';
 import { useParams } from 'react-router-dom';
-import {useHistory} from 'react-router-dom';
-import S from 'sanctuary';
-import {Button, Intent, Tab, Tabs} from '@blueprintjs/core';
+import { useHistory } from 'react-router-dom';
 
-/* Internal Libs */
-import {fM, maybeValues} from '../../libs/SaferSanctuary';
-
-/* Constants */
-import {API} from '../../consts';
-import useAdesState, {Axios, print} from '../../state/AdesState';
-import genericStyles from '../generic/GenericList.module.css';
-import styles from './UsersList.module.css';
-import '../../Ades.css';
-
-
-
-
-
-
+import styles from '../generic/GenericList.module.css';
+import GenericList, { GenericListLine } from '../generic/GenericList';
 import Pilot from './Pilot';
+import { ISDINACIA } from '../../consts';
 
-const USERS_ONE_PAGE_NUMBER = 8;
-
-function useUsersState() {
-	const [usersList, setUsersList] = useState(S.Nothing);
-	const [usersUpdated, setUpdated] = useState(0);
-	const [refetchTime, setRefechtime] = useState(0);
-	const [isError, setIsError] = useState(false);
-	const isEmpty = S.isNothing(usersList);
-	const [state, ] = useAdesState();
-
-	const refetch = () => setRefechtime(Date.now());
-	const usersListExtracted = maybeValues(usersList);
-
-	useEffect(() => {
-		Axios.get(API + 'user', {headers: {auth: fM(state.auth.token)}})
-			.then(result => {
-				const dataObtained = Array.from(result.data);
-				const pairs = S.justs(dataObtained.map((user) => {
-					return S.Just(S.Pair(user.username)(user));
-				}));
-				const users = S.fromPairs(pairs);
-				setUsersList(S.Just(users));
-				setUpdated(Date.now());
-				setIsError(false);
-			})
-			.catch(error => {
-				print(state, true, '*UserState', error);
-				setIsError(true);
-			});
-	}, [refetchTime]); // eslint-disable-line react-hooks/exhaustive-deps
-
-	return [usersListExtracted, usersUpdated, isEmpty, isError, refetch];
+function User({ expanded = false,  children }) {
+	const { t, } = useTranslation(['glossary', 'common']);
+	const history = useHistory();
+	const [showProperties, setShowProperties] = useState(expanded);
+	const [isEditing, setEditing] = useState(false);
+	const toggleOperation = (evt) => {
+		evt.stopPropagation();
+		setEditing(false);
+		setShowProperties(show => {
+			if (show === false) {
+				history.replace('/dashboard/users/' + children.username);
+				return true;
+			} else {
+				history.replace('/dashboard/users');
+				return false;
+			}
+		});
+	};
+	return useObserver(() => (
+		<Callout
+			className={styles.item}
+			title={
+				<div className={styles.title} onClick={toggleOperation}>
+					<p className={styles.titleText}>{`${children.firstName} ${children.lastName}`}</p>
+					<Button
+						className={styles.button}
+						small
+						minimal
+						icon='menu-open'
+						intent={showProperties ? Intent.DANGER : Intent.SUCCESS}
+						onClick={toggleOperation}
+					>
+						<div className={styles.buttonHoveredTooltip}>
+							{ showProperties &&
+							t('common:click_to_collapse')
+							}
+							{ !showProperties &&
+							t('common:click_to_expand')
+							}
+						</div>
+					</Button>
+					<Button
+						data-test-id={`edit${children.username}`}
+						className={styles.button}
+						small
+						minimal
+						icon='edit'
+						intent={isEditing ? Intent.DANGER : Intent.SUCCESS}
+						onClick={(evt) => {evt.stopPropagation(); setShowProperties(false); setEditing(current => !current);}}
+					>
+						<div className={styles.buttonHoveredTooltip}>
+							{t('edit')}
+						</div>
+					</Button>
+					<Button
+						className={styles.button}
+						small
+						minimal
+						icon='known-vehicle'
+						intent={Intent.SUCCESS}
+						onClick={(evt) => { evt.stopPropagation(); history.push('/dashboard/vehicles/' + children.username);}}
+					>
+						<div className={styles.buttonHoveredTooltip}>
+							{t('vehicles.plural_generic')}
+						</div>
+					</Button>
+				</div>
+			}
+			data-test-id={'op' + children.name}
+			icon="double-chevron-right"
+		>
+			{showProperties &&
+			<div className="animated fadeIn faster">
+				{ Object.keys(children).map((prop => {
+					if (prop !== 'dinacia_user' && prop !== 'password' && prop !== '_matchesFiltersByNames') {
+						return (
+							<GenericListLine key={prop}>
+								{t(`users.${prop}`)}
+								<div data-test-id={`dash#selected#${prop}`}>
+									{children[prop]}
+								</div>
+							</GenericListLine>
+						);
+					} else {
+						return null;
+					}
+				}))}
+				{ ISDINACIA && children.dinacia_user && Object.keys(children.dinacia_user).map((prop => {
+					if (prop !== 'dinacia_company' && prop.substr(-4) !== 'path' && prop.substr(-4) !== 'file') {
+						return (
+							<GenericListLine key={prop}>
+								{t(`users.${prop}`)}
+								<div data-test-id={`dash#selected#${prop}`}>
+									{prop.substr(-5) !== '_date' && children.dinacia_user[prop] !== null && children.dinacia_user[prop]}
+									{prop.substr(-5) === '_date' && children.dinacia_user[prop] !== null && children.dinacia_user[prop].toLocaleDateString()}
+								</div>
+							</GenericListLine>
+						);
+					} else {
+						return null;
+					}
+				}))}
+				{ ISDINACIA && children.dinacia_user && children.dinacia_user.dinacia_company && Object.keys(children.dinacia_user.dinacia_company).map((prop => {
+					return (
+						<GenericListLine key={prop}>
+							{t(`users.${prop}`)}
+							<div data-test-id={`dash#selected#${prop}`}>
+								{children.dinacia_user.dinacia_company[prop]}
+							</div>
+						</GenericListLine>
+					);
+				}))}
+				{	ISDINACIA && children.dinacia_user && children.dinacia_user.document_file_path &&
+				<GenericListLine>
+					<img className={styles.lineImage} src={children.dinacia_user.document_file_path} alt="Document" />
+					<p></p>
+				</GenericListLine>
+				}
+				{	ISDINACIA && children.dinacia_user && children.dinacia_user.permit_front_file_path &&
+					<GenericListLine>
+						<img className={styles.lineImage} src={children.dinacia_user.permit_front_file_path} alt="Front of the permit" />
+						<p></p>
+					</GenericListLine>
+				}
+				{	ISDINACIA && children.dinacia_user && children.dinacia_user.permit_back_file_path &&
+				<GenericListLine>
+					<img className={styles.lineImage} src={children.dinacia_user.permit_back_file_path} alt="Back of the permit" />
+					<p></p>
+				</GenericListLine>
+				}
+				{	ISDINACIA && children.dinacia_user && children.dinacia_user.remote_sensor_file_path &&
+				<GenericListLine>
+					<img className={styles.lineImage} src={children.dinacia_user.remote_sensor_file_path} alt="Remote Sensor ID" />
+					<p></p>
+				</GenericListLine>
+				}
+				{/* TODO: ADD volumesOfInterest! */}
+			</div>
+			}
+			{isEditing &&
+			<Pilot user={children} />
+			}
+		</Callout>
+	));
 }
 
-const UsersList = () => {
+function UsersList() {
+	const { t, } = useTranslation('glossary');
 	const history = useHistory();
-	const {t} = useTranslation(['glossary','common']);
+
+	const { store } = useStore(
+		'RootStore',
+		(store) => ({
+			store: store.userStore
+		}));
 	const { username } = useParams();
-
-	const [users, usersUpdated, isEmpty, isError, refetch] = useUsersState();
-	const [shownPilot, setShownPilot] = useState(S.Nothing);
-	const [firstUser, setFirstUser] = useState(0);
-	const [lastUser, setLastUser] = useState(USERS_ONE_PAGE_NUMBER);
-
-	/*useEffect(() => {
-		// Only run in mount
-		if (Date.now() - USERS_DATA_TOO_OLD - state.users.updated > USERS_DATA_TOO_OLD) {
-			actions.users.fetch();
-		}
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps*/
-
-	const usersThisPage = users.slice(firstUser, lastUser); // TODO: Pagination by API
-	let tabsTotal = [];
-	for (let i = 0; i <  users.length / USERS_ONE_PAGE_NUMBER; i++) {
-		tabsTotal.push(i);
-	}
-
-	useEffect(() => {
-		if (!isEmpty && username != null) {
-			const selected = users.find(user => user.username === username);
-			setShownPilot(S.Just(selected));
-		}
-	}, [username, usersUpdated, isEmpty]); // eslint-disable-line react-hooks/exhaustive-deps
-
 	return (
 		<>
-			{ 	isError &&
-			<>
-				<p>
-					{t('app.errorocurredfetching')}
-				</p>
-				<Button
-					intent={Intent.PRIMARY}
-					onClick={() => refetch()}
-				>
-					{t('app.tryagain')}
-				</Button>
-			</>
+			<div className={styles.header}>
+				<h1>
+					{t('users.plural_generic').toUpperCase()}
+				</h1>
+			</div>
+			{	!store.hasFetched &&
+			<div className="fullHW" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+				<Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>
+			</div>
 			}
-			{	!isError &&
-				S.isNothing(shownPilot) &&
+			{	store.allUsers.length > 0 &&
 				<>
-					<div className={genericStyles.header}>
-						<h1>
-							{t('users.plural_generic').toUpperCase()}
-						</h1>
+					<div
+						className={styles.filters}
+					>
+						<HTMLSelect
+							id='filter'
+							name="UvrFilterProperty"
+							className={styles.filterProperty}
+							value={store.filterProperty}
+							onChange={(event) => store.setFilterProperty(event.currentTarget.value)}
+						>
+							<option value="username">{t('users.username')}</option>
+							<option value="firstName">{t('users.firstName')}</option>
+							<option value="lastName">{t('users.lastName')}</option>
+							<option value="email">{t('users.email')}</option>
+							<option value="role">{t('users.role')}</option>
+						</HTMLSelect>
+						<InputGroup
+							className={styles.filterTextInput}
+							leftIcon="search"
+							onChange={(evt) => store.setFilterByText(evt.target.value)}
+							placeholder={t('map:filter.bytext.description')}
+							value={store.filterMatchingText}
+						/>
+						<p
+							className={styles.filterTextInfo}
+						>
+							{`Showing ${store.counts.matchesFilters} out of ${store.counts.userCount} vehicles`}
+						</p>
 					</div>
-					<div className={styles.buttons}>
-						<Tabs id='dshUsersListsTabs' onChange={tab => {
-							setFirstUser(tab * USERS_ONE_PAGE_NUMBER);
-							setLastUser((tab + 1) * USERS_ONE_PAGE_NUMBER);
-						}}>
-							{tabsTotal.map(tab => {
-								const page = tab + 1;
-								return <Tab id={tab} key={'tab' + tab} title={t('page', {number: page})}/>;
-							})
+					<div
+						className={styles.filters}
+					>
+						<p className={styles.filterLabel}>
+							Sorting by property:
+						</p>
+						<HTMLSelect
+							id='sorter'
+							name="UvrSorter"
+							className={styles.filterProperty}
+							value={store.sortingProperty}
+							minimal
+							onChange={(event) => store.setSortingProperty(event.currentTarget.value)}
+						>
+							<option value="username">{t('users.username')}</option>
+							<option value="firstName">{t('users.firstName')}</option>
+							<option value="lastName">{t('users.lastName')}</option>
+							<option value="email">{t('users.email')}</option>
+							<option value="role">{t('users.role')}</option>
+						</HTMLSelect>
+						<p className={styles.filterLabel}>
+							in
+						</p>
+						<HTMLSelect
+							id='sorter'
+							name="UvrSortingOrder"
+							className={styles.filterProperty}
+							value={store.sortingOrder}
+							minimal
+							onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
+						>
+							<option value='asc'>Ascending</option>
+							<option value='desc'>Descending</option>
+						</HTMLSelect>
+						<p className={styles.filterLabel}>
+							order
+						</p>
+					</div>
+					<div
+						className={styles.actionArea}
+					>
+						<Button
+							className={styles.buttonAction}
+							icon='add'
+							onClick={() => {
+								history.push('/dashboard/users/new');
+							}}
+						>
+							{t('add_user')}
+						</Button>
+					</div>
+					<GenericList>
+						{store.usersWithVisibility.map((user) => {
+							if (user._matchesFiltersByNames) {
+								return (
+									<User
+										key={user.username}
+										expanded={user.username === username}
+									>
+										{user}
+									</User>
+								);
+							} else {
+								return null;
 							}
-						</Tabs>
-					</div>
-					<div>
-						<table id='usersList' className='.bp3-html-table .bp3-html-table-bordered .bp3-html-table-striped fullHW'>
-							<thead>
-								<tr>
-									<th>{t('users.firstname')}</th>
-									<th>{t('users.lastname')}</th>
-									<th>{t('users.username')}</th>
-									<th>{t('users.email')}</th>
-									<th>{t('users.role')}</th>
-									<th>{t('actions')}</th>
-								</tr>
-							</thead>
-							<tbody className={styles.usersList}>
-								{usersThisPage.map(user => (
-									<tr key={user.username}>
-										<td>{user.firstName}</td>
-										<td>{user.lastName}</td>
-										<td>{user.username}</td>
-										<td>{user.email}</td>
-										<td>{user.role}</td>
-										<td>
-											<div style={{display: 'flex', justifyContent: 'space-evenly'}}>
-												<Button
-													small={true}
-													disabled
-													onClick={() => {
-														history.push('/dashboard/users/' + user.username);
-														setShownPilot(S.Just(user));
-													}}
-												>
-													{t('edit')}
-												</Button>
-												<Button
-													small={true}
-													onClick={() => history.push('/dashboard/vehicles/' + user.username + '/new/')}
-												>
-													{t('vehicles.add')}
-												</Button>
-											</div>
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
+						})}
+					</GenericList>
 				</>
 			}
-			{	!isError &&
-				S.isJust(shownPilot) &&
-				<>
-					<Button icon="circle-arrow-left" text={t('return_to_list')} onClick={() => {
-						setShownPilot(S.Nothing);
-						history.push('/dashboard/users');
-					}} />
-					<Pilot user={fM(shownPilot)} />
-				</>
+			{	store.allUsers.length === 0 &&
+				<h2>
+					{t('operations.zero_operations')}
+				</h2>
 			}
 		</>
 	);
-};
- 
-export default UsersList;
+	
+}
+
+export default observer(UsersList);

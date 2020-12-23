@@ -12,30 +12,37 @@ function getLeafletLayer(useGeoServer, L) {
 		});
 	} else {
 		return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors. ' +
+				'All icons by <a href="icons8.com">Icons8</a>'
 		});
 	}
 }
 
-const initializeLeaflet = (map, mapClick, mapDragEnd, setMapInitialized) => {
+const initializeLeaflet = () => {
 	const leafletLayer = getLeafletLayer(false, L);
-	map.current = L.map('adesMapLeaflet', {
-		zoomControl: false,
-		worldCopyJump: true,
-		layers: [leafletLayer]
-	});
 	/*L.control
 		.zoom({
 			position: 'topright'
 		})
 		.addTo(map.current);*/
-	map.current.on('click', mapClick); // Map clicked outside any element
-	map.current.on('moveend', mapDragEnd);
-	setMapInitialized(true);
+	const map = L.map('adesMapLeaflet', {
+		center: [-34.89719516961728, -56.1633110046386],
+		zoom: 11,
+		zoomControl: false,
+		worldCopyJump: true,
+		layers: [leafletLayer]
+	});
+	map.getPane('tooltipPane').style.visibility = 'hidden';
+	map.on('zoomend', function() {
+		if (map.getZoom() > 12) {
+			map.getPane('tooltipPane').style.visibility = 'visible';
+		} else {
+			map.getPane('tooltipPane').style.visibility = 'hidden';
+		}
+	});
+	return map;
 };
-// TODO: Add copyright information about marker icon
-//  <a target="_blank" href="https://icons8.com/icons/set/fighter-jet">Fighter Jet icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
-//  <a target="_blank" href="https://icons8.com/icons/set/unchecked-radio-button--v1">Unchecked Radio Button icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+
 /* END LEAFLET INITIALIZATION CODE  */
 
 

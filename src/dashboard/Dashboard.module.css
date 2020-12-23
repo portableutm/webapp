@@ -111,6 +111,7 @@
         height: fit-content;
         overflow: visible;
         pointer-events: auto;
+        width: 100vw;
     }
 }
 

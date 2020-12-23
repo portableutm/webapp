@@ -1,13 +1,19 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useStore } from 'mobx-store-provider';
 import styles from './home.module.css';
+import { useHistory } from 'react-router-dom';
 import genericListStyle from '../generic/GenericList.module.css';
-import useAdesState from '../../state/AdesState';
-import S from 'sanctuary';
-import {useTranslation} from 'react-i18next';
+import { observer } from 'mobx-react';
+import * as classnames from 'classnames';
 
-const SimpleValue = ({title, value, color}) => {
+const SimpleValue = ({ title, onClick, value, color, addtlClass = null }) => {
 	return (
-		<div className={styles.simpleValue} style={{backgroundColor: color}}>
+		<div
+			className={classnames(styles.simpleValue, { [addtlClass]: addtlClass !== null })}
+			style={{ backgroundColor: color }}
+			onClick={onClick}
+		>
 			<p className={styles.simpleValueText}>{title}</p>
 			<p className={styles.simpleValueValue}>{value}</p>
 		</div>
@@ -15,14 +21,12 @@ const SimpleValue = ({title, value, color}) => {
 };
 
 const HomeScreen = () => {
-	const [state, ] = useAdesState();
+	const history = useHistory();
+	const { opStore } = useStore('RootStore', (store) => ({
+		opStore: store.operationStore,
+		vehStore: store.vehicleStore
+	}));
 	const { t } = useTranslation('dashboard');
-	const operations = S.values(state.operations.list);
-	const operationCount = operations.length;
-	const activeCount = (S.filter ((op) => op.state === 'ACTIVE') (operations)).length;
-	const acceptedCount = (S.filter ((op) => op.state === 'ACCEPTED') (operations)).length;
-	const pendingCount = (S.filter ((op) => op.state === 'PENDING') (operations)).length;
-	const dronesCount = S.values(state.drones.list).length;
 
 	return (
 		<>
@@ -31,31 +35,62 @@ const HomeScreen = () => {
 					{t('home.title').toUpperCase()}
 				</h1>
 			</div>
+			<p className={styles.textDescription}>
+				{t('home.click_over_any_item_to')}
+			</p>
 			<div className={styles.homeScreen}>
 				<SimpleValue
+					title={t('home.pending')}
+					value={opStore.counts.pendingCount}
+					color={'#ecbf08'}
+					onClick={() => {
+						opStore.setFilterPending(true);
+						opStore.setFilterAccepted(false);
+						opStore.setFilterActivated(false);
+						opStore.setFilterRogue(false);
+						opStore.setFilterClosed(false);
+						history.push('/dashboard/operations');
+					}}
+				/>
+				{/*<SimpleValue
 					title={t('home.total')}
-					value={operationCount}
+					value={opStore.counts.operationCount}
+				/> */}
+				<SimpleValue
+					title={t('home.rogue')}
+					value={opStore.counts.rogueCount}
+					color={'#b31e1e'}
+					addtlClass={opStore.counts.rogueCount > 0 ? styles.rogueValueWarning : styles.rogueValueInactive}
+					onClick={() => {
+						opStore.setFilterPending(false);
+						opStore.setFilterAccepted(false);
+						opStore.setFilterActivated(false);
+						opStore.setFilterRogue(true);
+						opStore.setFilterClosed(false);
+						history.push('/dashboard/operations');
+					}}
 				/>
 				<SimpleValue
 					title={t('home.active')}
-					value={activeCount}
-					color="chocolate"
-				/>
-				<SimpleValue
-					title={t('home.accepted')}
-					value={acceptedCount}
+					value={opStore.counts.activeCount}
+					onClick={() => {
+						opStore.setFilterPending(false);
+						opStore.setFilterAccepted(false);
+						opStore.setFilterActivated(true);
+						opStore.setFilterRogue(false);
+						opStore.setFilterClosed(false);
+						history.push('/dashboard/operations');
+					}}
 					color="rgb(0,100,0)"
 				/>
-				<SimpleValue
-					title={t('home.pending')}
-					value={pendingCount}
-					color="orangered"
+				{/* <SimpleValue
+					title={t('home.accepted')}
+					value={opStore.counts.acceptedCount}
 				/>
 				<SimpleValue
 					title={t('home.vehicles')}
-					value={dronesCount}
-					color="darkmagenta"
-				/>
+					value={vehStore.counts.vehicleCount}
+				/> */}
 				{/*
 				<div className="div-ops-by-month">
 					Operations Evolution in the Last 12 Months
@@ -106,4 +141,4 @@ const HomeScreen = () => {
 	);
 };
  
-export default HomeScreen;
+export default observer(HomeScreen);
