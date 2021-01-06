@@ -10,7 +10,7 @@
     "@testing-library/user-event": "^7.1.2",
     "apexcharts": "^3.19.2",
     "async-mutex": "^0.1.4",
-    "axios": "^0.19.1",
+    "axios": "^0.21.1",
     "classnames": "^2.2.6",
     "i18next": "^19.4.2",
     "jwt-decode": "^2.2.0",
