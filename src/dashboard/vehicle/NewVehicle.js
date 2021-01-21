@@ -10,8 +10,12 @@ import { useLocalStore, useAsObservableSource, observer, useObserver } from 'mob
 import { ISDINACIA } from '../../consts';
 import { BaseDinaciaVehicle } from '../../models/entities/DinaciaVehicle';
 
+
+
 const GenericVehicleProperties = ({ localStore, properties }) => {
 	const { t, } = useTranslation(['glossary', 'common']);
+
+
 
 	return useObserver(() => {
 		return properties.map(property => {
@@ -60,6 +64,7 @@ const DinaciaVehicleProperties = ({ localStore, properties }) => {
 };
 
 function NewVehicle(props) {
+
 	const { vehicleStore, userStore } = useStore(
 		'RootStore',
 		(store) => ({ authStore: store.authStore, vehicleStore: store.vehicleStore, userStore: store.userStore }));
@@ -79,7 +84,7 @@ function NewVehicle(props) {
 			accessType: '',
 			vehicleTypeId: '',
 			'org-uuid': '',
-			dinacia_vehicle: BaseDinaciaVehicle.create({}),
+			dinacia_vehicle: BaseDinaciaVehicle.create({year:`${new Date().getFullYear()}`}),
 			operators: [],
 			/*registeredBy: authStore.username,*/
 			owner_id: obs.userId
@@ -114,19 +119,19 @@ function NewVehicle(props) {
 					/>
 				</div>
 				{ISDINACIA &&
-				<div className={form.col}>
-					<h2>{t('glossary:optional_fields')}</h2>
-					<DinaciaVehicleProperties
-						localStore={localStore}
-						properties={[
-							'caa_registration',
-							'usage',
-							'construction_material',
-							'year',
-							'serial_number'
-						]}
-					/>
-				</div>
+					<div className={form.col}>
+						<h2>{t('glossary:optional_fields')}</h2>
+						<DinaciaVehicleProperties
+							localStore={localStore}
+							properties={[
+								'caa_registration',
+								'usage',
+								'construction_material',
+								'year',
+								'serial_number'
+							]}
+						/>
+					</div>
 				}
 			</section>
 			{ISDINACIA &&
@@ -180,7 +185,7 @@ function NewVehicle(props) {
 					<h3>
 						{t('glossary:vehicles.operators')}
 					</h3>
-					{ localStore.vehicle.operators.map(operator => {
+					{localStore.vehicle.operators.map(operator => {
 						return (
 							<p key={operator}>{operator}</p>
 						);
@@ -188,18 +193,18 @@ function NewVehicle(props) {
 				</div>
 				<div className={form.col}>
 					{!userStore.hasError &&
-					<ul>
-						{ userStore.allUsers.map(user => {
-							return <Button key={user.username} small style={{ marginBottom: '5px' }} intent={localStore.vehicle.operators.indexOf(user.username) === -1 ? Intent.SUCCESS : Intent.DANGER} icon={localStore.vehicle.operators.indexOf(user.username) === -1 ? 'plus' : 'minus'}	onClick={() => {
-								if (localStore.vehicle.operators.indexOf(user.username) === -1) {
-									localStore.vehicle.addOperator(user.username);
-								} else {
-									localStore.vehicle.removeOperator(user.username);
-								}
-							}}
-							>{user.asDisplayString}</Button>;
-						})}
-					</ul>
+						<ul>
+							{userStore.allUsers.map(user => {
+								return <Button key={user.username} small style={{ marginBottom: '5px' }} intent={localStore.vehicle.operators.indexOf(user.username) === -1 ? Intent.SUCCESS : Intent.DANGER} icon={localStore.vehicle.operators.indexOf(user.username) === -1 ? 'plus' : 'minus'} onClick={() => {
+									if (localStore.vehicle.operators.indexOf(user.username) === -1) {
+										localStore.vehicle.addOperator(user.username);
+									} else {
+										localStore.vehicle.removeOperator(user.username);
+									}
+								}}
+								>{user.asDisplayString}</Button>;
+							})}
+						</ul>
 					}
 				</div>
 			</section>
@@ -215,9 +220,9 @@ function NewVehicle(props) {
 			}
 
 			{ISDINACIA &&
-			<FileInput fill buttonText={t('upload')} inputProps={{ accept: 'image/*' }}
-				text={localStore.vehicle.dinacia_vehicle.serial_number_file === null ? t('vehicles.serial_number_file') : localStore.vehicle.dinacia_vehicle.serial_number_file.name}
-				onInputChange={(evt) => localStore.vehicle.setDinaciaProperty('serial_number_file', evt.currentTarget.files[0])}/>
+				<FileInput fill buttonText={t('upload')} inputProps={{ accept: 'image/*' }}
+					text={localStore.vehicle.dinacia_vehicle.serial_number_file === null ? t('vehicles.serial_number_file') : localStore.vehicle.dinacia_vehicle.serial_number_file.name}
+					onInputChange={(evt) => localStore.vehicle.setDinaciaProperty('serial_number_file', evt.currentTarget.files[0])} />
 			}
 			{/*<RadioGroup
 				label={t('vehicles.class')}
@@ -239,14 +244,18 @@ function NewVehicle(props) {
 					{t('go_back')}
 				</Button>
 				<Button
+					id="add_vehicle_btn"
 					disabled={isSubmitting}
 					intent={Intent.SUCCESS}
 					style={{ marginLeft: '2px' }}
 					onClick={async () => {
 						setSubmitting(true);
-						await vehicleStore.post(localStore.vehicle);
+
+						let res = await vehicleStore.post(localStore.vehicle);
 						setSubmitting(false);
-						history.push(`/dashboard/vehicles/${username ? username : ''}`);
+						if(res && (res.status === 200)){
+							history.push(`/dashboard/vehicles/${username ? username : ''}`);
+						}
 					}}
 				>
 					{t('submit')}
