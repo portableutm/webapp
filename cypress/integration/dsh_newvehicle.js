@@ -49,7 +49,7 @@ describe('Use Case: Add new vehicle', function () {
 		// cy.get('#text-usage').type('Recreativo', { force: true });
 		// cy.get('#text-construction_material').type('Plastico', { force: true });
 
-		cy.get('#text-year').clear().type('2021', { force: true });x
+		cy.get('#text-year').clear().type('2021', { force: true });
 		
 		// cy.get('#text-serial_number').type('SN0987654321', { force: true });
 		
