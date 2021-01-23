@@ -84,7 +84,7 @@ function NewVehicle(props) {
 			accessType: '',
 			vehicleTypeId: '',
 			'org-uuid': '',
-			dinacia_vehicle: BaseDinaciaVehicle.create({year:`${new Date().getFullYear()}`}),
+			dinacia_vehicle: BaseDinaciaVehicle.create({ year:`${new Date().getFullYear()}` }),
 			operators: [],
 			/*registeredBy: authStore.username,*/
 			owner_id: obs.userId
@@ -117,68 +117,76 @@ function NewVehicle(props) {
 								]
 						}
 					/>
+					<FormGroup
+						label={t('vehicles.serial_number_file')}
+						labelFor='serial_number_file'
+					>
+						<FileInput id='serial_number_file' fill buttonText={t('upload')} inputProps={{ accept: 'image/*' }}
+								   text={localStore.vehicle.dinacia_vehicle.serial_number_file === null ? t('vehicles.serial_number_file') : localStore.vehicle.dinacia_vehicle.serial_number_file.name}
+								   onInputChange={(evt) => localStore.vehicle.setDinaciaProperty('serial_number_file', evt.currentTarget.files[0])} />
+					</FormGroup>
 				</div>
 				{ISDINACIA &&
-					<div className={form.col}>
-						<h2>{t('glossary:optional_fields')}</h2>
-						<DinaciaVehicleProperties
-							localStore={localStore}
-							properties={[
-								'caa_registration',
-								'usage',
-								'construction_material',
-								'year',
-								'serial_number'
-							]}
-						/>
-					</div>
+				<div className={form.col}>
+					<h2>{t('glossary:optional_fields')}</h2>
+					<DinaciaVehicleProperties
+						localStore={localStore}
+						properties={[
+							'caa_registration',
+							'usage',
+							'construction_material',
+							'year',
+							'serial_number'
+						]}
+					/>
+				</div>
 				}
 			</section>
 			{ISDINACIA &&
-				<section className={form.grid}>
-					<div className={form.col}>
-						<h2>{t('glossary:optional_fields')}</h2>
-						<DinaciaVehicleProperties
-							localStore={localStore}
-							properties={[
-								'empty_weight',
-								'max_weight',
-								'takeoff_method',
-								'sensor_type_and_mark',
-								'packing',
-								'longitude',
-								'height',
-								'color',
-								'max_speed',
-								'cruise_speed',
-								'landing_speed',
-								'time_autonomy',
-								'radio_accion'
-							]}
-						/>
-					</div>
-					<div className={form.col}>
-						<h2>{t('glossary:optional_fields')}</h2>
-						<DinaciaVehicleProperties
-							localStore={localStore}
-							properties={[
-								'ceiling',
-								'communication_control_system_command_navigation_vigilance',
-								'maintenance_inspections',
-								'remarks',
-								'engine_manufacturer',
-								'engine_type',
-								'engine_model',
-								'engine_power',
-								'engine_fuel',
-								'engine_quantity_batteries',
-								'propeller_type',
-								'propeller_model',
-								'propeller_material'
-							]}
-						/>
-					</div>
-				</section>
+			<section className={form.grid}>
+				<div className={form.col}>
+					<h2>{t('glossary:optional_fields')}</h2>
+					<DinaciaVehicleProperties
+						localStore={localStore}
+						properties={[
+							'empty_weight',
+							'max_weight',
+							'takeoff_method',
+							'sensor_type_and_mark',
+							'packing',
+							'longitude',
+							'height',
+							'color',
+							'max_speed',
+							'cruise_speed',
+							'landing_speed',
+							'time_autonomy',
+							'radio_accion'
+						]}
+					/>
+				</div>
+				<div className={form.col}>
+					<h2>{t('glossary:optional_fields')}</h2>
+					<DinaciaVehicleProperties
+						localStore={localStore}
+						properties={[
+							'ceiling',
+							'communication_control_system_command_navigation_vigilance',
+							'maintenance_inspections',
+							'remarks',
+							'engine_manufacturer',
+							'engine_type',
+							'engine_model',
+							'engine_power',
+							'engine_fuel',
+							'engine_quantity_batteries',
+							'propeller_type',
+							'propeller_model',
+							'propeller_material'
+						]}
+					/>
+				</div>
+			</section>
 			}
 			<section className={form.grid}>
 				<div className={form.col}>
@@ -219,11 +227,6 @@ function NewVehicle(props) {
 				</Button>
 			}
 
-			{ISDINACIA &&
-				<FileInput fill buttonText={t('upload')} inputProps={{ accept: 'image/*' }}
-					text={localStore.vehicle.dinacia_vehicle.serial_number_file === null ? t('vehicles.serial_number_file') : localStore.vehicle.dinacia_vehicle.serial_number_file.name}
-					onInputChange={(evt) => localStore.vehicle.setDinaciaProperty('serial_number_file', evt.currentTarget.files[0])} />
-			}
 			{/*<RadioGroup
 				label={t('vehicles.class')}
 				onChange={(evt) => localStore.vehicle.setProperty('class',evt.currentTarget.value)}

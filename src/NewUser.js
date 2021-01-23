@@ -206,32 +206,53 @@ const NewUser = ({ isSelfRegistering = true }) => {
 					<UserInputs localStore={localStore} />
 					{ISDINACIA &&
 						<>
-							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
-								text={localStore.user.dinacia_user.document_file === null ?
-									t('glossary:users.document_file') :
-									localStore.user.dinacia_user.document_file.name}
-								onInputChange={(evt) =>
-									localStore.user.setDinaciaProperty('document_file', evt.target.files[0])}/>
-							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
-								text={localStore.user.dinacia_user.permit_front_file === null ?
-									t('glossary:users.permit_front_file') :
-									localStore.user.dinacia_user.permit_front_file.name}
-								onInputChange={(evt) =>
-									localStore.user.setDinaciaProperty('permit_front_file', evt.target.files[0])}/>
-							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
-								text={localStore.user.dinacia_user.permit_back_file === null ?
-									t('glossary:users.permit_back_file') :
-									localStore.user.dinacia_user.permit_back_file.name}
-								onInputChange={(evt) =>
-									localStore.user.setDinaciaProperty('permit_back_file', evt.target.files[0])}/>
-							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
-								text={localStore.user.dinacia_user.remote_sensor_file === null ?
-									t('glossary:users.remote_sensor_file') :
-									localStore.user.dinacia_user.remote_sensor_file.name}
-								onInputChange={(evt) =>
-									localStore.user.setDinaciaProperty('remote_sensor_file', evt.target.files[0])}/>
 							<FormGroup
-								label={t('users.permit_expire_date')}
+								label={t('glossary:users.document_file')}
+								labelFor="document_file"
+							>
+								<FileInput id='document_file' style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+									text={localStore.user.dinacia_user.document_file === null ?
+										t('glossary:users.document_file') :
+										localStore.user.dinacia_user.document_file.name}
+									onInputChange={(evt) =>
+										localStore.user.setDinaciaProperty('document_file', evt.target.files[0])}/>
+							</FormGroup>
+
+							<FormGroup
+								label={t('glossary:users.permit_front_file')}
+								labelFor="permit_front_file"
+							>
+								<FileInput id='permit_front_file' style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+									text={localStore.user.dinacia_user.permit_front_file === null ?
+										t('glossary:users.permit_front_file') :
+										localStore.user.dinacia_user.permit_front_file.name}
+									onInputChange={(evt) =>
+										localStore.user.setDinaciaProperty('permit_front_file', evt.target.files[0])}/>
+							</FormGroup>
+							<FormGroup
+								label={t('glossary:users.permit_back_file')}
+								labelFor="permit_back_file"
+							>
+								<FileInput id='permit_back_file' style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+									text={localStore.user.dinacia_user.permit_back_file === null ?
+										t('glossary:users.permit_back_file') :
+										localStore.user.dinacia_user.permit_back_file.name}
+									onInputChange={(evt) =>
+										localStore.user.setDinaciaProperty('permit_back_file', evt.target.files[0])}/>
+							</FormGroup>
+							<FormGroup
+								label={t('glossary:users.remote_sensor_file' )}
+								labelFor="remote_sensor_file"
+							>
+								<FileInput id='remote_sensor_file' style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+									text={localStore.user.dinacia_user.remote_sensor_file === null ?
+										t('glossary:users.remote_sensor_file') :
+										localStore.user.dinacia_user.remote_sensor_file.name}
+									onInputChange={(evt) =>
+										localStore.user.setDinaciaProperty('remote_sensor_file', evt.target.files[0])}/>
+							</FormGroup>
+							<FormGroup
+								label={t('glossary:users.permit_expire_date')}
 								labelFor="permit_expire_date"
 							>
 								<InputGroup leftIcon="person"

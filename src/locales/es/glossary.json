@@ -92,7 +92,7 @@
     "color": "Color",
     "color_desc": "Color del vehículo",
     "max_speed": "Velocidad máxima",
-    "max_speed_desc": " ",
+    "max_speed_desc": "m/s",
     "cruise_speed": "Velocidad crucero",
     "cruise_speed_desc": " ",
     "landing_speed": "Velocidad de aterrizaje",
@@ -171,7 +171,14 @@
     "takeoff_method_desc": "Por ejemplo, VTOL.",
     "time_autonomy": "Rango",
     "time_autonomy_desc": "en minutos",
-    "usage": "Uso"
+    "usage": "Uso",
+    "class_desc": "MULTIROTOR o ala fija (FIXED-WING)",
+    "engine_type_desc": " ",
+    "operators": "Operadores del vehículo",
+    "owner_id": "Dueño",
+    "owner_id_desc": "Nombre de usuario del dueño del vehículo",
+    "propeller_model_desc": " ",
+    "usage_desc": "Tipo de uso que se le da al vehículo"
   },
   "volumes": {
     "effective_time_begin": "Tiempo de comienzo",
@@ -222,5 +229,7 @@
     "time_sent": "Última posición reportada a las",
     "username": "Parapente"
   },
-  "upload": "Cargar"
+  "upload": "Cargar",
+  "optional_fields": "Campos opcionales",
+  "required_fields": "Campos requeridos"
 }
