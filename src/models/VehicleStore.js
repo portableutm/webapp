@@ -4,8 +4,31 @@ import { Vehicle } from './entities/Vehicle';
 import _ from 'lodash';
 import { ISDINACIA } from '../consts';
 
+const validateFields = (vehicle , prueba) => {
+	console.log(`Validate field: ${JSON.stringify(vehicle)}, ${JSON.stringify(prueba)}`)
+	let errors = []
+	if (!vehicle.dinacia_vehicle.serial_number_file) {
+		errors.push("Serial number image can not be empty.")
+	}
+	if (!vehicle.vehicleName) {
+		errors.push("Vehicle name can not be empty.")
+	}
+	if (!vehicle.manufacturer) {
+		errors.push("Manufacturer can not be empty.")
+	}
+	if (!vehicle.model) {
+		errors.push("Model can not be empty.")
+	}
+	if(ISDINACIA){
+		if (!vehicle.dinacia_vehicle.year && !Number.isNaN(Number.parseInt(vehicle.dinacia_vehicle.year))) {
+			errors.push("Year must be a number.")
+		}
+	}
+	return errors
+}
+
 export const VehicleStore = types
-	.model('VehicleStore',{
+	.model('VehicleStore', {
 		vehicles: types.map(Vehicle),
 		filterMatchingText: '', // Those that match this string are displayed in the layers list (search)
 		filterProperty: 'nNumber',
@@ -46,25 +69,38 @@ export const VehicleStore = types
 			post: flow(function* post(vehicle) {
 				try {
 					const vehicleSnapshot = getSnapshot(vehicle);
-					const data = new FormData();
-					for (const key in vehicleSnapshot) {
-						if (key !== 'dinacia_vehicle' && key !== 'operators') {
-							// noinspection JSUnfilteredForInLoop
-							data.append(key, vehicleSnapshot[key]);
+					
+					let errors = validateFields(vehicle, vehicleSnapshot)
+					if (errors.length > 0) {
+						getRoot(self).setFloatingText(`Error while saving Vehicle: ${errors.join(", ")}`);
+						return;
+					} else {
+						const data = new FormData();
+						for (const key in vehicleSnapshot) {
+							if (key !== 'dinacia_vehicle' && key !== 'operators') {
+								// noinspection JSUnfilteredForInLoop
+								data.append(key, vehicleSnapshot[key]);
+							}
 						}
+						if (ISDINACIA) {
+							data.append('dinacia_vehicle_str', JSON.stringify(vehicleSnapshot.dinacia_vehicle));
+							data.append('operators_str', JSON.stringify(vehicle.operatorsBackend));
+							data.append('serial_number_file', vehicle.dinacia_vehicle.serial_number_file, 'serial_number_file');
+						}
+						console.dir(data);
+
+						const response = yield getRoot(self)
+							.axiosInstance
+							.post('vehicle', data, { headers: { 'Content-Type': 'multipart/form-data', auth: getRoot(self).authStore.token } });
+						if (response.status = 200) {
+							yield self.fetch();
+							getRoot(self).setFloatingText('Vehicle saved successfully! ');
+						} else if (response.status == 400) {
+							getRoot(self).setFloatingText(`Error while saving Vehicle: ${response.data}`);
+							
+						}
+						return response;
 					}
-					if (ISDINACIA) {
-						data.append('dinacia_vehicle_str', JSON.stringify(vehicleSnapshot.dinacia_vehicle));
-						data.append('operators_str', JSON.stringify(vehicle.operatorsBackend));
-						data.append('serial_number_file', vehicle.dinacia_vehicle.serial_number_file, 'serial_number_file');
-					}
-					console.dir(data);
-					const response = yield getRoot(self)
-						.axiosInstance
-						.post('vehicle', data,{ headers: { 'Content-Type': 'multipart/form-data', auth: getRoot(self).authStore.token } });
-					yield self.fetch();
-					getRoot(self).setFloatingText('Vehicle saved successfully! ');
-					return response;
 				} catch (error) {
 					getRoot(self).setFloatingText('Error while saving Vehicle: ' + error);
 				}
@@ -106,7 +142,8 @@ export const VehicleStore = types
 						if (vehicleWithVisibility.owner) vehicleWithVisibility.owner.asDisplayString = vehicle.owner.asDisplayString;
 						if (vehicleWithVisibility.registeredBy) vehicleWithVisibility.registeredBy.asDisplayString = vehicle.registeredBy.asDisplayString;
 						vehicleWithVisibility.asShortDisplayString = vehicle.asShortDisplayString;
-						return vehicleWithVisibility;})
+						return vehicleWithVisibility;
+					})
 					.orderBy(vehicle => {
 						return vehicle[self.sortingProperty];
 					}, self.sortingOrder)
