@@ -158,15 +158,17 @@ function SelectedOperation() {
 				<div
 					className={styles.sidebarSeparator}
 				>
+					{!authStore.isPilot &&
 					<Button
 						small={true}
 						intent={Intent.WARNING}
 						fill
 						style={{ marginRight: '5px ' }}
-						onClick={() =>showEmailDialog(true)}
+						onClick={() => showEmailDialog(true)}
 					>
 						{t('email')}
 					</Button>
+					}
 					<Button
 						small={true}
 						intent={Intent.PRIMARY}
