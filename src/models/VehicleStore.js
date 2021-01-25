@@ -5,27 +5,27 @@ import _ from 'lodash';
 import { ISDINACIA } from '../consts';
 
 const validateFields = (vehicle , prueba) => {
-	console.log(`Validate field: ${JSON.stringify(vehicle)}, ${JSON.stringify(prueba)}`)
-	let errors = []
+	console.log(`Validate field: ${JSON.stringify(vehicle)}, ${JSON.stringify(prueba)}`);
+	let errors = [];
 	if (!vehicle.dinacia_vehicle.serial_number_file) {
-		errors.push("Serial number image can not be empty.")
+		errors.push('Serial number image can not be empty.');
 	}
 	if (!vehicle.vehicleName) {
-		errors.push("Vehicle name can not be empty.")
+		errors.push('Vehicle name can not be empty.');
 	}
 	if (!vehicle.manufacturer) {
-		errors.push("Manufacturer can not be empty.")
+		errors.push('Manufacturer can not be empty.');
 	}
 	if (!vehicle.model) {
-		errors.push("Model can not be empty.")
+		errors.push('Model can not be empty.');
 	}
 	if(ISDINACIA){
 		if (!vehicle.dinacia_vehicle.year && !Number.isNaN(Number.parseInt(vehicle.dinacia_vehicle.year))) {
-			errors.push("Year must be a number.")
+			errors.push('Year must be a number.');
 		}
 	}
-	return errors
-}
+	return errors;
+};
 
 export const VehicleStore = types
 	.model('VehicleStore', {
@@ -49,15 +49,38 @@ export const VehicleStore = types
 		return {
 			fetch: flow(function* fetch() {
 				try {
-					const response = yield getRoot(self).axiosInstance.get(getRoot(self).authStore.isAdmin ? 'vehicle' : 'vehicle/operator', { headers: { auth: getRoot(self).authStore.token } });
-					self.hasFetched = true;
-					const vehicles = response.data;
-					self.vehicles.replace(
-						vehicles.reduce((prior, vehicle) => {
-							const processedVehicle = processVehicle(vehicle);
-							return [...prior, [processedVehicle.uvin, processedVehicle]];
-						}, [])
-					);
+					if (getRoot(self).authStore.isAdmin) {
+						// Admins can see all vehicles of the system
+						const response = yield getRoot(self).axiosInstance.get('vehicle', { headers: { auth: getRoot(self).authStore.token } });
+						self.hasFetched = true;
+						const vehicles = response.data;
+						self.vehicles.replace(
+							vehicles.reduce((prior, vehicle) => {
+								const processedVehicle = processVehicle(vehicle);
+								return [...prior, [processedVehicle.uvin, processedVehicle]];
+							}, [])
+						);
+					} else {
+						// Pilots can see the vehicles of which they are owners or operators
+						const responseOperator = yield getRoot(self).axiosInstance.get('vehicle/operator', { headers: { auth: getRoot(self).authStore.token } });
+						const responseOwner = yield getRoot(self).axiosInstance.get('vehicle', { headers: { auth: getRoot(self).authStore.token } });
+						self.hasFetched = true;
+						const vehiclesOperator = responseOperator.data;
+						self.vehicles.replace(
+							vehiclesOperator.reduce((prior, vehicle) => {
+								const processedVehicle = processVehicle(vehicle);
+								return [...prior, [processedVehicle.uvin, processedVehicle]];
+							}, [])
+						);
+						const vehiclesOwner = responseOwner.data;
+						self.vehicles.merge(
+							vehiclesOwner.reduce((prior, vehicle) => {
+								const processedVehicle = processVehicle(vehicle);
+								return [...prior, [processedVehicle.uvin, processedVehicle]];
+							}, [])
+						);
+					}
+
 				} catch (error) {
 					self.hasError = true;
 					console.group('vehicleStore fetch *error*');
@@ -70,10 +93,9 @@ export const VehicleStore = types
 				try {
 					const vehicleSnapshot = getSnapshot(vehicle);
 					
-					let errors = validateFields(vehicle, vehicleSnapshot)
+					const errors = validateFields(vehicle, vehicleSnapshot);
 					if (errors.length > 0) {
-						getRoot(self).setFloatingText(`Error while saving Vehicle: ${errors.join(", ")}`);
-						return;
+						getRoot(self).setFloatingText(`Error while saving Vehicle: ${errors.join(', ')}`);
 					} else {
 						const data = new FormData();
 						for (const key in vehicleSnapshot) {
@@ -92,10 +114,10 @@ export const VehicleStore = types
 						const response = yield getRoot(self)
 							.axiosInstance
 							.post('vehicle', data, { headers: { 'Content-Type': 'multipart/form-data', auth: getRoot(self).authStore.token } });
-						if (response.status = 200) {
+						if (response.status === 200) {
 							yield self.fetch();
 							getRoot(self).setFloatingText('Vehicle saved successfully! ');
-						} else if (response.status == 400) {
+						} else if (response.status === 400) {
 							getRoot(self).setFloatingText(`Error while saving Vehicle: ${response.data}`);
 							
 						}
