@@ -187,16 +187,16 @@ function Ades() {
 		if (rootStore.debugIsDebug) {
 			i18n.changeLanguage('none');
 		}
-		if (cookies.sneaky !== null &&
-			cookies.sneaky !== void 0 &&
-			cookies.hummingbird !== null &&
-			cookies.hummingbird !== void 0) {
-			rootStore.authStore.login(cookies.sneaky, cookies.hummingbird, () => {
+		if (process.env.REACT_APP_USER !== null &&
+			process.env.REACT_APP_USER !== void 0 &&
+			process.env.REACT_APP_PASSWORD !== null &&
+			process.env.REACT_APP_PASSWORD !== void 0) {
+			rootStore.authStore.login(process.env.REACT_APP_USER, process.env.REACT_APP_PASSWORD, () => {
 			}, () => {
 				alert('Sneaky Hummingbird failed');
 			});
 		}
-	}, [cookies]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	console.count('Render Ades');
 

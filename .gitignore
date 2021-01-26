@@ -29,3 +29,5 @@ util/convert/latvia.mbtiles
 .idea/
 
 .nyc_output/
+
+.env
