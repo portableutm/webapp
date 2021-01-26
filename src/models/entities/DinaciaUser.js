@@ -26,14 +26,14 @@ export const BaseDinaciaUser = types
 		cellphone: types.maybeNull(types.string),
 		nationality: types.maybeNull(types.string),
 		permit_expire_date: types.maybeNull(types.Date),
-		remote_sensor_id: types.maybeNull(types.string),
+		// remote_sensor_id: types.maybeNull(types.string),
 		dinacia_company: types.maybeNull(BaseDinaciaCompany)
 	})
 	.volatile(() => ({
 		document_file: null,
 		permit_front_file: null,
 		permit_back_file: null,
-		remote_sensor_file: null
+		// remote_sensor_file: null
 	}));
 
 const DinaciaUserInternal = BaseDinaciaUser
@@ -42,7 +42,7 @@ const DinaciaUserInternal = BaseDinaciaUser
 		document_file_path: types.maybe(types.string),
 		permit_front_file_path: types.maybe(types.string),
 		permit_back_file_path: types.maybe(types.string),
-		remote_sensor_file_path: types.maybe(types.string),
+		// remote_sensor_file_path: types.maybe(types.string),
 		dinacia_company: types.maybeNull(DinaciaCompany)
 	});
 
