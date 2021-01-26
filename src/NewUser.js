@@ -79,8 +79,10 @@ const NewUser = ({ isSelfRegistering = true }) => {
 	const [isError, setError] = useState(false);
 	const VERIFICATION_NOT_STARTED = 0; const VERIFICATION_OK = 1; const VERIFICATION_ERROR = 2;
 	const [verificationStatus, setVerificationStatus] = useState(VERIFICATION_NOT_STARTED);
-	const { t, i18n } = useTranslation(['auth','glossary','common']);
-	const [, setCookie, ] = useCookies(['jwt']);
+	const [errors, setErrors] = useState('');
+
+	const { t, i18n } = useTranslation(['auth', 'glossary', 'common']);
+	const [, setCookie,] = useCookies(['jwt']);
 
 	useEffect(() => {
 		if (DEBUG) {
@@ -99,7 +101,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 	//--------------------------------- AUX FUNCTIONS  ---------------------------------
 	//----------------------------------------------------------------------------------
 
-	function validEmail(email){
+	function validEmail(email) {
 		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(String(email).toLowerCase());
 	}
@@ -111,16 +113,79 @@ const NewUser = ({ isSelfRegistering = true }) => {
 	const handleOnSubmit = e => {
 		// avoid submit
 		e.preventDefault();
+		let errors = []
 
 		if (ISDINACIA) {
 			if (document.getElementById('permit_expire_date').value) {
 				localStore.user.setDinaciaProperty('permit_expire_date', document.getElementById('permit_expire_date').valueAsDate);
 			}
+			// else{
+			// 	errors.push('Invalid permit expire date')
+			// }
 		}
+
 
 		if (!validEmail(localStore.user.email)) {
 			store.setFloatingText(t('common:email_is_not_valid'));
-			return;
+			errors.push(t('common:email_is_not_valid'));
+			// return;
+		}
+
+		if (!(localStore.user.username)) {
+			errors.push(t('common:username_name_empty'));
+		}
+
+		if (!(localStore.user.firstName)) {
+			errors.push(t('common:first_name_empty'));
+		}
+
+		if (!(localStore.user.lastName)) {
+			errors.push(t('common:last_name_empty'));
+		}
+
+		if (!(localStore.user.address)) {
+			errors.push(t('common:address_empty'));
+		}
+
+		if (!(localStore.user.document_type)) {
+			errors.push(t('common:document_type_empty'));
+		}
+
+		if (!(localStore.user.document_number)) {
+			errors.push(t('common:document_number_empty'));
+		}
+		if (!(localStore.user.phone)) {
+			errors.push(t('common:phone_empty'));
+		}
+
+		if (!(localStore.user.cellphone)) {
+			errors.push(t('common:cellphone_empty'));
+		}
+
+		if (!(localStore.user.nationality)) {
+			errors.push(t('common:nationality_empty'));
+		}
+
+		if (!(localStore.user.password)) {
+			errors.push(t('common:password_empty'));
+		}
+
+		if (!(localStore.user.dinacia_user.document_file)) {
+			errors.push(t('common:document_file_empty'));
+		}
+
+		if (!(localStore.user.dinacia_user.permit_front_file)) {
+			errors.push(t('common:permit_front_file_empty'));
+		}
+
+		if (!(localStore.user.dinacia_user.permit_back_file)) {
+			errors.push(t('common:permit_back_file_empty'));
+		}
+
+
+		if(errors.length > 0){
+			setError(true)
+			setErrors(errors.join(','))
 		}
 
 		if (document.getElementById('input-passwordverification').value !== localStore.user.password) {
@@ -153,6 +218,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 
 		Axios.post('user/register', data, { headers: { 'Content-Type': 'multipart/form-data' } })
 			.then((response) => {
+				console.info(response)
 				setSuccessFullyRegistered(true);
 				if (!isSelfRegistering) {
 					Axios
@@ -160,20 +226,22 @@ const NewUser = ({ isSelfRegistering = true }) => {
 							username: response.data.username,
 							token: response.data.status.token
 						})
-						.then(() => {
+						.then((response) => {
 							setVerificationStatus(VERIFICATION_OK);
 						})
-						.catch(() => {
+						.catch((error) => {
+
 							setVerificationStatus(VERIFICATION_ERROR);
 						});
 				}
 			})
-			.catch(() => {
+			.catch((error) => {
+				console.error(`--->${JSON.stringify(error, null, 2)}`)
 				setError(true);
 			});
 	};
 
-	if(!successfullyRegistered && !isError){
+	if (!successfullyRegistered && !isError) {
 		// when the user first opens the page, we show him the registration form
 		return (
 			<UnloggedScreen showUnlogged={isSelfRegistering}>
@@ -194,14 +262,14 @@ const NewUser = ({ isSelfRegistering = true }) => {
 						)}
 					</Alert>
 					{!isSelfRegistering &&
-					<RadioGroup
-						label={t('glossary:users.role')}
-						onChange={(evt) => localStore.user.setProperty('role', evt.currentTarget.value)}
-						selectedValue={localStore.user.role}
-					>
-						<Radio label={t('glossary:users.role_admin')} value="admin"/>
-						<Radio label={t('glossary:users.role_pilot')} value="pilot"/>
-					</RadioGroup>
+						<RadioGroup
+							label={t('glossary:users.role')}
+							onChange={(evt) => localStore.user.setProperty('role', evt.currentTarget.value)}
+							selectedValue={localStore.user.role}
+						>
+							<Radio label={t('glossary:users.role_admin')} value="admin" />
+							<Radio label={t('glossary:users.role_pilot')} value="pilot" />
+						</RadioGroup>
 					}
 					<UserInputs localStore={localStore} />
 					{ISDINACIA &&
@@ -215,7 +283,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 										t('glossary:users.document_file') :
 										localStore.user.dinacia_user.document_file.name}
 									onInputChange={(evt) =>
-										localStore.user.setDinaciaProperty('document_file', evt.target.files[0])}/>
+										localStore.user.setDinaciaProperty('document_file', evt.target.files[0])} />
 							</FormGroup>
 
 							<FormGroup
@@ -227,7 +295,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 										t('glossary:users.permit_front_file') :
 										localStore.user.dinacia_user.permit_front_file.name}
 									onInputChange={(evt) =>
-										localStore.user.setDinaciaProperty('permit_front_file', evt.target.files[0])}/>
+										localStore.user.setDinaciaProperty('permit_front_file', evt.target.files[0])} />
 							</FormGroup>
 							<FormGroup
 								label={t('glossary:users.permit_back_file')}
@@ -238,7 +306,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 										t('glossary:users.permit_back_file') :
 										localStore.user.dinacia_user.permit_back_file.name}
 									onInputChange={(evt) =>
-										localStore.user.setDinaciaProperty('permit_back_file', evt.target.files[0])}/>
+										localStore.user.setDinaciaProperty('permit_back_file', evt.target.files[0])} />
 							</FormGroup>
 							{/* <FormGroup
 								label={t('glossary:users.remote_sensor_file' )}
@@ -257,7 +325,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 							>
 								<InputGroup leftIcon="person"
 									id="permit_expire_date"
-									type="date"/>
+									type="date" />
 							</FormGroup>
 						</>
 					}
@@ -317,21 +385,21 @@ const NewUser = ({ isSelfRegistering = true }) => {
 		} else if (verificationStatus === VERIFICATION_ERROR) {
 			return (
 				<UnloggedScreen showUnlogged={isSelfRegistering}>
-					{t('dashboard:sidemenu.new_user.verification_error')}
+					{t('dashboard:sidemenu.new_user.verification_error')} Blaaa
 				</UnloggedScreen>
 			);
 		}
 	} else {
-		return(
+		return (
 			<UnloggedScreen showUnlogged={isSelfRegistering} >
-				<p style={{ marginTop: '250px' }}>
-					{t('auth:login.register_error')}
+				<p style={{ marginTop: '200px' }}>
+					{t('auth:login.register_error')} : {errors}
 				</p>
 				<Button
 					fill
 					style={{ margin: '5px' }}
 					intent={Intent.WARNING}
-					onClick={() => {setError(false);setRegistrationButtonEnabled(true);}}
+					onClick={() => { setError(false); setErrors('');setRegistrationButtonEnabled(true); }}
 				>
 					{t('login.register')}
 				</Button>
