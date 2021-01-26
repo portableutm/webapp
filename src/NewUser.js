@@ -146,7 +146,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 				data.append('dinacia_user_str', JSON.stringify(dinaciaUserData));
 				data.append('document_file', localStore.user.dinacia_user.document_file);
 				data.append('permit_front_file', localStore.user.dinacia_user.permit_front_file);
-				data.append('remote_sensor_file', localStore.user.dinacia_user.remote_sensor_file);
+				// data.append('remote_sensor_file', localStore.user.dinacia_user.remote_sensor_file);
 				data.append('permit_back_file', localStore.user.dinacia_user.permit_back_file);
 			}
 		}
@@ -240,7 +240,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 									onInputChange={(evt) =>
 										localStore.user.setDinaciaProperty('permit_back_file', evt.target.files[0])}/>
 							</FormGroup>
-							<FormGroup
+							{/* <FormGroup
 								label={t('glossary:users.remote_sensor_file' )}
 								labelFor="remote_sensor_file"
 							>
@@ -250,7 +250,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 										localStore.user.dinacia_user.remote_sensor_file.name}
 									onInputChange={(evt) =>
 										localStore.user.setDinaciaProperty('remote_sensor_file', evt.target.files[0])}/>
-							</FormGroup>
+							</FormGroup> */}
 							<FormGroup
 								label={t('glossary:users.permit_expire_date')}
 								labelFor="permit_expire_date"
