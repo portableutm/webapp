@@ -106,6 +106,11 @@ const NewUser = ({ isSelfRegistering = true }) => {
 		return re.test(String(email).toLowerCase());
 	}
 
+	function validText(text) {
+		return (text !== undefined) && (typeof text == 'string') && (text.length >= 2)
+		// return re.test(String(email).toLowerCase());
+	}
+
 	//----------------------------------------------------------------------------------
 	//--------------------------------- EVENT HANDLERS ---------------------------------
 	//----------------------------------------------------------------------------------
@@ -124,6 +129,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 			// }
 		}
 
+		console.log(`Validate User: ${JSON.stringify(localStore.user, null, 2)}`)
 
 		if (!validEmail(localStore.user.email)) {
 			store.setFloatingText(t('common:email_is_not_valid'));
@@ -131,67 +137,75 @@ const NewUser = ({ isSelfRegistering = true }) => {
 			// return;
 		}
 
-		if (!(localStore.user.username)) {
+		if (!validText(localStore.user.username)) {
 			errors.push(t('common:username_name_empty'));
 		}
 
-		if (!(localStore.user.firstName)) {
+		if (!validText(localStore.user.firstName)) {
 			errors.push(t('common:first_name_empty'));
 		}
 
-		if (!(localStore.user.lastName)) {
+		if (!validText(localStore.user.lastName)) {
 			errors.push(t('common:last_name_empty'));
 		}
 
-		if (!(localStore.user.address)) {
-			errors.push(t('common:address_empty'));
+		if(ISDINACIA){
+			if (!validText(localStore.user.dinacia_user.address)) {
+				errors.push(t('common:address_empty'));
+			}
+	
+			if (!validText(localStore.user.dinacia_user.document_type)) {
+				errors.push(t('common:document_type_empty'));
+			}
+	
+			if (!validText(localStore.user.dinacia_user.document_number)) {
+				errors.push(t('common:document_number_empty'));
+			}
+			if (!validText(localStore.user.dinacia_user.phone)) {
+				errors.push(t('common:phone_empty'));
+			}
+	
+			if (!validText(localStore.user.dinacia_user.cellphone)) {
+				errors.push(t('common:cellphone_empty'));
+			}
+	
+			if (!validText(localStore.user.dinacia_user.nationality)) {
+				errors.push(t('common:nationality_empty'));
+			}
+	
+			if (!(localStore.user.dinacia_user.document_file)) {
+				errors.push(t('common:document_file_empty'));
+			}
+	
+			if (!(localStore.user.dinacia_user.permit_front_file)) {
+				errors.push(t('common:permit_front_file_empty'));
+			}
+	
+			if (!(localStore.user.dinacia_user.permit_back_file)) {
+				errors.push(t('common:permit_back_file_empty'));
+			}
 		}
+		
 
-		if (!(localStore.user.document_type)) {
-			errors.push(t('common:document_type_empty'));
-		}
-
-		if (!(localStore.user.document_number)) {
-			errors.push(t('common:document_number_empty'));
-		}
-		if (!(localStore.user.phone)) {
-			errors.push(t('common:phone_empty'));
-		}
-
-		if (!(localStore.user.cellphone)) {
-			errors.push(t('common:cellphone_empty'));
-		}
-
-		if (!(localStore.user.nationality)) {
-			errors.push(t('common:nationality_empty'));
-		}
-
-		if (!(localStore.user.password)) {
+		if (!validText(localStore.user.password)) {
 			errors.push(t('common:password_empty'));
 		}
 
-		if (!(localStore.user.dinacia_user.document_file)) {
-			errors.push(t('common:document_file_empty'));
+		if (document.getElementById('input-passwordverification').value !== localStore.user.password) {
+			// store.setFloatingText(t('common:passwords_are_not_equal'));
+			errors.push(t('common:passwords_are_not_equal'));
+			//return;
 		}
 
-		if (!(localStore.user.dinacia_user.permit_front_file)) {
-			errors.push(t('common:permit_front_file_empty'));
-		}
-
-		if (!(localStore.user.dinacia_user.permit_back_file)) {
-			errors.push(t('common:permit_back_file_empty'));
-		}
-
+		console.log(`Error User: ${JSON.stringify(errors, null, 2)}`)
 
 		if(errors.length > 0){
 			setError(true)
 			setErrors(errors.join(','))
+			return ;
 		}
 
-		if (document.getElementById('input-passwordverification').value !== localStore.user.password) {
-			store.setFloatingText(t('common:passwords_are_not_equal'));
-			return;
-		}
+		
 
 		setRegistrationButtonEnabled(false);
 
@@ -236,7 +250,9 @@ const NewUser = ({ isSelfRegistering = true }) => {
 				}
 			})
 			.catch((error) => {
-				console.error(`--->${JSON.stringify(error, null, 2)}`)
+				console.error(`--->${JSON.stringify(error.response.data, null, 2)}`)
+				setErrors(error.response.data.join(','))
+				// console.log(error.data)
 				setError(true);
 			});
 	};
@@ -385,7 +401,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 		} else if (verificationStatus === VERIFICATION_ERROR) {
 			return (
 				<UnloggedScreen showUnlogged={isSelfRegistering}>
-					{t('dashboard:sidemenu.new_user.verification_error')} Blaaa
+					{t('dashboard:sidemenu.new_user.verification_error')}
 				</UnloggedScreen>
 			);
 		}
