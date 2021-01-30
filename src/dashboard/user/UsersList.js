@@ -142,12 +142,12 @@ function User({ expanded = false,  children }) {
 					<p></p>
 				</GenericListLine>
 				}
-				{	ISDINACIA && children.dinacia_user && children.dinacia_user.remote_sensor_file_path &&
+				{/* {	ISDINACIA && children.dinacia_user && children.dinacia_user.remote_sensor_file_path &&
 				<GenericListLine>
 					<img className={styles.lineImage} src={children.dinacia_user.remote_sensor_file_path} alt="Remote Sensor ID" />
 					<p></p>
 				</GenericListLine>
-				}
+				} */}
 				{/* TODO: ADD volumesOfInterest! */}
 			</div>
 			}

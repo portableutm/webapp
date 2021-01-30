@@ -28,7 +28,7 @@ function Pilot({ user }) {
 		email: obsUser.email,
 		document_file: null,
 		permit_front_file: null,
-		remote_sensor_file: null,
+		// remote_sensor_file: null,
 		permit_back_file: null,
 
 		setProperty(property, value) {
@@ -92,7 +92,7 @@ function Pilot({ user }) {
 			newUserData.append('dinacia_user_str', JSON.stringify(dinaciaUserData));
 			newUserData.append('document_file', localStore.document_file);
 			newUserData.append('permit_front_file', localStore.permit_front_file);
-			newUserData.append('remote_sensor_file', localStore.remote_sensor_file);
+			// newUserData.append('remote_sensor_file', localStore.remote_sensor_file);
 			newUserData.append('permit_back_file', localStore.permit_back_file);
 		}
 
@@ -163,12 +163,14 @@ function Pilot({ user }) {
 									localStore.permit_back_file.name}
 								onInputChange={(evt) =>
 									localStore.setProperty('permit_back_file', evt.target.files[0])}/>
-							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+							
+							{/* <FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
 								text={localStore.remote_sensor_file === null ?
 									t('glossary:users.remote_sensor_file') :
 									localStore.remote_sensor_file.name}
 								onInputChange={(evt) =>
-									localStore.setProperty('remote_sensor_file', evt.target.files[0])}/>
+									localStore.setProperty('remote_sensor_file', evt.target.files[0])}/> */}
+
 							<FormGroup
 								label={t('users.permit_expire_date')}
 								labelFor="permit_expire_date"
