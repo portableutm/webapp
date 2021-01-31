@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useStore } from 'mobx-store-provider';
 import { observer } from 'mobx-react';
+import { autorun } from 'mobx';
 import { useParams, useHistory } from 'react-router-dom';
 import { Button, Callout, HTMLSelect, InputGroup, Intent, Spinner } from '@blueprintjs/core';
 import { useTranslation } from 'react-i18next';
@@ -174,9 +175,28 @@ function Vehicle({ v }) {
 
 function VehiclesList() {
 	const { t,  } = useTranslation('glossary');
-	const { store, authStore } = useStore('RootStore', (store) => ({ store: store.vehicleStore, authStore: store.authStore }));
+	const { store, authStore, userStore } = useStore('RootStore', (store) => ({ store: store.vehicleStore, authStore: store.authStore, userStore: store.userStore }));
 	const { username } = useParams(); // If set, filter only vehicles of a particular user
 	const history = useHistory();
+	const [listingOnlyVehiclesByUser, setListingOnlyVehiclesByUser] = useState(false);
+
+	useEffect(() => {
+		autorun(() => {
+			if (!userStore.hasFetched) {
+				userStore.fetchUsers();
+			}
+		});
+		autorun(() => {
+			if (username) {
+				if (userStore.users.get(username)) {
+					setListingOnlyVehiclesByUser(true);
+				} else {
+					store.setFilterProperty('uvin');
+					store.setFilterByText(username);
+				}
+			}
+		});
+	}, []);
 
 	if (store.hasFetched) {
 		if (store.isEmpty) {
@@ -193,7 +213,7 @@ function VehiclesList() {
 					<div
 						className={styles.actionArea}
 					>
-						{	username &&
+						{	listingOnlyVehiclesByUser &&
 						<Button
 							className={styles.buttonAction}
 							disabled={!username}
@@ -205,7 +225,7 @@ function VehiclesList() {
 							{t('add_vehicle')}
 						</Button>
 						}
-						{ !username && authStore.isAdmin &&
+						{ !listingOnlyVehiclesByUser && authStore.isAdmin &&
 						<p>To add a vehicle, please select a user from "All users". </p>
 						}
 					</div>
@@ -234,6 +254,7 @@ function VehiclesList() {
 							<option value="vehicleName">{t('vehicles.vehicleName')}</option>
 							<option value="manufacturer">{t('vehicles.manufacturer')}</option>
 							<option value="model">{t('vehicles.model')}</option>
+							<option value="uvin">{t('vehicles.uvin')}</option>
 						</HTMLSelect>
 						<InputGroup
 							className={styles.filterTextInput}
@@ -289,7 +310,7 @@ function VehiclesList() {
 					<div
 						className={styles.actionArea}
 					>
-						{	username &&
+						{	listingOnlyVehiclesByUser &&
 						<Button
 							className={styles.buttonAction}
 							disabled={!username}
@@ -301,13 +322,13 @@ function VehiclesList() {
 							{t('add_vehicle')}
 						</Button>
 						}
-						{ !username && authStore.isAdmin &&
+						{ !listingOnlyVehiclesByUser && authStore.isAdmin &&
 						<p>To add a vehicle, please select a user from the user list.</p>
 						}
 					</div>
 					<GenericList>
 						{store.vehiclesWithVisibility.map((vehicle) => {
-							if (username && vehicle.owner.username !== username) {
+							if (listingOnlyVehiclesByUser && vehicle.owner.username !== username) {
 								// Display only vehicles owned by the selected user, if chosen.
 								return null;
 							} else {
