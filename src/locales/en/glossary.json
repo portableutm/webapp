@@ -224,6 +224,7 @@
   "reject": "Reject",
   "upload": "Upload",
   "add_user": "Create new user",
+  "add_new_operator": "Add new operator",
   "add_operation": "Create new operation",
   "paraglider": {
     "selected": "Selected paraglider",
