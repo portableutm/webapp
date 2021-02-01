@@ -107,8 +107,8 @@ export const VehicleStore = types
 						if (ISDINACIA) {
 							data.append('dinacia_vehicle_str', JSON.stringify(vehicleSnapshot.dinacia_vehicle));
 							data.append('operators_str', JSON.stringify(vehicle.operatorsBackend));
-							data.append('serial_number_file', vehicle.dinacia_vehicle.serial_number_file, 'serial_number_file');
-							data.append('remote_sensor_file', vehicle.dinacia_vehicle.remote_sensor_file, 'remote_sensor_file');
+							if (vehicle.dinacia_vehicle.serial_number_file) data.append('serial_number_file', vehicle.dinacia_vehicle.serial_number_file, 'serial_number_file');
+							if (vehicle.dinacia_vehicle.remote_sensor_file) data.append('remote_sensor_file', vehicle.dinacia_vehicle.remote_sensor_file, 'remote_sensor_file');
 						}
 						console.dir(data);
 
