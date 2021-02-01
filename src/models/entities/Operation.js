@@ -83,6 +83,9 @@ export const BaseOperation = types
 		},
 		get uasRegistrationCount() {
 			return self.uas_registrations.length;
+		},
+		get hasAnyVolume() {
+			return self.operation_volumes.length > 0 && self.operation_volumes[0].operation_geography.coordinates.length > 0;
 		}
 	}))
 	.actions((self) => ({

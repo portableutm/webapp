@@ -20,18 +20,25 @@ function OperationInfoEditor() {
 		mapStore,
 		authStore,
 		vehicleStore,
-		userStore
-	} = useStore('RootStore', store => ({ mapStore: store.mapStore, authStore: store.authStore, userStore: store.userStore, vehicleStore: store.vehicleStore }));
+		userStore,
+		setFloatingText
+	} = useStore('RootStore', store => ({ mapStore: store.mapStore, authStore: store.authStore, userStore: store.userStore, vehicleStore: store.vehicleStore, setFloatingText: store.setFloatingText }));
 	const { t, } = useTranslation(['map', 'glossary', 'common']);
 	const [isSaving, setSaving] = useState(false);
 	const history = useHistory();
 
 	const [expandedLabel, setExpandedLabel] = useState('');
 
-	const saveOperationAndSetSaving = async () => {
-		setSaving(true);
-		await mapStore.saveOperation();
-		history.push('/');
+	const saveOperation = async () => {
+		if (mapStore.editorOperation.uasRegistrationCount === 0) {
+			setFloatingText(t('map:no_uas_selected'));
+		} else if (!mapStore.editorOperation.hasAnyVolume) {
+			setFloatingText(t('map:no_polygon_drawn'));
+		} else {
+			setSaving(true);
+			await mapStore.saveOperation();
+			history.push('/');
+		}
 	};
 
 	useEffect(() => {
@@ -224,9 +231,8 @@ function OperationInfoEditor() {
 						fill
 						icon="floppy-disk"
 						style={{ marginLeft: '2.5px' }}
-						disabled={mapStore.editorOperation.uasRegistrationCount === 0}
 						loading={isSaving}
-						onClick={() => saveOperationAndSetSaving()}
+						onClick={() => saveOperation()}
 					>
 						{t('editor.finish')}
 					</Button>

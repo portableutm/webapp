@@ -6,6 +6,7 @@ import { Button, Dialog, FormGroup, InputGroup, Intent } from '@blueprintjs/core
 import styles from '../Map.module.css';
 import { useStore } from 'mobx-store-provider';
 import { observer } from 'mobx-react';
+import { ISDINACIA } from '../../consts';
 
 function Property({ property, value }) {
 	const { t } = useTranslation(['glossary','map']);
@@ -67,6 +68,7 @@ function SelectedOperation() {
 					>
 						<InputGroup id="email" placeholder="Email address" />
 					</FormGroup>
+					{ ! authStore.isPilot &&
 					<FormGroup
 						className='fullW'
 						label="Message"
@@ -76,6 +78,7 @@ function SelectedOperation() {
 					>
 						<InputGroup id="message" placeholder="Message" />
 					</FormGroup>
+					}
 					<div
 						className='fullW'
 					>
@@ -89,7 +92,10 @@ function SelectedOperation() {
 						</Button>
 						<Button
 							onClick={async () => {
-								await sendOperationEmail(operation[1][1], document.getElementById('email').value, document.getElementById('message').value);
+								await sendOperationEmail(
+									operation[1][1],
+									document.getElementById('email').value,
+									document.getElementById('message') === null ? '' : document.getElementById('message').value); // TODO: Clean up this mess!
 								showEmailDialog(false);
 							}}
 							intent={Intent.PRIMARY}
@@ -158,7 +164,7 @@ function SelectedOperation() {
 				<div
 					className={styles.sidebarSeparator}
 				>
-					{!authStore.isPilot &&
+					{ ISDINACIA &&
 					<Button
 						small={true}
 						intent={Intent.WARNING}

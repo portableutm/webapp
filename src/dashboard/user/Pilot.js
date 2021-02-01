@@ -145,18 +145,44 @@ function Pilot({ user }) {
 						</FormGroup>
 						{ISDINACIA &&
 						<>
+							{obsUser.dinacia_user.document_file_path &&
+							<button onClick={() => {
+								const win = window.open(obsUser.dinacia_user.document_file_path, '_blank');
+								win.focus();
+							}}>La foto actual de {t('glossary:users.document_file')} es {
+									obsUser.dinacia_user.document_file_path.substring(obsUser.dinacia_user.document_file_path.lastIndexOf('/')+1)
+								}</button>
+							}
 							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
 								text={localStore.document_file === null ?
 									t('glossary:users.document_file') :
 									localStore.document_file.name}
 								onInputChange={(evt) =>
 									localStore.setProperty('document_file', evt.target.files[0])}/>
+
+							{obsUser.dinacia_user.permit_front_file_path &&
+							<button onClick={() => {
+								const win = window.open(obsUser.dinacia_user.permit_front_file_path, '_blank');
+								win.focus();
+							}}>La foto actual de {t('glossary:users.permit_front_file')} es {
+									obsUser.dinacia_user.permit_front_file_path.substring(obsUser.dinacia_user.permit_front_file_path.lastIndexOf('/')+1)
+								}</button>
+							}
 							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
 								text={localStore.permit_front_file === null ?
 									t('glossary:users.permit_front_file') :
 									localStore.permit_front_file.name}
 								onInputChange={(evt) =>
 									localStore.setProperty('permit_front_file', evt.target.files[0])}/>
+
+							{obsUser.dinacia_user.permit_back_file_path &&
+							<button onClick={() => {
+								const win = window.open(obsUser.dinacia_user.permit_back_file_path, '_blank');
+								win.focus();
+							}}>La foto actual de {t('glossary:users.permit_back_file')} es {
+									obsUser.dinacia_user.permit_back_file_path.substring(obsUser.dinacia_user.permit_back_file_path.lastIndexOf('/')+1)
+								}</button>
+							}
 							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
 								text={localStore.permit_back_file === null ?
 									t('glossary:users.permit_back_file') :

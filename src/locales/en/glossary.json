@@ -43,6 +43,7 @@
     "free_text": "Free text",
     "state": "State",
     "uas_registrations": "Vehicles that will fly the operation",
+    "remote_sensor_id": "Remote Sensors ID",
     "zero_operations": "There is no current operations, or they don't match any of the filters you've set."
   },
   "uvrs": {

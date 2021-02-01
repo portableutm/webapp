@@ -134,6 +134,7 @@ function Vehicle({ v }) {
 						'maintenance_inspections',
 						'remarks',
 						'engine_manufacturer',
+						'remote_sensor_id',
 						'engine_type',
 						'engine_model',
 						'engine_power',
@@ -163,8 +164,11 @@ function Vehicle({ v }) {
 				}
 				{	ISDINACIA && v.dinacia_vehicle &&
 					<GenericListLine>
-						<p>{v.dinacia_vehicle.serial_number_file_path}</p>
-						<p>test</p>
+						<p>{t('vehicles.serial_number_file')}</p>
+						<button onClick={() => {
+							const win = window.open(v.dinacia_vehicle.serial_number_file_path, '_blank');
+							win.focus();
+						}}>{t('common:view_image')}</button>
 					</GenericListLine>
 				}
 			</div>

@@ -43,6 +43,7 @@
     "state": "Estado",
     "uas_registration": "Vehículos",
     "uas_registrations": "Vehículos que volarán en la operación",
+    "remote_sensor_id": "Registro en sensores remotos",
     "zero_operations": "No hay operaciones, o no hay operaciones que cumplan los filtros seleccionados."
   },
   "positions": {
@@ -178,6 +179,7 @@
     "owner_id": "Dueño",
     "owner_id_desc": "Nombre de usuario del dueño del vehículo",
     "propeller_model_desc": " ",
+    "remote_sensor_id": "Remote Sensors ID",
     "usage_desc": "Tipo de uso que se le da al vehículo"
   },
   "volumes": {
