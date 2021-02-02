@@ -1,7 +1,8 @@
-import { flow, getRoot, types } from 'mobx-state-tree';
+import { flow, getRoot, getSnapshot, types } from 'mobx-state-tree';
 import { User } from './entities/User';
 import { values } from 'mobx';
 import _ from 'lodash';
+import { BaseDinaciaUser, DinaciaUser } from './entities/DinaciaUser';
 
 export const UserStore = types
 	.model('UserStore', {
@@ -25,8 +26,20 @@ export const UserStore = types
 					);
 					self.hasFetched = true;
 					const users = response.data;
+					console.dir(users);
 					self.users.replace(
 						users.reduce((prior, user) => {
+							if (user.dinacia_user) {
+								const dinaciaUserSnapshot = user.dinacia_user;
+								const dinaciaUser = DinaciaUser.create({
+									...dinaciaUserSnapshot,
+									permit_expire_date: new Date(dinaciaUserSnapshot.permit_expire_date),
+									permit_back_file_path: dinaciaUserSnapshot.permit_back_file_path,
+									permit_front_file_path: dinaciaUserSnapshot.permit_front_file_path,
+									document_file_path: dinaciaUserSnapshot.document_file_path
+								});
+								console.log(dinaciaUser);
+							}
 							return [...prior, [user.username, user]];
 						}, [])
 					);

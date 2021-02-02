@@ -65,7 +65,7 @@ const DinaciaVehicleProperties = ({ localStore, properties }) => {
 
 function NewVehicle(props) {
 
-	const { vehicleStore, userStore } = useStore(
+	const { vehicleStore, userStore, authStore } = useStore(
 		'RootStore',
 		(store) => ({ authStore: store.authStore, vehicleStore: store.vehicleStore, userStore: store.userStore }));
 
@@ -141,14 +141,14 @@ function NewVehicle(props) {
 							]}
 						/>
 						<FormGroup
-						label={t('vehicles.remote_sensor_file')}
-						labelFor='remote_sensor_file'
-					>
-						<FileInput id='remote_sensor_file' fill buttonText={t('upload')} inputProps={{ accept: 'image/*' }}
-							text={localStore.vehicle.dinacia_vehicle.remote_sensor_file === null ? t('vehicles.remote_sensor_file') : localStore.vehicle.dinacia_vehicle.remote_sensor_file.name}
-							onInputChange={(evt) => localStore.vehicle.setDinaciaProperty('remote_sensor_file', evt.currentTarget.files[0])} />
-					</FormGroup>
-					{/* <FormGroup
+							label={t('vehicles.remote_sensor_file')}
+							labelFor='remote_sensor_file'
+						>
+							<FileInput id='remote_sensor_file' fill buttonText={t('upload')} inputProps={{ accept: 'image/*' }}
+								text={localStore.vehicle.dinacia_vehicle.remote_sensor_file === null ? t('vehicles.remote_sensor_file') : localStore.vehicle.dinacia_vehicle.remote_sensor_file.name}
+								onInputChange={(evt) => localStore.vehicle.setDinaciaProperty('remote_sensor_file', evt.currentTarget.files[0])} />
+						</FormGroup>
+						{/* <FormGroup
 							label={t('glossary:users.remote_sensor_file')}
 							labelFor="remote_sensor_file"
 						>
@@ -216,6 +216,16 @@ function NewVehicle(props) {
 					<h3>
 						{t('glossary:vehicles.operators')}
 					</h3>
+					{ authStore.isPilot &&
+					<Button
+						onClick={() => {
+							const username = prompt(t('glossary:add_new_operator_username'));
+							localStore.vehicle.addOperator(username);
+						}}
+					>
+						{t('glossary:add_new_operator')}
+					</Button>
+					}
 					{localStore.vehicle.operators.map(operator => {
 						return (
 							<p key={operator}>{operator}</p>
@@ -223,7 +233,7 @@ function NewVehicle(props) {
 					})}
 				</div>
 				<div className={form.col}>
-					{!userStore.hasError &&
+					{ authStore.isAdmin &&
 						<ul>
 							{userStore.allUsers.map(user => {
 								return <Button key={user.username} small style={{ marginBottom: '5px' }} intent={localStore.vehicle.operators.indexOf(user.username) === -1 ? Intent.SUCCESS : Intent.DANGER} icon={localStore.vehicle.operators.indexOf(user.username) === -1 ? 'plus' : 'minus'} onClick={() => {
@@ -239,16 +249,7 @@ function NewVehicle(props) {
 					}
 				</div>
 			</section>
-			{userStore.hasError &&
-				<Button
-					onClick={() => {
-						const username = prompt(t('glossary:add_new_operator_username'));
-						localStore.vehicle.addOperator(username);
-					}}
-				>
-					{t('glossary:add_new_operator')}
-				</Button>
-			}
+
 
 			{/*<RadioGroup
 				label={t('vehicles.class')}

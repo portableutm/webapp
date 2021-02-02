@@ -107,7 +107,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 	}
 
 	function validText(text) {
-		return (text !== undefined) && (typeof text == 'string') && (text.length >= 2)
+		return (text !== undefined) && (typeof text == 'string') && (text.length >= 2);
 		// return re.test(String(email).toLowerCase());
 	}
 
@@ -118,7 +118,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 	const handleOnSubmit = e => {
 		// avoid submit
 		e.preventDefault();
-		let errors = []
+		let errors = [];
 
 		if (ISDINACIA) {
 			if (document.getElementById('permit_expire_date').value) {
@@ -129,7 +129,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 			// }
 		}
 
-		console.log(`Validate User: ${JSON.stringify(localStore.user, null, 2)}`)
+		console.log(`Validate User: ${JSON.stringify(localStore.user, null, 2)}`);
 
 		if (!validEmail(localStore.user.email)) {
 			store.setFloatingText(t('common:email_is_not_valid'));
@@ -197,11 +197,11 @@ const NewUser = ({ isSelfRegistering = true }) => {
 			//return;
 		}
 
-		console.log(`Error User: ${JSON.stringify(errors, null, 2)}`)
+		console.log(`Error User: ${JSON.stringify(errors, null, 2)}`);
 
 		if(errors.length > 0){
-			setError(true)
-			setErrors(errors.join(','))
+			setError(true);
+			setErrors(errors.join(','));
 			return ;
 		}
 
@@ -232,7 +232,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 
 		Axios.post('user/register', data, { headers: { 'Content-Type': 'multipart/form-data' } })
 			.then((response) => {
-				console.info(response)
+				console.info(response);
 				setSuccessFullyRegistered(true);
 				if (!isSelfRegistering) {
 					Axios
@@ -240,18 +240,17 @@ const NewUser = ({ isSelfRegistering = true }) => {
 							username: response.data.username,
 							token: response.data.status.token
 						})
-						.then((response) => {
+						.then(() => {
 							setVerificationStatus(VERIFICATION_OK);
 						})
-						.catch((error) => {
-
+						.catch(() => {
 							setVerificationStatus(VERIFICATION_ERROR);
 						});
 				}
 			})
 			.catch((error) => {
-				console.error(`--->${JSON.stringify(error.response.data, null, 2)}`)
-				setErrors(error.response.data.join(','))
+				console.error(`--->${JSON.stringify(error.response.data, null, 2)}`);
+				setErrors(error.response.data.join(','));
 				// console.log(error.data)
 				setError(true);
 			});

@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import styles from '../generic/GenericList.module.css';
 import { useStore } from 'mobx-store-provider';
 import { observer, useLocalStore } from 'mobx-react';
+import { ISDINACIA } from '../../consts';
 
 function Operation({ expanded = false, selected = false, operation, isPilot }) {
 	// Renders one Operation text properties for a list
@@ -167,12 +168,18 @@ function Operation({ expanded = false, selected = false, operation, isPilot }) {
 					{operation.owner.asDisplayString}
 				</GenericListLine>
 				{	operation.uas_registrations.map(uasr => {
-					return (
+					return <>
 						<GenericListLine key={uasr}>
 							{t('operations.uas_registration')}
 							{uasr}
 						</GenericListLine>
-					);
+						{ /* ISDINACIA && uasr.remote_sensor_id &&
+						<GenericListLine key={uasr}>
+							{t('operations.uas_registration')}
+							{uasr}
+						</GenericListLine>
+						*/ }
+					</>;
 				})}
 				<GenericListLine>
 					{t('volumes.effective_time_begin')}

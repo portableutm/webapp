@@ -74,6 +74,8 @@
       "text": "When you submit your operation, it will not be approved automatically. You will have to await the manual approval by an administrator of the system"
     }
   },
+  "no_uas_selected": "No vehicle has been selected to fly the operation. Please select AT LEAST ONE and then try again",
+  "no_polygon_drawn": "Operations MUST have an associated Polygon. Please draw it in the map by clicking on it, and then try again",
   "operation_not_exists": "The operation does not exist",
   "following_drone": "You are now following a vehicle that is in the air. The map has been locked, and you won't be able to drag it. You can still zoom in or zoom out. You may stop following a drone by pressing the CROSS on the SideMenu"
 }

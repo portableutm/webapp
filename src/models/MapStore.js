@@ -5,6 +5,7 @@ import _ from 'lodash';
 import i18n from 'i18next';
 import Uvr from './entities/Uvr';
 import { GeoJsonPolygon, Polygon } from './types/GeoJsonPolygon';
+import { ISDINACIA } from '../consts';
 
 const defaultNewOperation = {
 	name: 'Untitled',
@@ -412,7 +413,17 @@ export const MapStore = types
 		get getSelectedOperation() {
 			let operation = getRoot(self).operationStore.operations.get(self.selectedOperation);
 			if (!operation) operation = getRoot(self).operationStore.oldOperations.get(self.selectedOperation);
-			const uasrs = operation.uas_registrations.map(uasr => ['operations.uas_registration', uasr.asDisplayString]);
+			const uasrs = operation.uas_registrations.map(uasr => {
+				if (ISDINACIA && uasr.dinacia_vehicle && uasr.dinacia_vehicle.remote_sensor_id) {
+					return [
+						['operations.uas_registration', uasr.asDisplayString],
+						['operations.remote_sensor_id', uasr.dinacia_vehicle.remote_sensor_id]
+					];
+				} else {
+					return [['operations.uas_registration', uasr.asDisplayString]];
+				}
+			});
+			
 			return [
 				['operations.name', operation.name],
 				['ID',operation.gufi],
@@ -420,7 +431,7 @@ export const MapStore = types
 				['operations.owner', operation.owner.asDisplayString],
 				['operations.contact', operation.contact],
 				['operations.phone', operation.contact_phone],
-				...uasrs,
+				..._.flatten(uasrs),
 				['volumes.effective_time_begin', new Date(operation.operation_volumes[0].effective_time_begin).toLocaleString()],
 				['volumes.effective_time_end', new Date(operation.operation_volumes[0].effective_time_end).toLocaleString()],
 				['volumes.max_altitude', operation.operation_volumes[0].max_altitude+'m'],
