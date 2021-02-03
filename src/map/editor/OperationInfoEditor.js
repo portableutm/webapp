@@ -206,7 +206,8 @@ function OperationInfoEditor() {
 					})}
 				</FormGroup>
 				<OperationVolumeInfoEditor />
-				{	userStore.users.get(mapStore.editorOperation.owner) &&
+				
+				{/* {	userStore.users.get(mapStore.editorOperation.owner) &&
 					userStore.users.get(mapStore.editorOperation.owner).dinacia_user &&
 					( userStore.users.get(mapStore.editorOperation.owner).dinacia_user.permit_expire_date === null ||
 					userStore.users.get(mapStore.editorOperation.owner).dinacia_user.permit_expire_date < new Date() ) &&
@@ -215,7 +216,7 @@ function OperationInfoEditor() {
 					<p>{t('editor.expired_permit.title')}</p>
 					<p>{t('editor.expired_permit.text')}</p>
 				</div>
-				}
+				} */}
 				<div
 					className={styles.sidebarButtonTextRight}
 				>
