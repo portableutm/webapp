@@ -79,8 +79,10 @@ const NewUser = ({ isSelfRegistering = true }) => {
 	const [isError, setError] = useState(false);
 	const VERIFICATION_NOT_STARTED = 0; const VERIFICATION_OK = 1; const VERIFICATION_ERROR = 2;
 	const [verificationStatus, setVerificationStatus] = useState(VERIFICATION_NOT_STARTED);
-	const { t, i18n } = useTranslation(['auth','glossary','common']);
-	const [, setCookie, ] = useCookies(['jwt']);
+	const [errors, setErrors] = useState('');
+
+	const { t, i18n } = useTranslation(['auth', 'glossary', 'common']);
+	const [, setCookie,] = useCookies(['jwt']);
 
 	useEffect(() => {
 		if (DEBUG) {
@@ -99,9 +101,14 @@ const NewUser = ({ isSelfRegistering = true }) => {
 	//--------------------------------- AUX FUNCTIONS  ---------------------------------
 	//----------------------------------------------------------------------------------
 
-	function validEmail(email){
+	function validEmail(email) {
 		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(String(email).toLowerCase());
+	}
+
+	function validText(text) {
+		return (text !== undefined) && (typeof text == 'string') && (text.length >= 2);
+		// return re.test(String(email).toLowerCase());
 	}
 
 	//----------------------------------------------------------------------------------
@@ -111,22 +118,94 @@ const NewUser = ({ isSelfRegistering = true }) => {
 	const handleOnSubmit = e => {
 		// avoid submit
 		e.preventDefault();
+		let errors = [];
 
 		if (ISDINACIA) {
 			if (document.getElementById('permit_expire_date').value) {
 				localStore.user.setDinaciaProperty('permit_expire_date', document.getElementById('permit_expire_date').valueAsDate);
 			}
+			// else{
+			// 	errors.push('Invalid permit expire date')
+			// }
 		}
+
+		console.log(`Validate User: ${JSON.stringify(localStore.user, null, 2)}`);
 
 		if (!validEmail(localStore.user.email)) {
 			store.setFloatingText(t('common:email_is_not_valid'));
-			return;
+			errors.push(t('common:email_is_not_valid'));
+			// return;
+		}
+
+		if (!validText(localStore.user.username)) {
+			errors.push(t('common:username_name_empty'));
+		}
+
+		if (!validText(localStore.user.firstName)) {
+			errors.push(t('common:first_name_empty'));
+		}
+
+		if (!validText(localStore.user.lastName)) {
+			errors.push(t('common:last_name_empty'));
+		}
+
+		if(ISDINACIA){
+			if (!validText(localStore.user.dinacia_user.address)) {
+				errors.push(t('common:address_empty'));
+			}
+	
+			if (!validText(localStore.user.dinacia_user.document_type)) {
+				errors.push(t('common:document_type_empty'));
+			}
+	
+			if (!validText(localStore.user.dinacia_user.document_number)) {
+				errors.push(t('common:document_number_empty'));
+			}
+			if (!validText(localStore.user.dinacia_user.phone)) {
+				errors.push(t('common:phone_empty'));
+			}
+	
+			if (!validText(localStore.user.dinacia_user.cellphone)) {
+				errors.push(t('common:cellphone_empty'));
+			}
+	
+			if (!validText(localStore.user.dinacia_user.nationality)) {
+				errors.push(t('common:nationality_empty'));
+			}
+	
+			if (!(localStore.user.dinacia_user.document_file)) {
+				errors.push(t('common:document_file_empty'));
+			}
+	
+			if (!(localStore.user.dinacia_user.permit_front_file)) {
+				errors.push(t('common:permit_front_file_empty'));
+			}
+	
+			if (!(localStore.user.dinacia_user.permit_back_file)) {
+				errors.push(t('common:permit_back_file_empty'));
+			}
+		}
+		
+
+		if (!validText(localStore.user.password)) {
+			errors.push(t('common:password_empty'));
 		}
 
 		if (document.getElementById('input-passwordverification').value !== localStore.user.password) {
-			store.setFloatingText(t('common:passwords_are_not_equal'));
-			return;
+			// store.setFloatingText(t('common:passwords_are_not_equal'));
+			errors.push(t('common:passwords_are_not_equal'));
+			//return;
 		}
+
+		console.log(`Error User: ${JSON.stringify(errors, null, 2)}`);
+
+		if(errors.length > 0){
+			setError(true);
+			setErrors(errors.join(','));
+			return ;
+		}
+
+		
 
 		setRegistrationButtonEnabled(false);
 
@@ -146,13 +225,14 @@ const NewUser = ({ isSelfRegistering = true }) => {
 				data.append('dinacia_user_str', JSON.stringify(dinaciaUserData));
 				data.append('document_file', localStore.user.dinacia_user.document_file);
 				data.append('permit_front_file', localStore.user.dinacia_user.permit_front_file);
-				data.append('remote_sensor_file', localStore.user.dinacia_user.remote_sensor_file);
+				// data.append('remote_sensor_file', localStore.user.dinacia_user.remote_sensor_file);
 				data.append('permit_back_file', localStore.user.dinacia_user.permit_back_file);
 			}
 		}
 
 		Axios.post('user/register', data, { headers: { 'Content-Type': 'multipart/form-data' } })
 			.then((response) => {
+				console.info(response);
 				setSuccessFullyRegistered(true);
 				if (!isSelfRegistering) {
 					Axios
@@ -168,12 +248,15 @@ const NewUser = ({ isSelfRegistering = true }) => {
 						});
 				}
 			})
-			.catch(() => {
+			.catch((error) => {
+				console.error(`--->${JSON.stringify(error.response.data, null, 2)}`);
+				setErrors(error.response.data.join(','));
+				// console.log(error.data)
 				setError(true);
 			});
 	};
 
-	if(!successfullyRegistered && !isError){
+	if (!successfullyRegistered && !isError) {
 		// when the user first opens the page, we show him the registration form
 		return (
 			<UnloggedScreen showUnlogged={isSelfRegistering}>
@@ -194,49 +277,70 @@ const NewUser = ({ isSelfRegistering = true }) => {
 						)}
 					</Alert>
 					{!isSelfRegistering &&
-					<RadioGroup
-						label={t('glossary:users.role')}
-						onChange={(evt) => localStore.user.setProperty('role', evt.currentTarget.value)}
-						selectedValue={localStore.user.role}
-					>
-						<Radio label={t('glossary:users.role_admin')} value="admin"/>
-						<Radio label={t('glossary:users.role_pilot')} value="pilot"/>
-					</RadioGroup>
+						<RadioGroup
+							label={t('glossary:users.role')}
+							onChange={(evt) => localStore.user.setProperty('role', evt.currentTarget.value)}
+							selectedValue={localStore.user.role}
+						>
+							<Radio label={t('glossary:users.role_admin')} value="admin" />
+							<Radio label={t('glossary:users.role_pilot')} value="pilot" />
+						</RadioGroup>
 					}
 					<UserInputs localStore={localStore} />
 					{ISDINACIA &&
 						<>
-							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
-								text={localStore.user.dinacia_user.document_file === null ?
-									t('glossary:users.document_file') :
-									localStore.user.dinacia_user.document_file.name}
-								onInputChange={(evt) =>
-									localStore.user.setDinaciaProperty('document_file', evt.target.files[0])}/>
-							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
-								text={localStore.user.dinacia_user.permit_front_file === null ?
-									t('glossary:users.permit_front_file') :
-									localStore.user.dinacia_user.permit_front_file.name}
-								onInputChange={(evt) =>
-									localStore.user.setDinaciaProperty('permit_front_file', evt.target.files[0])}/>
-							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
-								text={localStore.user.dinacia_user.permit_back_file === null ?
-									t('glossary:users.permit_back_file') :
-									localStore.user.dinacia_user.permit_back_file.name}
-								onInputChange={(evt) =>
-									localStore.user.setDinaciaProperty('permit_back_file', evt.target.files[0])}/>
-							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
-								text={localStore.user.dinacia_user.remote_sensor_file === null ?
-									t('glossary:users.remote_sensor_file') :
-									localStore.user.dinacia_user.remote_sensor_file.name}
-								onInputChange={(evt) =>
-									localStore.user.setDinaciaProperty('remote_sensor_file', evt.target.files[0])}/>
 							<FormGroup
-								label={t('users.permit_expire_date')}
+								label={t('glossary:users.document_file')}
+								labelFor="document_file"
+							>
+								<FileInput id='document_file' style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+									text={localStore.user.dinacia_user.document_file === null ?
+										t('glossary:users.document_file') :
+										localStore.user.dinacia_user.document_file.name}
+									onInputChange={(evt) =>
+										localStore.user.setDinaciaProperty('document_file', evt.target.files[0])} />
+							</FormGroup>
+
+							<FormGroup
+								label={t('glossary:users.permit_front_file')}
+								labelFor="permit_front_file"
+							>
+								<FileInput id='permit_front_file' style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+									text={localStore.user.dinacia_user.permit_front_file === null ?
+										t('glossary:users.permit_front_file') :
+										localStore.user.dinacia_user.permit_front_file.name}
+									onInputChange={(evt) =>
+										localStore.user.setDinaciaProperty('permit_front_file', evt.target.files[0])} />
+							</FormGroup>
+							<FormGroup
+								label={t('glossary:users.permit_back_file')}
+								labelFor="permit_back_file"
+							>
+								<FileInput id='permit_back_file' style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+									text={localStore.user.dinacia_user.permit_back_file === null ?
+										t('glossary:users.permit_back_file') :
+										localStore.user.dinacia_user.permit_back_file.name}
+									onInputChange={(evt) =>
+										localStore.user.setDinaciaProperty('permit_back_file', evt.target.files[0])} />
+							</FormGroup>
+							{/* <FormGroup
+								label={t('glossary:users.remote_sensor_file' )}
+								labelFor="remote_sensor_file"
+							>
+								<FileInput id='remote_sensor_file' style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+									text={localStore.user.dinacia_user.remote_sensor_file === null ?
+										t('glossary:users.remote_sensor_file') :
+										localStore.user.dinacia_user.remote_sensor_file.name}
+									onInputChange={(evt) =>
+										localStore.user.setDinaciaProperty('remote_sensor_file', evt.target.files[0])}/>
+							</FormGroup> */}
+							<FormGroup
+								label={t('glossary:users.permit_expire_date')}
 								labelFor="permit_expire_date"
 							>
 								<InputGroup leftIcon="person"
 									id="permit_expire_date"
-									type="date"/>
+									type="date" />
 							</FormGroup>
 						</>
 					}
@@ -301,16 +405,16 @@ const NewUser = ({ isSelfRegistering = true }) => {
 			);
 		}
 	} else {
-		return(
+		return (
 			<UnloggedScreen showUnlogged={isSelfRegistering} >
-				<p style={{ marginTop: '250px' }}>
-					{t('auth:login.register_error')}
+				<p style={{ marginTop: '200px' }}>
+					{t('auth:login.register_error')} : {errors}
 				</p>
 				<Button
 					fill
 					style={{ margin: '5px' }}
 					intent={Intent.WARNING}
-					onClick={() => {setError(false);setRegistrationButtonEnabled(true);}}
+					onClick={() => { setError(false); setErrors('');setRegistrationButtonEnabled(true); }}
 				>
 					{t('login.register')}
 				</Button>
