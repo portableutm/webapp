@@ -47,7 +47,7 @@ function OperationInfoEditor() {
 				const user = userStore.users.get(mapStore.editorOperation.owner);
 				if (user) {
 					mapStore.setOperationInfo('contact', user.asDisplayString);
-					if (user.dinacia_user !== null) {
+					if (user && user.dinacia_user !== null) {
 						if (user.dinacia_user.phone !== null && user.dinacia_user.phone.length > 0) {
 							mapStore.setOperationInfo('contact_phone', user.dinacia_user.phone);
 						} else {
