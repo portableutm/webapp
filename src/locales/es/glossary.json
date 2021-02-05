@@ -21,8 +21,6 @@
     "permit_expire_date": "Fecha de expiración de la licencia de piloto.",
     "permit_front_file": "Foto de la licencia de piloto, recto.",
     "phone": "Teléfono fijo",
-    "remote_sensor_file": "Foto de su registro en sensores remotos",
-    "remote_sensor_id": "ID en Sensores Remotos",
     "repeat_password": "Re-escriba la contraseña"
   },
   "operations": {
@@ -179,7 +177,9 @@
     "owner_id": "Dueño",
     "owner_id_desc": "Nombre de usuario del dueño del vehículo",
     "propeller_model_desc": " ",
-    "remote_sensor_id": "Remote Sensors ID",
+    "remote_sensor_id": "Registro en sensores remotos",
+    "remote_sensor_id_desc": "Id del registro del sensor remoto",
+    "remote_sensor_file": "Foto de sensores remotos",
     "usage_desc": "Tipo de uso que se le da al vehículo"
   },
   "volumes": {

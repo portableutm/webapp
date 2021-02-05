@@ -19,8 +19,6 @@
     "document_file": "Scan of your document",
     "permit_front_file": "Front of the Pilot Permit",
     "permit_back_file": "Back of the Pilot Permit",
-    "remote_sensor_id": "Registry ID in Remote Sensors directory",
-    "remote_sensor_file": "ID in the Remote Sensors directory",
     "permit_expire_date": "Expire date of the Pilot Permit",
     "firstname": "First Name",
     "lastname": "Last name"
@@ -194,7 +192,9 @@
     "wingspan_desc": "in cm.",
     "operators": "Operators of the vehicle",
     "zero_vehicles": "You have no vehicles registered in the system.",
-    "material_desc": "Material"
+    "material_desc": "Material",
+    "remote_sensor_id": "Registry ID in Remote Sensors directory",
+    "remote_sensor_file": "ID in the Remote Sensors directory"
   },
   "rfvs": {
     "id": "Identifier",
