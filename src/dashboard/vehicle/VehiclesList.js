@@ -12,6 +12,7 @@ import { ISDINACIA } from '../../consts';
 function Vehicle({ v }) {
 	const { t,  } = useTranslation(['glossary','common']);
 	const [showProperties, setShowProperties] = useState(false);
+	const history = useHistory();
 
 	const toggleOperation = (evt) => {
 		evt.stopPropagation();
@@ -42,6 +43,18 @@ function Vehicle({ v }) {
 							{ !showProperties &&
 							t('common:click_to_expand')
 							}
+						</div>
+					</Button>
+					<Button
+						className={styles.button}
+						small
+						minimal
+						icon='edit'
+						intent={Intent.WARNING}
+						onClick={(evt) => {evt.stopPropagation(); history.push('/dashboard/vehicles/edit/' + v.uvin);}}
+					>
+						<div className={styles.buttonHoveredTooltip}>
+							{t('common:edit')}
 						</div>
 					</Button>
 				</div>
@@ -162,7 +175,7 @@ function Vehicle({ v }) {
 						</GenericListLine>;
 					})
 				}
-				{	ISDINACIA && v.dinacia_vehicle &&
+				{	ISDINACIA && v.dinacia_vehicle && v.dinacia_vehicle.serial_number_file_path !== null &&
 					<GenericListLine>
 						<p>{t('vehicles.serial_number_file')}</p>
 						<button onClick={() => {
@@ -170,6 +183,15 @@ function Vehicle({ v }) {
 							win.focus();
 						}}>{t('common:view_image')}</button>
 					</GenericListLine>
+				}
+				{	ISDINACIA && v.dinacia_vehicle && v.dinacia_vehicle.remote_sensor_file_path !== null &&
+				<GenericListLine>
+					<p>{t('vehicles.remote_sensor_file')}</p>
+					<button onClick={() => {
+						const win = window.open(v.dinacia_vehicle.remote_sensor_file_path, '_blank');
+						win.focus();
+					}}>{t('common:view_image')}</button>
+				</GenericListLine>
 				}
 			</div>
 			}

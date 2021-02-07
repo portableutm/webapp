@@ -3,6 +3,7 @@ import { values } from 'mobx';
 import { Vehicle } from './entities/Vehicle';
 import _ from 'lodash';
 import { ISDINACIA } from '../consts';
+import { BaseDinaciaVehicle } from './entities/DinaciaVehicle';
 
 const validateFields = (vehicle , prueba) => {
 	console.log(`Validate field: ${JSON.stringify(vehicle)}, ${JSON.stringify(prueba)}`);
@@ -89,7 +90,7 @@ export const VehicleStore = types
 					console.groupEnd();
 				}
 			}),
-			post: flow(function* post(vehicle) {
+			post: flow(function* post(vehicle, uvin = null) {
 				try {
 					const vehicleSnapshot = getSnapshot(vehicle);
 					
@@ -104,6 +105,7 @@ export const VehicleStore = types
 								data.append(key, vehicleSnapshot[key]);
 							}
 						}
+						if (uvin !== null) data.append('uvin', uvin);
 						if (ISDINACIA) {
 							data.append('dinacia_vehicle_str', JSON.stringify(vehicleSnapshot.dinacia_vehicle));
 							data.append('operators_str', JSON.stringify(vehicle.operatorsBackend));

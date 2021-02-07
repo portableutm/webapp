@@ -37,5 +37,6 @@
   "approve": "Approve",
   "reject": "Reject",
   "reason": "Reason for accepting or rejecting the operation",
-  "view_image": "View image"
+  "view_image": "View image",
+  "edit": "Edit"
 }

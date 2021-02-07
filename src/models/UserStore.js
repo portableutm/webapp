@@ -26,7 +26,6 @@ export const UserStore = types
 					);
 					self.hasFetched = true;
 					const users = response.data;
-					console.dir(users);
 					self.users.replace(
 						users.reduce((prior, user) => {
 							if (user.dinacia_user) {
@@ -38,7 +37,6 @@ export const UserStore = types
 									permit_front_file_path: dinaciaUserSnapshot.permit_front_file_path,
 									document_file_path: dinaciaUserSnapshot.document_file_path
 								});
-								console.log(dinaciaUser);
 							}
 							return [...prior, [user.username, user]];
 						}, [])

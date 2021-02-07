@@ -53,7 +53,7 @@ import { RootStore } from './models/RootStore.js';
 import { useCookies } from 'react-cookie';
 import Pilot from './dashboard/user/Pilot';
 import VehiclesList from './dashboard/vehicle/VehiclesList';
-import NewVehicle from './dashboard/vehicle/NewVehicle';
+import EditVehicle from './dashboard/vehicle/EditVehicle';
 import HomeScreen from './dashboard/home/HomeScreen';
 import VerificationScreen from './VerificationScreen';
 import BottomArea from './layout/BottomArea';
@@ -290,9 +290,14 @@ function Ades() {
 									<UsersList/>
 								</Dashboard>
 							</LayoutRoute>
+							<LayoutRoute exact path='/dashboard/vehicles/edit/:id'>
+								<Dashboard>
+									<EditVehicle />
+								</Dashboard>
+							</LayoutRoute>
 							<LayoutRoute exact path='/dashboard/vehicles/:username/new'>
 								<Dashboard>
-									<NewVehicle />
+									<EditVehicle />
 								</Dashboard>
 							</LayoutRoute>
 							<LayoutRoute exact path='/dashboard/vehicles/:username?'>
@@ -353,7 +358,7 @@ function Ades() {
 							</LayoutRoute>
 							<LayoutRoute exact path={'/dashboard/vehicles/new'}>
 								<Dashboard>
-									<NewVehicle userId={rootStore.authStore.username}/>
+									<EditVehicle userId={rootStore.authStore.username}/>
 								</Dashboard>
 							</LayoutRoute>
 							<LayoutRoute exact path='/dashboard/operations/:id'>

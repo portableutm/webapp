@@ -49,4 +49,15 @@ export const DinaciaVehicle = BaseDinaciaVehicle
 		authorized: types.boolean,
 		serial_number_file_path: types.maybeNull(types.string),
 		remote_sensor_file_path: types.maybeNull(types.string),
-	});
+	})
+	.views(self => {
+		return {
+			get hasSerialNumberFile() {
+				return self.serial_number_file_path !== null;
+			},
+			get hasRemoteSensorFile() {
+				return self.remote_sensor_file_path !== null;
+			}
+		};
+	})
+;
