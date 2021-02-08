@@ -217,14 +217,14 @@ function UsersList() {
 						<p
 							className={styles.filterTextInfo}
 						>
-							{`Showing ${store.counts.matchesFilters} out of ${store.counts.userCount} vehicles`}
+							{t('glossary:showing_out_of', { sub: store.counts.matchesFilters, total: store.counts.userCount })}
 						</p>
 					</div>
 					<div
 						className={styles.filters}
 					>
 						<p className={styles.filterLabel}>
-							Sorting by property:
+							{t('glossary:sorting_by_property')}
 						</p>
 						<HTMLSelect
 							id='sorter'
@@ -241,7 +241,7 @@ function UsersList() {
 							<option value="role">{t('users.role')}</option>
 						</HTMLSelect>
 						<p className={styles.filterLabel}>
-							in
+							{t('glossary:in')}
 						</p>
 						<HTMLSelect
 							id='sorter'
@@ -251,11 +251,11 @@ function UsersList() {
 							minimal
 							onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
 						>
-							<option value='asc'>Ascending</option>
-							<option value='desc'>Descending</option>
+							<option value='asc'>{t('glossary:ascending')}</option>
+							<option value='desc'>{t('glossary:descending')}</option>
 						</HTMLSelect>
 						<p className={styles.filterLabel}>
-							order
+							{t('glossary:order')}
 						</p>
 					</div>
 					<div

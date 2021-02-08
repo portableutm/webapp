@@ -169,7 +169,7 @@ function UvrList() {
 							<p
 								className={styles.filterTextInfo}
 							>
-								{`Showing ${store.counts.matchesFilters} out of ${store.counts.uvrCount} UVRs`}
+								{t('glossary:showing_out_of', { sub: store.counts.matchesFilters, total: store.counts.uvrCount })}
 							</p>
 						</div>
 						{/*

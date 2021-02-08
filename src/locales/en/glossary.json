@@ -194,7 +194,8 @@
     "zero_vehicles": "You have no vehicles registered in the system.",
     "material_desc": "Material",
     "remote_sensor_id": "Registry ID in Remote Sensors directory",
-    "remote_sensor_file": "ID in the Remote Sensors directory"
+    "remote_sensor_file": "ID in the Remote Sensors directory",
+    "remote_sensor_id_desc": "Registry ID in Remote Sensors registry"
   },
   "rfvs": {
     "id": "Identifier",
@@ -233,5 +234,12 @@
     "time_sent": "Time message was sent"
   },
   "current": "Current expire date set is ",
-  "submit": "Complete"
+  "submit": "Complete",
+  "add_vehicle_from_users": "To add a vehicle, please select a user from the user list.",
+  "sorting_by_property": "Sorting by property",
+  "in": "in",
+  "order": "order",
+  "showing_out_of": "Showing {{sub}} out of {{total}}",
+  "ascending": "ascending",
+  "descending": "descending"
 }

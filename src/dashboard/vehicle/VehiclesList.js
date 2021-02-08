@@ -292,14 +292,14 @@ function VehiclesList() {
 						<p
 							className={styles.filterTextInfo}
 						>
-							{`Showing ${store.counts.matchesFilters} out of ${store.counts.vehicleCount} vehicles`}
+							{t('glossary:showing_out_of', { sub: store.counts.matchesFilters, total: store.counts.vehicleCount })}
 						</p>
 					</div>
 					<div
 						className={styles.filters}
 					>
 						<p className={styles.filterLabel}>
-							Sorting by property:
+							{t('glossary:sorting_by_property')}
 						</p>
 						<HTMLSelect
 							id='sorter'
@@ -316,7 +316,7 @@ function VehiclesList() {
 							<option value="model">{t('vehicles.model')}</option>
 						</HTMLSelect>
 						<p className={styles.filterLabel}>
-							in
+							{t('glossary:in')}
 						</p>
 						<HTMLSelect
 							id='sorter'
@@ -326,11 +326,11 @@ function VehiclesList() {
 							minimal
 							onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
 						>
-							<option value='asc'>Ascending</option>
-							<option value='desc'>Descending</option>
+							<option value='asc'>{t('glossary:ascending')}</option>
+							<option value='desc'>{t('glossary:descending')}</option>
 						</HTMLSelect>
 						<p className={styles.filterLabel}>
-							order
+							{t('glossary:order')}
 						</p>
 					</div>
 					<div
@@ -349,7 +349,7 @@ function VehiclesList() {
 						</Button>
 						}
 						{ !listingOnlyVehiclesByUser && authStore.isAdmin &&
-						<p>To add a vehicle, please select a user from the user list.</p>
+						<p>{t('glossary:add_vehicle_from_users')}</p>
 						}
 					</div>
 					<GenericList>

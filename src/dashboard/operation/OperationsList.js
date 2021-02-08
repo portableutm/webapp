@@ -353,7 +353,7 @@ function OperationsList() {
 						className={styles.filters}
 					>
 						<p className={styles.filterLabel}>
-								Sorting by property:
+							{t('glossary:sorting_by_property')}
 						</p>
 						<HTMLSelect
 							id='sorter'
@@ -372,7 +372,7 @@ function OperationsList() {
 							<option value="end">End</option>
 						</HTMLSelect>
 						<p className={styles.filterLabel}>
-								in
+							{t('glossary:in')}
 						</p>
 						<HTMLSelect
 							id='sorter'
@@ -382,11 +382,11 @@ function OperationsList() {
 							minimal
 							onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
 						>
-							<option value='asc'>Ascending</option>
-							<option value='desc'>Descending</option>
+							<option value='asc'>{t('glossary:ascending')}</option>
+							<option value='desc'>{t('glossary:descending')}</option>
 						</HTMLSelect>
 						<p className={styles.filterLabel}>
-								order
+							{t('glossary:order')}
 						</p>
 					</div>
 					<div
