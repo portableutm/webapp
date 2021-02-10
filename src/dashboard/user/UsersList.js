@@ -274,6 +274,9 @@ function UsersList() {
 					<GenericList>
 						{store.usersWithVisibility.map((user) => {
 							if (user._matchesFiltersByNames) {
+								if((user.dinacia_user === null) || (user.dinacia_user === undefined ) ){
+									user.dinacia_user = {}
+								}
 								return (
 									<User
 										key={user.username}
