@@ -143,7 +143,7 @@ function Pilot({ user }) {
 							<InputGroup leftIcon="person" disabled={!localStore.isUserDataChangeEnabled} id="lastName"
 								defaultValue={user.lastName}/>
 						</FormGroup>
-						{ISDINACIA &&
+						{ISDINACIA && obsUser.dinacia_user &&
 						<>
 							{obsUser.dinacia_user.document_file_path &&
 							<button onClick={() => {
