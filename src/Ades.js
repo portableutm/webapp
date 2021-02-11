@@ -75,15 +75,8 @@ import UvrList from './dashboard/uvr/UvrList';
 }*/
 
 const LayoutRoute = ({ path, exact, isMapVisible = false, leftIsExpanded = false, children }) => {
-	const store = useStore('RootStore');
-
 	return (
 		<Route exact={exact} path={path}>
-			{store.debugIsDebug &&
-			<div className='timeLeftOverlay'>
-				Expires at {store.authStore.expireDate.toLocaleTimeString()}
-			</div>
-			}
 			<LeftArea>
 				<NotificationCenter/>
 			</LeftArea>

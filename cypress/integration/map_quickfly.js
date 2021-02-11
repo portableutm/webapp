@@ -39,8 +39,6 @@ const quickFlyLocations = [{
 
 describe('SP1: (Map) Quick Fly', function () {
 	beforeEach('Auth', function () {
-		cy.setCookie('sneaky', 'admin');
-		cy.setCookie('hummingbird', 'admin');
 		cy.server();           // enable response stubbing
 		cy.route({
 			method: 'GET',      // Route all GET requests
@@ -63,8 +61,7 @@ describe('SP1: (Map) Quick Fly', function () {
 
 	it('Finds button and clicks on first location', function () {
 		cy.visit('http://localhost:2000/');
-		cy.get('[data-test-id="rightAreaOpener"]').click();
-		cy.get('[data-test-id="mapButtonquickFly"]').click();
+		cy.contains('QUICKFLY.TITLE').click();
 		cy.get('[data-test-id="mapquickFly0"]').click();
 	});
 	it('Finds button and clicks on second location', function () {
@@ -83,8 +80,7 @@ describe('SP1: (Map) Quick Fly', function () {
 	});
 	it('Deletes some quickflies', function () {
 		cy.visit('http://localhost:2000/');
-		cy.get('[data-test-id="rightAreaOpener"]').click();
-		cy.get('[data-test-id="mapButtonquickFly"]').click();
+		cy.contains('QUICKFLY.TITLE').click();
 		cy.contains('quickfly.activate_delete_mode').click({ force: true });
 		cy.contains('SUMU').click();
 		cy.contains('quickfly.deactivate_delete_mode').click({ force: true });

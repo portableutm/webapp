@@ -35,7 +35,7 @@ function Uvr({ expanded = false, uvr, changeState, isPilot }) {
 					<p className={styles.titleText}>{uvr.reason}</p>
 					<Button
 						className={styles.button}
-						data-test-id={`showHideProperties${uvr.reason}`}
+						data-test-id={`showHideProperties${uvr.reason.split(' ').join('_')}`}
 						small
 						minimal
 						icon='menu-open'
@@ -55,6 +55,7 @@ function Uvr({ expanded = false, uvr, changeState, isPilot }) {
 						className={styles.button}
 						small
 						minimal
+						data-test-id={`view${uvr.reason.split(' ').join('_')}`}
 						icon='pin'
 						intent={Intent.SUCCESS}
 						onClick={(evt) => {
@@ -70,6 +71,7 @@ function Uvr({ expanded = false, uvr, changeState, isPilot }) {
 						className={styles.button}
 						small
 						minimal
+						data-test-id={`edit${uvr.reason.split(' ').join('_')}`}
 						icon='edit'
 						intent={Intent.WARNING}
 						onClick={(evt) => {

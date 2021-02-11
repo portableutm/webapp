@@ -8,6 +8,57 @@ const operations = {
 	count: 5,
 	ops: [
 		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
 			gufi: '4e1c5d47-5e6d-4893-84b6-ed3c15059564',
 			uss_name: null,
 			discovery_reference: null,
@@ -17,7 +68,14 @@ const operations = {
 			name: 'PROPOSED',
 			volumes_description: 'v0.1 - Restricted to one volume.',
 			airspace_authorization: null,
-			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
+			owner: {
+				firstName: 'test',
+				lastName: 'test',
+				username: 'test',
+				email: 'spam@example.com',
+				password: 'fake',
+				role: 'pilot'
+			},
 			flight_number: '12345678',
 			state: 'PROPOSED',
 			controller_location: null,
@@ -133,10 +191,68 @@ const operations = {
 			]
 		},
 		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
 			gufi: 'a20ef8d5-506d-4f54-a981-874f6c8bd4de',
 			uss_name: null,
 			discovery_reference: null,
-			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
+			owner: {
+				firstName: 'test',
+				lastName: 'test',
+				username: 'test',
+				email: 'spam@example.com',
+				password: 'fake',
+				role: 'pilot'
+			},
 			submit_time: '2020-04-13T08:59:46.146Z',
 			update_time: '2020-04-13T09:00:31.552Z',
 			aircraft_comments: null,
@@ -266,10 +382,68 @@ const operations = {
 			]
 		},
 		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
 			gufi: 'b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63',
 			uss_name: null,
 			discovery_reference: null,
-			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
+			owner: {
+				firstName: 'test',
+				lastName: 'test',
+				username: 'test',
+				email: 'spam@example.com',
+				password: 'fake',
+				role: 'pilot'
+			},
 			submit_time: '2020-04-13T08:59:49.740Z',
 			update_time: '2020-04-13T09:00:01.482Z',
 			aircraft_comments: null,
@@ -399,10 +573,68 @@ const operations = {
 			]
 		},
 		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
 			gufi: 'f7891e78-9bb4-431d-94d3-1a506910c254',
 			uss_name: null,
 			discovery_reference: null,
-			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
+			owner: {
+				firstName: 'test',
+				lastName: 'test',
+				username: 'test',
+				email: 'spam@example.com',
+				password: 'fake',
+				role: 'pilot'
+			},
 			submit_time: '2020-04-13T08:59:47.892Z',
 			update_time: '2020-04-13T09:00:00.885Z',
 			aircraft_comments: null,
@@ -536,10 +768,68 @@ const operations = {
 			]
 		},
 		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
 			gufi: 'ff4b6505-c282-42b1-b013-66f02137f5d5',
 			uss_name: null,
 			discovery_reference: null,
-			owner: { firstName: 'test', lastName: 'test', username: 'test', email: 'spam@example.com', password: 'fake', role: 'pilot' },
+			owner: {
+				firstName: 'test',
+				lastName: 'test',
+				username: 'test',
+				email: 'spam@example.com',
+				password: 'fake',
+				role: 'pilot'
+			},
 			submit_time: '2020-04-13T08:59:44.339Z',
 			update_time: '2020-04-13T09:00:31.161Z',
 			aircraft_comments: null,

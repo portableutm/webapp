@@ -64,6 +64,16 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 		cy.get('[data-test-id="map#editor#operation#info#flight_comments"]').clear().type('Comments');
 		cy.get('[data-test-id="map#editor#operation#info#pilot"]').select('admin');
 	});
+	it('Finish and fails, fix mistake', function () {
+		cy.contains('finish').click();
+		cy.get('[data-test-id="floating-text"]').then(($el) => {
+			expect($el).to.contain('no_uas_selected');
+		});
+		cy.get('.bp3-checkbox').first().click();
+		cy.window().then((win) => {
+			win.store.hideFloatingText();
+		});
+	});
 	it('Finish and add', function () {
 		cy.contains('finish').click();
 		cy.wait('@postOperation');

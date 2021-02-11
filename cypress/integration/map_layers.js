@@ -13,6 +13,57 @@ const operations = {
 	count: 5,
 	ops: [
 		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
 			gufi: '4e1c5d47-5e6d-4893-84b6-ed3c15059564',
 			uss_name: null,
 			discovery_reference: null,
@@ -145,6 +196,57 @@ const operations = {
 			]
 		},
 		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
 			gufi: 'a20ef8d5-506d-4f54-a981-874f6c8bd4de',
 			uss_name: null,
 			discovery_reference: null,
@@ -285,6 +387,57 @@ const operations = {
 			]
 		},
 		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
 			gufi: 'b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63',
 			uss_name: null,
 			discovery_reference: null,
@@ -425,6 +578,57 @@ const operations = {
 			]
 		},
 		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
 			gufi: 'f7891e78-9bb4-431d-94d3-1a506910c254',
 			uss_name: null,
 			discovery_reference: null,
@@ -569,6 +773,57 @@ const operations = {
 			]
 		},
 		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
 			gufi: 'ff4b6505-c282-42b1-b013-66f02137f5d5',
 			uss_name: null,
 			discovery_reference: null,
@@ -780,7 +1035,6 @@ describe('SP1: (Map) Layers', function () {
 
 	it('Clicks use case button', function () {
 		cy.visit('http://localhost:2000/');
-		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.contains('filter.bystate').click();
 		//cy.get('[data-test-id="mapButtonLayers"]').click();
 	});
@@ -861,5 +1115,11 @@ describe('SP1: (Map) Layers', function () {
 		cy.get('.bp3-input').clear();
 		cy.get('.bp3-input').clear();
 		cy.contains('ACTIVATED').click();
+	});
+	it('Select and unselect an Operation', function () {
+		cy.window().then((win) => {
+			win.store.mapStore.setSelectedOperation('a20ef8d5-506d-4f54-a981-874f6c8bd4de');
+			win.store.mapStore.unsetSelectedOperation();
+		});
 	});
 });

@@ -2,7 +2,7 @@
 UseCase 01A: Create new Operation
  */
 
-describe('Use Case 01A: Create New Operation (valid)', function () {
+describe('Use Case 01A: Create New UVR (valid)', function () {
 	beforeEach('Auth', function () {
 		cy.setCookie('sneaky', 'admin');
 		cy.setCookie('hummingbird', 'admin');

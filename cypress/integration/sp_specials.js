@@ -12,6 +12,12 @@ describe('Edit operation', function () {
 
 	it('Visits Web and navigate to Dashboard', function () {
 		cy.visit('http://localhost:2000/dashboard');
+		cy.contains('home.pending').click();
+		cy.visit('http://localhost:2000/dashboard');
+		cy.contains('home.rogue').click();
+		cy.visit('http://localhost:2000/dashboard');
+		cy.contains('home.active').click();
+		cy.visit('http://localhost:2000/dashboard');
 		cy.on('uncaught:exception', (err, runnable) => {
 			console.log('err :' + err);
 			console.log('runnable :' + runnable);

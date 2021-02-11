@@ -11,7 +11,9 @@ describe('Use Case: Add new vehicle', function () {
 		cy.server();           // enable response stubbing
 		cy.route({
 			method: 'POST',      // Route all GET requests
-			url: '/vehicle'    //
+			url: '/vehicle',    //
+			response: {},
+			status: 200
 		}).as('postVehicle');
 	});
 
@@ -34,9 +36,10 @@ describe('Use Case: Add new vehicle', function () {
 		cy.get('input[type=file]').attachFile('images/newVehicle.png');
 		cy.get('#add_vehicle_btn').click();
 		cy.wait(1000);
-		cy.contains('Vehicle saved successfully')
-
-	})
+		cy.get('[data-test-id="floating-text"]').then(($el) => {
+			expect($el).to.contain('saved successfully');
+		});
+	});
 
 	it('Error while crete vehicle name cant be empty', function () {
 		cy.visit('http://localhost:2000/dashboard/vehicles/admin');
@@ -56,11 +59,10 @@ describe('Use Case: Add new vehicle', function () {
 		cy.get('input[type=file]').attachFile('images/newVehicle.png');
 		cy.get('#add_vehicle_btn').click();
 		cy.wait(1000);
-		// cy.contains('Error')
-		cy.contains('Error').contains('Vehicle name')
-
-
-	})
+		cy.get('[data-test-id="floating-text"]').then(($el) => {
+			expect($el).to.contain('not be empty');
+		});
+	});
 
 	it('Error while crete vehicle image serial number cant be empty', function () {
 		cy.visit('http://localhost:2000/dashboard/vehicles/admin');
@@ -80,9 +82,10 @@ describe('Use Case: Add new vehicle', function () {
 		// cy.get('input[type=file]').attachFile('images/newVehicle.png');
 		cy.get('#add_vehicle_btn').click();
 		cy.wait(1000);
-		cy.contains('Error').contains('Serial number')
-
-	})
+		cy.get('[data-test-id="floating-text"]').then(($el) => {
+			expect($el).to.contain('erial number');
+		});
+	});
 
 	/*
 	it('Finish and add', function () {

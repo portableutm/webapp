@@ -1,10 +1,6 @@
 describe('SPx: (Registration)', function () {
 	beforeEach('Intercept add', function () {
-		cy.server();           // enable response stubbing
-		cy.route({
-			method: 'POST',      // Route all GET requests
-			url: '/user/register'    //
-		}).as('postUser');
+
 	});
 
 	// it('Fills info of user', function () {
@@ -45,7 +41,17 @@ describe('SPx: (Registration)', function () {
 
 
 	it('Register user', function () {
-		cy.visit('http://localhost:2000/registration');
+		cy.server();           // enable response stubbing
+		cy.route({
+			method: 'POST',      // Route all GET requests
+			url: '/user/register',
+			response: {},
+			status: 200
+		}).as('postUser');
+		cy.visit('http://localhost:2000/dashboard');
+		cy.contains('sidemenu.logout').click();
+		cy.contains('sidemenu.logout_positive').click();
+		cy.contains('login.register').click();
 		cy.get('#input-username').type('newUserTest');
 		cy.get('#input-firstName').type('UnUsuario');
 		cy.get('#input-lastName').type('Nuevo');
@@ -66,12 +72,15 @@ describe('SPx: (Registration)', function () {
 		cy.get('#input-passwordverification').type('1234');
 
 		cy.get('form').submit();
-		cy.contains('login.registered')
+		cy.contains('login.registered');
 
 	});
 
 	it('Error user user name repeated', function () {
-		cy.visit('http://localhost:2000/registration');
+		cy.visit('http://localhost:2000/dashboard');
+		cy.contains('sidemenu.logout').click();
+		cy.contains('sidemenu.logout_positive').click();
+		cy.contains('login.register').click();
 		cy.get('#input-username').type('admin');
 		cy.get('#input-firstName').type('UnUsuario');
 		cy.get('#input-lastName').type('Nuevo');
@@ -92,14 +101,16 @@ describe('SPx: (Registration)', function () {
 		cy.get('#input-passwordverification').type('1234');
 
 		cy.get('form').submit();
-		cy.contains('login.register_error')
+		cy.contains('login.register_error');
 
 	});
 
 
 	it('Error user no username', function () {
-		cy.visit('http://localhost:2000/registration');
-		// cy.get('#input-username').type('admin');
+		cy.visit('http://localhost:2000/dashboard');
+		cy.contains('sidemenu.logout').click();
+		cy.contains('sidemenu.logout_positive').click();
+		cy.contains('login.register').click();
 		cy.get('#input-firstName').type('UnUsuario');
 		cy.get('#input-lastName').type('Nuevo');
 		cy.get('#input-email').type('newUser@dronfies.com');
@@ -119,12 +130,15 @@ describe('SPx: (Registration)', function () {
 		cy.get('#input-passwordverification').type('1234');
 
 		cy.get('form').submit();
-		cy.contains('login.register_error')
+		cy.contains('login.register_error');
 
 	});
 
 	it('Error user no email', function () {
-		cy.visit('http://localhost:2000/registration');
+		cy.visit('http://localhost:2000/dashboard');
+		cy.contains('sidemenu.logout').click();
+		cy.contains('sidemenu.logout_positive').click();
+		cy.contains('login.register').click();
 		cy.get('#input-username').type('admin');
 		cy.get('#input-firstName').type('UnUsuario');
 		cy.get('#input-lastName').type('Nuevo');
@@ -145,8 +159,9 @@ describe('SPx: (Registration)', function () {
 		cy.get('#input-passwordverification').type('1234');
 
 		cy.get('form').submit();
-		cy.contains('login.register_error')
-
+		cy.get('.registrationCard').then($el => {
+			expect($el).to.contain('email_is_not_valid');
+		});
 	});
 
 
