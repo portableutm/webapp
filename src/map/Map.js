@@ -56,7 +56,7 @@ const Map = ({ mode }) => {
 	const { t, } = useTranslation('map');
 
 	/* State holders and references */
-	const { store, operationStore, mapStore, uvrStore, positionStore } = useStore(
+	const { store, operationStore, mapStore, uvrStore } = useStore(
 		'RootStore',
 		(store) => ({
 			store: store,

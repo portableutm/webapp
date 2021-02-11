@@ -3,7 +3,6 @@ import { values } from 'mobx';
 import { Vehicle } from './entities/Vehicle';
 import _ from 'lodash';
 import { ISDINACIA } from '../consts';
-import { BaseDinaciaVehicle } from './entities/DinaciaVehicle';
 
 const validateFields = (vehicle , prueba) => {
 	console.log(`Validate field: ${JSON.stringify(vehicle)}, ${JSON.stringify(prueba)}`);

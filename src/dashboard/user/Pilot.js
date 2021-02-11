@@ -205,7 +205,7 @@ function Pilot({ user }) {
 									id="permit_expire_date"
 									type="date"
 								/>
-								{user.dinacia_user != null && user.dinacia_user.permit_expire_date != undefined &&
+								{	user.dinacia_user && user.dinacia_user.permit_expire_date &&
 								<p>
 									{t('glossary:current')} {user.dinacia_user.permit_expire_date.toDateString()}
 								</p>

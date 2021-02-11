@@ -6,8 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styles from '../generic/GenericList.module.css';
 import { useStore } from 'mobx-store-provider';
-import { observer, useLocalStore } from 'mobx-react';
-import { ISDINACIA } from '../../consts';
+import { observer } from 'mobx-react';
 
 function Operation({ expanded = false, selected = false, operation, isPilot }) {
 	// Renders one Operation text properties for a list

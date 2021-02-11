@@ -50,7 +50,6 @@ import OperationList from './dashboard/operation/OperationsList.js';
  * State Providers
  */
 import { RootStore } from './models/RootStore.js';
-import { useCookies } from 'react-cookie';
 import Pilot from './dashboard/user/Pilot';
 import VehiclesList from './dashboard/vehicle/VehiclesList';
 import EditVehicle from './dashboard/vehicle/EditVehicle';
@@ -163,8 +162,6 @@ function Ades() {
 	const bc = new BroadcastChannel('simulator');
 	bc.onmessage = (event) => setAlertUtmMessage(event.data);*/
 
-	/* Auth */
-	const [cookies, ,] = useCookies(['lang', 'sneaky', 'hummingbird']);
 
 	// let timer;
 

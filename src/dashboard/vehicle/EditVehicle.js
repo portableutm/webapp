@@ -137,7 +137,7 @@ function EditVehicle(props) {
 			}
 		});
 		return () => dispose();
-	}, []);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const { t, } = useTranslation(['glossary', 'common']);
 	const [isSubmitting, setSubmitting] = useState(false);

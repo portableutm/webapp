@@ -1,8 +1,7 @@
-import { flow, getRoot, getSnapshot, types } from 'mobx-state-tree';
+import { flow, getRoot, types } from 'mobx-state-tree';
 import { User } from './entities/User';
 import { values } from 'mobx';
 import _ from 'lodash';
-import { BaseDinaciaUser, DinaciaUser } from './entities/DinaciaUser';
 
 export const UserStore = types
 	.model('UserStore', {

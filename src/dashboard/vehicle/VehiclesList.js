@@ -222,7 +222,7 @@ function VehiclesList() {
 				}
 			}
 		});
-	}, []);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	if (store.hasFetched) {
 		if (store.isEmpty) {
