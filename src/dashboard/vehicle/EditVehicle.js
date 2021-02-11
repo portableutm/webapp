@@ -41,7 +41,7 @@ const GenericVehicleProperties = ({ localStore, properties }) => {
 	});
 };
 
-const DinaciaVehicleProperties = ({ localStore, properties }) => {
+const DinaciaVehicleProperties = ({ localStore, properties, isAdmin = false }) => {
 	const { t, } = useTranslation('glossary');
 
 	return useObserver(() => {
@@ -56,6 +56,7 @@ const DinaciaVehicleProperties = ({ localStore, properties }) => {
 					<InputGroup
 						id={'text-' + property}
 						key={'text-' + property}
+						disabled={ISDINACIA && !isAdmin && property === 'caa_registration'} // TODO: No comments...
 						value={localStore.vehicle.dinacia_vehicle[property] === null ? '' : localStore.vehicle.dinacia_vehicle[property]}
 						onChange={(evt) => localStore.vehicle.setDinaciaProperty(property, evt.target.value)}
 					/>
@@ -191,6 +192,7 @@ function EditVehicle(props) {
 						<h2>{t('glossary:optional_fields')}</h2>
 						<DinaciaVehicleProperties
 							localStore={localStore}
+							isAdmin={authStore.isAdmin}
 							properties={[
 								'caa_registration',
 								'usage',

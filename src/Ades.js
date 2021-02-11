@@ -356,6 +356,11 @@ function Ades() {
 									}
 								</Dashboard>
 							</LayoutRoute>
+							<LayoutRoute exact path='/dashboard/vehicles/edit/:id'>
+								<Dashboard>
+									<EditVehicle />
+								</Dashboard>
+							</LayoutRoute>
 							<LayoutRoute exact path={'/dashboard/vehicles/new'}>
 								<Dashboard>
 									<EditVehicle userId={rootStore.authStore.username}/>

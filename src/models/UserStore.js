@@ -28,16 +28,6 @@ export const UserStore = types
 					const users = response.data;
 					self.users.replace(
 						users.reduce((prior, user) => {
-							if (user.dinacia_user) {
-								const dinaciaUserSnapshot = user.dinacia_user;
-								const dinaciaUser = DinaciaUser.create({
-									...dinaciaUserSnapshot,
-									permit_expire_date: new Date(dinaciaUserSnapshot.permit_expire_date),
-									permit_back_file_path: dinaciaUserSnapshot.permit_back_file_path,
-									permit_front_file_path: dinaciaUserSnapshot.permit_front_file_path,
-									document_file_path: dinaciaUserSnapshot.document_file_path
-								});
-							}
 							return [...prior, [user.username, user]];
 						}, [])
 					);

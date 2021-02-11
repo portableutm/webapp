@@ -124,65 +124,65 @@ function Vehicle({ v }) {
 				</GenericListLine>
 				}
 				{ 	ISDINACIA &&
-					v.dinacia_vehicle !== null &&
-					['caa_registration',
-						'usage',
-						'construction_material',
-						'year',
-						'empty_weight',
-						'max_weight',
-						'takeoff_method',
-						'sensor_type_and_mark',
-						'packing',
-						'longitude',
-						'height',
-						'color',
-						'max_speed',
-						'cruise_speed',
-						'landing_speed',
-						'time_autonomy',
-						'radio_accion',
-						'ceiling',
-						'communication_control_system_command_navigation_vigilance',
-						'maintenance_inspections',
-						'remarks',
-						'engine_manufacturer',
-						'remote_sensor_id',
-						'engine_type',
-						'engine_model',
-						'engine_power',
-						'engine_fuel',
-						'engine_quantity_batteries',
-						'propeller_type',
-						'propeller_model',
-						'propeller_material'
-					].map((dinaciaProp) => {
-						if (v.dinacia_vehicle[dinaciaProp] !== null) {
-							return <GenericListLine key={dinaciaProp}>
-								{t(`vehicles.${dinaciaProp}`)}
-								{v.dinacia_vehicle[dinaciaProp]}
-							</GenericListLine>;
-						} else {
-							return null;
-						}
-					})
+				v.dinacia_vehicle !== null &&
+				['caa_registration',
+					'usage',
+					'construction_material',
+					'year',
+					'empty_weight',
+					'max_weight',
+					'takeoff_method',
+					'sensor_type_and_mark',
+					'packing',
+					'longitude',
+					'height',
+					'color',
+					'max_speed',
+					'cruise_speed',
+					'landing_speed',
+					'time_autonomy',
+					'radio_accion',
+					'ceiling',
+					'communication_control_system_command_navigation_vigilance',
+					'maintenance_inspections',
+					'remarks',
+					'engine_manufacturer',
+					'remote_sensor_id',
+					'engine_type',
+					'engine_model',
+					'engine_power',
+					'engine_fuel',
+					'engine_quantity_batteries',
+					'propeller_type',
+					'propeller_model',
+					'propeller_material'
+				].map((dinaciaProp) => {
+					if (v.dinacia_vehicle[dinaciaProp] !== null) {
+						return <GenericListLine key={dinaciaProp}>
+							{t(`vehicles.${dinaciaProp}`)}
+							{v.dinacia_vehicle[dinaciaProp]}
+						</GenericListLine>;
+					} else {
+						return null;
+					}
+				})
 				}
 				{	ISDINACIA && v.operators &&
-					v.operators.map(operator => {
-						return <GenericListLine key={operator}>
-							{t('vehicles.operator')}
-							{operator}
-						</GenericListLine>;
-					})
+				v.operators.map(operator => {
+					return <GenericListLine key={operator}>
+						{t('vehicles.operator')}
+						{operator}
+					</GenericListLine>;
+				})
 				}
 				{	ISDINACIA && v.dinacia_vehicle && v.dinacia_vehicle.serial_number_file_path !== null &&
-					<GenericListLine>
-						<p>{t('vehicles.serial_number_file')}</p>
-						<button onClick={() => {
-							const win = window.open(v.dinacia_vehicle.serial_number_file_path, '_blank');
-							win.focus();
-						}}>{t('common:view_image')}</button>
-					</GenericListLine>
+				<GenericListLine>
+					<p>{t('vehicles.serial_number_file')}</p>
+					<button onClick={() => {
+						const win = window.open(v.dinacia_vehicle.serial_number_file_path, '_blank');
+						win.focus();
+					}}>{t('common:view_image')}</button>
+				</GenericListLine>
 				}
 				{	ISDINACIA && v.dinacia_vehicle && v.dinacia_vehicle.remote_sensor_file_path !== null &&
 				<GenericListLine>
