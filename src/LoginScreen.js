@@ -3,12 +3,11 @@ import { Button, Card, Elevation, FormGroup, InputGroup, Intent } from '@bluepri
 
 import { useStore } from 'mobx-store-provider';
 import { useTranslation } from 'react-i18next';
-import { useCookies } from 'react-cookie';
 
 /* External */
 import { useHistory } from 'react-router-dom';
 /* Internal */
-import { DEBUG, ISDINACIA } from './consts';
+import { ISDINACIA } from './consts';
 import logo from './images/logo.png';
 import dinaciaLogo from './images/DINACIA.png';
 import background from './images/bg.jpg';
@@ -23,8 +22,7 @@ function LoginScreen() {
 	const [password, setPassword] = useState('');
 	const [isError, setError] = useState(false);
 	const [isLogging, setLogging] = useState(false);
-	const { t, i18n } = useTranslation('auth');
-	const [, setCookie, ] = useCookies(['jwt']);
+	const { t } = useTranslation('auth');
 	const history = useHistory();
 
 	/* Callbacks */
@@ -45,7 +43,7 @@ function LoginScreen() {
 		history.push('/registration');
 	};
 
-	useEffect(() => {
+	/*useEffect(() => {
 		if (DEBUG) {
 			setCookie('lang', 'none', { path: '/' });
 			i18n.changeLanguage('none');
@@ -67,7 +65,7 @@ function LoginScreen() {
 			i18n.changeLanguage('en');
 			history.push('/');
 		}
-	}, [window.location]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [window.location]); // eslint-disable-line react-hooks/exhaustive-deps */
 
 	/* img from https://pixabay.com/photos/airport-building-sun-weather-sky-1682067/ */
 	return (

@@ -38,6 +38,25 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 		cy.get('[data-test-id="mapButtonMenu"]').click();
 		cy.contains('hamburger.createnewop').click();
 	});
+	it('Finish and fails bc of no UAS, fix mistake', function () {
+		cy.contains('finish').click();
+		cy.get('[data-test-id="floating-text"]').then(($el) => {
+			expect($el).to.contain('no_uas_selected');
+		});
+		cy.get('.bp3-checkbox').first().click();
+		cy.window().then((win) => {
+			win.store.hideFloatingText();
+		});
+	});
+	it('Finish and fails bc of no polygon', function () {
+		cy.contains('finish').click();
+		cy.get('[data-test-id="floating-text"]').then(($el) => {
+			expect($el).to.contain('no_polygon_drawn');
+		});
+		cy.window().then((win) => {
+			win.store.hideFloatingText();
+		});
+	});
 	it('Define Polygon', function () {
 		cy.get('[data-test-id="map"]').click( 'bottom');
 		cy.get('[data-test-id="map"]').click('topRight');
@@ -62,19 +81,11 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 			.type('09123456');
 		cy.get('[data-test-id="map#editor#operation#info#name"]').clear().type('CreateNewOp#01');
 		cy.get('[data-test-id="map#editor#operation#info#flight_comments"]').clear().type('Comments');
+		cy.get('[data-test-id="map#editor#volume#info#effective_time_begin"]').click();
 		cy.get('[data-test-id="map#editor#operation#info#pilot"]').select('admin');
 	});
-	it('Finish and fails, fix mistake', function () {
-		cy.contains('finish').click();
-		cy.get('[data-test-id="floating-text"]').then(($el) => {
-			expect($el).to.contain('no_uas_selected');
-		});
-		cy.get('.bp3-checkbox').first().click();
-		cy.window().then((win) => {
-			win.store.hideFloatingText();
-		});
-	});
 	it('Finish and add', function () {
+		cy.get('.bp3-checkbox').first().click();
 		cy.contains('finish').click();
 		cy.wait('@postOperation');
 		cy.get('[data-test-id="mapButtonMenu"]').click();
@@ -84,8 +95,6 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 		cy.visit('http://localhost:2000/');
 		cy.get('[data-test-id="mapButtonMenu"]').click();
 		cy.contains('hamburger.createnewop').click();
-		cy.get('[data-test-id="map#editor#operation#info#uas_registration#0"]').click({ force: true });
-		cy.get('[data-test-id="map#editor#operation#info#uas_registration#0"]').click({ force: true });
 		cy.contains('editor.return').click();
 	});
 });

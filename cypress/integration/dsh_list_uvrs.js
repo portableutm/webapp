@@ -48,6 +48,7 @@ describe('Dashboard: UVR List', function () {
 	it('Clicks use case button', function () {
 		cy.visit('http://localhost:2000/dashboard/uvrs');
 		cy.get('[data-test-id="showHidePropertiesUVR_1"]').click();
+		cy.get('[data-test-id="showHidePropertiesUVR_1"]').click();
 		cy.get('[data-test-id="viewUVR_1"]').click();
 		cy.visit('http://localhost:2000/dashboard/uvrs');
 		cy.get('[data-test-id="editUVR_1"]').click();

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
 	Alert,
 	Button,
@@ -12,9 +12,8 @@ import {
 	RadioGroup
 } from '@blueprintjs/core';
 import A from 'axios';
-import { API, DEBUG, ISDINACIA } from './consts';
+import { API, ISDINACIA } from './consts';
 import { useTranslation } from 'react-i18next';
-import { useCookies } from 'react-cookie';
 import styles from './LoginScreen.module.css';
 import * as classnames from 'classnames';
 import { observer, useLocalStore } from 'mobx-react';
@@ -81,10 +80,9 @@ const NewUser = ({ isSelfRegistering = true }) => {
 	const [verificationStatus, setVerificationStatus] = useState(VERIFICATION_NOT_STARTED);
 	const [errors, setErrors] = useState('');
 
-	const { t, i18n } = useTranslation(['auth', 'glossary', 'common']);
-	const [, setCookie,] = useCookies(['jwt']);
+	const { t,  } = useTranslation(['auth', 'glossary', 'common']);
 
-	useEffect(() => {
+	/*useEffect(() => {
 		if (DEBUG) {
 			setCookie('lang', 'none', { path: '/' });
 			i18n.changeLanguage('none');
@@ -95,7 +93,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 			setCookie('lang', 'en', { path: '/' });
 			i18n.changeLanguage('en');
 		}
-	}, [window.location]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [window.location]); // eslint-disable-line react-hooks/exhaustive-deps */
 
 	//----------------------------------------------------------------------------------
 	//--------------------------------- AUX FUNCTIONS  ---------------------------------

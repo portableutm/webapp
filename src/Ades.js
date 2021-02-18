@@ -12,7 +12,7 @@ import {
 } from '@blueprintjs/core';
 import S from 'sanctuary';
 import { useTranslation } from 'react-i18next';
-import { useProvider, useCreateStore, useStore } from 'mobx-store-provider';
+import { useProvider, useCreateStore } from 'mobx-store-provider';
 //import 'mobx-react-lite/batchingForReactDom';
 
 

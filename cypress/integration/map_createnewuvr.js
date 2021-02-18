@@ -52,6 +52,7 @@ describe('Use Case 01A: Create New UVR (valid)', function () {
 		cy.contains('finish').click();
 		cy.wait('@postUvr');
 		cy.get('[data-test-id="mapButtonMenu"]').click();
-		cy.contains('hamburger.map').click();
+		cy.contains('hamburger.createnewuvr').click();
+		cy.contains('editor.return').click();
 	});
 });

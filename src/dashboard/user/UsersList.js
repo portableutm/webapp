@@ -10,7 +10,7 @@ import { useHistory } from 'react-router-dom';
 import styles from '../generic/GenericList.module.css';
 import GenericList, { GenericListLine } from '../generic/GenericList';
 import Pilot from './Pilot';
-import { ISDINACIA } from '../../consts';
+import { DEBUG, ISDINACIA } from '../../consts';
 
 function User({ expanded = false,  children }) {
 	const { t, } = useTranslation(['glossary', 'common']);
@@ -34,7 +34,7 @@ function User({ expanded = false,  children }) {
 		<Callout
 			className={styles.item}
 			title={
-				<div className={styles.title} onClick={toggleOperation}>
+				<div className={styles.title} onClick={toggleOperation} data-test-id={children.username}>
 					<p className={styles.titleText}>{`${children.firstName} ${children.lastName}`}</p>
 					<Button
 						className={styles.button}
@@ -43,6 +43,7 @@ function User({ expanded = false,  children }) {
 						icon='menu-open'
 						intent={showProperties ? Intent.DANGER : Intent.SUCCESS}
 						onClick={toggleOperation}
+						data-test-id='collapser'
 					>
 						<div className={styles.buttonHoveredTooltip}>
 							{ showProperties &&
@@ -54,7 +55,7 @@ function User({ expanded = false,  children }) {
 						</div>
 					</Button>
 					<Button
-						data-test-id={`edit${children.username}`}
+						data-test-id='edit'
 						className={styles.button}
 						small
 						minimal
@@ -67,6 +68,7 @@ function User({ expanded = false,  children }) {
 						</div>
 					</Button>
 					<Button
+						data-test-id='vehicles'
 						className={styles.button}
 						small
 						minimal
@@ -127,27 +129,27 @@ function User({ expanded = false,  children }) {
 				{	ISDINACIA && children.dinacia_user && children.dinacia_user.document_file_path &&
 				<GenericListLine>
 					<p>{t('users.document_file')}</p>
-					<button onClick={() => {
+					<button data-test-id='document_file_image' onClick={() => {
 						const win = window.open(children.dinacia_user.document_file_path, '_blank');
-						win.focus();
+						if (!DEBUG) win.focus();
 					}}>{t('common:view_image')}</button>
 				</GenericListLine>
 				}
 				{	ISDINACIA && children.dinacia_user && children.dinacia_user.permit_front_file_path &&
 					<GenericListLine>
 						<p>{t('users.permit_front_file')}</p>
-						<button onClick={() => {
+						<button data-test-id='permit_front_file_image' onClick={() => {
 							const win = window.open(children.dinacia_user.permit_front_file_path, '_blank');
-							win.focus();
+							if (!DEBUG) win.focus();
 						}}>{t('common:view_image')}</button>
 					</GenericListLine>
 				}
 				{	ISDINACIA && children.dinacia_user && children.dinacia_user.permit_back_file_path &&
 				<GenericListLine>
 					<p>{t('users.permit_back_file')}</p>
-					<button onClick={() => {
+					<button data-test-id='permit_back_file_image' onClick={() => {
 						const win = window.open(children.dinacia_user.permit_back_file_path, '_blank');
-						win.focus();
+						if (!DEBUG) win.focus();
 					}}>{t('common:view_image')}</button>
 				</GenericListLine>
 				}

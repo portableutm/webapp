@@ -9,7 +9,21 @@ describe('Edit operation', function () {
 			status: 200
 		});
 	});
-
+	it('Drone Test', function () {
+		cy.visit('http://localhost:2000/vehicle/1');
+		cy.wait(1000);
+		cy.window().then((win) => {
+			win.store.mapStore.setCorners( {
+				'type': 'Point',
+				'coordinates': [-0.01,0.01]
+			},  {
+				'type': 'Point',
+				'coordinates': [0.01,-0.01]
+			});
+			win.store.positionStore.debugRunTest();
+			cy.wait(10000);
+		});
+	});
 	it('Visits Web and navigate to Dashboard', function () {
 		cy.visit('http://localhost:2000/dashboard');
 		cy.contains('home.pending').click();
