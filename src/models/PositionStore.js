@@ -47,6 +47,33 @@ export const PositionStore = types
 					self.paraglidersPositions.set(correctedPosition.username, [correctedPosition]);
 				}
 			},
+			/* Testing helper function */
+			debugRunTest() {
+				const position1 = {
+					id: 1,
+					altitude_gps: 100,
+					location: {
+						'type': 'Point',
+						'coordinates': [0,0]
+					},
+					controller_location: null,
+					gufi: '123', 
+					heading: 214
+				};
+				self.addPosition(position1);
+				setTimeout(() => {
+					const position2 = { ...position1, altitude_gps: 2000 };
+					self.addPosition(position2);
+				}, 1000);
+				setTimeout(() => {
+					const position2 = { ...position1, altitude_gps: 4000 };
+					self.addPosition(position2);
+				}, 3000);
+				setTimeout(() => {
+					const position2 = { ...position1, altitude_gps: 8000 };
+					self.addPosition(position2);
+				}, 5000);
+			},
 			reset() {
 				self.hasFetched = false;
 			}

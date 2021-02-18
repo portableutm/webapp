@@ -6,8 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styles from '../generic/GenericList.module.css';
 import { useStore } from 'mobx-store-provider';
-import { observer, useLocalStore } from 'mobx-react';
-import { ISDINACIA } from '../../consts';
+import { observer } from 'mobx-react';
 
 function Operation({ expanded = false, selected = false, operation, isPilot }) {
 	// Renders one Operation text properties for a list
@@ -24,10 +23,12 @@ function Operation({ expanded = false, selected = false, operation, isPilot }) {
 			authStore: store.authStore
 		}));
 
+	/* istanbul ignore next */
 	const changeState = (newState) => {
 		opStore.updateState(operation.gufi, newState);
 	};
 
+	/* istanbul ignore next */
 	const pendingToAccepted = (evt) => {
 		evt.stopPropagation();
 		const comments = prompt(t('common:reason'));
@@ -39,6 +40,7 @@ function Operation({ expanded = false, selected = false, operation, isPilot }) {
 		);
 	};
 
+	/* istanbul ignore next */
 	const pendingToRejected = (evt) => {
 		evt.stopPropagation();
 		const comments = prompt(t('common:reason'));
@@ -123,6 +125,7 @@ function Operation({ expanded = false, selected = false, operation, isPilot }) {
 					</Button>
 					<Button
 						className={styles.button}
+						data-test-id='showinmap'
 						small
 						minimal
 						icon='eye-open'
@@ -141,6 +144,7 @@ function Operation({ expanded = false, selected = false, operation, isPilot }) {
 					<Button
 						className={styles.button}
 						small
+						data-test-id='editinmap'
 						minimal
 						icon='edit'
 						intent={Intent.WARNING}
@@ -279,6 +283,7 @@ function OperationsList() {
 						</HTMLSelect>
 						<InputGroup
 							className={styles.filterTextInput}
+							data-test-id='filter.bytext'
 							leftIcon="search"
 							onChange={(evt) => store.setFilterByText(evt.target.value)}
 							placeholder={t('map:filter.bytext.description')}

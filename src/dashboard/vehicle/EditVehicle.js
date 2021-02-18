@@ -8,7 +8,7 @@ import { useStore } from 'mobx-store-provider';
 import { BaseVehicle } from '../../models/entities/Vehicle';
 import { autorun } from 'mobx';
 import { useLocalStore, useAsObservableSource, observer, useObserver } from 'mobx-react';
-import { ISDINACIA } from '../../consts';
+import { DEBUG, ISDINACIA } from '../../consts';
 import { BaseDinaciaVehicle } from '../../models/entities/DinaciaVehicle';
 import { getSnapshot } from 'mobx-state-tree';
 
@@ -104,6 +104,8 @@ function EditVehicle(props) {
 		}
 	}));
 
+	if (DEBUG) window.ls = window.localStore;
+
 	useEffect(() => {
 		const dispose = autorun(async () => {
 			if (ISDINACIA && id && vehicleStore.vehicles.get(id)) {
@@ -122,7 +124,7 @@ function EditVehicle(props) {
 
 					setSerialNumberFile(window.URL.createObjectURL(data));
 				}
-				if (vehicle.dinacia_vehicle.remote_sensor_file_path) {
+				if (vehicle.dinacia_vehicle.hasRemoteSensorFile) {
 					// This code is a mess and should be removed
 					const response = await fetch(vehicle.remote_sensor_file_path);
 					const data = await response.blob();
@@ -137,7 +139,7 @@ function EditVehicle(props) {
 			}
 		});
 		return () => dispose();
-	}, []);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const { t, } = useTranslation(['glossary', 'common']);
 	const [isSubmitting, setSubmitting] = useState(false);

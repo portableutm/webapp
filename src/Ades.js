@@ -12,7 +12,7 @@ import {
 } from '@blueprintjs/core';
 import S from 'sanctuary';
 import { useTranslation } from 'react-i18next';
-import { useProvider, useCreateStore, useStore } from 'mobx-store-provider';
+import { useProvider, useCreateStore } from 'mobx-store-provider';
 //import 'mobx-react-lite/batchingForReactDom';
 
 
@@ -50,7 +50,6 @@ import OperationList from './dashboard/operation/OperationsList.js';
  * State Providers
  */
 import { RootStore } from './models/RootStore.js';
-import { useCookies } from 'react-cookie';
 import Pilot from './dashboard/user/Pilot';
 import VehiclesList from './dashboard/vehicle/VehiclesList';
 import EditVehicle from './dashboard/vehicle/EditVehicle';
@@ -76,15 +75,8 @@ import UvrList from './dashboard/uvr/UvrList';
 }*/
 
 const LayoutRoute = ({ path, exact, isMapVisible = false, leftIsExpanded = false, children }) => {
-	const store = useStore('RootStore');
-
 	return (
 		<Route exact={exact} path={path}>
-			{store.debugIsDebug &&
-			<div className='timeLeftOverlay'>
-				Expires at {store.authStore.expireDate.toLocaleTimeString()}
-			</div>
-			}
 			<LeftArea>
 				<NotificationCenter/>
 			</LeftArea>
@@ -163,8 +155,6 @@ function Ades() {
 	const bc = new BroadcastChannel('simulator');
 	bc.onmessage = (event) => setAlertUtmMessage(event.data);*/
 
-	/* Auth */
-	const [cookies, ,] = useCookies(['lang', 'sneaky', 'hummingbird']);
 
 	// let timer;
 

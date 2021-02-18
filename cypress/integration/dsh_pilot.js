@@ -12,7 +12,9 @@ describe('Edit operation', function () {
 
 	it('Visits Web and navigate to Dashboard', function () {
 		cy.visit('http://localhost:2000/dashboard/users/admin');
-		cy.get('[data-test-id="editadmin"]').click();
+		cy.get('[data-test-id="admin"]').within($el => {
+			cy.get('[data-test-id="edit"]').click();
+		});
 		cy.get('#firstName').type('Roberto');
 		cy.get('#lastName').type('Malawi');
 		cy.get('#email').type('email');

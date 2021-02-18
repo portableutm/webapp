@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import L from 'leaflet';
 
 /* LEAFLET INITIALIZATION CODE */
