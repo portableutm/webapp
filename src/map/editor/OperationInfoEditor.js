@@ -20,18 +20,25 @@ function OperationInfoEditor() {
 		mapStore,
 		authStore,
 		vehicleStore,
-		userStore
-	} = useStore('RootStore', store => ({ mapStore: store.mapStore, authStore: store.authStore, userStore: store.userStore, vehicleStore: store.vehicleStore }));
+		userStore,
+		setFloatingText
+	} = useStore('RootStore', store => ({ mapStore: store.mapStore, authStore: store.authStore, userStore: store.userStore, vehicleStore: store.vehicleStore, setFloatingText: store.setFloatingText }));
 	const { t, } = useTranslation(['map', 'glossary', 'common']);
 	const [isSaving, setSaving] = useState(false);
 	const history = useHistory();
 
 	const [expandedLabel, setExpandedLabel] = useState('');
 
-	const saveOperationAndSetSaving = async () => {
-		setSaving(true);
-		await mapStore.saveOperation();
-		history.push('/');
+	const saveOperation = async () => {
+		if (mapStore.editorOperation.uasRegistrationCount === 0) {
+			setFloatingText(t('map:no_uas_selected'));
+		} else if (!mapStore.editorOperation.hasAnyVolume) {
+			setFloatingText(t('map:no_polygon_drawn'));
+		} else {
+			setSaving(true);
+			await mapStore.saveOperation();
+			history.push('/');
+		}
 	};
 
 	useEffect(() => {
@@ -40,7 +47,7 @@ function OperationInfoEditor() {
 				const user = userStore.users.get(mapStore.editorOperation.owner);
 				if (user) {
 					mapStore.setOperationInfo('contact', user.asDisplayString);
-					if (user.dinacia_user !== null) {
+					if (user && user.dinacia_user !== null) {
 						if (user.dinacia_user.phone !== null && user.dinacia_user.phone.length > 0) {
 							mapStore.setOperationInfo('contact_phone', user.dinacia_user.phone);
 						} else {
@@ -199,7 +206,8 @@ function OperationInfoEditor() {
 					})}
 				</FormGroup>
 				<OperationVolumeInfoEditor />
-				{	userStore.users.get(mapStore.editorOperation.owner) &&
+				
+				{/* {	userStore.users.get(mapStore.editorOperation.owner) &&
 					userStore.users.get(mapStore.editorOperation.owner).dinacia_user &&
 					( userStore.users.get(mapStore.editorOperation.owner).dinacia_user.permit_expire_date === null ||
 					userStore.users.get(mapStore.editorOperation.owner).dinacia_user.permit_expire_date < new Date() ) &&
@@ -208,7 +216,7 @@ function OperationInfoEditor() {
 					<p>{t('editor.expired_permit.title')}</p>
 					<p>{t('editor.expired_permit.text')}</p>
 				</div>
-				}
+				} */}
 				<div
 					className={styles.sidebarButtonTextRight}
 				>
@@ -224,9 +232,8 @@ function OperationInfoEditor() {
 						fill
 						icon="floppy-disk"
 						style={{ marginLeft: '2.5px' }}
-						disabled={mapStore.editorOperation.uasRegistrationCount === 0}
 						loading={isSaving}
-						onClick={() => saveOperationAndSetSaving()}
+						onClick={() => saveOperation()}
 					>
 						{t('editor.finish')}
 					</Button>

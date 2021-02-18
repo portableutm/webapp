@@ -8,7 +8,7 @@
   "notifications": {
     "operation_gone_rogue": {
       "header": "OPERACIÓN EN ESTADO ROGUE",
-      "body": "La operación \"{{operation}}\" está en el estado ROGUE. Es posible que los vehículos estén fuera de su volúmen. Es importante notificar a todos los vehículos cercanos."
+      "body": "La operación \"{{operation}}\" está en el estado ROGUE. Es posible que los drones estén fuera de su volúmen. Es importante notificar a todos los drones cercanos."
     },
     "utmmessage": {
       "header": "({{severity}}) recibido a las {{time_sent}}"
@@ -36,5 +36,7 @@
   "operation_state_changed_text": "La operación *{{name}}* está ahora en el estado **{{state}}**",
   "passwords_are_not_equal": "Las contraseñas ingresadas no son iguales. Por favor, intenta nuevamente.",
   "reason": "Motivo por el cual acepta o rechaza la operación",
-  "reject": "Rechazar"
+  "reject": "Rechazar",
+  "edit": "Editar",
+  "view_image": "Ver imágen"
 }

@@ -12,7 +12,7 @@ import {
 } from '@blueprintjs/core';
 import S from 'sanctuary';
 import { useTranslation } from 'react-i18next';
-import { useProvider, useCreateStore, useStore } from 'mobx-store-provider';
+import { useProvider, useCreateStore } from 'mobx-store-provider';
 //import 'mobx-react-lite/batchingForReactDom';
 
 
@@ -50,10 +50,9 @@ import OperationList from './dashboard/operation/OperationsList.js';
  * State Providers
  */
 import { RootStore } from './models/RootStore.js';
-import { useCookies } from 'react-cookie';
 import Pilot from './dashboard/user/Pilot';
 import VehiclesList from './dashboard/vehicle/VehiclesList';
-import NewVehicle from './dashboard/vehicle/NewVehicle';
+import EditVehicle from './dashboard/vehicle/EditVehicle';
 import HomeScreen from './dashboard/home/HomeScreen';
 import VerificationScreen from './VerificationScreen';
 import BottomArea from './layout/BottomArea';
@@ -76,15 +75,8 @@ import UvrList from './dashboard/uvr/UvrList';
 }*/
 
 const LayoutRoute = ({ path, exact, isMapVisible = false, leftIsExpanded = false, children }) => {
-	const store = useStore('RootStore');
-
 	return (
 		<Route exact={exact} path={path}>
-			{store.debugIsDebug &&
-			<div className='timeLeftOverlay'>
-				Expires at {store.authStore.expireDate.toLocaleTimeString()}
-			</div>
-			}
 			<LeftArea>
 				<NotificationCenter/>
 			</LeftArea>
@@ -163,8 +155,6 @@ function Ades() {
 	const bc = new BroadcastChannel('simulator');
 	bc.onmessage = (event) => setAlertUtmMessage(event.data);*/
 
-	/* Auth */
-	const [cookies, ,] = useCookies(['lang', 'sneaky', 'hummingbird']);
 
 	// let timer;
 
@@ -187,16 +177,16 @@ function Ades() {
 		if (rootStore.debugIsDebug) {
 			i18n.changeLanguage('none');
 		}
-		if (cookies.sneaky !== null &&
-			cookies.sneaky !== void 0 &&
-			cookies.hummingbird !== null &&
-			cookies.hummingbird !== void 0) {
-			rootStore.authStore.login(cookies.sneaky, cookies.hummingbird, () => {
+		if (process.env.REACT_APP_USER !== null &&
+			process.env.REACT_APP_USER !== void 0 &&
+			process.env.REACT_APP_PASSWORD !== null &&
+			process.env.REACT_APP_PASSWORD !== void 0) {
+			rootStore.authStore.login(process.env.REACT_APP_USER, process.env.REACT_APP_PASSWORD, () => {
 			}, () => {
 				alert('Sneaky Hummingbird failed');
 			});
 		}
-	}, [cookies]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	console.count('Render Ades');
 
@@ -290,9 +280,14 @@ function Ades() {
 									<UsersList/>
 								</Dashboard>
 							</LayoutRoute>
+							<LayoutRoute exact path='/dashboard/vehicles/edit/:id'>
+								<Dashboard>
+									<EditVehicle />
+								</Dashboard>
+							</LayoutRoute>
 							<LayoutRoute exact path='/dashboard/vehicles/:username/new'>
 								<Dashboard>
-									<NewVehicle />
+									<EditVehicle />
 								</Dashboard>
 							</LayoutRoute>
 							<LayoutRoute exact path='/dashboard/vehicles/:username?'>
@@ -351,9 +346,14 @@ function Ades() {
 									}
 								</Dashboard>
 							</LayoutRoute>
+							<LayoutRoute exact path='/dashboard/vehicles/edit/:id'>
+								<Dashboard>
+									<EditVehicle />
+								</Dashboard>
+							</LayoutRoute>
 							<LayoutRoute exact path={'/dashboard/vehicles/new'}>
 								<Dashboard>
-									<NewVehicle userId={rootStore.authStore.username}/>
+									<EditVehicle userId={rootStore.authStore.username}/>
 								</Dashboard>
 							</LayoutRoute>
 							<LayoutRoute exact path='/dashboard/operations/:id'>

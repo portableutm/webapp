@@ -33,10 +33,13 @@ export const BaseDinaciaVehicle = types
 		engine_quantity_batteries: types.maybeNull(types.string),
 		propeller_type: types.maybeNull(types.string),
 		propeller_model: types.maybeNull(types.string),
-		propeller_material: types.maybeNull(types.string)
+		propeller_material: types.maybeNull(types.string),
+		remote_sensor_id: types.maybeNull(types.string),
+
 	})
 	.volatile(() => ({
-		serial_number_file: null
+		serial_number_file: null,
+		remote_sensor_file: null
 	}));
 
 export const DinaciaVehicle = BaseDinaciaVehicle
@@ -45,4 +48,16 @@ export const DinaciaVehicle = BaseDinaciaVehicle
 		id: types.string,
 		authorized: types.boolean,
 		serial_number_file_path: types.maybeNull(types.string),
-	});
+		remote_sensor_file_path: types.maybeNull(types.string),
+	})
+	.views(self => {
+		return {
+			get hasSerialNumberFile() {
+				return self.serial_number_file_path !== null;
+			},
+			get hasRemoteSensorFile() {
+				return self.remote_sensor_file_path !== null;
+			}
+		};
+	})
+;

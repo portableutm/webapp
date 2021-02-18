@@ -2,7 +2,7 @@
 UseCase 01A: Create new Operation
  */
 
-describe('Use Case 01A: Create New Operation (valid)', function () {
+describe('Use Case 01A: Create New UVR (valid)', function () {
 	beforeEach('Auth', function () {
 		cy.setCookie('sneaky', 'admin');
 		cy.setCookie('hummingbird', 'admin');
@@ -52,6 +52,7 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 		cy.contains('finish').click();
 		cy.wait('@postUvr');
 		cy.get('[data-test-id="mapButtonMenu"]').click();
-		cy.contains('hamburger.map').click();
+		cy.contains('hamburger.createnewuvr').click();
+		cy.contains('editor.return').click();
 	});
 });

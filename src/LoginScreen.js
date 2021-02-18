@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Card, Elevation, FormGroup, InputGroup, Intent} from '@blueprintjs/core';
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Elevation, FormGroup, InputGroup, Intent } from '@blueprintjs/core';
 
-import {useStore} from 'mobx-store-provider';
-import {useTranslation} from 'react-i18next';
-import {useCookies} from 'react-cookie';
+import { useStore } from 'mobx-store-provider';
+import { useTranslation } from 'react-i18next';
 
 /* External */
 import { useHistory } from 'react-router-dom';
 /* Internal */
-import {DEBUG} from './consts';
+import { ISDINACIA } from './consts';
 import logo from './images/logo.png';
+import dinaciaLogo from './images/DINACIA.png';
 import background from './images/bg.jpg';
 import styles from './LoginScreen.module.css';
 import * as classnames from 'classnames';
@@ -22,8 +22,7 @@ function LoginScreen() {
 	const [password, setPassword] = useState('');
 	const [isError, setError] = useState(false);
 	const [isLogging, setLogging] = useState(false);
-	const { t, i18n } = useTranslation('auth');
-	const [, setCookie, ] = useCookies(['jwt']);
+	const { t } = useTranslation('auth');
 	const history = useHistory();
 
 	/* Callbacks */
@@ -40,12 +39,16 @@ function LoginScreen() {
 		await store.authStore.login(user, password, okCallback, badCallback);
 	};
 
-	useEffect(() => {
+	const register = () => {
+		history.push('/registration');
+	};
+
+	/*useEffect(() => {
 		if (DEBUG) {
-			setCookie('lang', 'none', {path: '/'});
+			setCookie('lang', 'none', { path: '/' });
 			i18n.changeLanguage('none');
 		} else if (window.location.pathname === '/es') {
-			setCookie('lang', 'es', {path: '/'});
+			setCookie('lang', 'es', { path: '/' });
 			i18n.changeLanguage('es');
 			history.push('/');
 		} else if (window.location.pathname === '/ru') {
@@ -53,16 +56,16 @@ function LoginScreen() {
 			history.push('/');
 		} else if (window.location.pathname === '/de') {
 			alert('DEBUG MODE ACTIVATED - In this mode, you will see secret functions, and the texts will not be translated');
-			setCookie('lang', 'none', {path: '/'});
+			setCookie('lang', 'none', { path: '/' });
 			i18n.changeLanguage('none');
 			store.debugSetDebugging(true);
 			history.push('/');
 		} else if (window.location.pathname === '/en') {
-			setCookie('lang', 'en', {path: '/'});
+			setCookie('lang', 'en', { path: '/' });
 			i18n.changeLanguage('en');
 			history.push('/');
 		}
-	}, [window.location]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [window.location]); // eslint-disable-line react-hooks/exhaustive-deps */
 
 	/* img from https://pixabay.com/photos/airport-building-sun-weather-sky-1682067/ */
 	return (
@@ -110,13 +113,25 @@ function LoginScreen() {
 							onChange={(evt) => setPassword(evt.target.value)}/>
 					</FormGroup>
 					<div className={styles.buttonArea}>
-						<Button style={{margin: '5px'}} intent={Intent.PRIMARY}
+						<Button style={{ margin: '5px' }} intent={Intent.PRIMARY}
+							onClick={register}>
+							{t('login.register')}
+						</Button>
+						<Button style={{ margin: '5px' }} intent={Intent.SUCCESS}
 							type="submit"
 							onClick={login}>
 							{t('login.login')}
 						</Button>
 					</div>
 				</Card>
+				{ ISDINACIA &&
+				<Card className={styles.windowInstanceLogo}
+					elevation={Elevation.ONE}>
+					<a href="https://www.dinacia.gub.uy/">
+						<img className={styles.dinaciaLogo} alt="DIRECCIÓN NACIONAL DE AVIACIÓN CIVIL E INFRAESTRUCTURA AERONÁUTICA" src={dinaciaLogo} />
+					</a>
+				</Card>
+				}
 				{isError &&
 				<Card id='error' className={classnames('bp3-dark',styles.error,'animated flash')} elevation={Elevation.TWO}>
 					{t('login.login_error')}

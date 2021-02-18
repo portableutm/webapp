@@ -13,6 +13,57 @@ const operations = {
 	count: 5,
 	ops: [
 		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
 			gufi: '4e1c5d47-5e6d-4893-84b6-ed3c15059564',
 			uss_name: null,
 			discovery_reference: null,
@@ -145,6 +196,57 @@ const operations = {
 			]
 		},
 		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
 			gufi: 'a20ef8d5-506d-4f54-a981-874f6c8bd4de',
 			uss_name: null,
 			discovery_reference: null,
@@ -285,6 +387,57 @@ const operations = {
 			]
 		},
 		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
 			gufi: 'b92c7431-13c4-4c6c-9b4a-1c3c8eec8c63',
 			uss_name: null,
 			discovery_reference: null,
@@ -425,7 +578,58 @@ const operations = {
 			]
 		},
 		{
-			gufi: 'f7891e78-9bb4-431d-94d3-1a506910c254',
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
+			gufi: 'PENDING',
 			uss_name: null,
 			discovery_reference: null,
 			owner: {
@@ -569,6 +773,57 @@ const operations = {
 			]
 		},
 		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
 			gufi: 'ff4b6505-c282-42b1-b013-66f02137f5d5',
 			uss_name: null,
 			discovery_reference: null,
@@ -604,6 +859,197 @@ const operations = {
 					near_structure: null,
 					effective_time_begin: '2019-12-11T19:59:10.000Z',
 					effective_time_end: date2.toISOString(),
+					actual_time_end: null,
+					min_altitude: '10',
+					max_altitude: '70',
+					operation_geography: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[
+									-56.1532688140869,
+									-34.899940591293
+								],
+								[
+									-56.1538696289062,
+									-34.9040937470933
+								],
+								[
+									-56.1476898193359,
+									-34.9036714018596
+								],
+								[
+									-56.1508655548096,
+									-34.9003629557135
+								],
+								[
+									-56.1532688140869,
+									-34.899940591293
+								]
+							]
+						]
+					},
+					beyond_visual_line_of_sight: true
+				}
+			],
+			uas_registrations: [],
+			contingency_plans: [
+				{
+					contingency_id: 1,
+					contingency_cause: [
+						'ENVIRONMENTAL',
+						'MECHANICAL_PROBLEM'
+					],
+					contingency_response: 'LANDING',
+					contingency_polygon: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[
+									-56.1636114120483,
+									-34.9068213410793
+								],
+								[
+									-56.1632251739502,
+									-34.9112556875821
+								],
+								[
+									-56.1545348167419,
+									-34.9138950658402
+								],
+								[
+									-56.1540627479553,
+									-34.9090209476524
+								],
+								[
+									-56.1636114120483,
+									-34.9068213410793
+								]
+							]
+						]
+					},
+					loiter_altitude: 30,
+					relative_preference: 30,
+					contingency_location_description: 'OPERATOR_UPDATED',
+					relevant_operation_volumes: [
+						'1',
+						'0'
+					],
+					valid_time_begin: '2019-12-11T19:59:10.000Z',
+					valid_time_end: '2019-12-11T20:59:10.000Z',
+					free_text: 'Texto libre DE prueba'
+				}
+			],
+			negotiation_agreements: [
+				{
+					message_id: '328d523c-3eaa-4711-922b-480100c2341a',
+					negotiation_id: null,
+					uss_name: 'dronfies',
+					uss_name_of_originator: 'dronfies',
+					uss_name_of_receiver: 'dronfies',
+					free_text: 'Esto es solo una prueba',
+					discovery_reference: 'discovery reference',
+					type: 'INTERSECTION'
+				},
+				{
+					message_id: '8aaaf8f2-c748-4993-9fee-d7251f969cb6',
+					negotiation_id: null,
+					uss_name: 'dronfies',
+					uss_name_of_originator: 'dronfies',
+					uss_name_of_receiver: 'dronfies',
+					free_text: '(2) Esto es solo una prueba',
+					discovery_reference: '(2)discovery reference',
+					type: 'REPLAN'
+				}
+			]
+		},
+		{
+			'creator': {
+				'username': 'operator',
+				'firstName': 'Operator',
+				'lastName': '-',
+				'email': 'operator@dronfies.com',
+				'role': 'admin',
+				'VolumesOfInterest': {
+					'type': 'Polygon',
+					'coordinates': [
+						[
+							[
+								-56.160736,
+								-34.899941
+							],
+							[
+								-56.159706,
+								-34.922816
+							],
+							[
+								-56.170607,
+								-34.917748
+							],
+							[
+								-56.172495,
+								-34.901419
+							],
+							[
+								-56.160736,
+								-34.899941
+							]
+						]
+					]
+				},
+				'settings': {
+					'langauge': 'EN'
+				},
+				'dinacia_user': {
+					'id': '9cd3e07c-38f8-491c-af27-8928818f57b2',
+					'address': null,
+					'document_type': null,
+					'document_number': null,
+					'phone': null,
+					'cellphone': null,
+					'nationality': null,
+					'permit_expire_date': '2022-12-23T00:00:00.000Z',
+					'document_file_path': null,
+					'permit_front_file_path': null,
+					'permit_back_file_path': null,
+					'dinacia_company': null
+				}
+			},
+			gufi: 'idclosed',
+			uss_name: null,
+			discovery_reference: null,
+			owner: {
+				firstName: 'test',
+				lastName: 'test',
+				username: 'test',
+				email: 'spam@example.com',
+				password: 'fake',
+				role: 'pilot'
+			},
+			submit_time: '2020-04-13T08:59:44.339Z',
+			update_time: '2020-04-13T09:00:31.161Z',
+			aircraft_comments: null,
+			name: 'CLOSED',
+			volumes_description: 'Simple polygon',
+			airspace_authorization: null,
+			flight_number: '12345678',
+			state: 'CLOSED',
+			controller_location: null,
+			gcs_location: null,
+			faa_rule: 'PART_107',
+			contact: 'Charly Good',
+			priority_elements: {
+				priority_level: 'ALERT',
+				priority_status: 'NONE'
+			},
+			operation_volumes: [
+				{
+					id: 1,
+					ordinal: 0,
+					volume_type: null,
+					near_structure: null,
+					effective_time_begin: '2019-12-11T19:59:10.000Z',
+					effective_time_end: '2019-12-11T20:59:10.000Z',
 					actual_time_end: null,
 					min_altitude: '10',
 					max_altitude: '70',
@@ -757,7 +1203,7 @@ const rfvs = [{
 }];
 
 describe('SP1: (Map) Layers', function () {
-	before('Auth', function () {
+	beforeEach('Auth', function () {
 		cy.setCookie('sneaky', 'admin');
 		cy.setCookie('hummingbird', 'admin');
 		cy.server();           // enable response stubbing
@@ -780,7 +1226,6 @@ describe('SP1: (Map) Layers', function () {
 
 	it('Clicks use case button', function () {
 		cy.visit('http://localhost:2000/');
-		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.contains('filter.bystate').click();
 		//cy.get('[data-test-id="mapButtonLayers"]').click();
 	});
@@ -826,11 +1271,25 @@ describe('SP1: (Map) Layers', function () {
 		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersPENDING"]').uncheck({ force: true });
 	});
+	it('Check 1 CLOSED AND HISTORICAL operations', function () {
+		//cy.get('[data-test-id="rightAreaOpener"]').click();
+		//cy.get('[data-test-id="mapButtonLayers"]').click();
+		cy.get('[data-test-id="historicalModeSwitch"]').check({ force: true });
+		cy.get('[data-test-id="layersCLOSED"]').check({ force: true });
+		cy.window().then((win) => {
+			expect(win.store.operationStore.counts.matchingTextAndStateCount).to.eq(1);
+			console.log(win.store.operationStore.counts.matchingTextAndStateCount);
+		});
+		cy.get('[data-test-id="rightAreaCloser"]').click();
+		cy.get('[data-test-id="rightAreaOpener"]').click();
+		cy.get('[data-test-id="historicalModeSwitch"]').uncheck({ force: true });
+		cy.get('[data-test-id="layersCLOSED"]').uncheck({ force: true });
+	});
 	it('Check ROGUE operation', function () {
 		//cy.get('[data-test-id="rightAreaOpener"]').click();
 		//cy.get('[data-test-id="mapButtonLayers"]').click();
 		cy.get('[data-test-id="layersROGUE"]').check({ force: true });
-		cy.get('[data-test-id="rightAreaCloser"]').click();
+		cy.get('[data-test-id="rightAreaCloser"]').click({ force: true });
 		cy.get('[data-test-id="rightAreaOpener"]').click();
 		cy.get('[data-test-id="layersROGUE"]').uncheck({ force: true });
 	});
@@ -861,5 +1320,38 @@ describe('SP1: (Map) Layers', function () {
 		cy.get('.bp3-input').clear();
 		cy.get('.bp3-input').clear();
 		cy.contains('ACTIVATED').click();
+	});
+	it('Select and unselect an Operation', function () {
+		cy.window().then((win) => {
+			win.store.mapStore.setSelectedOperation('a20ef8d5-506d-4f54-a981-874f6c8bd4de');
+		});
+		cy.contains('email').click();
+		cy.contains('editor.operation.email_close_dialog').click();
+		cy.contains('info').click();
+		cy.visit('http://localhost:2000/operation/a20ef8d5-506d-4f54-a981-874f6c8bd4de');
+		cy.window().then((win) => {
+			win.store.mapStore.setSelectedOperation('a20ef8d5-506d-4f54-a981-874f6c8bd4de');
+		});
+		cy.contains('email').click();
+		cy.get('#email').type('test');
+		cy.contains('editor.operation.send_email').click();
+		cy.window().then((win) => {
+			win.store.mapStore.unsetSelectedOperation();
+		});
+	});
+	it('View PENDING operation', function () {
+		cy.window().then((win) => {
+			win.store.mapStore.setSelectedOperation('PENDING');
+		});
+		cy.contains('reject').click();
+		cy.contains('Close dialog').click();
+		cy.contains('approve').click();
+		cy.get('#comments').type('Vas good!');
+		cy.contains('APPROVE').click();
+	});
+	it('View historical operation', function () {
+		cy.visit('http://localhost:2000/operation/idclosed');
+		cy.wait(5000);
+		cy.visit('http://localhost:2000/operation/1231241');
 	});
 });

@@ -28,7 +28,7 @@ function Pilot({ user }) {
 		email: obsUser.email,
 		document_file: null,
 		permit_front_file: null,
-		remote_sensor_file: null,
+		// remote_sensor_file: null,
 		permit_back_file: null,
 
 		setProperty(property, value) {
@@ -92,7 +92,7 @@ function Pilot({ user }) {
 			newUserData.append('dinacia_user_str', JSON.stringify(dinaciaUserData));
 			newUserData.append('document_file', localStore.document_file);
 			newUserData.append('permit_front_file', localStore.permit_front_file);
-			newUserData.append('remote_sensor_file', localStore.remote_sensor_file);
+			// newUserData.append('remote_sensor_file', localStore.remote_sensor_file);
 			newUserData.append('permit_back_file', localStore.permit_back_file);
 		}
 
@@ -143,32 +143,60 @@ function Pilot({ user }) {
 							<InputGroup leftIcon="person" disabled={!localStore.isUserDataChangeEnabled} id="lastName"
 								defaultValue={user.lastName}/>
 						</FormGroup>
-						{ISDINACIA &&
+						{ISDINACIA && obsUser.dinacia_user &&
 						<>
+							{obsUser.dinacia_user.document_file_path &&
+							<button onClick={() => {
+								const win = window.open(obsUser.dinacia_user.document_file_path, '_blank');
+								win.focus();
+							}}>La foto actual de {t('glossary:users.document_file')} es {
+									obsUser.dinacia_user.document_file_path.substring(obsUser.dinacia_user.document_file_path.lastIndexOf('/')+1)
+								}</button>
+							}
 							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
 								text={localStore.document_file === null ?
 									t('glossary:users.document_file') :
 									localStore.document_file.name}
 								onInputChange={(evt) =>
 									localStore.setProperty('document_file', evt.target.files[0])}/>
+
+							{obsUser.dinacia_user.permit_front_file_path &&
+							<button onClick={() => {
+								const win = window.open(obsUser.dinacia_user.permit_front_file_path, '_blank');
+								win.focus();
+							}}>La foto actual de {t('glossary:users.permit_front_file')} es {
+									obsUser.dinacia_user.permit_front_file_path.substring(obsUser.dinacia_user.permit_front_file_path.lastIndexOf('/')+1)
+								}</button>
+							}
 							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
 								text={localStore.permit_front_file === null ?
 									t('glossary:users.permit_front_file') :
 									localStore.permit_front_file.name}
 								onInputChange={(evt) =>
 									localStore.setProperty('permit_front_file', evt.target.files[0])}/>
+
+							{obsUser.dinacia_user.permit_back_file_path &&
+							<button onClick={() => {
+								const win = window.open(obsUser.dinacia_user.permit_back_file_path, '_blank');
+								win.focus();
+							}}>La foto actual de {t('glossary:users.permit_back_file')} es {
+									obsUser.dinacia_user.permit_back_file_path.substring(obsUser.dinacia_user.permit_back_file_path.lastIndexOf('/')+1)
+								}</button>
+							}
 							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
 								text={localStore.permit_back_file === null ?
 									t('glossary:users.permit_back_file') :
 									localStore.permit_back_file.name}
 								onInputChange={(evt) =>
 									localStore.setProperty('permit_back_file', evt.target.files[0])}/>
-							<FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
+							
+							{/* <FileInput style={{ marginBottom: '20px' }} fill buttonText={t('common:upload')} inputProps={{ accept: 'image/*' }}
 								text={localStore.remote_sensor_file === null ?
 									t('glossary:users.remote_sensor_file') :
 									localStore.remote_sensor_file.name}
 								onInputChange={(evt) =>
-									localStore.setProperty('remote_sensor_file', evt.target.files[0])}/>
+									localStore.setProperty('remote_sensor_file', evt.target.files[0])}/> */}
+
 							<FormGroup
 								label={t('users.permit_expire_date')}
 								labelFor="permit_expire_date"
@@ -177,7 +205,7 @@ function Pilot({ user }) {
 									id="permit_expire_date"
 									type="date"
 								/>
-								{user.dinacia_user != null &&
+								{	user.dinacia_user && user.dinacia_user.permit_expire_date &&
 								<p>
 									{t('glossary:current')} {user.dinacia_user.permit_expire_date.toDateString()}
 								</p>

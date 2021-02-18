@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styles from '../generic/GenericList.module.css';
 import { useStore } from 'mobx-store-provider';
-import { observer, useLocalStore } from 'mobx-react';
+import { observer } from 'mobx-react';
 
 function Operation({ expanded = false, selected = false, operation, isPilot }) {
 	// Renders one Operation text properties for a list
@@ -23,10 +23,12 @@ function Operation({ expanded = false, selected = false, operation, isPilot }) {
 			authStore: store.authStore
 		}));
 
+	/* istanbul ignore next */
 	const changeState = (newState) => {
 		opStore.updateState(operation.gufi, newState);
 	};
 
+	/* istanbul ignore next */
 	const pendingToAccepted = (evt) => {
 		evt.stopPropagation();
 		const comments = prompt(t('common:reason'));
@@ -38,6 +40,7 @@ function Operation({ expanded = false, selected = false, operation, isPilot }) {
 		);
 	};
 
+	/* istanbul ignore next */
 	const pendingToRejected = (evt) => {
 		evt.stopPropagation();
 		const comments = prompt(t('common:reason'));
@@ -122,6 +125,7 @@ function Operation({ expanded = false, selected = false, operation, isPilot }) {
 					</Button>
 					<Button
 						className={styles.button}
+						data-test-id='showinmap'
 						small
 						minimal
 						icon='eye-open'
@@ -140,6 +144,7 @@ function Operation({ expanded = false, selected = false, operation, isPilot }) {
 					<Button
 						className={styles.button}
 						small
+						data-test-id='editinmap'
 						minimal
 						icon='edit'
 						intent={Intent.WARNING}
@@ -167,12 +172,18 @@ function Operation({ expanded = false, selected = false, operation, isPilot }) {
 					{operation.owner.asDisplayString}
 				</GenericListLine>
 				{	operation.uas_registrations.map(uasr => {
-					return (
+					return <>
 						<GenericListLine key={uasr}>
 							{t('operations.uas_registration')}
 							{uasr}
 						</GenericListLine>
-					);
+						{ /* ISDINACIA && uasr.remote_sensor_id &&
+						<GenericListLine key={uasr}>
+							{t('operations.uas_registration')}
+							{uasr}
+						</GenericListLine>
+						*/ }
+					</>;
 				})}
 				<GenericListLine>
 					{t('volumes.effective_time_begin')}
@@ -272,6 +283,7 @@ function OperationsList() {
 						</HTMLSelect>
 						<InputGroup
 							className={styles.filterTextInput}
+							data-test-id='filter.bytext'
 							leftIcon="search"
 							onChange={(evt) => store.setFilterByText(evt.target.value)}
 							placeholder={t('map:filter.bytext.description')}
@@ -346,7 +358,7 @@ function OperationsList() {
 						className={styles.filters}
 					>
 						<p className={styles.filterLabel}>
-								Sorting by property:
+							{t('glossary:sorting_by_property')}
 						</p>
 						<HTMLSelect
 							id='sorter'
@@ -365,7 +377,7 @@ function OperationsList() {
 							<option value="end">End</option>
 						</HTMLSelect>
 						<p className={styles.filterLabel}>
-								in
+							{t('glossary:in')}
 						</p>
 						<HTMLSelect
 							id='sorter'
@@ -375,11 +387,11 @@ function OperationsList() {
 							minimal
 							onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
 						>
-							<option value='asc'>Ascending</option>
-							<option value='desc'>Descending</option>
+							<option value='asc'>{t('glossary:ascending')}</option>
+							<option value='desc'>{t('glossary:descending')}</option>
 						</HTMLSelect>
 						<p className={styles.filterLabel}>
-								order
+							{t('glossary:order')}
 						</p>
 					</div>
 					<div

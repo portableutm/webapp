@@ -26,23 +26,24 @@ export const BaseDinaciaUser = types
 		cellphone: types.maybeNull(types.string),
 		nationality: types.maybeNull(types.string),
 		permit_expire_date: types.maybeNull(types.Date),
-		remote_sensor_id: types.maybeNull(types.string),
+		// remote_sensor_id: types.maybeNull(types.string),
 		dinacia_company: types.maybeNull(BaseDinaciaCompany)
 	})
 	.volatile(() => ({
 		document_file: null,
 		permit_front_file: null,
 		permit_back_file: null,
-		remote_sensor_file: null
+		// remote_sensor_file: null
 	}));
 
 const DinaciaUserInternal = BaseDinaciaUser
 	.named('DinaciaUser')
 	.props({
-		document_file_path: types.maybe(types.string),
-		permit_front_file_path: types.maybe(types.string),
-		permit_back_file_path: types.maybe(types.string),
-		remote_sensor_file_path: types.maybe(types.string),
+		//id: types.identifier,
+		document_file_path: types.maybeNull(types.string),
+		permit_front_file_path: types.maybeNull(types.string),
+		permit_back_file_path: types.maybeNull(types.string),
+		// remote_sensor_file_path: types.maybe(types.string),
 		dinacia_company: types.maybeNull(DinaciaCompany)
 	});
 
@@ -50,6 +51,15 @@ export const DinaciaUser = types.snapshotProcessor(DinaciaUserInternal, {
 	preProcessor(snapshot) {
 		if (snapshot != null) {
 			return {
+				address: snapshot.address,
+				document_type: snapshot.document_type,
+				document_number: snapshot.document_number,
+				phone: snapshot.phone,
+				cellphone: snapshot.cellphone,
+				nationality: snapshot.nationality,
+				document_file_path: snapshot.document_file_path,
+				permit_front_file_path: snapshot.permit_front_file_path,
+				permit_back_file_path: snapshot.permit_back_file_path,
 				permit_expire_date: new Date(snapshot.permit_expire_date)
 			};
 		} else {

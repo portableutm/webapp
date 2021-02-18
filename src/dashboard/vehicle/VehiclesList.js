@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useStore } from 'mobx-store-provider';
 import { observer } from 'mobx-react';
+import { autorun } from 'mobx';
 import { useParams, useHistory } from 'react-router-dom';
 import { Button, Callout, HTMLSelect, InputGroup, Intent, Spinner } from '@blueprintjs/core';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +12,7 @@ import { ISDINACIA } from '../../consts';
 function Vehicle({ v }) {
 	const { t,  } = useTranslation(['glossary','common']);
 	const [showProperties, setShowProperties] = useState(false);
+	const history = useHistory();
 
 	const toggleOperation = (evt) => {
 		evt.stopPropagation();
@@ -41,6 +43,18 @@ function Vehicle({ v }) {
 							{ !showProperties &&
 							t('common:click_to_expand')
 							}
+						</div>
+					</Button>
+					<Button
+						className={styles.button}
+						small
+						minimal
+						icon='edit'
+						intent={Intent.WARNING}
+						onClick={(evt) => {evt.stopPropagation(); history.push('/dashboard/vehicles/edit/' + v.uvin);}}
+					>
+						<div className={styles.buttonHoveredTooltip}>
+							{t('common:edit')}
 						</div>
 					</Button>
 				</div>
@@ -110,61 +124,74 @@ function Vehicle({ v }) {
 				</GenericListLine>
 				}
 				{ 	ISDINACIA &&
-					v.dinacia_vehicle !== null &&
-					['caa_registration',
-						'usage',
-						'construction_material',
-						'year',
-						'empty_weight',
-						'max_weight',
-						'takeoff_method',
-						'sensor_type_and_mark',
-						'packing',
-						'longitude',
-						'height',
-						'color',
-						'max_speed',
-						'cruise_speed',
-						'landing_speed',
-						'time_autonomy',
-						'radio_accion',
-						'ceiling',
-						'communication_control_system_command_navigation_vigilance',
-						'maintenance_inspections',
-						'remarks',
-						'engine_manufacturer',
-						'engine_type',
-						'engine_model',
-						'engine_power',
-						'engine_fuel',
-						'engine_quantity_batteries',
-						'propeller_type',
-						'propeller_model',
-						'propeller_material'
-					].map((dinaciaProp) => {
-						if (v.dinacia_vehicle[dinaciaProp] !== null) {
-							return <GenericListLine key={dinaciaProp}>
-								{t(`vehicles.${dinaciaProp}`)}
-								{v.dinacia_vehicle[dinaciaProp]}
-							</GenericListLine>;
-						} else {
-							return null;
-						}
-					})
+				v.dinacia_vehicle !== null &&
+				['caa_registration',
+					'usage',
+					'construction_material',
+					'year',
+					'empty_weight',
+					'max_weight',
+					'takeoff_method',
+					'sensor_type_and_mark',
+					'packing',
+					'longitude',
+					'height',
+					'color',
+					'max_speed',
+					'cruise_speed',
+					'landing_speed',
+					'time_autonomy',
+					'radio_accion',
+					'ceiling',
+					'communication_control_system_command_navigation_vigilance',
+					'maintenance_inspections',
+					'remarks',
+					'engine_manufacturer',
+					'remote_sensor_id',
+					'engine_type',
+					'engine_model',
+					'engine_power',
+					'engine_fuel',
+					'engine_quantity_batteries',
+					'propeller_type',
+					'propeller_model',
+					'propeller_material'
+				].map((dinaciaProp) => {
+					if (v.dinacia_vehicle[dinaciaProp] !== null) {
+						return <GenericListLine key={dinaciaProp}>
+							{t(`vehicles.${dinaciaProp}`)}
+							{v.dinacia_vehicle[dinaciaProp]}
+						</GenericListLine>;
+					} else {
+						return null;
+					}
+				})
 				}
 				{	ISDINACIA && v.operators &&
-					v.operators.map(operator => {
-						return <GenericListLine key={operator}>
-							{t('vehicles.operator')}
-							{operator}
-						</GenericListLine>;
-					})
+				v.operators.map(operator => {
+					return <GenericListLine key={operator}>
+						{t('vehicles.operator')}
+						{operator}
+					</GenericListLine>;
+				})
 				}
-				{	ISDINACIA && v.dinacia_vehicle &&
-					<GenericListLine>
-						<img className={styles.lineImage} src={v.dinacia_vehicle.serial_number_file_path} alt="Serial number" />
-						<p></p>
-					</GenericListLine>
+				{	ISDINACIA && v.dinacia_vehicle && v.dinacia_vehicle.serial_number_file_path !== null &&
+				<GenericListLine>
+					<p>{t('vehicles.serial_number_file')}</p>
+					<button onClick={() => {
+						const win = window.open(v.dinacia_vehicle.serial_number_file_path, '_blank');
+						win.focus();
+					}}>{t('common:view_image')}</button>
+				</GenericListLine>
+				}
+				{	ISDINACIA && v.dinacia_vehicle && v.dinacia_vehicle.remote_sensor_file_path !== null &&
+				<GenericListLine>
+					<p>{t('vehicles.remote_sensor_file')}</p>
+					<button onClick={() => {
+						const win = window.open(v.dinacia_vehicle.remote_sensor_file_path, '_blank');
+						win.focus();
+					}}>{t('common:view_image')}</button>
+				</GenericListLine>
 				}
 			</div>
 			}
@@ -174,9 +201,28 @@ function Vehicle({ v }) {
 
 function VehiclesList() {
 	const { t,  } = useTranslation('glossary');
-	const { store, authStore } = useStore('RootStore', (store) => ({ store: store.vehicleStore, authStore: store.authStore }));
+	const { store, authStore, userStore } = useStore('RootStore', (store) => ({ store: store.vehicleStore, authStore: store.authStore, userStore: store.userStore }));
 	const { username } = useParams(); // If set, filter only vehicles of a particular user
 	const history = useHistory();
+	const [listingOnlyVehiclesByUser, setListingOnlyVehiclesByUser] = useState(false);
+
+	useEffect(() => {
+		autorun(() => {
+			if (!userStore.hasFetched) {
+				userStore.fetchUsers();
+			}
+		});
+		autorun(() => {
+			if (username) {
+				if (userStore.users.get(username)) {
+					setListingOnlyVehiclesByUser(true);
+				} else {
+					store.setFilterProperty('uvin');
+					store.setFilterByText(username);
+				}
+			}
+		});
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	if (store.hasFetched) {
 		if (store.isEmpty) {
@@ -193,7 +239,7 @@ function VehiclesList() {
 					<div
 						className={styles.actionArea}
 					>
-						{	username &&
+						{	listingOnlyVehiclesByUser &&
 						<Button
 							className={styles.buttonAction}
 							disabled={!username}
@@ -205,7 +251,7 @@ function VehiclesList() {
 							{t('add_vehicle')}
 						</Button>
 						}
-						{ !username && authStore.isAdmin &&
+						{ !listingOnlyVehiclesByUser && authStore.isAdmin &&
 						<p>To add a vehicle, please select a user from "All users". </p>
 						}
 					</div>
@@ -234,6 +280,7 @@ function VehiclesList() {
 							<option value="vehicleName">{t('vehicles.vehicleName')}</option>
 							<option value="manufacturer">{t('vehicles.manufacturer')}</option>
 							<option value="model">{t('vehicles.model')}</option>
+							<option value="uvin">{t('vehicles.uvin')}</option>
 						</HTMLSelect>
 						<InputGroup
 							className={styles.filterTextInput}
@@ -245,14 +292,14 @@ function VehiclesList() {
 						<p
 							className={styles.filterTextInfo}
 						>
-							{`Showing ${store.counts.matchesFilters} out of ${store.counts.vehicleCount} vehicles`}
+							{t('glossary:showing_out_of', { sub: store.counts.matchesFilters, total: store.counts.vehicleCount })}
 						</p>
 					</div>
 					<div
 						className={styles.filters}
 					>
 						<p className={styles.filterLabel}>
-							Sorting by property:
+							{t('glossary:sorting_by_property')}
 						</p>
 						<HTMLSelect
 							id='sorter'
@@ -269,7 +316,7 @@ function VehiclesList() {
 							<option value="model">{t('vehicles.model')}</option>
 						</HTMLSelect>
 						<p className={styles.filterLabel}>
-							in
+							{t('glossary:in')}
 						</p>
 						<HTMLSelect
 							id='sorter'
@@ -279,17 +326,17 @@ function VehiclesList() {
 							minimal
 							onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
 						>
-							<option value='asc'>Ascending</option>
-							<option value='desc'>Descending</option>
+							<option value='asc'>{t('glossary:ascending')}</option>
+							<option value='desc'>{t('glossary:descending')}</option>
 						</HTMLSelect>
 						<p className={styles.filterLabel}>
-							order
+							{t('glossary:order')}
 						</p>
 					</div>
 					<div
 						className={styles.actionArea}
 					>
-						{	username &&
+						{	listingOnlyVehiclesByUser &&
 						<Button
 							className={styles.buttonAction}
 							disabled={!username}
@@ -301,13 +348,13 @@ function VehiclesList() {
 							{t('add_vehicle')}
 						</Button>
 						}
-						{ !username && authStore.isAdmin &&
-						<p>To add a vehicle, please select a user from the user list.</p>
+						{ !listingOnlyVehiclesByUser && authStore.isAdmin &&
+						<p>{t('glossary:add_vehicle_from_users')}</p>
 						}
 					</div>
 					<GenericList>
 						{store.vehiclesWithVisibility.map((vehicle) => {
-							if (username && vehicle.owner.username !== username) {
+							if (listingOnlyVehiclesByUser && vehicle.owner.username !== username) {
 								// Display only vehicles owned by the selected user, if chosen.
 								return null;
 							} else {

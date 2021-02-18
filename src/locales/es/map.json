@@ -63,7 +63,7 @@
       "finish": "Paso 3: Finalizar."
     },
     "finish": "Finalizar",
-    "cant_finish": "No se pudo crear la OPERACIÓN, ya que el polígono no estaba definido. Por favor, defina un polígono donde el vehículo pueda volar, haciendo clic en el mapa en las posiciones apropiadas",
+    "cant_finish": "No se pudo crear la OPERACIÓN, ya que el polígono no estaba definido. Por favor, defina un polígono donde el drone pueda volar, haciendo clic en el mapa en las posiciones apropiadas",
     "uvr": {
       "complete": "Editando información de la UVR"
     },
@@ -74,6 +74,8 @@
   },
   "historical_mode": "Operaciones expiradas",
   "historical_mode_description": "Mostrar operaciones históricas",
-  "following_drone": "Ahora estás siguiendo los movimientos de un vehículo en el aire. El mapa ha sido bloqueado, y no podrás desplazarte en el mismo. Puedes dejar de seguir un drone en el mapa presionando la cruz en el menú lateral izquierdo.",
-  "operation_not_exists": "La operación no existe"
+  "following_drone": "Ahora estás siguiendo los movimientos de un drone en el aire. El mapa ha sido bloqueado, y no podrás desplazarte en el mismo. Puedes dejar de seguir un drone en el mapa presionando la cruz en el menú lateral izquierdo.",
+  "operation_not_exists": "La operación no existe",
+  "no_polygon_drawn": "Las operaciones deben tener un polígono asociado. Por favor, dibuja un polígono cliqueando en el mapa, y luego intenta nuevamente.",
+  "no_uas_selected": "No se ha seleccionado ningún drone para volar la operación. Por favor, elige AL MENOS UNO y luego intenta nuevamente."
 }

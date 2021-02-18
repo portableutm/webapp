@@ -10,7 +10,7 @@ import { useHistory } from 'react-router-dom';
 import styles from '../generic/GenericList.module.css';
 import GenericList, { GenericListLine } from '../generic/GenericList';
 import Pilot from './Pilot';
-import { ISDINACIA } from '../../consts';
+import { DEBUG, ISDINACIA } from '../../consts';
 
 function User({ expanded = false,  children }) {
 	const { t, } = useTranslation(['glossary', 'common']);
@@ -34,7 +34,7 @@ function User({ expanded = false,  children }) {
 		<Callout
 			className={styles.item}
 			title={
-				<div className={styles.title} onClick={toggleOperation}>
+				<div className={styles.title} onClick={toggleOperation} data-test-id={children.username}>
 					<p className={styles.titleText}>{`${children.firstName} ${children.lastName}`}</p>
 					<Button
 						className={styles.button}
@@ -43,6 +43,7 @@ function User({ expanded = false,  children }) {
 						icon='menu-open'
 						intent={showProperties ? Intent.DANGER : Intent.SUCCESS}
 						onClick={toggleOperation}
+						data-test-id='collapser'
 					>
 						<div className={styles.buttonHoveredTooltip}>
 							{ showProperties &&
@@ -54,7 +55,7 @@ function User({ expanded = false,  children }) {
 						</div>
 					</Button>
 					<Button
-						data-test-id={`edit${children.username}`}
+						data-test-id='edit'
 						className={styles.button}
 						small
 						minimal
@@ -67,6 +68,7 @@ function User({ expanded = false,  children }) {
 						</div>
 					</Button>
 					<Button
+						data-test-id='vehicles'
 						className={styles.button}
 						small
 						minimal
@@ -126,28 +128,37 @@ function User({ expanded = false,  children }) {
 				}))}
 				{	ISDINACIA && children.dinacia_user && children.dinacia_user.document_file_path &&
 				<GenericListLine>
-					<img className={styles.lineImage} src={children.dinacia_user.document_file_path} alt="Document" />
-					<p></p>
+					<p>{t('users.document_file')}</p>
+					<button data-test-id='document_file_image' onClick={() => {
+						const win = window.open(children.dinacia_user.document_file_path, '_blank');
+						if (!DEBUG) win.focus();
+					}}>{t('common:view_image')}</button>
 				</GenericListLine>
 				}
 				{	ISDINACIA && children.dinacia_user && children.dinacia_user.permit_front_file_path &&
 					<GenericListLine>
-						<img className={styles.lineImage} src={children.dinacia_user.permit_front_file_path} alt="Front of the permit" />
-						<p></p>
+						<p>{t('users.permit_front_file')}</p>
+						<button data-test-id='permit_front_file_image' onClick={() => {
+							const win = window.open(children.dinacia_user.permit_front_file_path, '_blank');
+							if (!DEBUG) win.focus();
+						}}>{t('common:view_image')}</button>
 					</GenericListLine>
 				}
 				{	ISDINACIA && children.dinacia_user && children.dinacia_user.permit_back_file_path &&
 				<GenericListLine>
-					<img className={styles.lineImage} src={children.dinacia_user.permit_back_file_path} alt="Back of the permit" />
-					<p></p>
+					<p>{t('users.permit_back_file')}</p>
+					<button data-test-id='permit_back_file_image' onClick={() => {
+						const win = window.open(children.dinacia_user.permit_back_file_path, '_blank');
+						if (!DEBUG) win.focus();
+					}}>{t('common:view_image')}</button>
 				</GenericListLine>
 				}
-				{	ISDINACIA && children.dinacia_user && children.dinacia_user.remote_sensor_file_path &&
+				{/* {	ISDINACIA && children.dinacia_user && children.dinacia_user.remote_sensor_file_path &&
 				<GenericListLine>
 					<img className={styles.lineImage} src={children.dinacia_user.remote_sensor_file_path} alt="Remote Sensor ID" />
 					<p></p>
 				</GenericListLine>
-				}
+				} */}
 				{/* TODO: ADD volumesOfInterest! */}
 			</div>
 			}
@@ -208,14 +219,14 @@ function UsersList() {
 						<p
 							className={styles.filterTextInfo}
 						>
-							{`Showing ${store.counts.matchesFilters} out of ${store.counts.userCount} vehicles`}
+							{t('glossary:showing_out_of', { sub: store.counts.matchesFilters, total: store.counts.userCount })}
 						</p>
 					</div>
 					<div
 						className={styles.filters}
 					>
 						<p className={styles.filterLabel}>
-							Sorting by property:
+							{t('glossary:sorting_by_property')}
 						</p>
 						<HTMLSelect
 							id='sorter'
@@ -232,7 +243,7 @@ function UsersList() {
 							<option value="role">{t('users.role')}</option>
 						</HTMLSelect>
 						<p className={styles.filterLabel}>
-							in
+							{t('glossary:in')}
 						</p>
 						<HTMLSelect
 							id='sorter'
@@ -242,11 +253,11 @@ function UsersList() {
 							minimal
 							onChange={(event) => store.setSortingOrder(event.currentTarget.value)}
 						>
-							<option value='asc'>Ascending</option>
-							<option value='desc'>Descending</option>
+							<option value='asc'>{t('glossary:ascending')}</option>
+							<option value='desc'>{t('glossary:descending')}</option>
 						</HTMLSelect>
 						<p className={styles.filterLabel}>
-							order
+							{t('glossary:order')}
 						</p>
 					</div>
 					<div

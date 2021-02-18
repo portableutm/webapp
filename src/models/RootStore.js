@@ -52,7 +52,7 @@ export const RootStore = types
 			afterCreate() {
 				self.axiosInstance = A.create({
 					baseURL: API,
-					timeout: 150000,
+					timeout: 1500000,
 					headers: {
 						'Content-Type': 'application/json',
 					}

@@ -6,14 +6,11 @@ import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import Ades from './Ades';
 import './i18n';
 import * as serviceWorker from './serviceWorker';
-import { CookiesProvider } from 'react-cookie';
 import 'mobx-react-lite/batchingForReactDom';
 
 function renderApp() {
 	ReactDOM.render(
-		<CookiesProvider>
-			<Ades/>
-		</CookiesProvider>,
+		<Ades/>,
 		document.getElementById('root')
 	);
 }

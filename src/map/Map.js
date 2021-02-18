@@ -56,7 +56,7 @@ const Map = ({ mode }) => {
 	const { t, } = useTranslation('map');
 
 	/* State holders and references */
-	const { store, operationStore, mapStore, uvrStore, positionStore } = useStore(
+	const { store, operationStore, mapStore, uvrStore } = useStore(
 		'RootStore',
 		(store) => ({
 			store: store,
@@ -190,6 +190,8 @@ const Map = ({ mode }) => {
 			}
 		});
 
+		// TODO: Re-implement when bugs are solved (automatic following drones)
+		/*
 		const dispose4 = autorun(() => {
 			if (obs.mode === 'view-vehicle') {
 				mapStore.map.dragging.disable();
@@ -206,13 +208,13 @@ const Map = ({ mode }) => {
 				mapStore.map.boxZoom.enable();
 				mapStore.map.keyboard.enable();
 			}
-		});
+		}); */
 
 		return () => {
 			dispose1();
 			//dispose2();
 			dispose3();
-			dispose4();
+			//dispose4();
 		};
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 

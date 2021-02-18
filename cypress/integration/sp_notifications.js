@@ -146,6 +146,7 @@ describe('Special Use Case: Notifications', function() {
 		cy.visit('http://localhost:2000/');
 		cy.window().then((win) => {
 			win.store.notificationStore.addInformation({ header: 'test', body: 'test' });
+			cy.wait(2000);
 			cy.get('.bp3-card').first().click();
 			cy.get('[data-test-id="acknowledgeNotification"]').first().click();
 			cy.get('[data-test-id="deleteNotification"]').first().click();
