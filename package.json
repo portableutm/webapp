@@ -1,6 +1,6 @@
 {
   "name": "ades",
-  "version": "1.2.0",
+  "version": "1.2.1-DEV",
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.22.3",
