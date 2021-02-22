@@ -40,7 +40,16 @@ export const BaseDinaciaVehicle = types
 	.volatile(() => ({
 		serial_number_file: null,
 		remote_sensor_file: null
-	}));
+	}))
+	.views(self => ({
+		get hasSerialNumberLocalFile() {
+			return self.serial_number_file !== null;
+		},
+		get hasRemoteSensorLocalFile() {
+			return self.remote_sensor_file !== null;
+		}
+	}))
+;
 
 export const DinaciaVehicle = BaseDinaciaVehicle
 	.named('DinaciaVehicle')
