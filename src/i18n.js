@@ -33,7 +33,7 @@ i18n
 	.init({
 		resources,
 		defaultNS: 'common',
-		lng: 'en',
+		lng: 'es',
 		keySeparator: '.', // We use keys in format .
 		interpolation: {
 			escapeValue: false // react already safes from xss
