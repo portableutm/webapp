@@ -104,7 +104,7 @@ function EditVehicle(props) {
 		}
 	}));
 
-	if (DEBUG) window.ls = window.localStore;
+	if (DEBUG) window.ev = { ls: localStore, s: serialNumberFile, r: remoteSensorFile };
 
 	useEffect(() => {
 		const dispose = autorun(async () => {
@@ -143,7 +143,7 @@ function EditVehicle(props) {
 
 	const { t, } = useTranslation(['glossary', 'common']);
 	const [isSubmitting, setSubmitting] = useState(false);
-	
+
 	return (
 		<>
 			<div className={styles.header}>
