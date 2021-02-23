@@ -2,12 +2,12 @@ import { flow, getRoot, getSnapshot, types } from 'mobx-state-tree';
 import { values } from 'mobx';
 import { Vehicle } from './entities/Vehicle';
 import _ from 'lodash';
-import { DEBUG, ISDINACIA } from '../consts';
+import { ISDINACIA } from '../consts';
 
 const validateFields = (vehicle , prueba) => {
 	console.log(`Validate field: ${JSON.stringify(vehicle)}, ${JSON.stringify(prueba)}`);
 	let errors = [];
-	if (!DEBUG && !vehicle.dinacia_vehicle.hasSerialNumberFile) {
+	if (!vehicle.dinacia_vehicle.serial_number_file) {
 		errors.push('Serial number image can not be empty.');
 	}
 	if (!vehicle.vehicleName) {
