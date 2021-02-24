@@ -7,7 +7,19 @@ import { Button, Callout, HTMLSelect, InputGroup, Intent, Spinner } from '@bluep
 import { useTranslation } from 'react-i18next';
 import GenericList, { GenericListLine } from '../generic/GenericList';
 import styles from '../generic/GenericList.module.css';
-import { ISDINACIA } from '../../consts';
+import { ISDINACIA, API } from '../../consts';
+import { buildUrl } from "../../Utils";
+
+// let buildUrl = (relativePath) => {
+// 	let url = `${API}`
+// 	if(relativePath && relativePath.startsWith("/")){
+// 		url = url.concat(relativePath.substring(1))
+// 	}else {
+// 		url = url.concat(relativePath)
+// 	}
+// 	console.log(`Url:${url}, ${relativePath}`)
+// 	return url
+// }
 
 function Vehicle({ v }) {
 	const { t,  } = useTranslation(['glossary','common']);
@@ -179,7 +191,7 @@ function Vehicle({ v }) {
 				<GenericListLine>
 					<p>{t('vehicles.serial_number_file')}</p>
 					<button onClick={() => {
-						const win = window.open(v.dinacia_vehicle.serial_number_file_path, '_blank');
+						const win = window.open(buildUrl(v.dinacia_vehicle.serial_number_file_path), '_blank');
 						win.focus();
 					}}>{t('common:view_image')}</button>
 				</GenericListLine>
@@ -188,7 +200,7 @@ function Vehicle({ v }) {
 				<GenericListLine>
 					<p>{t('vehicles.remote_sensor_file')}</p>
 					<button onClick={() => {
-						const win = window.open(v.dinacia_vehicle.remote_sensor_file_path, '_blank');
+						const win = window.open(buildUrl(v.dinacia_vehicle.remote_sensor_file_path), '_blank');
 						win.focus();
 					}}>{t('common:view_image')}</button>
 				</GenericListLine>

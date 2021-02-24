@@ -7,6 +7,7 @@ import * as classnames from 'classnames';
 import gStyles from '../generic/GenericList.module.css';
 import styles from './Pilot.module.css';
 import { ISDINACIA } from '../../consts';
+import { buildUrl } from '../../Utils';
 
 function Pilot({ user }) {
 	const { t, } = useTranslation(['glossary', 'common']);
@@ -147,7 +148,7 @@ function Pilot({ user }) {
 						<>
 							{obsUser.dinacia_user.document_file_path &&
 							<button onClick={() => {
-								const win = window.open(obsUser.dinacia_user.document_file_path, '_blank');
+								const win = window.open(buildUrl(obsUser.dinacia_user.document_file_path), '_blank');
 								win.focus();
 							}}>La foto actual de {t('glossary:users.document_file')} es {
 									obsUser.dinacia_user.document_file_path.substring(obsUser.dinacia_user.document_file_path.lastIndexOf('/')+1)
@@ -162,7 +163,7 @@ function Pilot({ user }) {
 
 							{obsUser.dinacia_user.permit_front_file_path &&
 							<button onClick={() => {
-								const win = window.open(obsUser.dinacia_user.permit_front_file_path, '_blank');
+								const win = window.open(buildUrl(obsUser.dinacia_user.permit_front_file_path), '_blank');
 								win.focus();
 							}}>La foto actual de {t('glossary:users.permit_front_file')} es {
 									obsUser.dinacia_user.permit_front_file_path.substring(obsUser.dinacia_user.permit_front_file_path.lastIndexOf('/')+1)
@@ -177,7 +178,7 @@ function Pilot({ user }) {
 
 							{obsUser.dinacia_user.permit_back_file_path &&
 							<button onClick={() => {
-								const win = window.open(obsUser.dinacia_user.permit_back_file_path, '_blank');
+								const win = window.open(buildUrl(obsUser.dinacia_user.permit_back_file_path), '_blank');
 								win.focus();
 							}}>La foto actual de {t('glossary:users.permit_back_file')} es {
 									obsUser.dinacia_user.permit_back_file_path.substring(obsUser.dinacia_user.permit_back_file_path.lastIndexOf('/')+1)
