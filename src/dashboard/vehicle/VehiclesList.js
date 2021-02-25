@@ -21,8 +21,8 @@ import { buildUrl } from "../../Utils";
 // 	return url
 // }
 
-function Vehicle({ v }) {
-	const { t,  } = useTranslation(['glossary','common']);
+function Vehicle({ v, authorize, canEditStatus }) {
+	const { t, } = useTranslation(['glossary', 'common']);
 	const [showProperties, setShowProperties] = useState(false);
 	const history = useHistory();
 
@@ -49,11 +49,11 @@ function Vehicle({ v }) {
 						onClick={toggleOperation}
 					>
 						<div className={styles.buttonHoveredTooltip}>
-							{ showProperties &&
-							t('common:click_to_collapse')
+							{showProperties &&
+								t('common:click_to_collapse')
 							}
-							{ !showProperties &&
-							t('common:click_to_expand')
+							{!showProperties &&
+								t('common:click_to_expand')
 							}
 						</div>
 					</Button>
@@ -63,55 +63,98 @@ function Vehicle({ v }) {
 						minimal
 						icon='edit'
 						intent={Intent.WARNING}
-						onClick={(evt) => {evt.stopPropagation(); history.push('/dashboard/vehicles/edit/' + v.uvin);}}
+						onClick={(evt) => { evt.stopPropagation(); history.push('/dashboard/vehicles/edit/' + v.uvin); }}
 					>
 						<div className={styles.buttonHoveredTooltip}>
 							{t('common:edit')}
 						</div>
 					</Button>
+					{canEditStatus && <>
+
+						{(v.authorized !== "AUTHORIZED") && <Button
+							className={styles.button}
+							small
+							minimal
+							icon='confirm'
+							intent={Intent.SUCCESS}
+							onClick={(evt) => {
+								evt.stopPropagation();
+								authorize(v.uvin, "AUTHORIZED")
+							}}
+						>
+
+							<div className={styles.buttonHoveredTooltip}>
+								{t('common:authorize')}
+							</div>
+						</Button>
+						}
+						{(v.authorized !== "NOT_AUTHORIZED") && <Button
+							className={styles.button}
+							small
+							minimal
+							icon='delete'
+							intent={Intent.DANGER}
+							onClick={(evt) => {
+								evt.stopPropagation();
+								authorize(v.uvin, "NOT_AUTHORIZED")
+							}}
+						>
+
+							<div className={styles.buttonHoveredTooltip}>
+								{t('common:deny')}
+							</div>
+						</Button>
+						}
+					</>
+					}
+
 				</div>
 			}
 			icon="double-chevron-right"
 		>
 			{showProperties &&
-			<div className="animated fadeIn faster">
-				<GenericListLine>
-					{t('vehicles.uvin')}
-					{v.uvin}
-				</GenericListLine>
-				<GenericListLine>
-					{t('vehicles.date')}
-					{v.date.toLocaleString()}
-				</GenericListLine>
-				{ !ISDINACIA &&
-				<>
+				<div className="animated fadeIn faster">
 					<GenericListLine>
-						{t('vehicles.nNumber')}
-						{v.nNumber}
+						{t('vehicles.uvin')}
+						{v.uvin}
 					</GenericListLine>
 					<GenericListLine>
-						{t('vehicles.faaNumber')}
-						{v.faaNumber}
+						{t('vehicles.date')}
+						{v.date.toLocaleString()}
 					</GenericListLine>
-				</>
-				}
-				<GenericListLine>
-					{t('vehicles.name')}
-					{v.vehicleName}
-				</GenericListLine>
-				<GenericListLine>
-					{t('vehicles.manufacturer')}
-					{v.manufacturer}
-				</GenericListLine>
-				<GenericListLine>
-					{t('vehicles.model')}
-					{v.model}
-				</GenericListLine>
-				<GenericListLine>
-					{t('vehicles.class')}
-					{v['class']}
-				</GenericListLine>
-				{/*<GenericListLine>
+					{!ISDINACIA &&
+						<>
+							<GenericListLine>
+								{t('vehicles.nNumber')}
+								{v.nNumber}
+							</GenericListLine>
+							<GenericListLine>
+								{t('vehicles.faaNumber')}
+								{v.faaNumber}
+							</GenericListLine>
+						</>
+					}
+					<GenericListLine>
+						{t('vehicles.name')}
+						{v.vehicleName}
+					</GenericListLine>
+					<GenericListLine>
+						{t('vehicles.manufacturer')}
+						{v.manufacturer}
+					</GenericListLine>
+					<GenericListLine>
+						{t('vehicles.model')}
+						{v.model}
+					</GenericListLine>
+					<GenericListLine>
+						{t('vehicles.class')}
+						{v['class']}
+					</GenericListLine>
+					<GenericListLine>
+						{t('vehicles.authorized')}
+						{v.authorized}
+					</GenericListLine>
+					{/*<GenericListLine>
 					{t('vehicles.accessType')}
 					{v.accessType}
 				</GenericListLine>
@@ -123,96 +166,96 @@ function Vehicle({ v }) {
 					{t('vehicles.org-uuid')}
 					{v['org-uuid']}
 				</GenericListLine>*/}
-				{	v.owner && // If undefined, it's your own vehicle
-				<GenericListLine>
-					{t('vehicles.owner')}
-					{v.owner.asDisplayString}
-				</GenericListLine>
-				}
-				{	v.registeredBy && // If undefined, it's your own vehicle. This should still be not undefined, but...
-				<GenericListLine>
-					{t('vehicles.registeredBy')}
-					{v.registeredBy.asDisplayString}
-				</GenericListLine>
-				}
-				{ 	ISDINACIA &&
-				v.dinacia_vehicle !== null &&
-				['caa_registration',
-					'usage',
-					'construction_material',
-					'year',
-					'empty_weight',
-					'max_weight',
-					'takeoff_method',
-					'sensor_type_and_mark',
-					'packing',
-					'longitude',
-					'height',
-					'color',
-					'max_speed',
-					'cruise_speed',
-					'landing_speed',
-					'time_autonomy',
-					'radio_accion',
-					'ceiling',
-					'communication_control_system_command_navigation_vigilance',
-					'maintenance_inspections',
-					'remarks',
-					'engine_manufacturer',
-					'remote_sensor_id',
-					'engine_type',
-					'engine_model',
-					'engine_power',
-					'engine_fuel',
-					'engine_quantity_batteries',
-					'propeller_type',
-					'propeller_model',
-					'propeller_material'
-				].map((dinaciaProp) => {
-					if (v.dinacia_vehicle[dinaciaProp] !== null) {
-						return <GenericListLine key={dinaciaProp}>
-							{t(`vehicles.${dinaciaProp}`)}
-							{v.dinacia_vehicle[dinaciaProp]}
-						</GenericListLine>;
-					} else {
-						return null;
+					{v.owner && // If undefined, it's your own vehicle
+						<GenericListLine>
+							{t('vehicles.owner')}
+							{v.owner.asDisplayString}
+						</GenericListLine>
 					}
-				})
-				}
-				{	ISDINACIA && v.operators &&
-				v.operators.map(operator => {
-					return <GenericListLine key={operator}>
-						{t('vehicles.operator')}
-						{operator}
-					</GenericListLine>;
-				})
-				}
-				{	ISDINACIA && v.dinacia_vehicle && v.dinacia_vehicle.serial_number_file_path !== null &&
-				<GenericListLine>
-					<p>{t('vehicles.serial_number_file')}</p>
-					<button onClick={() => {
-						const win = window.open(buildUrl(v.dinacia_vehicle.serial_number_file_path), '_blank');
-						win.focus();
-					}}>{t('common:view_image')}</button>
-				</GenericListLine>
-				}
-				{	ISDINACIA && v.dinacia_vehicle && v.dinacia_vehicle.remote_sensor_file_path !== null &&
-				<GenericListLine>
-					<p>{t('vehicles.remote_sensor_file')}</p>
-					<button onClick={() => {
-						const win = window.open(buildUrl(v.dinacia_vehicle.remote_sensor_file_path), '_blank');
-						win.focus();
-					}}>{t('common:view_image')}</button>
-				</GenericListLine>
-				}
-			</div>
+					{v.registeredBy && // If undefined, it's your own vehicle. This should still be not undefined, but...
+						<GenericListLine>
+							{t('vehicles.registeredBy')}
+							{v.registeredBy.asDisplayString}
+						</GenericListLine>
+					}
+					{ISDINACIA &&
+						v.dinacia_vehicle !== null &&
+						['caa_registration',
+							'usage',
+							'construction_material',
+							'year',
+							'empty_weight',
+							'max_weight',
+							'takeoff_method',
+							'sensor_type_and_mark',
+							'packing',
+							'longitude',
+							'height',
+							'color',
+							'max_speed',
+							'cruise_speed',
+							'landing_speed',
+							'time_autonomy',
+							'radio_accion',
+							'ceiling',
+							'communication_control_system_command_navigation_vigilance',
+							'maintenance_inspections',
+							'remarks',
+							'engine_manufacturer',
+							'remote_sensor_id',
+							'engine_type',
+							'engine_model',
+							'engine_power',
+							'engine_fuel',
+							'engine_quantity_batteries',
+							'propeller_type',
+							'propeller_model',
+							'propeller_material'
+						].map((dinaciaProp) => {
+							if (v.dinacia_vehicle[dinaciaProp] !== null) {
+								return <GenericListLine key={dinaciaProp}>
+									{t(`vehicles.${dinaciaProp}`)}
+									{v.dinacia_vehicle[dinaciaProp]}
+								</GenericListLine>;
+							} else {
+								return null;
+							}
+						})
+					}
+					{ISDINACIA && v.operators &&
+						v.operators.map(operator => {
+							return <GenericListLine key={operator}>
+								{t('vehicles.operator')}
+								{operator}
+							</GenericListLine>;
+						})
+					}
+					{ISDINACIA && v.dinacia_vehicle && v.dinacia_vehicle.serial_number_file_path !== null &&
+						<GenericListLine>
+							<p>{t('vehicles.serial_number_file')}</p>
+							<button onClick={() => {
+								const win = window.open(buildUrl(v.dinacia_vehicle.serial_number_file_path), '_blank');
+								win.focus();
+							}}>{t('common:view_image')}</button>
+						</GenericListLine>
+					}
+					{ISDINACIA && v.dinacia_vehicle && v.dinacia_vehicle.remote_sensor_file_path !== null &&
+						<GenericListLine>
+							<p>{t('vehicles.remote_sensor_file')}</p>
+							<button onClick={() => {
+								const win = window.open(buildUrl(v.dinacia_vehicle.remote_sensor_file_path), '_blank');
+								win.focus();
+							}}>{t('common:view_image')}</button>
+						</GenericListLine>
+					}
+				</div>
 			}
 		</Callout>
 	);
 }
 
 function VehiclesList() {
-	const { t,  } = useTranslation('glossary');
+	const { t, } = useTranslation('glossary');
 	const { store, authStore, userStore } = useStore('RootStore', (store) => ({ store: store.vehicleStore, authStore: store.authStore, userStore: store.userStore }));
 	const { username } = useParams(); // If set, filter only vehicles of a particular user
 	const history = useHistory();
@@ -236,6 +279,8 @@ function VehiclesList() {
 		});
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+	let authorize = (uvin, status) => { store.authorize(uvin, status) }
+
 	if (store.hasFetched) {
 		if (store.isEmpty) {
 			return (
@@ -251,20 +296,20 @@ function VehiclesList() {
 					<div
 						className={styles.actionArea}
 					>
-						{	listingOnlyVehiclesByUser &&
-						<Button
-							className={styles.buttonAction}
-							disabled={!username}
-							icon='add'
-							onClick={() => {
-								history.push(`/dashboard/vehicles/${username}/new`);
-							}}
-						>
-							{t('add_vehicle')}
-						</Button>
+						{listingOnlyVehiclesByUser &&
+							<Button
+								className={styles.buttonAction}
+								disabled={!username}
+								icon='add'
+								onClick={() => {
+									history.push(`/dashboard/vehicles/${username}/new`);
+								}}
+							>
+								{t('add_vehicle')}
+							</Button>
 						}
-						{ !listingOnlyVehiclesByUser && authStore.isAdmin &&
-						<p>To add a vehicle, please select a user from "All users". </p>
+						{!listingOnlyVehiclesByUser && authStore.isAdmin &&
+							<p>To add a vehicle, please select a user from "All users". </p>
 						}
 					</div>
 				</>
@@ -348,20 +393,20 @@ function VehiclesList() {
 					<div
 						className={styles.actionArea}
 					>
-						{	listingOnlyVehiclesByUser &&
-						<Button
-							className={styles.buttonAction}
-							disabled={!username}
-							icon='add'
-							onClick={() => {
-								history.push(`/dashboard/vehicles/${username}/new`);
-							}}
-						>
-							{t('add_vehicle')}
-						</Button>
+						{listingOnlyVehiclesByUser &&
+							<Button
+								className={styles.buttonAction}
+								disabled={!username}
+								icon='add'
+								onClick={() => {
+									history.push(`/dashboard/vehicles/${username}/new`);
+								}}
+							>
+								{t('add_vehicle')}
+							</Button>
 						}
-						{ !listingOnlyVehiclesByUser && authStore.isAdmin &&
-						<p>{t('glossary:add_vehicle_from_users')}</p>
+						{!listingOnlyVehiclesByUser && authStore.isAdmin &&
+							<p>{t('glossary:add_vehicle_from_users')}</p>
 						}
 					</div>
 					<GenericList>
@@ -371,9 +416,12 @@ function VehiclesList() {
 								return null;
 							} else {
 								if (vehicle._matchesFiltersByNames) {
+									//cambio aqui
 									return <Vehicle
 										key={vehicle.uvin}
 										v={vehicle}
+										authorize={authorize}
+										canEditStatus={authStore.isAdmin}
 									/>;
 								} else {
 									return null;
@@ -397,7 +445,7 @@ function VehiclesList() {
 						{t('app.errorocurredfetching')}
 					</p>
 					<Button
-						intent={Intent.PRIMARY}
+						intent={Intent.PRIMstoreARY}
 						onClick={() => store.fetch()}
 					>
 						{t('app.tryagain')}
@@ -407,7 +455,7 @@ function VehiclesList() {
 		} else {
 			return (
 				<div className="fullHW" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-					<Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE}/>
+					<Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE} />
 				</div>
 			);
 		}
