@@ -4,7 +4,7 @@ import { Vehicle } from './entities/Vehicle';
 import _ from 'lodash';
 import { ISDINACIA } from '../consts';
 
-const validateFields = (vehicle , prueba) => {
+const validateFields = (vehicle, prueba) => {
 	console.log(`Validate field: ${JSON.stringify(vehicle)}, ${JSON.stringify(prueba)}`);
 	let errors = [];
 	if (!vehicle.dinacia_vehicle.serial_number_file) {
@@ -19,7 +19,7 @@ const validateFields = (vehicle , prueba) => {
 	if (!vehicle.model) {
 		errors.push('Model can not be empty.');
 	}
-	if(ISDINACIA){
+	if (ISDINACIA) {
 		if (!vehicle.dinacia_vehicle.year && !Number.isNaN(Number.parseInt(vehicle.dinacia_vehicle.year))) {
 			errors.push('Year must be a number.');
 		}
@@ -92,7 +92,7 @@ export const VehicleStore = types
 			post: flow(function* post(vehicle, uvin = null) {
 				try {
 					const vehicleSnapshot = getSnapshot(vehicle);
-					
+
 					const errors = validateFields(vehicle, vehicleSnapshot);
 					if (errors.length > 0) {
 						getRoot(self).setFloatingText(`Error while saving Vehicle: ${errors.join(', ')}`);
@@ -121,12 +121,39 @@ export const VehicleStore = types
 							getRoot(self).setFloatingText('Vehicle saved successfully! ');
 						} else if (response.status === 400) {
 							getRoot(self).setFloatingText(`Error while saving Vehicle: ${response.data}`);
-							
+
 						}
 						return response;
 					}
 				} catch (error) {
 					getRoot(self).setFloatingText('Error while saving Vehicle: ' + error);
+				}
+			}),
+			authorize: flow(function* authorize(uvin, status) {
+				// PENDING = "PENDING",
+				// AUTHORIZED = "AUTHORIZED",
+				// NOT_AUTHORIZED = "NOT_AUTHORIZED",
+				try {
+					let data = {
+						uvin,
+						status
+					}
+					const response = yield getRoot(self)
+						.axiosInstance
+						.post('vehicle/authorize', data, { headers: { auth: getRoot(self).authStore.token } });
+
+					if (response.status === 200) {
+						yield self.fetch();
+						getRoot(self).setFloatingText('Vehicle update status successfully! ');
+					} else { //if (response.status === 400) {
+						getRoot(self).setFloatingText(`Error while update Vehicle Status: ${response.data}`);
+
+					}
+					return response;
+
+				} catch (error) {
+					getRoot(self).setFloatingText('Error while saving Vehicle: ' + error);
+
 				}
 			}),
 			setFilterByText(text) {
