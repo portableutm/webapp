@@ -72,6 +72,7 @@ export const Vehicle = BaseVehicle
 	.props({
 		uvin: types.identifier,
 		date: types.Date,
+		authorized: types.string,
 		owner: types.maybe(User),
 		registeredBy: types.maybe(User),
 		dinacia_vehicle: types.maybeNull(DinaciaVehicle) // If the instance is NOT DINACIA, this MUST BE null
