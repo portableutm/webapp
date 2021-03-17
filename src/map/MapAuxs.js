@@ -17,23 +17,30 @@ function getLeafletLayer(useGeoServer, L) {
 			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors. ' +
 				'All icons by <a href="icons8.com">Icons8</a>'
 		});
+		
 	}
 }
 
 const initializeLeaflet = () => {
-	const leafletLayer = getLeafletLayer(false, L);
-	/*L.control
-		.zoom({
-			position: 'topright'
-		})
-		.addTo(map.current);*/
+	let satellital = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+		});
+		const leafletLayer = getLeafletLayer(false, L);
+		// const leafletLayer = getLeafletLayer(false, L);
+
+	
 	const map = L.map('adesMapLeaflet', {
 		center: [-34.89719516961728, -56.1633110046386],
 		zoom: 11,
 		zoomControl: false,
 		worldCopyJump: true,
-		layers: [leafletLayer]
+		layers: [satellital, leafletLayer]
 	});
+	var baseMaps = {
+		"Satelite": satellital,
+		"Calles": leafletLayer
+	};
+	L.control.layers(baseMaps, null).addTo(map);
 	map.getPane('tooltipPane').style.visibility = 'hidden';
 	map.on('zoomend', function() {
 		if (map.getZoom() > 12) {
