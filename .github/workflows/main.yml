@@ -13,6 +13,13 @@ jobs:
           build: npm run build
           start: npm run start-dev
           wait-on: http://localhost:2000
+      - name: machine ls $GITHUB_EVENT_PATH
+        run: "ls -la $GITHUB_EVENT_PATH"
+      - name: machine ls $GITHUB_WORKSPACE
+        run: "ls -la $GITHUB_WORKSPACE"
+      - name: machine ls $HOME
+        working-directory: "."
+        run: "ls -la $HOME"
       - name: Upload coverage
         uses: codecov/codecov-action@v1
         with:
