@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import React, { useEffect, useState } from 'react';
 import { useStore } from 'mobx-store-provider';
 import { observer } from 'mobx-react';
