@@ -81,7 +81,6 @@ describe('Use Case 01A: Create New Operation (valid)', function () {
 			.type('09123456');
 		cy.get('[data-test-id="map#editor#operation#info#name"]').clear().type('CreateNewOp#01');
 		cy.get('[data-test-id="map#editor#operation#info#flight_comments"]').clear().type('Comments');
-		cy.get('[data-test-id="map#editor#volume#info#effective_time_begin"]').click();
 		cy.get('[data-test-id="map#editor#operation#info#pilot"]').select('admin');
 	});
 	it('Finish and add', function () {

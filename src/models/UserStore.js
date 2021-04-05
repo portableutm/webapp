@@ -27,7 +27,8 @@ export const UserStore = types
 					const users = response.data;
 					self.users.replace(
 						users.reduce((prior, user) => {
-							return [...prior, [user.username, user]];
+							return [...prior, [user.username, user.dinacia_user ? user : { ...user, ...{ dinacia_user: { dummy: "" } } }]];
+							// return [...prior, [user.username, user]];
 						}, [])
 					);
 				} catch (error) {
@@ -44,7 +45,9 @@ export const UserStore = types
 						`user/${username}`,
 						{ headers: { auth: getRoot(self).authStore.token } }
 					);
-					self.users.set(response.data.username, response.data);
+					self.users.set(response.data.username, response.data.dinacia_user ? response.data : { ...response.data, ...{ dinacia_user: { dummy: "" } } });
+					// self.users.set(response.data.username, {...{dinacia_user:{}}, ...response.data});
+					// self.users.set(response.data.username, response.data);
 				} catch (error) {
 					console.group('/userStore fetchOne *error*');
 					console.log('%cAn error has ocurred', 'color:red; font-size: 36px');
@@ -98,7 +101,8 @@ export const UserStore = types
 							user[self.filterProperty].toLowerCase(),
 							self.filterMatchingText.toLowerCase()
 						);
-						return userWithVisibility;})
+						return userWithVisibility;
+					})
 					.orderBy(user => {
 						return user[self.sortingProperty];
 					}, self.sortingOrder)

@@ -11,6 +11,8 @@ import styles from '../generic/GenericList.module.css';
 import GenericList, { GenericListLine } from '../generic/GenericList';
 import Pilot from './Pilot';
 import { DEBUG, ISDINACIA } from '../../consts';
+import { buildUrl } from "../../Utils";
+
 
 function User({ expanded = false,  children }) {
 	const { t, } = useTranslation(['glossary', 'common']);
@@ -130,7 +132,7 @@ function User({ expanded = false,  children }) {
 				<GenericListLine>
 					<p>{t('users.document_file')}</p>
 					<button data-test-id='document_file_image' onClick={() => {
-						const win = window.open(children.dinacia_user.document_file_path, '_blank');
+						const win = window.open(buildUrl(children.dinacia_user.document_file_path), '_blank');
 						if (!DEBUG) win.focus();
 					}}>{t('common:view_image')}</button>
 				</GenericListLine>
@@ -139,7 +141,7 @@ function User({ expanded = false,  children }) {
 					<GenericListLine>
 						<p>{t('users.permit_front_file')}</p>
 						<button data-test-id='permit_front_file_image' onClick={() => {
-							const win = window.open(children.dinacia_user.permit_front_file_path, '_blank');
+							const win = window.open(buildUrl(children.dinacia_user.permit_front_file_path), '_blank');
 							if (!DEBUG) win.focus();
 						}}>{t('common:view_image')}</button>
 					</GenericListLine>
@@ -148,7 +150,7 @@ function User({ expanded = false,  children }) {
 				<GenericListLine>
 					<p>{t('users.permit_back_file')}</p>
 					<button data-test-id='permit_back_file_image' onClick={() => {
-						const win = window.open(children.dinacia_user.permit_back_file_path, '_blank');
+						const win = window.open(buildUrl(children.dinacia_user.permit_back_file_path), '_blank');
 						if (!DEBUG) win.focus();
 					}}>{t('common:view_image')}</button>
 				</GenericListLine>

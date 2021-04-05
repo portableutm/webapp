@@ -41,7 +41,7 @@ const GenericVehicleProperties = ({ localStore, properties }) => {
 	});
 };
 
-const DinaciaVehicleProperties = ({ localStore, properties, isAdmin = false }) => {
+const DinaciaVehicleProperties = ({ localStore, properties, isAdmin = false, vehicleExists = false }) => {
 	const { t, } = useTranslation('glossary');
 
 	return useObserver(() => {
@@ -56,7 +56,7 @@ const DinaciaVehicleProperties = ({ localStore, properties, isAdmin = false }) =
 					<InputGroup
 						id={'text-' + property}
 						key={'text-' + property}
-						disabled={ISDINACIA && !isAdmin && property === 'caa_registration'} // TODO: No comments...
+						disabled={ISDINACIA && !isAdmin && vehicleExists && property === 'caa_registration'} // TODO: No comments...
 						value={localStore.vehicle.dinacia_vehicle[property] === null ? '' : localStore.vehicle.dinacia_vehicle[property]}
 						onChange={(evt) => localStore.vehicle.setDinaciaProperty(property, evt.target.value)}
 					/>
@@ -98,13 +98,13 @@ function EditVehicle(props) {
 		setVehicle(snapshot) {
 			localStore.vehicle = BaseVehicle.create({
 				...snapshot,
-				owner_id: snapshot.owner.username,
+				owner_id: snapshot.owner ? snapshot.owner.username : authStore.username,
 				dinacia_vehicle: snapshot.dinacia_vehicle ? snapshot.dinacia_vehicle : { year: `${new Date().getFullYear()}` }
 			});
 		}
 	}));
 
-	if (DEBUG) window.ls = window.localStore;
+	if (DEBUG) window.ev = { ls: localStore, s: serialNumberFile, r: remoteSensorFile };
 
 	useEffect(() => {
 		const dispose = autorun(async () => {
@@ -124,7 +124,7 @@ function EditVehicle(props) {
 
 					setSerialNumberFile(window.URL.createObjectURL(data));
 				}
-				if (vehicle.dinacia_vehicle.hasRemoteSensorFile) {
+				if (vehicle.dinacia_vehicle.remote_sensor_file_path !== null) {
 					// This code is a mess and should be removed
 					const response = await fetch(vehicle.remote_sensor_file_path);
 					const data = await response.blob();
@@ -195,6 +195,7 @@ function EditVehicle(props) {
 						<DinaciaVehicleProperties
 							localStore={localStore}
 							isAdmin={authStore.isAdmin}
+							vehicleExists={id && vehicleStore.vehicles.get(id)}
 							properties={[
 								'caa_registration',
 								'usage',

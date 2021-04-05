@@ -8,15 +8,21 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Cypress run
-        uses: cypress-io/github-action@v1
+        uses: cypress-io/github-action@v2
         with:
           build: npm run build
           start: npm run start-dev
           wait-on: http://localhost:2000
+      - name: machine ls $GITHUB_EVENT_PATH
+        run: "ls -la $GITHUB_EVENT_PATH"
+      - name: machine ls $GITHUB_WORKSPACE
+        run: "ls -la $GITHUB_WORKSPACE"
+      - name: machine ls $HOME
+        working-directory: "."
+        run: "ls -la $HOME"
       - name: Upload coverage
         uses: codecov/codecov-action@v1
         with:
-          #file: ./coverage/index.html
           fail_ci_if_error: false
           verbose: true
       - name: Save photos
