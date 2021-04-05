@@ -51,6 +51,7 @@
   "nyc": {
     "exclude": "src/serviceWorker.js",
     "reporter": [
+      "lcov",
       "html"
     ]
   },
