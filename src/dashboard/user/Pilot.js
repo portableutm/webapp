@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import React from 'react';
 import { observer, useLocalStore, useAsObservableSource } from 'mobx-react';
 import { useStore } from 'mobx-store-provider';
@@ -90,17 +92,17 @@ function Pilot({ user }) {
 		localStore.setUserDataChangeEnabled(false);
 
 		const newUserData = new FormData();
-		console.log(` Pruebbaaaaaa`)
+		console.log(' Pruebbaaaaaa');
 		if (ISDINACIA) {
 
-			let address = document.getElementById('address').value
-			let document_type = document.getElementById('document_type').value
-			let document_number = document.getElementById('document_number').value
-			let phone = document.getElementById('phone').value
-			let cellphone = document.getElementById('cellphone').value
-			let nationality = document.getElementById('nationality').value
+			let address = document.getElementById('address').value;
+			let document_type = document.getElementById('document_type').value;
+			let document_number = document.getElementById('document_number').value;
+			let phone = document.getElementById('phone').value;
+			let cellphone = document.getElementById('cellphone').value;
+			let nationality = document.getElementById('nationality').value;
 
-			let dinacia_user = { address, document_type, document_number, phone, cellphone, nationality }
+			let dinacia_user = { address, document_type, document_number, phone, cellphone, nationality };
 
 			const dinaciaUserData = { ...user.dinacia_user, ...dinacia_user };
 
@@ -113,7 +115,7 @@ function Pilot({ user }) {
 				}
 
 			}catch(e){
-				dinaciaUserData.permit_expire_date = null
+				dinaciaUserData.permit_expire_date = null;
 			}
 
 			if (document.getElementById('permit_expire_date').valueAsNumber > 0){

@@ -7,8 +7,8 @@ import { Button, Callout, HTMLSelect, InputGroup, Intent, Spinner } from '@bluep
 import { useTranslation } from 'react-i18next';
 import GenericList, { GenericListLine } from '../generic/GenericList';
 import styles from '../generic/GenericList.module.css';
-import { ISDINACIA, API } from '../../consts';
-import { buildUrl } from "../../Utils";
+import { ISDINACIA } from '../../consts';
+import { buildUrl } from '../../Utils';
 
 // let buildUrl = (relativePath) => {
 // 	let url = `${API}`
@@ -71,7 +71,7 @@ function Vehicle({ v, authorize, canEditStatus }) {
 					</Button>
 					{canEditStatus && <>
 
-						{(v.authorized !== "AUTHORIZED") && <Button
+						{(v.authorized !== 'AUTHORIZED') && <Button
 							className={styles.button}
 							small
 							minimal
@@ -79,7 +79,7 @@ function Vehicle({ v, authorize, canEditStatus }) {
 							intent={Intent.SUCCESS}
 							onClick={(evt) => {
 								evt.stopPropagation();
-								authorize(v.uvin, "AUTHORIZED")
+								authorize(v.uvin, 'AUTHORIZED');
 							}}
 						>
 
@@ -88,7 +88,7 @@ function Vehicle({ v, authorize, canEditStatus }) {
 							</div>
 						</Button>
 						}
-						{(v.authorized !== "NOT_AUTHORIZED") && <Button
+						{(v.authorized !== 'NOT_AUTHORIZED') && <Button
 							className={styles.button}
 							small
 							minimal
@@ -96,7 +96,7 @@ function Vehicle({ v, authorize, canEditStatus }) {
 							intent={Intent.DANGER}
 							onClick={(evt) => {
 								evt.stopPropagation();
-								authorize(v.uvin, "NOT_AUTHORIZED")
+								authorize(v.uvin, 'NOT_AUTHORIZED');
 							}}
 						>
 
@@ -279,7 +279,7 @@ function VehiclesList() {
 		});
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	let authorize = (uvin, status) => { store.authorize(uvin, status) }
+	let authorize = (uvin, status) => { store.authorize(uvin, status); };
 
 	if (store.hasFetched) {
 		if (store.isEmpty) {

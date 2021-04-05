@@ -34,9 +34,9 @@ describe('Use Case: Add new vehicle', function () {
 		cy.get('#text-year').clear().type('2021', { force: true });
 		// cy.get('#text-serial_number').type('SN0987654321', { force: true });
 
-		/*cy.get('#serial_number_file').within(() => {
+		cy.get('#serial_number_file').within(() => {
 			cy.get('input[type="file"]').attachFile('images/newVehicle.png');
-		});*/
+		});
 		cy.get('#add_vehicle_btn').click();
 		cy.wait(1000);
 		cy.get('[data-test-id="floating-text"]').then(($el) => {

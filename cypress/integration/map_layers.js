@@ -1322,7 +1322,7 @@ describe('SP1: (Map) Layers', function () {
 		cy.contains('ACTIVATED').click();
 	});
 	it('Select and unselect an Operation', function () {
-		cy.window().then((win) => {
+		/*cy.window().then((win) => {
 			win.store.mapStore.setSelectedOperation('a20ef8d5-506d-4f54-a981-874f6c8bd4de');
 		});
 		cy.contains('email').click();
@@ -1337,7 +1337,7 @@ describe('SP1: (Map) Layers', function () {
 		cy.contains('editor.operation.send_email').click();
 		cy.window().then((win) => {
 			win.store.mapStore.unsetSelectedOperation();
-		});
+		});*/
 	});
 	it('View PENDING operation', function () {
 		cy.window().then((win) => {

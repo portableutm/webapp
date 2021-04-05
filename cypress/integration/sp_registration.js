@@ -63,13 +63,14 @@ describe('SPx: (Registration)', function () {
 		cy.get('#input-cellphone').type('1029384765');
 		cy.get('#input-nationality').type('uy');
 
-		 
 		cy.get('#document_file > input').attachFile('images/newVehicle.png');
 		cy.get('#permit_front_file > input').attachFile('images/newVehicle.png');
 		cy.get('#permit_back_file > input').attachFile('images/newVehicle.png');
 		
 		cy.get('#input-password').type('1234');
 		cy.get('#input-passwordverification').type('1234');
+
+		cy.contains('Acepto términos y condiciones').click();
 
 		cy.get('form').submit();
 		cy.contains('login.registered');
