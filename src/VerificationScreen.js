@@ -1,9 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Card, Elevation, Intent, Spinner} from '@blueprintjs/core';
-import {useTranslation} from 'react-i18next';
+/* istanbul ignore file */
+
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Elevation, Intent, Spinner } from '@blueprintjs/core';
+import { useTranslation } from 'react-i18next';
 import { useParams, useHistory, useLocation } from 'react-router-dom';
 import A from 'axios';
-import {API, DEBUG} from './consts';
+import { API, DEBUG } from './consts';
 import styles from './LoginScreen.module.css';
 import * as classnames from 'classnames';
 
@@ -20,7 +22,7 @@ function VerificationScreen() {
 	const [isLoading, setLoading] = useState(true);
 
 	const history = useHistory();
-	const {username} = useParams();
+	const { username } = useParams();
 	const location = useLocation();
 	const token = (location.search.split('?token='))[1];
 
@@ -70,9 +72,9 @@ function VerificationScreen() {
 					!isError &&
 					<>
 						<h3>{t('verification.title')}</h3>
-						{t('verification.successful', {user: username})}
+						{t('verification.successful', { user: username })}
 						<div className="buttonArea">
-							<Button style={{margin: '5px'}} intent={Intent.SUCCESS}
+							<Button style={{ margin: '5px' }} intent={Intent.SUCCESS}
 								type="submit"
 								onClick={() => history.push('/')}>
 								{t('goto_login')}
@@ -84,7 +86,7 @@ function VerificationScreen() {
 					isError &&
 					<>
 						<h3>{t('verification.title')}</h3>
-						{t('verification.failed', {user: username})}
+						{t('verification.failed', { user: username })}
 					</>
 				}
 			</Card>

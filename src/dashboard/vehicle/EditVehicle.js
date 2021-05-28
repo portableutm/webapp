@@ -124,7 +124,7 @@ function EditVehicle(props) {
 
 					setSerialNumberFile(window.URL.createObjectURL(data));
 				}
-				if (vehicle.dinacia_vehicle.hasRemoteSensorFile) {
+				if (vehicle.dinacia_vehicle.remote_sensor_file_path !== null) {
 					// This code is a mess and should be removed
 					const response = await fetch(vehicle.remote_sensor_file_path);
 					const data = await response.blob();

@@ -3,6 +3,7 @@ import {
 	Alert,
 	Button,
 	Card,
+	Checkbox,
 	Elevation,
 	FileInput,
 	FormGroup,
@@ -20,6 +21,7 @@ import { observer, useLocalStore } from 'mobx-react';
 import { useStore } from 'mobx-store-provider';
 import { BaseUser } from './models/entities/User';
 import UserInputs from './dashboard/user/UserInputs';
+import { Consent } from "./Consent";
 
 const Axios = A.create({
 	baseURL: API,
@@ -74,13 +76,14 @@ const NewUser = ({ isSelfRegistering = true }) => {
 
 	const [registrationButtonEnabled, setRegistrationButtonEnabled] = useState(true);
 	const [successfullyRegistered, setSuccessFullyRegistered] = useState(false);
+	const [consented, setConsented] = useState(false);
 	const [alertMessage, setAlertMessage] = useState(null);
 	const [isError, setError] = useState(false);
 	const VERIFICATION_NOT_STARTED = 0; const VERIFICATION_OK = 1; const VERIFICATION_ERROR = 2;
 	const [verificationStatus, setVerificationStatus] = useState(VERIFICATION_NOT_STARTED);
 	const [errors, setErrors] = useState('');
 
-	const { t,  } = useTranslation(['auth', 'glossary', 'common']);
+	const { t, } = useTranslation(['auth', 'glossary', 'common']);
 
 	/*useEffect(() => {
 		if (DEBUG) {
@@ -116,15 +119,17 @@ const NewUser = ({ isSelfRegistering = true }) => {
 	const handleOnSubmit = e => {
 		// avoid submit
 		e.preventDefault();
+		
 		let errors = [];
+		if(!consented){
+			errors.push("Debe aceptar terminos y condiciones")
+		}
 
 		if (ISDINACIA) {
 			if (document.getElementById('permit_expire_date').value) {
 				localStore.user.setDinaciaProperty('permit_expire_date', document.getElementById('permit_expire_date').valueAsDate);
 			}
-			// else{
-			// 	errors.push('Invalid permit expire date')
-			// }
+
 		}
 
 		console.log(`Validate User: ${JSON.stringify(localStore.user, null, 2)}`);
@@ -147,43 +152,43 @@ const NewUser = ({ isSelfRegistering = true }) => {
 			errors.push(t('common:last_name_empty'));
 		}
 
-		if(ISDINACIA){
+		if (ISDINACIA) {
 			if (!validText(localStore.user.dinacia_user.address)) {
 				errors.push(t('common:address_empty'));
 			}
-	
+
 			if (!validText(localStore.user.dinacia_user.document_type)) {
 				errors.push(t('common:document_type_empty'));
 			}
-	
+
 			if (!validText(localStore.user.dinacia_user.document_number)) {
 				errors.push(t('common:document_number_empty'));
 			}
 			if (!validText(localStore.user.dinacia_user.phone)) {
 				errors.push(t('common:phone_empty'));
 			}
-	
+
 			if (!validText(localStore.user.dinacia_user.cellphone)) {
 				errors.push(t('common:cellphone_empty'));
 			}
-	
+
 			if (!validText(localStore.user.dinacia_user.nationality)) {
 				errors.push(t('common:nationality_empty'));
 			}
-	
+
 			if (!(localStore.user.dinacia_user.document_file)) {
 				errors.push(t('common:document_file_empty'));
 			}
-	
+
 			if (!(localStore.user.dinacia_user.permit_front_file)) {
 				errors.push(t('common:permit_front_file_empty'));
 			}
-	
+
 			if (!(localStore.user.dinacia_user.permit_back_file)) {
 				errors.push(t('common:permit_back_file_empty'));
 			}
 		}
-		
+
 
 		if (!validText(localStore.user.password)) {
 			errors.push(t('common:password_empty'));
@@ -197,13 +202,13 @@ const NewUser = ({ isSelfRegistering = true }) => {
 
 		console.log(`Error User: ${JSON.stringify(errors, null, 2)}`);
 
-		if(errors.length > 0){
+		if (errors.length > 0) {
 			setError(true);
 			setErrors(errors.join(','));
-			return ;
+			return;
 		}
 
-		
+
 
 		setRegistrationButtonEnabled(false);
 
@@ -361,6 +366,8 @@ const NewUser = ({ isSelfRegistering = true }) => {
 						/>
 					</FormGroup>
 					<div className={styles.buttonArea}>
+						<Consent />
+						<Checkbox checked={consented} onClick={() => setConsented(!consented)}>Acepto términos y condiciones</Checkbox>
 						<Button
 							style={{ margin: '5px' }}
 							intent={Intent.SUCCESS}
@@ -412,7 +419,7 @@ const NewUser = ({ isSelfRegistering = true }) => {
 					fill
 					style={{ margin: '5px' }}
 					intent={Intent.WARNING}
-					onClick={() => { setError(false); setErrors('');setRegistrationButtonEnabled(true); }}
+					onClick={() => { setError(false); setErrors(''); setRegistrationButtonEnabled(true); }}
 				>
 					{t('login.register')}
 				</Button>

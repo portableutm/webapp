@@ -31,3 +31,15 @@ util/convert/latvia.mbtiles
 .nyc_output/
 
 .env
+
+cypress/screenshots/dsh_newvehicle.js/
+
+cypress/screenshots/map_createnewoperation.js/
+
+cypress/screenshots/map_layers.js/
+
+cypress/screenshots/sp_registration.js/
+
+cypress/videos/
+
+.actrc

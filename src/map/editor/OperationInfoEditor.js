@@ -179,7 +179,7 @@ function OperationInfoEditor() {
 					labelFor="uas_registrations"
 				>
 					{ vehicleStore.allVehicles.map((vehicle, index) => {
-						if (vehicle && canPilotFlyVehicle(vehicle, mapStore.editorOperation.owner)) {
+						if (vehicle && canPilotFlyVehicle(vehicle, mapStore.editorOperation.owner) && vehicle.authorized === 'AUTHORIZED' ) {
 							return (
 								<div
 									onMouseEnter={() => setExpandedLabel(vehicle.uvin)}

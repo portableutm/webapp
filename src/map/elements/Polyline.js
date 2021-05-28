@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { useEffect } from 'react';
 
 /* Logic */
