@@ -91,6 +91,20 @@ const StateFilters = () => {
 					{t('filter.closed')}
 				</Checkbox>
 			</div>
+			<div
+				className={styles.sidebarButtonText}
+			>
+				<Checkbox
+					className={styles.sidebarButtonTextContent}
+					data-test-id='layersNOT_ACCEPTED'
+					checked={store.filterShowNotAccepted}
+					onChange={(evt) => {
+						store.setFilterNotAccepted(evt.target.checked);
+					}}
+				>
+					{t('filter.not_accepted')}
+				</Checkbox>
+			</div>
 		</>
 	));
 };
@@ -140,6 +154,8 @@ const OperationFilters = () => {
 	const doesOperationStateMatchOneOfTheStateFilters = (operation) => {
 		// Do not let user uncheck an operation that is being shown because it matches by state
 		if (store.filterShowAccepted && operation.state === 'ACCEPTED') {
+			return true;
+		} else if (store.filterShowNotAccepted && operation.state === 'NOT_ACCEPTED') {
 			return true;
 		} else if (store.filterShowPending && operation.state === 'PENDING') {
 			return true;

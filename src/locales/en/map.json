@@ -19,6 +19,7 @@
   "filter": {
     "proposed": "Proposed",
     "accepted": "Accepted",
+    "not_accepted": "Not Accepted",
     "activated": "Activated",
     "closed": "Closed",
     "pending": "Pending",

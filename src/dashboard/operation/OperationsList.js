@@ -353,6 +353,15 @@ function OperationsList() {
 						>
 							{t('map:filter.closed')}
 						</Checkbox>
+						<Checkbox
+							data-test-id='layersNOT_ACCEPTED'
+							checked={store.filterShowClosed}
+							onChange={(evt) => {
+								store.setFilterNotAccepted(evt.target.checked);
+							}}
+						>
+							{t('map:filter.not_accepted')}
+						</Checkbox>
 					</div>
 					<div
 						className={styles.filters}

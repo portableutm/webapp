@@ -11,6 +11,7 @@ export const OperationStore = types
 		operations: types.map(Operation),
 		oldOperations: types.map(Operation),
 		filterShowAccepted: true,
+		filterShowNotAccepted: false,
 		filterShowPending: true,
 		filterShowActivated: true,
 		filterShowRogue: true,
@@ -178,6 +179,9 @@ export const OperationStore = types
 			setFilterAccepted(flag) {
 				self.filterShowAccepted = flag;
 			},
+			setFilterNotAccepted(flag) {
+				self.filterShowNotAccepted = flag;
+			},
 			setFilterPending(flag) {
 				self.filterShowPending = flag;
 			},
@@ -233,6 +237,8 @@ export const OperationStore = types
 			return _.filter(self.isInHistoricalMode ? self.allOperations : self.allCurrentOperations, (operation) => {
 				if (self.filterShowAccepted && operation.state === 'ACCEPTED') {
 					return true;
+				} else if (self.filterShowNotAccepted && operation.state === 'NOT_ACCEPTED'){
+					return true;
 				} else if (self.filterShowPending && operation.state === 'PENDING') {
 					return true;
 				} else if (self.filterShowActivated && operation.state === 'ACTIVATED') {
@@ -255,6 +261,7 @@ export const OperationStore = types
 					opWithVisibility.owner.asDisplayString = op.owner.asDisplayString;
 					opWithVisibility._matchesFiltersByStates =
 						(self.filterShowAccepted && op.state === 'ACCEPTED') 	||
+						(self.filterShowNotAccepted && op.state === 'NOT_ACCEPTED') 	||
 						(self.filterShowPending && op.state === 'PENDING') 		||
 						(self.filterShowActivated && op.state === 'ACTIVATED') 	||
 						(self.filterShowClosed && op.state === 'CLOSED') 	||
@@ -295,6 +302,7 @@ export const OperationStore = types
 					matchingProperty,
 					self.filterMatchingText.toLowerCase()
 				) && ((self.filterShowAccepted && operation.state === 'ACCEPTED') ||
+					(self.filterShowNotAccepted && operation.state === 'NOT_ACCEPTED') ||
 					(self.filterShowPending && operation.state === 'PENDING') ||
 					(self.filterShowClosed && operation.state === 'CLOSED') ||
 					(self.filterShowActivated && operation.state === 'ACTIVATED') ||
